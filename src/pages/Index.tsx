@@ -1,30 +1,163 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { OracleCardComponent } from "@/components/OracleCardComponent";
 import { CardDetail } from "@/components/CardDetail";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
-import { oracleCards } from "@/data/oracleCards";
-import { Shuffle, Sparkles } from "lucide-react";
+import { DeckSelection } from "@/components/DeckSelection";
+import { PurchaseVerification } from "@/components/PurchaseVerification";
+import { supabase } from "@/integrations/supabase/client";
+import { Shuffle, Sparkles, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
+import { useToast } from "@/hooks/use-toast";
+import type { User } from "@supabase/supabase-js";
+
+interface Card {
+  id: string;
+  name: string;
+  meaning: string;
+  reflection_prompt: string;
+  image_color: string;
+  deck_id: string;
+}
+
+interface Deck {
+  id: string;
+  name: string;
+  description: string | null;
+  theme: string;
+  image_color: string;
+  is_free: boolean;
+  woocommerce_product_id: string | null;
+}
 
 const Index = () => {
-  const [selectedCard, setSelectedCard] = useState<typeof oracleCards[0] | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [decks, setDecks] = useState<Deck[]>([]);
+  const [userPurchases, setUserPurchases] = useState<string[]>([]);
+  const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [isShuffling, setIsShuffling] = useState(false);
   const [showCard, setShowCard] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
+  const [verifyDeckId, setVerifyDeckId] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleShuffle = () => {
+  useEffect(() => {
+    // Check auth state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        navigate("/auth");
+      } else {
+        setUser(session.user);
+        fetchDecks();
+        fetchUserPurchases(session.user.id);
+      }
+      setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        navigate("/auth");
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const fetchDecks = async () => {
+    const { data, error } = await supabase
+      .from('decks')
+      .select('*')
+      .order('display_order');
+
+    if (error) {
+      console.error('Error fetching decks:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load decks",
+        variant: "destructive",
+      });
+    } else {
+      setDecks(data || []);
+    }
+  };
+
+  const fetchUserPurchases = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('deck_purchases')
+      .select('deck_id')
+      .eq('user_id', userId)
+      .eq('verified', true);
+
+    if (error) {
+      console.error('Error fetching purchases:', error);
+    } else {
+      setUserPurchases((data || []).map(p => p.deck_id));
+    }
+  };
+
+  const handleSelectDeck = async (deckId: string) => {
+    const deck = decks.find(d => d.id === deckId);
+    if (!deck) return;
+
+    setSelectedDeck(deck);
+  };
+
+  const handleShuffle = async () => {
+    if (!selectedDeck || !user) return;
+
     setIsShuffling(true);
     setShowCard(false);
     setIsRevealed(false);
-    
-    setTimeout(() => {
-      const randomCard = oracleCards[Math.floor(Math.random() * oracleCards.length)];
-      setSelectedCard(randomCard);
+
+    try {
+      // Fetch cards for the selected deck
+      const { data: cards, error } = await supabase
+        .from('cards')
+        .select('*')
+        .eq('deck_id', selectedDeck.id);
+
+      if (error) throw error;
+
+      if (!cards || cards.length === 0) {
+        toast({
+          title: "Error",
+          description: "No cards found in this deck",
+          variant: "destructive",
+        });
+        setIsShuffling(false);
+        return;
+      }
+
+      setTimeout(async () => {
+        const randomCard = cards[Math.floor(Math.random() * cards.length)];
+        setSelectedCard(randomCard);
+
+        // Record the draw
+        await supabase.from('card_draws').insert({
+          user_id: user.id,
+          card_id: randomCard.id,
+          deck_id: selectedDeck.id,
+        });
+
+        setIsShuffling(false);
+        setShowCard(true);
+      }, 1500);
+    } catch (error) {
+      console.error('Error drawing card:', error);
+      toast({
+        title: "Error",
+        description: "Failed to draw a card",
+        variant: "destructive",
+      });
       setIsShuffling(false);
-      setShowCard(true);
-    }, 1500);
+    }
   };
 
   const handleReveal = () => {
@@ -37,6 +170,29 @@ const Index = () => {
     setSelectedCard(null);
   };
 
+  const handleBackToDecks = () => {
+    setSelectedDeck(null);
+    setShowCard(false);
+    setIsRevealed(false);
+    setSelectedCard(null);
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  };
+
+  const handleVerifyPurchase = (deckId: string) => {
+    setVerifyDeckId(deckId);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Sparkles className="w-12 h-12 text-accent animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Background Image */}
@@ -48,15 +204,45 @@ const Index = () => {
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background" />
 
+      {/* Sign Out Button */}
+      <div className="absolute top-4 right-4 z-20">
+        <Button
+          onClick={handleSignOut}
+          variant="ghost"
+          size="sm"
+          className="text-foreground/70 hover:text-foreground"
+        >
+          <LogOut className="w-4 h-4 mr-2" />
+          Sign Out
+        </Button>
+      </div>
+
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-12">
-        {!showCard && !isShuffling && (
+        {!selectedDeck && (
+          <DeckSelection
+            decks={decks}
+            userPurchases={userPurchases}
+            onSelectDeck={handleSelectDeck}
+            onVerifyPurchase={handleVerifyPurchase}
+          />
+        )}
+
+        {selectedDeck && !showCard && !isShuffling && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center space-y-8 max-w-2xl mx-auto min-h-[80vh] flex flex-col justify-center"
           >
+            <Button
+              onClick={handleBackToDecks}
+              variant="ghost"
+              className="absolute top-4 left-4"
+            >
+              ← Back to Decks
+            </Button>
+
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -65,11 +251,11 @@ const Index = () => {
             </motion.div>
             
             <h1 className="font-serif text-6xl md:text-7xl font-bold text-foreground mb-4">
-              Mystic Oracle
+              {selectedDeck.name}
             </h1>
             
             <p className="text-xl md:text-2xl text-foreground/80 leading-relaxed">
-              Draw a card to receive divine guidance and meaningful journaling prompts for your spiritual journey
+              {selectedDeck.description || "Draw a card to receive divine guidance"}
             </p>
 
             <Button
@@ -100,11 +286,26 @@ const Index = () => {
             transition={{ duration: 0.6 }}
             className="min-h-[80vh] flex flex-col justify-center items-center space-y-8"
           >
+            <Button
+              onClick={handleBackToDecks}
+              variant="ghost"
+              className="absolute top-4 left-4"
+            >
+              ← Back to Decks
+            </Button>
+
             <h2 className="font-serif text-4xl text-foreground mb-8">
               Your Card Awaits
             </h2>
             <OracleCardComponent
-              card={selectedCard}
+              card={{
+                id: 0,
+                name: selectedCard.name,
+                meaning: selectedCard.meaning,
+                description: '',
+                journalPrompts: [],
+                imageColor: selectedCard.image_color,
+              }}
               isRevealed={isRevealed}
               onClick={handleReveal}
             />
@@ -113,9 +314,41 @@ const Index = () => {
         )}
 
         {isRevealed && selectedCard && (
-          <CardDetail card={selectedCard} onDrawAnother={handleDrawAnother} />
+          <>
+            <Button
+              onClick={handleBackToDecks}
+              variant="ghost"
+              className="absolute top-4 left-4"
+            >
+              ← Back to Decks
+            </Button>
+            <CardDetail 
+              card={{
+                id: 0,
+                name: selectedCard.name,
+                meaning: selectedCard.meaning,
+                description: selectedCard.meaning,
+                journalPrompts: [selectedCard.reflection_prompt],
+                imageColor: selectedCard.image_color,
+              }} 
+              onDrawAnother={handleDrawAnother} 
+            />
+          </>
         )}
       </div>
+
+      {/* Purchase Verification Dialog */}
+      <PurchaseVerification
+        deckId={verifyDeckId}
+        deckName={decks.find(d => d.id === verifyDeckId)?.name || ""}
+        isOpen={!!verifyDeckId}
+        onClose={() => setVerifyDeckId(null)}
+        onSuccess={() => {
+          if (user) {
+            fetchUserPurchases(user.id);
+          }
+        }}
+      />
     </div>
   );
 };
