@@ -57,27 +57,33 @@ export type Database = {
         Row: {
           created_at: string | null
           deck_id: string
+          embodiment_content: string | null
           id: string
           image_color: string
           meaning: string
+          meditation_audio_url: string | null
           name: string
           reflection_prompt: string
         }
         Insert: {
           created_at?: string | null
           deck_id: string
+          embodiment_content?: string | null
           id?: string
           image_color: string
           meaning: string
+          meditation_audio_url?: string | null
           name: string
           reflection_prompt: string
         }
         Update: {
           created_at?: string | null
           deck_id?: string
+          embodiment_content?: string | null
           id?: string
           image_color?: string
           meaning?: string
+          meditation_audio_url?: string | null
           name?: string
           reflection_prompt?: string
         }
@@ -95,6 +101,7 @@ export type Database = {
         Row: {
           deck_id: string
           id: string
+          is_premium: boolean | null
           purchased_at: string | null
           user_id: string
           verified: boolean | null
@@ -104,6 +111,7 @@ export type Database = {
         Insert: {
           deck_id: string
           id?: string
+          is_premium?: boolean | null
           purchased_at?: string | null
           user_id: string
           verified?: boolean | null
@@ -113,6 +121,7 @@ export type Database = {
         Update: {
           deck_id?: string
           id?: string
+          is_premium?: boolean | null
           purchased_at?: string | null
           user_id?: string
           verified?: boolean | null
@@ -137,10 +146,12 @@ export type Database = {
           id: string
           image_color: string
           is_free: boolean | null
+          is_starter: boolean | null
           name: string
           theme: string
           updated_at: string | null
           woocommerce_product_id: string | null
+          woocommerce_product_id_premium: string | null
         }
         Insert: {
           created_at?: string | null
@@ -149,10 +160,12 @@ export type Database = {
           id?: string
           image_color: string
           is_free?: boolean | null
+          is_starter?: boolean | null
           name: string
           theme: string
           updated_at?: string | null
           woocommerce_product_id?: string | null
+          woocommerce_product_id_premium?: string | null
         }
         Update: {
           created_at?: string | null
@@ -161,10 +174,12 @@ export type Database = {
           id?: string
           image_color?: string
           is_free?: boolean | null
+          is_starter?: boolean | null
           name?: string
           theme?: string
           updated_at?: string | null
           woocommerce_product_id?: string | null
+          woocommerce_product_id_premium?: string | null
         }
         Relationships: []
       }
@@ -213,6 +228,35 @@ export type Database = {
         }
         Relationships: []
       }
+      user_starter_deck_cards: {
+        Row: {
+          assigned_at: string | null
+          card_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          card_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string | null
+          card_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_starter_deck_cards_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -226,6 +270,10 @@ export type Database = {
         Returns: boolean
       }
       user_has_deck_access: {
+        Args: { _deck_id: string; _user_id: string }
+        Returns: boolean
+      }
+      user_has_premium_deck_access: {
         Args: { _deck_id: string; _user_id: string }
         Returns: boolean
       }
