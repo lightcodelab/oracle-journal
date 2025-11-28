@@ -12,54 +12,53 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
   // Split content into paragraphs
   const paragraphs = processedContent.split('\n').filter(p => p.trim());
 
+  let isInMythicSection = false;
+ 
   const formatParagraph = (text: string) => {
-    // Check if line starts with a bullet point indicator (-, •, *, or numbered list)
-    const bulletPattern = /^[\-•*]\s+(.+)$/;
-    const numberedPattern = /^\d+\.\s+(.+)$/;
-    
-    if (bulletPattern.test(text)) {
-      const match = text.match(bulletPattern);
-      return { type: 'bullet', content: match ? match[1] : text };
-    }
-    
-    if (numberedPattern.test(text)) {
-      const match = text.match(numberedPattern);
-      return { type: 'numbered', content: match ? match[1] : text };
-    }
-    
-    // Check for bold labels (text ending with colon)
-    const labelPattern = /^([^:]+:)\s*(.*)$/;
-    if (labelPattern.test(text)) {
-      const match = text.match(labelPattern);
-      if (match) {
-        const label = match[1];
-        const content = match[2];
-        
-        // Check if this is Mythic Moment - format as poetry
-        if (label.includes('Mythic Moment')) {
-          // Split into sentences while preserving existing line breaks
-          const stanzaLines = content.split('\n').filter((l) => l.trim());
-          const lines: string[] = [];
-
-          stanzaLines.forEach((line) => {
-            const parts = line.match(/[^.!?:]+[.!?:]*/g);
-            if (parts) {
-              parts
-                .map((p) => p.trim())
-                .filter(Boolean)
-                .forEach((p) => lines.push(p));
-            }
-          });
-
-          return { type: 'mythic', label, lines };
-        }
-        
-        return { type: 'labeled', label, content };
-      }
-    }
-    
-    return { type: 'normal', content: text };
-  };
+     // Check if line starts with a bullet point indicator (-, •, *, or numbered list)
+     const bulletPattern = /^[\-•*]\s+(.+)$/;
+     const numberedPattern = /^\d+\.\s+(.+)$/;
+     const labelPattern = /^([^:]+:)\s*(.*)$/;
+ 
+     if (bulletPattern.test(text)) {
+       const match = text.match(bulletPattern);
+       return { type: 'bullet', content: match ? match[1] : text };
+     }
+ 
+     if (numberedPattern.test(text)) {
+       const match = text.match(numberedPattern);
+       return { type: 'numbered', content: match ? match[1] : text };
+     }
+ 
+     // Inside Mythic Moment block: treat following lines as poetic lines
+     if (isInMythicSection && !labelPattern.test(text)) {
+       return { type: 'mythic-line', content: text };
+     }
+ 
+     // Check for bold labels (text ending with colon)
+     if (labelPattern.test(text)) {
+       const match = text.match(labelPattern);
+       if (match) {
+         const label = match[1];
+         const content = match[2];
+ 
+         // Start Mythic Moment section - label plus optional first line
+         if (label.includes('Mythic Moment')) {
+           isInMythicSection = true;
+           const lines = content ? [content] : [];
+           return { type: 'mythic', label, lines };
+         }
+ 
+         // Any other label exits Mythic Moment section
+         isInMythicSection = false;
+         return { type: 'labeled', label, content };
+       }
+     }
+ 
+     // Normal text resets Mythic Moment section if it's a blank or unrelated line
+     isInMythicSection = false;
+     return { type: 'normal', content: text };
+   };
 
   return (
     <div className={`space-y-4 ${className}`}>
@@ -91,6 +90,14 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
                   <p key={lineIdx}>{line}</p>
                 ))}
               </div>
+            </div>
+          );
+        }
+ 
+        if (formatted.type === 'mythic-line') {
+          return (
+            <div key={idx} className="pl-8 italic leading-relaxed">
+              <p>{formatted.content}</p>
             </div>
           );
         }
