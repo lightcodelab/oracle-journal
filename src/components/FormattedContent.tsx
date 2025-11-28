@@ -37,8 +37,8 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
         
         // Check if this is Mythic Moment - format as poetry
         if (label.includes('Mythic Moment')) {
-          // Split by periods to create poem lines, but keep the period
-          const lines = content.split('.').filter(l => l.trim()).map(l => l.trim() + '.');
+          // Split by line breaks to create poem lines
+          const lines = content.split('\n').filter(l => l.trim());
           return { type: 'mythic', label, lines };
         }
         
