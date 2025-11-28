@@ -30,25 +30,39 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
        return { type: 'numbered', content: match ? match[1] : text };
      }
  
-     // Check for bold labels (text ending with colon)
-     if (labelPattern.test(text)) {
-       const match = text.match(labelPattern);
-       if (match) {
-         const label = match[1];
-         const content = match[2];
- 
-         // Start Mythic Moment section - label plus optional first line
-         if (label.includes('Mythic Moment')) {
-           isInMythicSection = true;
-           const lines = content ? [content] : [];
-           return { type: 'mythic', label, lines };
-         }
- 
-         // Any other label exits Mythic Moment section
-         isInMythicSection = false;
-         return { type: 'labeled', label, content };
-       }
-     }
+      // Check for bold labels (text ending with colon)
+      if (labelPattern.test(text)) {
+        const match = text.match(labelPattern);
+        if (match) {
+          const label = match[1];
+          const content = match[2];
+
+          // Only treat as a label if the part before the colon looks like a proper section heading
+          // (e.g. "Mythic Moment", "Reflective Transition", "The Distortion", etc.)
+          const headingText = label.slice(0, -1).trim(); // remove trailing colon
+          const looksLikeHeading = /^[A-Z][A-Za-z\s]+$/.test(headingText);
+
+          if (!looksLikeHeading) {
+            // It's just a regular sentence ending with a colon (e.g. inside the poem),
+            // so keep it as normal text and stay in the current section (including Mythic Moment).
+            if (isInMythicSection) {
+              return { type: 'mythic-line', content: text };
+            }
+            return { type: 'normal', content: text };
+          }
+
+          // Start Mythic Moment section - label plus optional first line
+          if (label.includes('Mythic Moment')) {
+            isInMythicSection = true;
+            const lines = content ? [content] : [];
+            return { type: 'mythic', label, lines };
+          }
+
+          // Any other label exits Mythic Moment section
+          isInMythicSection = false;
+          return { type: 'labeled', label, content };
+        }
+      }
  
      // Inside Mythic Moment block: treat all lines as poetic lines until next label
      if (isInMythicSection) {
