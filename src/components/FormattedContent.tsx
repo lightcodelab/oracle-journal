@@ -34,14 +34,6 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
       if (match) {
         const label = match[1];
         const content = match[2];
-        
-        // Check if this is Mythic Moment - format as poetry
-        if (label.includes('Mythic Moment')) {
-          // Split by periods to create poem lines, but keep the period
-          const lines = content.split('.').filter(l => l.trim()).map(l => l.trim() + '.');
-          return { type: 'mythic', label, lines };
-        }
-        
         return { type: 'labeled', label, content };
       }
     }
@@ -70,24 +62,11 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
           );
         }
         
-        if (formatted.type === 'mythic') {
-          return (
-            <div key={idx} className="space-y-2">
-              <p className="font-semibold mb-3">{formatted.label}</p>
-              <div className="pl-4 space-y-1 italic leading-relaxed">
-                {formatted.lines?.map((line, lineIdx) => (
-                  <p key={lineIdx}>{line}</p>
-                ))}
-              </div>
-            </div>
-          );
-        }
-        
         if (formatted.type === 'labeled') {
           return (
-            <div key={idx} className="space-y-2">
+            <div key={idx} className="space-y-1">
               <p className="font-semibold">{formatted.label}</p>
-              <p className="leading-relaxed">{formatted.content}</p>
+              {formatted.content && <p className="leading-relaxed">{formatted.content}</p>}
             </div>
           );
         }
