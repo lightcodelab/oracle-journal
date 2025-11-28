@@ -80,22 +80,32 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
         }
         
         if (formatted.type === 'mythic') {
+          const sentences = (formatted.lines || [])
+            .flatMap((line) => line.match(/[^.!?]+[.!?]*/g) || [])
+            .map((s) => s.trim())
+            .filter(Boolean);
+
           return (
             <div key={idx} className="space-y-2">
               <p className="font-semibold mb-3">{formatted.label}</p>
               <div className="pl-8 space-y-1 italic leading-relaxed">
-                {formatted.lines?.map((line, lineIdx) => (
-                  <p key={lineIdx}>{line}</p>
+                {sentences.map((sentence, lineIdx) => (
+                  <p key={lineIdx}>{sentence}</p>
                 ))}
               </div>
             </div>
           );
         }
- 
+
         if (formatted.type === 'mythic-line') {
+          const sentences =
+            formatted.content?.match(/[^.!?]+[.!?]*/g)?.map((s) => s.trim()).filter(Boolean) || [];
+
           return (
-            <div key={idx} className="pl-8 italic leading-relaxed">
-              <p>{formatted.content}</p>
+            <div key={idx} className="pl-8 italic leading-relaxed space-y-1">
+              {sentences.map((sentence, lineIdx) => (
+                <p key={lineIdx}>{sentence}</p>
+              ))}
             </div>
           );
         }
