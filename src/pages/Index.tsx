@@ -6,6 +6,7 @@ import { CardDetail } from "@/components/CardDetail";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
 import { DeckSelection } from "@/components/DeckSelection";
 import { PurchaseVerification } from "@/components/PurchaseVerification";
+import { CardNumberSelector } from "@/components/CardNumberSelector";
 import { supabase } from "@/integrations/supabase/client";
 import { Shuffle, Sparkles, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
@@ -229,6 +230,57 @@ const Index = () => {
     }
   };
 
+  const handleSelectCardNumber = async (cardNumber: number) => {
+    if (!selectedDeck || !user) return;
+
+    setIsShuffling(true);
+    setShowCard(false);
+    setIsRevealed(false);
+
+    try {
+      const { data: card, error } = await supabase
+        .from('cards')
+        .select('*')
+        .eq('deck_id', selectedDeck.id)
+        .eq('card_number', cardNumber)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (!card) {
+        toast({
+          title: "Card Not Found",
+          description: `Card number ${cardNumber} not found in this deck`,
+          variant: "destructive",
+        });
+        setIsShuffling(false);
+        return;
+      }
+
+      setTimeout(async () => {
+        setSelectedCard(card);
+
+        // Record the draw
+        await supabase.from('card_draws').insert({
+          user_id: user.id,
+          card_id: card.id,
+          deck_id: selectedDeck.id,
+        });
+
+        setIsShuffling(false);
+        setShowCard(true);
+      }, 800);
+    } catch (error) {
+      console.error('Error selecting card:', error);
+      toast({
+        title: "Error",
+        description: "Failed to select card",
+        variant: "destructive",
+      });
+      setIsShuffling(false);
+    }
+  };
+
   const handleReveal = () => {
     setIsRevealed(true);
   };
@@ -327,14 +379,21 @@ const Index = () => {
               {selectedDeck.description || "Draw a card to receive divine guidance"}
             </p>
 
-            <Button
-              onClick={handleShuffle}
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-12 py-8 text-xl shadow-glow mx-auto"
-            >
-              <Shuffle className="w-6 h-6 mr-3" />
-              Shuffle the Deck
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button
+                onClick={handleShuffle}
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-12 py-8 text-xl shadow-glow"
+              >
+                <Shuffle className="w-6 h-6 mr-3" />
+                Shuffle the Deck
+              </Button>
+              
+              <CardNumberSelector 
+                onSelectCard={handleSelectCardNumber}
+                totalCards={selectedDeck.is_starter ? 8 : 63}
+              />
+            </div>
           </motion.div>
         )}
 
