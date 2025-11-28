@@ -11,7 +11,9 @@ interface Deck {
   theme: string;
   image_color: string;
   is_free: boolean;
+  is_starter: boolean;
   woocommerce_product_id: string | null;
+  woocommerce_product_id_premium: string | null;
 }
 
 interface DeckSelectionProps {
@@ -28,7 +30,7 @@ export const DeckSelection = ({
   onVerifyPurchase 
 }: DeckSelectionProps) => {
   const hasAccess = (deck: Deck) => {
-    return deck.is_free || userPurchases.includes(deck.id);
+    return deck.is_free || deck.is_starter || userPurchases.includes(deck.id);
   };
 
   return (
@@ -79,7 +81,12 @@ export const DeckSelection = ({
                         Free
                       </Badge>
                     )}
-                    {!accessible && !deck.is_free && (
+                    {deck.is_starter && (
+                      <Badge variant="secondary" className="ml-2">
+                        Starter
+                      </Badge>
+                    )}
+                    {!accessible && !deck.is_free && !deck.is_starter && (
                       <Badge variant="outline" className="ml-2">
                         <Lock className="w-3 h-3 mr-1" />
                         Locked

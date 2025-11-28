@@ -8,6 +8,7 @@ const corsHeaders = {
 interface PurchaseVerificationRequest {
   email: string;
   deckId: string;
+  isPremium?: boolean;
 }
 
 Deno.serve(async (req) => {
@@ -36,8 +37,8 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { email, deckId }: PurchaseVerificationRequest = await req.json();
-    console.log('Verifying purchase for:', { email, deckId, userId: user.id });
+    const { email, deckId, isPremium = false }: PurchaseVerificationRequest = await req.json();
+    console.log('Verifying purchase for:', { email, deckId, isPremium, userId: user.id });
 
     // Get deck info including WooCommerce product ID
     const { data: deck, error: deckError } = await supabaseClient
@@ -66,6 +67,7 @@ Deno.serve(async (req) => {
           woocommerce_order_id: 'FREE',
           woocommerce_customer_email: email,
           verified: true,
+          is_premium: false,
         }, {
           onConflict: 'user_id,deck_id'
         });
@@ -85,10 +87,12 @@ Deno.serve(async (req) => {
     }
 
     // For paid decks, verify WooCommerce purchase
-    if (!deck.woocommerce_product_id) {
-      console.error('No WooCommerce product ID set for deck');
+    const productId = isPremium ? deck.woocommerce_product_id_premium : deck.woocommerce_product_id;
+    
+    if (!productId) {
+      console.error('No WooCommerce product ID set for this deck version');
       return new Response(
-        JSON.stringify({ error: 'Deck not configured for purchase verification' }),
+        JSON.stringify({ error: 'Deck version not configured for purchase verification' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -137,7 +141,7 @@ Deno.serve(async (req) => {
 
     for (const order of orders) {
       const hasProduct = order.line_items?.some(
-        (item: any) => item.product_id.toString() === deck.woocommerce_product_id
+        (item: any) => item.product_id.toString() === productId
       );
 
       if (hasProduct) {
@@ -158,6 +162,7 @@ Deno.serve(async (req) => {
           woocommerce_order_id: matchingOrderId,
           woocommerce_customer_email: email,
           verified: true,
+          is_premium: isPremium,
         }, {
           onConflict: 'user_id,deck_id'
         });

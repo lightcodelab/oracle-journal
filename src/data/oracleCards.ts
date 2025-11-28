@@ -5,6 +5,8 @@ export interface OracleCard {
   description: string;
   journalPrompts: string[];
   imageColor: string;
+  embodimentContent?: string;
+  meditationAudioUrl?: string;
 }
 
 export const oracleCards: OracleCard[] = [
