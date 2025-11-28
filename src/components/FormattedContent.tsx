@@ -74,7 +74,7 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
           return (
             <div key={idx} className="space-y-2">
               <p className="font-semibold mb-3">{formatted.label}</p>
-              <div className="pl-4 space-y-1 italic leading-relaxed">
+              <div className="pl-8 space-y-1 italic leading-relaxed">
                 {formatted.lines?.map((line, lineIdx) => (
                   <p key={lineIdx}>{line}</p>
                 ))}
