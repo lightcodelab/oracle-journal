@@ -22,7 +22,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
       <div className="flex justify-center">
         {card.image_file_name ? (
           <img 
-            src={`/cards/${card.image_file_name}`} 
+            src={`/src/assets/cards/${card.image_file_name}`} 
             alt={card.card_title}
             className="w-72 h-96 object-cover rounded-2xl border-2 border-accent/50 shadow-glow"
           />
@@ -42,9 +42,11 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
             <Sparkles className="w-6 h-6 text-accent" />
             <h3 className="font-serif text-2xl font-semibold text-foreground">The Card</h3>
           </div>
-          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
-            {card.card_details}
-          </p>
+          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
+            {card.card_details.split('\n').map((paragraph, idx) => (
+              paragraph.trim() && <p key={idx}>{paragraph}</p>
+            ))}
+          </div>
         </Card>
       )}
 
@@ -54,9 +56,11 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
           <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
             {card.opening_invocation_heading || "Opening Invocation"}
           </h3>
-          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
-            {card.opening_invocation_content}
-          </p>
+          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
+            {card.opening_invocation_content.split('\n').map((paragraph, idx) => (
+              paragraph.trim() && <p key={idx}>{paragraph}</p>
+            ))}
+          </div>
         </Card>
       )}
 
@@ -66,9 +70,11 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
           <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
             {card.spiral_of_inquiry_heading || "Spiral of Inquiry"}
           </h3>
-          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
-            {card.spiral_of_inquiry_content}
-          </p>
+          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
+            {card.spiral_of_inquiry_content.split('\n').map((paragraph, idx) => (
+              paragraph.trim() && <p key={idx}>{paragraph}</p>
+            ))}
+          </div>
         </Card>
       )}
 
@@ -78,9 +84,11 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
           <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
             {card.acknowledgement_heading || "Acknowledgement"}
           </h3>
-          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
-            {card.acknowledgement_content}
-          </p>
+          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
+            {card.acknowledgement_content.split('\n').map((paragraph, idx) => (
+              paragraph.trim() && <p key={idx}>{paragraph}</p>
+            ))}
+          </div>
         </Card>
       )}
 
@@ -90,9 +98,11 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
           <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
             {card.spiral_of_seeing_heading || "Spiral of Seeing"}
           </h3>
-          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
-            {card.spiral_of_seeing_content}
-          </p>
+          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
+            {card.spiral_of_seeing_content.split('\n').map((paragraph, idx) => (
+              paragraph.trim() && <p key={idx}>{paragraph}</p>
+            ))}
+          </div>
         </Card>
       )}
 
@@ -102,9 +112,11 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
           <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
             {card.living_inquiry_heading || "Living Inquiry"}
           </h3>
-          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
-            {card.living_inquiry_content}
-          </p>
+          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
+            {card.living_inquiry_content.split('\n').map((paragraph, idx) => (
+              paragraph.trim() && <p key={idx}>{paragraph}</p>
+            ))}
+          </div>
         </Card>
       )}
 
@@ -114,9 +126,11 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
           <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
             {card.guided_audio_heading || "Guided Audio Journey"}
           </h3>
-          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
-            {card.guided_audio_content}
-          </p>
+          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
+            {card.guided_audio_content.split('\n').map((paragraph, idx) => (
+              paragraph.trim() && <p key={idx}>{paragraph}</p>
+            ))}
+          </div>
         </Card>
       )}
 
@@ -129,9 +143,11 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
               {card.embodiment_ritual_heading || "Embodiment Ritual"}
             </h3>
           </div>
-          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
-            {card.embodiment_ritual_content}
-          </p>
+          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
+            {card.embodiment_ritual_content.split('\n').map((paragraph, idx) => (
+              paragraph.trim() && <p key={idx}>{paragraph}</p>
+            ))}
+          </div>
         </Card>
       )}
 
@@ -141,9 +157,11 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
           <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
             {card.benediction_heading || "Closing Benediction"}
           </h3>
-          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
-            {card.benediction_content}
-          </p>
+          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
+            {card.benediction_content.split('\n').map((paragraph, idx) => (
+              paragraph.trim() && <p key={idx}>{paragraph}</p>
+            ))}
+          </div>
         </Card>
       )}
 
