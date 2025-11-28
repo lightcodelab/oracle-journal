@@ -4,8 +4,10 @@ interface FormattedContentProps {
 }
 
 export const FormattedContent = ({ content, className = "" }: FormattedContentProps) => {
-  // Replace em dashes with commas
-  const processedContent = content.replace(/—/g, ',');
+  // Replace em dashes with commas and remove spaces before commas
+  const processedContent = content
+    .replace(/—/g, ',')
+    .replace(/\s+,/g, ',');
   
   // Split content into paragraphs
   const paragraphs = processedContent.split('\n').filter(p => p.trim());
