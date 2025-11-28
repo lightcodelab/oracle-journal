@@ -43,7 +43,7 @@ export const OracleCardComponent = ({ card, isRevealed, onClick }: OracleCardCom
         <div className="absolute w-full h-full backface-hidden" style={{ transform: "rotateY(180deg)" }}>
           {card.image_file_name ? (
             <img 
-              src={`/cards/${card.image_file_name}`} 
+              src={`/src/assets/cards/${card.image_file_name}`} 
               alt={card.card_title}
               className="w-full h-full object-cover rounded-2xl border-2 border-accent/50 shadow-glow"
             />
