@@ -60,6 +60,7 @@ export type Database = {
           embodiment_content: string | null
           id: string
           image_color: string
+          image_url: string | null
           meaning: string
           meditation_audio_url: string | null
           name: string
@@ -71,6 +72,7 @@ export type Database = {
           embodiment_content?: string | null
           id?: string
           image_color: string
+          image_url?: string | null
           meaning: string
           meditation_audio_url?: string | null
           name: string
@@ -82,6 +84,7 @@ export type Database = {
           embodiment_content?: string | null
           id?: string
           image_color?: string
+          image_url?: string | null
           meaning?: string
           meditation_audio_url?: string | null
           name?: string
