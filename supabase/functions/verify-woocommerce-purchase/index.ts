@@ -40,6 +40,40 @@ Deno.serve(async (req) => {
     const { email, deckId, isPremium = false }: PurchaseVerificationRequest = await req.json();
     console.log('Verifying purchase for:', { email, deckId, isPremium, userId: user.id });
 
+    // Check if user is admin - admins get instant access
+    const { data: adminRole } = await supabaseClient
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .eq('role', 'admin')
+      .single();
+
+    if (adminRole) {
+      console.log('User is admin, granting access');
+      
+      const { error: insertError } = await supabaseClient
+        .from('deck_purchases')
+        .upsert({
+          user_id: user.id,
+          deck_id: deckId,
+          woocommerce_order_id: 'ADMIN_ACCESS',
+          woocommerce_customer_email: email,
+          verified: true,
+          is_premium: isPremium,
+        }, {
+          onConflict: 'user_id,deck_id'
+        });
+
+      if (insertError) {
+        console.error('Error granting admin access:', insertError);
+      }
+
+      return new Response(
+        JSON.stringify({ success: true, verified: true, message: 'Admin access granted' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Get deck info including WooCommerce product ID
     const { data: deck, error: deckError } = await supabaseClient
       .from('decks')
