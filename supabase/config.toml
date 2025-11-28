@@ -2,3 +2,6 @@ project_id = "gjaafbzhkdekgigmnafp"
 
 [functions.verify-woocommerce-purchase]
 verify_jwt = true
+
+[functions.import-sacred-rewrite-cards]
+verify_jwt = false
