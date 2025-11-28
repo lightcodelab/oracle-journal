@@ -22,7 +22,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
       <div className="flex justify-center">
         {card.image_file_name ? (
           <img 
-            src={`/src/assets/cards/${card.image_file_name}`} 
+            src={`/cards/${card.image_file_name}`} 
             alt={card.card_title}
             className="w-72 h-96 object-cover rounded-2xl border-2 border-accent/50 shadow-glow"
           />
