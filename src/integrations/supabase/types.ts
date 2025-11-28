@@ -55,6 +55,7 @@ export type Database = {
       }
       cards: {
         Row: {
+          card_number: number | null
           created_at: string | null
           deck_id: string
           embodiment_content: string | null
@@ -67,6 +68,7 @@ export type Database = {
           reflection_prompt: string
         }
         Insert: {
+          card_number?: number | null
           created_at?: string | null
           deck_id: string
           embodiment_content?: string | null
@@ -79,6 +81,7 @@ export type Database = {
           reflection_prompt: string
         }
         Update: {
+          card_number?: number | null
           created_at?: string | null
           deck_id?: string
           embodiment_content?: string | null
