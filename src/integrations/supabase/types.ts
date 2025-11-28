@@ -38,13 +38,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "card_draws_card_id_fkey"
-            columns: ["card_id"]
-            isOneToOne: false
-            referencedRelation: "cards"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "card_draws_deck_id_fkey"
             columns: ["deck_id"]
             isOneToOne: false
@@ -55,43 +48,85 @@ export type Database = {
       }
       cards: {
         Row: {
-          card_number: number | null
+          acknowledgement_content: string | null
+          acknowledgement_heading: string | null
+          benediction_content: string | null
+          benediction_heading: string | null
+          card_details: string | null
+          card_number: number
+          card_title: string
           created_at: string | null
           deck_id: string
-          embodiment_content: string | null
+          deck_name: string | null
+          embodiment_ritual_content: string | null
+          embodiment_ritual_heading: string | null
+          guided_audio_content: string | null
+          guided_audio_heading: string | null
           id: string
-          image_color: string
-          image_url: string | null
-          meaning: string
-          meditation_audio_url: string | null
-          name: string
-          reflection_prompt: string
+          image_file_name: string | null
+          living_inquiry_content: string | null
+          living_inquiry_heading: string | null
+          opening_invocation_content: string | null
+          opening_invocation_heading: string | null
+          spiral_of_inquiry_content: string | null
+          spiral_of_inquiry_heading: string | null
+          spiral_of_seeing_content: string | null
+          spiral_of_seeing_heading: string | null
+          updated_at: string | null
         }
         Insert: {
-          card_number?: number | null
+          acknowledgement_content?: string | null
+          acknowledgement_heading?: string | null
+          benediction_content?: string | null
+          benediction_heading?: string | null
+          card_details?: string | null
+          card_number: number
+          card_title: string
           created_at?: string | null
           deck_id: string
-          embodiment_content?: string | null
+          deck_name?: string | null
+          embodiment_ritual_content?: string | null
+          embodiment_ritual_heading?: string | null
+          guided_audio_content?: string | null
+          guided_audio_heading?: string | null
           id?: string
-          image_color: string
-          image_url?: string | null
-          meaning: string
-          meditation_audio_url?: string | null
-          name: string
-          reflection_prompt: string
+          image_file_name?: string | null
+          living_inquiry_content?: string | null
+          living_inquiry_heading?: string | null
+          opening_invocation_content?: string | null
+          opening_invocation_heading?: string | null
+          spiral_of_inquiry_content?: string | null
+          spiral_of_inquiry_heading?: string | null
+          spiral_of_seeing_content?: string | null
+          spiral_of_seeing_heading?: string | null
+          updated_at?: string | null
         }
         Update: {
-          card_number?: number | null
+          acknowledgement_content?: string | null
+          acknowledgement_heading?: string | null
+          benediction_content?: string | null
+          benediction_heading?: string | null
+          card_details?: string | null
+          card_number?: number
+          card_title?: string
           created_at?: string | null
           deck_id?: string
-          embodiment_content?: string | null
+          deck_name?: string | null
+          embodiment_ritual_content?: string | null
+          embodiment_ritual_heading?: string | null
+          guided_audio_content?: string | null
+          guided_audio_heading?: string | null
           id?: string
-          image_color?: string
-          image_url?: string | null
-          meaning?: string
-          meditation_audio_url?: string | null
-          name?: string
-          reflection_prompt?: string
+          image_file_name?: string | null
+          living_inquiry_content?: string | null
+          living_inquiry_heading?: string | null
+          opening_invocation_content?: string | null
+          opening_invocation_heading?: string | null
+          spiral_of_inquiry_content?: string | null
+          spiral_of_inquiry_heading?: string | null
+          spiral_of_seeing_content?: string | null
+          spiral_of_seeing_heading?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -253,15 +288,7 @@ export type Database = {
           id?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_starter_deck_cards_card_id_fkey"
-            columns: ["card_id"]
-            isOneToOne: false
-            referencedRelation: "cards"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {

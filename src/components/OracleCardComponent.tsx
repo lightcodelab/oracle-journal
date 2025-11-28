@@ -41,14 +41,19 @@ export const OracleCardComponent = ({ card, isRevealed, onClick }: OracleCardCom
 
         {/* Front of card */}
         <div className="absolute w-full h-full backface-hidden" style={{ transform: "rotateY(180deg)" }}>
-          <div className={`w-full h-full bg-gradient-to-br ${card.imageColor} rounded-2xl border-2 border-accent/50 shadow-glow p-6 flex flex-col items-center justify-center text-center`}>
-            <h2 className="font-serif text-3xl font-bold text-primary-foreground mb-4">
-              {card.name}
-            </h2>
-            <p className="text-primary-foreground/90 text-lg italic">
-              {card.meaning}
-            </p>
-          </div>
+          {card.image_file_name ? (
+            <img 
+              src={`/src/assets/cards/${card.image_file_name}`} 
+              alt={card.card_title}
+              className="w-full h-full object-cover rounded-2xl border-2 border-accent/50 shadow-glow"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-purple-600 to-pink-500 rounded-2xl border-2 border-accent/50 shadow-glow p-6 flex flex-col items-center justify-center text-center">
+              <h2 className="font-serif text-3xl font-bold text-primary-foreground mb-4">
+                {card.card_title}
+              </h2>
+            </div>
+          )}
         </div>
       </motion.div>
     </motion.div>

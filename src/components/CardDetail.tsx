@@ -20,75 +20,130 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
     >
       {/* Card Display */}
       <div className="flex justify-center">
-        <div className={`w-72 h-96 bg-gradient-to-br ${card.imageColor} rounded-2xl border-2 border-accent/50 shadow-glow p-6 flex flex-col items-center justify-center text-center`}>
-          <h2 className="font-serif text-3xl font-bold text-primary-foreground mb-4">
-            {card.name}
-          </h2>
-          <p className="text-primary-foreground/90 text-lg italic">
-            {card.meaning}
-          </p>
-        </div>
+        {card.image_file_name ? (
+          <img 
+            src={`/src/assets/cards/${card.image_file_name}`} 
+            alt={card.card_title}
+            className="w-72 h-96 object-cover rounded-2xl border-2 border-accent/50 shadow-glow"
+          />
+        ) : (
+          <div className="w-72 h-96 bg-gradient-to-br from-purple-600 to-pink-500 rounded-2xl border-2 border-accent/50 shadow-glow p-6 flex flex-col items-center justify-center text-center">
+            <h2 className="font-serif text-3xl font-bold text-primary-foreground mb-4">
+              {card.card_title}
+            </h2>
+          </div>
+        )}
       </div>
 
-      {/* Meaning Section */}
-      <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-        <div className="flex items-center gap-2 mb-4">
-          <Sparkles className="w-6 h-6 text-accent" />
-          <h3 className="font-serif text-2xl font-semibold text-foreground">Card Meaning</h3>
-        </div>
-        <p className="text-foreground/80 leading-relaxed text-lg">
-          {card.description}
-        </p>
-      </Card>
-
-      {/* Journaling Prompts */}
-      <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-        <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
-          Journaling Prompts
-        </h3>
-        <div className="space-y-4">
-          {card.journalPrompts.map((prompt, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + index * 0.1 }}
-              className="flex gap-4"
-            >
-              <span className="text-accent font-semibold text-lg flex-shrink-0">
-                {index + 1}.
-              </span>
-              <p className="text-foreground/80 leading-relaxed">
-                {prompt}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </Card>
-
-      {/* Premium Content - Embodiment */}
-      {hasPremiumAccess && card.embodimentContent && (
-        <Card className="bg-card/50 backdrop-blur-sm border-accent/30 p-8">
+      {/* Card Details Section */}
+      {card.card_details && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-6 h-6 text-accent animate-pulse" />
-            <h3 className="font-serif text-2xl font-semibold text-foreground">Embodiment Practice</h3>
+            <Sparkles className="w-6 h-6 text-accent" />
+            <h3 className="font-serif text-2xl font-semibold text-foreground">The Card</h3>
           </div>
           <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
-            {card.embodimentContent}
+            {card.card_details}
           </p>
         </Card>
       )}
 
-      {/* Premium Content - Meditation */}
-      {hasPremiumAccess && card.meditationAudioUrl && (
+      {/* Opening Invocation */}
+      {card.opening_invocation_content && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+            {card.opening_invocation_heading || "Opening Invocation"}
+          </h3>
+          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
+            {card.opening_invocation_content}
+          </p>
+        </Card>
+      )}
+
+      {/* Spiral of Inquiry */}
+      {card.spiral_of_inquiry_content && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+            {card.spiral_of_inquiry_heading || "Spiral of Inquiry"}
+          </h3>
+          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
+            {card.spiral_of_inquiry_content}
+          </p>
+        </Card>
+      )}
+
+      {/* Acknowledgement */}
+      {card.acknowledgement_content && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+            {card.acknowledgement_heading || "Acknowledgement"}
+          </h3>
+          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
+            {card.acknowledgement_content}
+          </p>
+        </Card>
+      )}
+
+      {/* Spiral of Seeing */}
+      {card.spiral_of_seeing_content && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+            {card.spiral_of_seeing_heading || "Spiral of Seeing"}
+          </h3>
+          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
+            {card.spiral_of_seeing_content}
+          </p>
+        </Card>
+      )}
+
+      {/* Living Inquiry */}
+      {card.living_inquiry_content && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+            {card.living_inquiry_heading || "Living Inquiry"}
+          </h3>
+          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
+            {card.living_inquiry_content}
+          </p>
+        </Card>
+      )}
+
+      {/* Guided Audio */}
+      {card.guided_audio_content && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+            {card.guided_audio_heading || "Guided Audio Journey"}
+          </h3>
+          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
+            {card.guided_audio_content}
+          </p>
+        </Card>
+      )}
+
+      {/* Premium Content - Embodiment Ritual */}
+      {hasPremiumAccess && card.embodiment_ritual_content && (
         <Card className="bg-card/50 backdrop-blur-sm border-accent/30 p-8">
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-6 h-6 text-accent animate-pulse" />
-            <h3 className="font-serif text-2xl font-semibold text-foreground">Guided Meditation</h3>
+            <h3 className="font-serif text-2xl font-semibold text-foreground">
+              {card.embodiment_ritual_heading || "Embodiment Ritual"}
+            </h3>
           </div>
-          <audio controls className="w-full" src={card.meditationAudioUrl}>
-            Your browser does not support the audio element.
-          </audio>
+          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
+            {card.embodiment_ritual_content}
+          </p>
+        </Card>
+      )}
+
+      {/* Benediction */}
+      {card.benediction_content && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+            {card.benediction_heading || "Closing Benediction"}
+          </h3>
+          <p className="text-foreground/80 leading-relaxed text-lg whitespace-pre-wrap">
+            {card.benediction_content}
+          </p>
         </Card>
       )}
 
