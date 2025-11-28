@@ -59,7 +59,8 @@ export default {
         'smooth': 'var(--transition-smooth)',
       },
       fontFamily: {
-        'serif': ['Cinzel', 'serif'],
+        'serif': ['Playfair Display', 'serif'],
+        'sans': ['Inter', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
