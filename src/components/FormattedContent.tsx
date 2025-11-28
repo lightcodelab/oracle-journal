@@ -30,11 +30,6 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
        return { type: 'numbered', content: match ? match[1] : text };
      }
  
-     // Inside Mythic Moment block: treat following lines as poetic lines
-     if (isInMythicSection && !labelPattern.test(text)) {
-       return { type: 'mythic-line', content: text };
-     }
- 
      // Check for bold labels (text ending with colon)
      if (labelPattern.test(text)) {
        const match = text.match(labelPattern);
@@ -55,8 +50,11 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
        }
      }
  
-     // Normal text resets Mythic Moment section if it's a blank or unrelated line
-     isInMythicSection = false;
+     // Inside Mythic Moment block: treat all lines as poetic lines until next label
+     if (isInMythicSection) {
+       return { type: 'mythic-line', content: text };
+     }
+ 
      return { type: 'normal', content: text };
    };
 
