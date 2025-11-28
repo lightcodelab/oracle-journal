@@ -37,8 +37,20 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
         
         // Check if this is Mythic Moment - format as poetry
         if (label.includes('Mythic Moment')) {
-          // Split by line breaks to create poem lines
-          const lines = content.split('\n').filter(l => l.trim());
+          // Split into sentences while preserving existing line breaks
+          const stanzaLines = content.split('\n').filter((l) => l.trim());
+          const lines: string[] = [];
+
+          stanzaLines.forEach((line) => {
+            const parts = line.match(/[^.!?:]+[.!?:]*/g);
+            if (parts) {
+              parts
+                .map((p) => p.trim())
+                .filter(Boolean)
+                .forEach((p) => lines.push(p));
+            }
+          });
+
           return { type: 'mythic', label, lines };
         }
         
