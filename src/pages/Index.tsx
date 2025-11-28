@@ -233,7 +233,6 @@ const Index = () => {
   const handleSelectCardNumber = async (cardNumber: number) => {
     if (!selectedDeck || !user) return;
 
-    setIsShuffling(true);
     setShowCard(false);
     setIsRevealed(false);
 
@@ -253,23 +252,19 @@ const Index = () => {
           description: `Card number ${cardNumber} not found in this deck`,
           variant: "destructive",
         });
-        setIsShuffling(false);
         return;
       }
 
-      setTimeout(async () => {
-        setSelectedCard(card);
+      setSelectedCard(card);
 
-        // Record the draw
-        await supabase.from('card_draws').insert({
-          user_id: user.id,
-          card_id: card.id,
-          deck_id: selectedDeck.id,
-        });
+      // Record the draw
+      await supabase.from('card_draws').insert({
+        user_id: user.id,
+        card_id: card.id,
+        deck_id: selectedDeck.id,
+      });
 
-        setIsShuffling(false);
-        setShowCard(true);
-      }, 800);
+      setShowCard(true);
     } catch (error) {
       console.error('Error selecting card:', error);
       toast({
@@ -277,7 +272,6 @@ const Index = () => {
         description: "Failed to select card",
         variant: "destructive",
       });
-      setIsShuffling(false);
     }
   };
 
