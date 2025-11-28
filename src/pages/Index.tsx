@@ -12,15 +12,7 @@ import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
-
-interface Card {
-  id: string;
-  name: string;
-  meaning: string;
-  reflection_prompt: string;
-  image_color: string;
-  deck_id: string;
-}
+import type { OracleCard } from "@/data/oracleCards";
 
 interface Deck {
   id: string;
@@ -40,7 +32,7 @@ const Index = () => {
   const [decks, setDecks] = useState<Deck[]>([]);
   const [userPurchases, setUserPurchases] = useState<string[]>([]);
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
-  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const [selectedCard, setSelectedCard] = useState<OracleCard | null>(null);
   const [isShuffling, setIsShuffling] = useState(false);
   const [showCard, setShowCard] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
@@ -375,14 +367,7 @@ const Index = () => {
               Your Card Awaits
             </h2>
             <OracleCardComponent
-              card={{
-                id: 0,
-                name: selectedCard.name,
-                meaning: selectedCard.meaning,
-                description: '',
-                journalPrompts: [],
-                imageColor: selectedCard.image_color,
-              }}
+              card={selectedCard}
               isRevealed={isRevealed}
               onClick={handleReveal}
             />
@@ -400,16 +385,7 @@ const Index = () => {
               ← Back to Decks
             </Button>
             <CardDetail 
-              card={{
-                id: 0,
-                name: selectedCard.name,
-                meaning: selectedCard.meaning,
-                description: selectedCard.meaning,
-                journalPrompts: [selectedCard.reflection_prompt],
-                imageColor: selectedCard.image_color,
-                embodimentContent: hasPremiumAccess ? (selectedCard as any).embodiment_content : undefined,
-                meditationAudioUrl: hasPremiumAccess ? (selectedCard as any).meditation_audio_url : undefined,
-              }} 
+              card={selectedCard}
               onDrawAnother={handleDrawAnother}
               hasPremiumAccess={hasPremiumAccess}
             />
