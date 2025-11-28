@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Sparkles, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
+import { FormattedContent } from "./FormattedContent";
 
 interface CardDetailProps {
   card: OracleCard;
@@ -38,130 +39,94 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
       {/* Card Details Section */}
       {card.card_details && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-6 h-6 text-accent" />
-            <h3 className="font-serif text-2xl font-semibold text-foreground">The Card</h3>
+            <h3 className="font-serif text-3xl font-semibold text-foreground">The Card</h3>
           </div>
-          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
-            {card.card_details.split('\n').map((paragraph, idx) => (
-              paragraph.trim() && <p key={idx}>{paragraph}</p>
-            ))}
-          </div>
+          <FormattedContent content={card.card_details} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Opening Invocation */}
       {card.opening_invocation_content && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
             {card.opening_invocation_heading || "Opening Invocation"}
           </h3>
-          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
-            {card.opening_invocation_content.split('\n').map((paragraph, idx) => (
-              paragraph.trim() && <p key={idx}>{paragraph}</p>
-            ))}
-          </div>
+          <FormattedContent content={card.opening_invocation_content} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Spiral of Inquiry */}
       {card.spiral_of_inquiry_content && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
             {card.spiral_of_inquiry_heading || "Spiral of Inquiry"}
           </h3>
-          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
-            {card.spiral_of_inquiry_content.split('\n').map((paragraph, idx) => (
-              paragraph.trim() && <p key={idx}>{paragraph}</p>
-            ))}
-          </div>
+          <FormattedContent content={card.spiral_of_inquiry_content} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Acknowledgement */}
       {card.acknowledgement_content && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
             {card.acknowledgement_heading || "Acknowledgement"}
           </h3>
-          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
-            {card.acknowledgement_content.split('\n').map((paragraph, idx) => (
-              paragraph.trim() && <p key={idx}>{paragraph}</p>
-            ))}
-          </div>
+          <FormattedContent content={card.acknowledgement_content} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Spiral of Seeing */}
       {card.spiral_of_seeing_content && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
             {card.spiral_of_seeing_heading || "Spiral of Seeing"}
           </h3>
-          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
-            {card.spiral_of_seeing_content.split('\n').map((paragraph, idx) => (
-              paragraph.trim() && <p key={idx}>{paragraph}</p>
-            ))}
-          </div>
+          <FormattedContent content={card.spiral_of_seeing_content} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Living Inquiry */}
       {card.living_inquiry_content && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
             {card.living_inquiry_heading || "Living Inquiry"}
           </h3>
-          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
-            {card.living_inquiry_content.split('\n').map((paragraph, idx) => (
-              paragraph.trim() && <p key={idx}>{paragraph}</p>
-            ))}
-          </div>
+          <FormattedContent content={card.living_inquiry_content} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Guided Audio */}
       {card.guided_audio_content && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
             {card.guided_audio_heading || "Guided Audio Journey"}
           </h3>
-          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
-            {card.guided_audio_content.split('\n').map((paragraph, idx) => (
-              paragraph.trim() && <p key={idx}>{paragraph}</p>
-            ))}
-          </div>
+          <FormattedContent content={card.guided_audio_content} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Premium Content - Embodiment Ritual */}
       {hasPremiumAccess && card.embodiment_ritual_content && (
         <Card className="bg-card/50 backdrop-blur-sm border-accent/30 p-8">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-6 h-6 text-accent animate-pulse" />
-            <h3 className="font-serif text-2xl font-semibold text-foreground">
+            <h3 className="font-serif text-3xl font-semibold text-foreground">
               {card.embodiment_ritual_heading || "Embodiment Ritual"}
             </h3>
           </div>
-          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
-            {card.embodiment_ritual_content.split('\n').map((paragraph, idx) => (
-              paragraph.trim() && <p key={idx}>{paragraph}</p>
-            ))}
-          </div>
+          <FormattedContent content={card.embodiment_ritual_content} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Benediction */}
       {card.benediction_content && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6">
+          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
             {card.benediction_heading || "Closing Benediction"}
           </h3>
-          <div className="text-foreground/80 leading-relaxed text-lg space-y-4">
-            {card.benediction_content.split('\n').map((paragraph, idx) => (
-              paragraph.trim() && <p key={idx}>{paragraph}</p>
-            ))}
-          </div>
+          <FormattedContent content={card.benediction_content} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
