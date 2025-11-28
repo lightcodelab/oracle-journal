@@ -23,6 +23,7 @@ export const PurchaseVerification = ({
   onSuccess,
 }: PurchaseVerificationProps) => {
   const [email, setEmail] = useState("");
+  const [isPremium, setIsPremium] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -40,7 +41,7 @@ export const PurchaseVerification = ({
 
     try {
       const { data, error } = await supabase.functions.invoke('verify-woocommerce-purchase', {
-        body: { email, deckId },
+        body: { email, deckId, isPremium },
       });
 
       if (error) throw error;
@@ -77,7 +78,7 @@ export const PurchaseVerification = ({
         <DialogHeader>
           <DialogTitle>Verify Purchase for {deckName}</DialogTitle>
           <DialogDescription>
-            Enter the email address you used when purchasing this deck from our WooCommerce store.
+            Enter the email address you used when purchasing this deck from our store, and select which version you purchased.
           </DialogDescription>
         </DialogHeader>
         
@@ -91,6 +92,31 @@ export const PurchaseVerification = ({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Version Purchased</Label>
+            <div className="flex gap-4">
+              <Button
+                type="button"
+                variant={!isPremium ? "default" : "outline"}
+                className="flex-1"
+                onClick={() => setIsPremium(false)}
+              >
+                Digital Version
+              </Button>
+              <Button
+                type="button"
+                variant={isPremium ? "default" : "outline"}
+                className="flex-1"
+                onClick={() => setIsPremium(true)}
+              >
+                Premium Version
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Premium includes embodiment content and guided meditations
+            </p>
           </div>
 
           <Button

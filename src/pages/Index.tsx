@@ -29,7 +29,9 @@ interface Deck {
   theme: string;
   image_color: string;
   is_free: boolean;
+  is_starter: boolean;
   woocommerce_product_id: string | null;
+  woocommerce_product_id_premium: string | null;
 }
 
 const Index = () => {
@@ -43,6 +45,7 @@ const Index = () => {
   const [showCard, setShowCard] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
   const [verifyDeckId, setVerifyDeckId] = useState<string | null>(null);
+  const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -102,11 +105,70 @@ const Index = () => {
     }
   };
 
+  const initializeStarterDeck = async (userId: string, starterDeckId: string) => {
+    // Check if user already has starter cards assigned
+    const { data: existingCards } = await supabase
+      .from('user_starter_deck_cards')
+      .select('id')
+      .eq('user_id', userId)
+      .limit(1);
+
+    if (existingCards && existingCards.length > 0) {
+      return; // Already initialized
+    }
+
+    // Get all cards from non-starter decks
+    const { data: allCards } = await supabase
+      .from('cards')
+      .select('id, deck_id')
+      .neq('deck_id', starterDeckId);
+
+    if (!allCards || allCards.length === 0) return;
+
+    // Randomly select 8 cards
+    const shuffled = [...allCards].sort(() => Math.random() - 0.5);
+    const selectedCards = shuffled.slice(0, 8);
+
+    // Insert into user_starter_deck_cards
+    const { error } = await supabase
+      .from('user_starter_deck_cards')
+      .insert(
+        selectedCards.map(card => ({
+          user_id: userId,
+          card_id: card.id,
+        }))
+      );
+
+    if (error) {
+      console.error('Error initializing starter deck:', error);
+    }
+  };
+
   const handleSelectDeck = async (deckId: string) => {
     const deck = decks.find(d => d.id === deckId);
-    if (!deck) return;
+    if (!deck || !user) return;
 
     setSelectedDeck(deck);
+
+    // Initialize starter deck if needed
+    if (deck.is_starter) {
+      await initializeStarterDeck(user.id, deckId);
+    }
+
+    // Check if user has premium access
+    if (!deck.is_free && !deck.is_starter) {
+      const { data } = await supabase
+        .from('deck_purchases')
+        .select('is_premium')
+        .eq('user_id', user.id)
+        .eq('deck_id', deckId)
+        .eq('verified', true)
+        .maybeSingle();
+
+      setHasPremiumAccess(data?.is_premium || false);
+    } else {
+      setHasPremiumAccess(false);
+    }
   };
 
   const handleShuffle = async () => {
@@ -117,13 +179,28 @@ const Index = () => {
     setIsRevealed(false);
 
     try {
-      // Fetch cards for the selected deck
-      const { data: cards, error } = await supabase
-        .from('cards')
-        .select('*')
-        .eq('deck_id', selectedDeck.id);
+      let cards;
 
-      if (error) throw error;
+      if (selectedDeck.is_starter) {
+        // For starter deck, fetch user's assigned starter cards
+        const { data: starterCards, error } = await supabase
+          .from('user_starter_deck_cards')
+          .select('card_id, cards(*)')
+          .eq('user_id', user.id);
+
+        if (error) throw error;
+
+        cards = starterCards?.map(sc => sc.cards).filter(Boolean) || [];
+      } else {
+        // For regular decks, fetch all cards
+        const { data: deckCards, error } = await supabase
+          .from('cards')
+          .select('*')
+          .eq('deck_id', selectedDeck.id);
+
+        if (error) throw error;
+        cards = deckCards || [];
+      }
 
       if (!cards || cards.length === 0) {
         toast({
@@ -330,8 +407,11 @@ const Index = () => {
                 description: selectedCard.meaning,
                 journalPrompts: [selectedCard.reflection_prompt],
                 imageColor: selectedCard.image_color,
+                embodimentContent: hasPremiumAccess ? (selectedCard as any).embodiment_content : undefined,
+                meditationAudioUrl: hasPremiumAccess ? (selectedCard as any).meditation_audio_url : undefined,
               }} 
-              onDrawAnother={handleDrawAnother} 
+              onDrawAnother={handleDrawAnother}
+              hasPremiumAccess={hasPremiumAccess}
             />
           </>
         )}
