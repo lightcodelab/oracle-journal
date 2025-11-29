@@ -383,10 +383,12 @@ const Index = () => {
                 Shuffle the Deck
               </Button>
               
-              <CardNumberSelector 
-                onSelectCard={handleSelectCardNumber}
-                totalCards={selectedDeck.is_starter ? 8 : 63}
-              />
+              {!selectedDeck.is_starter && (
+                <CardNumberSelector 
+                  onSelectCard={handleSelectCardNumber}
+                  totalCards={63}
+                />
+              )}
             </div>
           </motion.div>
         )}
