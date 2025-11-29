@@ -55,6 +55,7 @@ export type Database = {
           card_details: string | null
           card_number: number
           card_title: string
+          content_sections: Json | null
           created_at: string | null
           deck_id: string
           deck_name: string | null
@@ -82,6 +83,7 @@ export type Database = {
           card_details?: string | null
           card_number: number
           card_title: string
+          content_sections?: Json | null
           created_at?: string | null
           deck_id: string
           deck_name?: string | null
@@ -109,6 +111,7 @@ export type Database = {
           card_details?: string | null
           card_number?: number
           card_title?: string
+          content_sections?: Json | null
           created_at?: string | null
           deck_id?: string
           deck_name?: string | null
