@@ -12,6 +12,11 @@ interface CardDetailProps {
 }
 
 export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: CardDetailProps) => {
+  // Helper to get content from either JSON structure or legacy fields
+  const getContent = (key: string): string | undefined => {
+    return card.content_sections?.[key] || card[key as keyof OracleCard] as string | undefined;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -37,96 +42,96 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
       </div>
 
       {/* Card Details Section */}
-      {card.card_details && (
+      {getContent('card_details') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-6 h-6 text-accent" />
             <h3 className="font-serif text-3xl font-semibold text-foreground">The Card</h3>
           </div>
-          <FormattedContent content={card.card_details} className="text-foreground/80 text-lg" />
+          <FormattedContent content={getContent('card_details')!} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Opening Invocation */}
-      {card.opening_invocation_content && (
+      {getContent('opening_invocation_content') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-            {card.opening_invocation_heading || "Opening Invocation"}
+            {getContent('opening_invocation_heading') || "Opening Invocation"}
           </h3>
-          <FormattedContent content={card.opening_invocation_content} className="text-foreground/80 text-lg" />
+          <FormattedContent content={getContent('opening_invocation_content')!} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Spiral of Inquiry */}
-      {card.spiral_of_inquiry_content && (
+      {getContent('spiral_of_inquiry_content') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-            {card.spiral_of_inquiry_heading || "Spiral of Inquiry"}
+            {getContent('spiral_of_inquiry_heading') || "Spiral of Inquiry"}
           </h3>
-          <FormattedContent content={card.spiral_of_inquiry_content} className="text-foreground/80 text-lg" />
+          <FormattedContent content={getContent('spiral_of_inquiry_content')!} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Acknowledgement */}
-      {card.acknowledgement_content && (
+      {getContent('acknowledgement_content') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-            {card.acknowledgement_heading || "Acknowledgement"}
+            {getContent('acknowledgement_heading') || "Acknowledgement"}
           </h3>
-          <FormattedContent content={card.acknowledgement_content} className="text-foreground/80 text-lg" />
+          <FormattedContent content={getContent('acknowledgement_content')!} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Spiral of Seeing */}
-      {card.spiral_of_seeing_content && (
+      {getContent('spiral_of_seeing_content') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-            {card.spiral_of_seeing_heading || "Spiral of Seeing"}
+            {getContent('spiral_of_seeing_heading') || "Spiral of Seeing"}
           </h3>
-          <FormattedContent content={card.spiral_of_seeing_content} className="text-foreground/80 text-lg" />
+          <FormattedContent content={getContent('spiral_of_seeing_content')!} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Living Inquiry */}
-      {card.living_inquiry_content && (
+      {getContent('living_inquiry_content') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-            {card.living_inquiry_heading || "Living Inquiry"}
+            {getContent('living_inquiry_heading') || "Living Inquiry"}
           </h3>
-          <FormattedContent content={card.living_inquiry_content} className="text-foreground/80 text-lg" />
+          <FormattedContent content={getContent('living_inquiry_content')!} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Guided Audio */}
-      {card.guided_audio_content && (
+      {getContent('guided_audio_content') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-            {card.guided_audio_heading || "Guided Audio Journey"}
+            {getContent('guided_audio_heading') || "Guided Audio Journey"}
           </h3>
-          <FormattedContent content={card.guided_audio_content} className="text-foreground/80 text-lg" />
+          <FormattedContent content={getContent('guided_audio_content')!} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Premium Content - Embodiment Ritual */}
-      {hasPremiumAccess && card.embodiment_ritual_content && (
+      {hasPremiumAccess && getContent('embodiment_ritual_content') && (
         <Card className="bg-card/50 backdrop-blur-sm border-accent/30 p-8">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-6 h-6 text-accent animate-pulse" />
             <h3 className="font-serif text-3xl font-semibold text-foreground">
-              {card.embodiment_ritual_heading || "Embodiment Ritual"}
+              {getContent('embodiment_ritual_heading') || "Embodiment Ritual"}
             </h3>
           </div>
-          <FormattedContent content={card.embodiment_ritual_content} className="text-foreground/80 text-lg" />
+          <FormattedContent content={getContent('embodiment_ritual_content')!} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
       {/* Benediction */}
-      {card.benediction_content && (
+      {getContent('benediction_content') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-            {card.benediction_heading || "Closing Benediction"}
+            {getContent('benediction_heading') || "Closing Benediction"}
           </h3>
-          <FormattedContent content={card.benediction_content} className="text-foreground/80 text-lg" />
+          <FormattedContent content={getContent('benediction_content')!} className="text-foreground/80 text-lg" />
         </Card>
       )}
 

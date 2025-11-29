@@ -207,7 +207,7 @@ const Index = () => {
 
       setTimeout(async () => {
         const randomCard = cards[Math.floor(Math.random() * cards.length)];
-        setSelectedCard(randomCard);
+        setSelectedCard(randomCard as OracleCard);
 
         // Record the draw
         await supabase.from('card_draws').insert({
@@ -255,7 +255,7 @@ const Index = () => {
         return;
       }
 
-      setSelectedCard(card);
+      setSelectedCard(card as OracleCard);
 
       // Record the draw
       await supabase.from('card_draws').insert({
