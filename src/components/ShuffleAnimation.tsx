@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { CardBack } from "./CardBack";
 
-export const ShuffleAnimation = () => {
+interface ShuffleAnimationProps {
+  cardBackImage?: string;
+}
+
+export const ShuffleAnimation = ({ cardBackImage }: ShuffleAnimationProps) => {
   // Create an array of card positions for the shuffle effect
   const cardCount = 7;
   const cards = Array.from({ length: cardCount }, (_, i) => i);
@@ -50,7 +54,7 @@ export const ShuffleAnimation = () => {
             times: [0, 0.25, 0.5, 0.75, 1],
           }}
         >
-          <CardBack />
+          <CardBack imageSrc={cardBackImage} />
         </motion.div>
       ))}
       
