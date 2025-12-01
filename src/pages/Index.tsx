@@ -7,6 +7,7 @@ import { ShuffleAnimation } from "@/components/ShuffleAnimation";
 import { DeckSelection } from "@/components/DeckSelection";
 import { PurchaseVerification } from "@/components/PurchaseVerification";
 import { CardNumberSelector } from "@/components/CardNumberSelector";
+import { CardDropdownSelector } from "@/components/CardDropdownSelector";
 import { supabase } from "@/integrations/supabase/client";
 import { Shuffle, Sparkles, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
@@ -433,10 +434,17 @@ const Index = () => {
               </Button>
               
               {!selectedDeck.is_starter && (
-                <CardNumberSelector 
-                  onSelectCard={handleSelectCardNumber}
-                  totalCards={63}
-                />
+                selectedDeck.name.toLowerCase().includes('magic not logic') ? (
+                  <CardDropdownSelector 
+                    deckId={selectedDeck.id}
+                    onSelectCard={handleSelectCardNumber}
+                  />
+                ) : (
+                  <CardNumberSelector 
+                    onSelectCard={handleSelectCardNumber}
+                    totalCards={63}
+                  />
+                )
               )}
             </div>
           </motion.div>
