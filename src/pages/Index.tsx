@@ -15,6 +15,7 @@ import heroBg from "@/assets/hero-bg.jpg";
 import sacredRewriteCardBack from "@/assets/card-back-v2.png";
 import mnlCardBack from "@/assets/mnl-card-back.png";
 import tsrBanner from "@/assets/tsr-banner.png";
+import mnlBanner from "@/assets/mnl-banner.png";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
 import type { OracleCard } from "@/data/oracleCards";
@@ -419,6 +420,19 @@ const Index = () => {
                 <img 
                   src={tsrBanner} 
                   alt="The Sacred Rewrite" 
+                  className="w-full max-w-3xl mx-auto rounded-lg shadow-lg"
+                />
+              </motion.div>
+            ) : selectedDeck.name === "Magic not Logic" ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+                className="mb-8"
+              >
+                <img 
+                  src={mnlBanner} 
+                  alt="Magic not Logic" 
                   className="w-full max-w-3xl mx-auto rounded-lg shadow-lg"
                 />
               </motion.div>
