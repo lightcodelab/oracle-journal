@@ -4,6 +4,7 @@ import { Card } from "./ui/card";
 import { Sparkles, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { FormattedContent } from "./FormattedContent";
+import { VimeoEmbed } from "./VimeoEmbed";
 
 interface CardDetailProps {
   card: OracleCard;
@@ -132,6 +133,29 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
             {getContent('benediction_heading') || "Closing Benediction"}
           </h3>
           <FormattedContent content={getContent('benediction_content')!} className="text-foreground/80 text-lg" />
+        </Card>
+      )}
+
+      {/* Journalling Activity */}
+      {getContent('journalling_activity') && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+            {getContent('journalling_activity_heading') || "Journalling Activity"}
+          </h3>
+          <FormattedContent content={getContent('journalling_activity')!} className="text-foreground/80 text-lg" />
+        </Card>
+      )}
+
+      {/* Vimeo Video Section */}
+      {getContent('vimeo_video') && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+            Clearing Video
+          </h3>
+          <VimeoEmbed 
+            videoId={getContent('vimeo_video')!} 
+            title={`${card.card_title} - Clearing Video`}
+          />
         </Card>
       )}
 
