@@ -87,6 +87,25 @@ const Index = () => {
   };
 
   const fetchUserPurchases = async (userId: string) => {
+    // First check if user is admin
+    const { data: roleData } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .eq('role', 'admin')
+      .maybeSingle();
+
+    if (roleData) {
+      // Admin has access to all decks - fetch all deck IDs
+      const { data: allDecks } = await supabase
+        .from('decks')
+        .select('id');
+      
+      setUserPurchases((allDecks || []).map(d => d.id));
+      return;
+    }
+
+    // Not admin, fetch actual purchases
     const { data, error } = await supabase
       .from('deck_purchases')
       .select('deck_id')
@@ -152,6 +171,21 @@ const Index = () => {
 
     // Check if user has premium access
     if (!deck.is_free && !deck.is_starter) {
+      // First check if user is admin
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .maybeSingle();
+
+      if (roleData) {
+        // Admin has full premium access
+        setHasPremiumAccess(true);
+        return;
+      }
+
+      // Not admin, check actual purchase
       const { data } = await supabase
         .from('deck_purchases')
         .select('is_premium')
