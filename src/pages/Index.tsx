@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import sacredRewriteCardBack from "@/assets/card-back-v2.png";
 import mnlCardBack from "@/assets/mnl-card-back.png";
+import tsrBanner from "@/assets/tsr-banner.png";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
 import type { OracleCard } from "@/data/oracleCards";
@@ -408,16 +409,33 @@ const Index = () => {
               ← Back to Decks
             </Button>
 
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <Sparkles className="w-20 h-20 mx-auto text-accent animate-glow" />
-            </motion.div>
-            
-            <h1 className="font-serif text-6xl md:text-7xl font-bold text-foreground mb-4">
-              {selectedDeck.name}
-            </h1>
+            {selectedDeck.name === "The Sacred Rewrite" ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+                className="mb-8"
+              >
+                <img 
+                  src={tsrBanner} 
+                  alt="The Sacred Rewrite" 
+                  className="w-full max-w-3xl mx-auto rounded-lg shadow-lg"
+                />
+              </motion.div>
+            ) : (
+              <>
+                <motion.div
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <Sparkles className="w-20 h-20 mx-auto text-accent animate-glow" />
+                </motion.div>
+                
+                <h1 className="font-serif text-6xl md:text-7xl font-bold text-foreground mb-4">
+                  {selectedDeck.name}
+                </h1>
+              </>
+            )}
             
             <p className="text-xl md:text-2xl text-foreground/80 leading-relaxed">
               {selectedDeck.description || "Draw a card to receive divine guidance"}
