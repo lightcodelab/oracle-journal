@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Lock, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import tsrBanner from "@/assets/tsr-banner.png";
 
 interface Deck {
   id: string;
@@ -99,11 +100,21 @@ export const DeckSelection = ({
                     <p className="text-foreground/70 text-sm">{deck.description}</p>
                   )}
                   
-                  <div 
-                    className={`h-32 rounded-lg bg-gradient-to-br ${deck.image_color} flex items-center justify-center`}
-                  >
-                    <Sparkles className="w-12 h-12 text-white/80" />
-                  </div>
+                  {deck.name === "The Sacred Rewrite" ? (
+                    <div className="rounded-lg overflow-hidden">
+                      <img 
+                        src={tsrBanner} 
+                        alt="The Sacred Rewrite" 
+                        className="w-full h-32 object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div 
+                      className={`h-32 rounded-lg bg-gradient-to-br ${deck.image_color} flex items-center justify-center`}
+                    >
+                      <Sparkles className="w-12 h-12 text-white/80" />
+                    </div>
+                  )}
 
                   {accessible ? (
                     <Button
