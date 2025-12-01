@@ -24,7 +24,7 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
        const match = text.match(bulletPattern);
        // Check if previous line was a numbered item to determine if this is a nested bullet
        const prevLine = index > 0 ? allParagraphs[index - 1] : '';
-       const isNestedBullet = numberedPattern.test(prevLine) || bulletPattern.test(prevLine);
+       const isNestedBullet = numberedPattern.test(prevLine);
        return { type: 'bullet', content: match ? match[1] : text, nested: isNestedBullet };
      }
  
