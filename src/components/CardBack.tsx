@@ -1,10 +1,14 @@
 import cardBackImage from "@/assets/card-back-v2.png";
 
-export const CardBack = () => {
+interface CardBackProps {
+  imageSrc?: string;
+}
+
+export const CardBack = ({ imageSrc = cardBackImage }: CardBackProps) => {
   return (
     <div className="relative w-full h-full rounded-2xl overflow-hidden">
       <img 
-        src={cardBackImage} 
+        src={imageSrc} 
         alt="Card back" 
         className="w-full h-full object-cover"
       />

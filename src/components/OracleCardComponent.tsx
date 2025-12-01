@@ -7,9 +7,10 @@ interface OracleCardComponentProps {
   card: OracleCard;
   isRevealed: boolean;
   onClick?: () => void;
+  cardBackImage?: string;
 }
 
-export const OracleCardComponent = ({ card, isRevealed, onClick }: OracleCardComponentProps) => {
+export const OracleCardComponent = ({ card, isRevealed, onClick, cardBackImage }: OracleCardComponentProps) => {
   const [isFlipping, setIsFlipping] = useState(false);
 
   const handleClick = () => {
@@ -36,7 +37,7 @@ export const OracleCardComponent = ({ card, isRevealed, onClick }: OracleCardCom
       >
         {/* Back of card */}
         <div className="absolute w-full h-full backface-hidden">
-          <CardBack />
+          <CardBack imageSrc={cardBackImage} />
         </div>
 
         {/* Front of card */}

@@ -11,6 +11,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Shuffle, Sparkles, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
+import sacredRewriteCardBack from "@/assets/card-back-v2.png";
+import mnlCardBack from "@/assets/mnl-card-back.png";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
 import type { OracleCard } from "@/data/oracleCards";
@@ -300,6 +302,19 @@ const Index = () => {
     setVerifyDeckId(deckId);
   };
 
+  // Get the appropriate card back image for the selected deck
+  const getCardBackImage = () => {
+    if (!selectedDeck) return sacredRewriteCardBack;
+    
+    // Map deck names to their card back images
+    if (selectedDeck.name.toLowerCase().includes('magic not logic')) {
+      return mnlCardBack;
+    }
+    
+    // Default to Sacred Rewrite card back
+    return sacredRewriteCardBack;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -399,7 +414,7 @@ const Index = () => {
             animate={{ opacity: 1 }}
             className="min-h-[80vh] flex justify-center items-center"
           >
-            <ShuffleAnimation />
+            <ShuffleAnimation cardBackImage={getCardBackImage()} />
           </motion.div>
         )}
 
@@ -425,6 +440,7 @@ const Index = () => {
               card={selectedCard}
               isRevealed={isRevealed}
               onClick={handleReveal}
+              cardBackImage={getCardBackImage()}
             />
             <p className="text-foreground/70 text-lg">Click the card to reveal</p>
           </motion.div>
