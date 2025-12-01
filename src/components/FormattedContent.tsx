@@ -17,7 +17,7 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
   const formatParagraph = (text: string, index: number, allParagraphs: string[]) => {
      // Check if line starts with a bullet point indicator (-, •, *, or numbered list)
      const bulletPattern = /^[\-•*]\s+(.+)$/;
-     const numberedPattern = /^\d+\.\s+(.+)$/;
+     const numberedPattern = /^(\d+)\.\s+(.+)$/;
      const labelPattern = /^([^:]+:)\s*(.*)$/;
  
      if (bulletPattern.test(text)) {
@@ -38,7 +38,9 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
          if (bulletMatch) nestedBullets.push(bulletMatch[1]);
          j++;
        }
-       return { type: 'numbered', content: match ? match[1] : text, nestedBullets, skipNext: nestedBullets.length };
+       const numberIndex = match ? parseInt(match[1], 10) : undefined;
+       const contentText = match ? match[2] : text;
+       return { type: 'numbered', index: numberIndex, content: contentText, nestedBullets, skipNext: nestedBullets.length };
      }
  
       // Check for bold labels (text ending with colon)
@@ -112,11 +114,14 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
           skipCount = formatted.skipNext || 0;
           return (
             <div key={idx} className="space-y-2">
-              <li className="ml-4 list-decimal list-inside">
+              <p className="leading-relaxed">
+                {formatted.index !== undefined && (
+                  <span className="font-semibold mr-1">{formatted.index}.</span>
+                )}
                 {formatted.content}
-              </li>
+              </p>
               {formatted.nestedBullets && formatted.nestedBullets.length > 0 && (
-                <ul className="ml-12 space-y-1 list-disc">
+                <ul className="ml-8 space-y-1 list-disc list-inside">
                   {formatted.nestedBullets.map((bullet, bulletIdx) => (
                     <li key={bulletIdx}>{bullet}</li>
                   ))}
