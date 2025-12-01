@@ -14,7 +14,7 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
 
   let isInMythicSection = false;
  
-  const formatParagraph = (text: string) => {
+  const formatParagraph = (text: string, index: number, allParagraphs: string[]) => {
      // Check if line starts with a bullet point indicator (-, •, *, or numbered list)
      const bulletPattern = /^[\-•*]\s+(.+)$/;
      const numberedPattern = /^\d+\.\s+(.+)$/;
@@ -22,12 +22,23 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
  
      if (bulletPattern.test(text)) {
        const match = text.match(bulletPattern);
-       return { type: 'bullet', content: match ? match[1] : text };
+       // Check if previous line was a numbered item to determine if this is a nested bullet
+       const prevLine = index > 0 ? allParagraphs[index - 1] : '';
+       const isNestedBullet = numberedPattern.test(prevLine) || bulletPattern.test(prevLine);
+       return { type: 'bullet', content: match ? match[1] : text, nested: isNestedBullet };
      }
  
      if (numberedPattern.test(text)) {
        const match = text.match(numberedPattern);
-       return { type: 'numbered', content: match ? match[1] : text };
+       // Collect any following bullet points as nested content
+       const nestedBullets: string[] = [];
+       let j = index + 1;
+       while (j < allParagraphs.length && bulletPattern.test(allParagraphs[j])) {
+         const bulletMatch = allParagraphs[j].match(bulletPattern);
+         if (bulletMatch) nestedBullets.push(bulletMatch[1]);
+         j++;
+       }
+       return { type: 'numbered', content: match ? match[1] : text, nestedBullets, skipNext: nestedBullets.length };
      }
  
       // Check for bold labels (text ending with colon)
@@ -72,12 +83,19 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
      return { type: 'normal', content: text };
    };
 
+  let skipCount = 0;
+  
   return (
     <div className={`space-y-4 ${className}`}>
       {paragraphs.map((para, idx) => {
-        const formatted = formatParagraph(para);
+        if (skipCount > 0) {
+          skipCount--;
+          return null;
+        }
         
-        if (formatted.type === 'bullet') {
+        const formatted = formatParagraph(para, idx, paragraphs);
+        
+        if (formatted.type === 'bullet' && !formatted.nested) {
           return (
             <li key={idx} className="ml-4 list-disc list-inside">
               {formatted.content}
@@ -85,11 +103,26 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
           );
         }
         
+        if (formatted.type === 'bullet' && formatted.nested) {
+          // Skip nested bullets as they're rendered with their parent numbered item
+          return null;
+        }
+        
         if (formatted.type === 'numbered') {
+          skipCount = formatted.skipNext || 0;
           return (
-            <li key={idx} className="ml-4 list-decimal list-inside">
-              {formatted.content}
-            </li>
+            <div key={idx} className="space-y-2">
+              <li className="ml-4 list-decimal list-inside">
+                {formatted.content}
+              </li>
+              {formatted.nestedBullets && formatted.nestedBullets.length > 0 && (
+                <ul className="ml-12 space-y-1 list-disc">
+                  {formatted.nestedBullets.map((bullet, bulletIdx) => (
+                    <li key={bulletIdx}>{bullet}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
           );
         }
         
