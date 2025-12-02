@@ -47,10 +47,15 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
       {/* AreekeerA-specific content */}
       {isAreekeerA && (
         <>
-          {/* Card Subtitle */}
-          {getContent('card_subtitle') && (
-            <div className="text-center">
-              <p className="font-serif text-xl italic text-foreground/70">{getContent('card_subtitle')}</p>
+          {/* Card Heading and Subtitle */}
+          {(getContent('card_heading') || getContent('card_subtitle')) && (
+            <div className="text-center space-y-2">
+              {getContent('card_heading') && (
+                <h2 className="font-serif text-2xl font-semibold text-foreground">{getContent('card_heading')}</h2>
+              )}
+              {getContent('card_subtitle') && (
+                <p className="font-serif text-xl italic text-foreground/70">{getContent('card_subtitle')}</p>
+              )}
             </div>
           )}
 
