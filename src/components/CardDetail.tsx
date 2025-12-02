@@ -42,6 +42,13 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
         )}
       </div>
 
+      {/* Card Subtitle (AreekeerA) */}
+      {getContent('card_subtitle') && (
+        <div className="text-center">
+          <p className="font-serif text-xl italic text-foreground/70">{getContent('card_subtitle')}</p>
+        </div>
+      )}
+
       {/* Card Details Section */}
       {getContent('card_details') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
@@ -50,6 +57,27 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
             <h3 className="font-serif text-3xl font-semibold text-foreground">The Card</h3>
           </div>
           <FormattedContent content={getContent('card_details')!} className="text-foreground/80 text-lg" />
+        </Card>
+      )}
+
+      {/* Card Content (AreekeerA) */}
+      {getContent('card_content') && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <div className="flex items-center gap-2 mb-6">
+            <Sparkles className="w-6 h-6 text-accent" />
+            <h3 className="font-serif text-3xl font-semibold text-foreground">Card Guidance</h3>
+          </div>
+          <FormattedContent content={getContent('card_content')!} className="text-foreground/80 text-lg" />
+        </Card>
+      )}
+
+      {/* Exercise (AreekeerA) */}
+      {getContent('exercise') && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+            {getContent('exercise_heading') || "Exercise"}
+          </h3>
+          <FormattedContent content={getContent('exercise')!} className="text-foreground/80 text-lg" />
         </Card>
       )}
 
