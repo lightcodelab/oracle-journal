@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import tsrBanner from "@/assets/tsr-banner.png";
 import mnlBanner from "@/assets/mnl-banner.png";
 import areekeeraBanner from "@/assets/areekeera-banner.png";
+import taoshBanner from "@/assets/taosh-banner.png";
 
 interface Deck {
   id: string;
@@ -123,6 +124,14 @@ export const DeckSelection = ({
                       <img 
                         src={areekeeraBanner} 
                         alt="AreekeerA Energy Medicine Codes" 
+                        className="w-full h-32 object-cover"
+                      />
+                    </div>
+                  ) : deck.name === "The Art of Self-Healing" ? (
+                    <div className="rounded-lg overflow-hidden">
+                      <img 
+                        src={taoshBanner} 
+                        alt="The Art of Self-Healing" 
                         className="w-full h-32 object-cover"
                       />
                     </div>
