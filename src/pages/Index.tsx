@@ -14,8 +14,10 @@ import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import sacredRewriteCardBack from "@/assets/card-back-v2.png";
 import mnlCardBack from "@/assets/mnl-card-back.png";
+import areekeeraCardBack from "@/assets/areekeera-card-back.png";
 import tsrBanner from "@/assets/tsr-banner.png";
 import mnlBanner from "@/assets/mnl-banner.png";
+import areekeeraBanner from "@/assets/areekeera-banner.png";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
 import type { OracleCard } from "@/data/oracleCards";
@@ -347,6 +349,9 @@ const Index = () => {
     if (selectedDeck.name.toLowerCase().includes('magic not logic')) {
       return mnlCardBack;
     }
+    if (selectedDeck.name.toLowerCase().includes('areekeera')) {
+      return areekeeraCardBack;
+    }
     
     // Default to Sacred Rewrite card back
     return sacredRewriteCardBack;
@@ -436,6 +441,19 @@ const Index = () => {
                   className="w-full max-w-3xl mx-auto rounded-lg shadow-lg"
                 />
               </motion.div>
+            ) : selectedDeck.name === "AreekeerA" ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+                className="mb-8"
+              >
+                <img 
+                  src={areekeeraBanner} 
+                  alt="AreekeerA Energy Medicine Codes" 
+                  className="w-full max-w-3xl mx-auto rounded-lg shadow-lg"
+                />
+              </motion.div>
             ) : (
               <>
                 <motion.div
@@ -470,6 +488,11 @@ const Index = () => {
                   <CardDropdownSelector 
                     deckId={selectedDeck.id}
                     onSelectCard={handleSelectCardNumber}
+                  />
+                ) : selectedDeck.name === 'AreekeerA' ? (
+                  <CardNumberSelector 
+                    onSelectCard={handleSelectCardNumber}
+                    totalCards={56}
                   />
                 ) : (
                   <CardNumberSelector 
