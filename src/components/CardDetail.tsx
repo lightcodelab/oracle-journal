@@ -82,9 +82,9 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
       {/* Art of Self-Healing-specific content */}
       {isArtOfSelfHealing && (
         <>
-          {/* Card Title */}
+          {/* Card Number */}
           <div className="text-center space-y-2">
-            <h2 className="font-serif text-2xl font-semibold text-foreground">{card.card_title}</h2>
+            <h2 className="font-serif text-2xl font-semibold text-foreground">Card: {card.card_number}</h2>
           </div>
 
           {/* Teaching */}
