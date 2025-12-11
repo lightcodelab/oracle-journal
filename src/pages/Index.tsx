@@ -507,15 +507,11 @@ const Index = () => {
                     deckId={selectedDeck.id}
                     onSelectCard={handleSelectCardNumber}
                   />
-                ) : selectedDeck.name === 'AreekeerA' ? (
-                  <CardNumberSelector 
-                    onSelectCard={handleSelectCardNumber}
-                    totalCards={56}
-                  />
                 ) : (
                   <CardNumberSelector 
                     onSelectCard={handleSelectCardNumber}
-                    totalCards={63}
+                    deckId={selectedDeck.id}
+                    deckName={selectedDeck.name}
                   />
                 )
               )}
