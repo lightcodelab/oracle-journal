@@ -19,6 +19,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
   };
 
   const isAreekeerA = card.deck_name === 'AreekeerA';
+  const isArtOfSelfHealing = card.deck_name === 'The Art of Self-Healing';
 
   return (
     <motion.div
@@ -78,8 +79,39 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
         </>
       )}
 
-      {/* Card Details Section (non-AreekeerA decks) */}
-      {!isAreekeerA && getContent('card_details') && (
+      {/* Art of Self-Healing-specific content */}
+      {isArtOfSelfHealing && (
+        <>
+          {/* Card Title */}
+          <div className="text-center space-y-2">
+            <h2 className="font-serif text-2xl font-semibold text-foreground">{card.card_title}</h2>
+          </div>
+
+          {/* Teaching */}
+          {getContent('teaching') && (
+            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+              <div className="flex items-center gap-2 mb-6">
+                <Sparkles className="w-6 h-6 text-accent" />
+                <h3 className="font-serif text-3xl font-semibold text-foreground">Teaching</h3>
+              </div>
+              <FormattedContent content={getContent('teaching')!} className="text-foreground/80 text-lg" />
+            </Card>
+          )}
+
+          {/* Activity */}
+          {getContent('activity') && (
+            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                {getContent('activity_heading') || "Activity"}
+              </h3>
+              <FormattedContent content={getContent('activity')!} className="text-foreground/80 text-lg" />
+            </Card>
+          )}
+        </>
+      )}
+
+      {/* Card Details Section (non-AreekeerA and non-Art of Self-Healing decks) */}
+      {!isAreekeerA && !isArtOfSelfHealing && getContent('card_details') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-6 h-6 text-accent" />
@@ -90,7 +122,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
       )}
 
       {/* Sacred Rewrite-specific content */}
-      {!isAreekeerA && (
+      {!isAreekeerA && !isArtOfSelfHealing && (
         <>
           {/* Opening Invocation */}
           {getContent('opening_invocation_content') && (
@@ -135,7 +167,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
       )}
 
       {/* Sacred Rewrite continued - Living Inquiry, Guided Audio, Embodiment, Benediction */}
-      {!isAreekeerA && (
+      {!isAreekeerA && !isArtOfSelfHealing && (
         <>
           {/* Living Inquiry */}
           {getContent('living_inquiry_content') && (
