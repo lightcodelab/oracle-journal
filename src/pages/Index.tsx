@@ -430,7 +430,7 @@ const Index = () => {
                 <img 
                   src={tsrBanner} 
                   alt="The Sacred Rewrite" 
-                  className="w-full max-w-3xl mx-auto rounded-lg shadow-lg"
+                  className="w-full max-w-3xl mx-auto shadow-lg"
                 />
               </motion.div>
             ) : selectedDeck.name === "Magic not Logic" ? (
@@ -443,7 +443,7 @@ const Index = () => {
                 <img 
                   src={mnlBanner} 
                   alt="Magic not Logic" 
-                  className="w-full max-w-3xl mx-auto rounded-lg shadow-lg"
+                  className="w-full max-w-3xl mx-auto shadow-lg"
                 />
               </motion.div>
             ) : selectedDeck.name === "AreekeerA" ? (
@@ -456,7 +456,7 @@ const Index = () => {
                 <img 
                   src={areekeeraBanner} 
                   alt="AreekeerA Energy Medicine Codes" 
-                  className="w-full max-w-3xl mx-auto rounded-lg shadow-lg"
+                  className="w-full max-w-3xl mx-auto shadow-lg"
                 />
               </motion.div>
             ) : selectedDeck.name === "The Art of Self-Healing" ? (
@@ -469,7 +469,7 @@ const Index = () => {
                 <img 
                   src={taoshBanner} 
                   alt="The Art of Self-Healing" 
-                  className="w-full max-w-3xl mx-auto rounded-lg shadow-lg"
+                  className="w-full max-w-3xl mx-auto shadow-lg"
                 />
               </motion.div>
             ) : (
