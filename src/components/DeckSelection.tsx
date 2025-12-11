@@ -104,7 +104,7 @@ export const DeckSelection = ({
                   )}
                   
                   {deck.name === "The Sacred Rewrite" ? (
-                    <div className="rounded-lg overflow-hidden">
+                    <div className="overflow-hidden">
                       <img 
                         src={tsrBanner} 
                         alt="The Sacred Rewrite" 
@@ -112,7 +112,7 @@ export const DeckSelection = ({
                       />
                     </div>
                   ) : deck.name === "Magic not Logic" ? (
-                    <div className="rounded-lg overflow-hidden">
+                    <div className="overflow-hidden">
                       <img 
                         src={mnlBanner} 
                         alt="Magic not Logic" 
@@ -120,7 +120,7 @@ export const DeckSelection = ({
                       />
                     </div>
                   ) : deck.name === "AreekeerA" ? (
-                    <div className="rounded-lg overflow-hidden">
+                    <div className="overflow-hidden">
                       <img 
                         src={areekeeraBanner} 
                         alt="AreekeerA Energy Medicine Codes" 
@@ -128,7 +128,7 @@ export const DeckSelection = ({
                       />
                     </div>
                   ) : deck.name === "The Art of Self-Healing" ? (
-                    <div className="rounded-lg overflow-hidden">
+                    <div className="overflow-hidden">
                       <img 
                         src={taoshBanner} 
                         alt="The Art of Self-Healing" 
