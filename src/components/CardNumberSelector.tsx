@@ -1,15 +1,10 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Hash } from "lucide-react";
 
 interface CardNumberSelectorProps {
@@ -18,59 +13,30 @@ interface CardNumberSelectorProps {
 }
 
 export const CardNumberSelector = ({ onSelectCard, totalCards }: CardNumberSelectorProps) => {
-  const [cardNumber, setCardNumber] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const cardNumbers = Array.from({ length: totalCards }, (_, i) => i + 1);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const num = parseInt(cardNumber);
-    
-    if (num >= 1 && num <= totalCards) {
-      onSelectCard(num);
-      setIsOpen(false);
-      setCardNumber("");
-    }
+  const handleValueChange = (value: string) => {
+    const cardNumber = parseInt(value);
+    onSelectCard(cardNumber);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="lg"
-          className="border-border/50 hover:border-accent hover:bg-accent/10 hover:text-primary font-semibold px-8 py-6 text-lg"
-        >
-          <Hash className="w-5 h-5 mr-2" />
-          Go to Card Number
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-serif text-2xl">Select Card Number</DialogTitle>
-          <DialogDescription>
-            Enter a card number (1-{totalCards}) to view that specific card
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="cardNumber">Card Number</Label>
-            <Input
-              id="cardNumber"
-              type="number"
-              min={1}
-              max={totalCards}
-              value={cardNumber}
-              onChange={(e) => setCardNumber(e.target.value)}
-              placeholder={`1-${totalCards}`}
-              className="text-center text-lg"
-              autoFocus
-            />
-          </div>
-          <Button type="submit" className="w-full" size="lg">
-            View Card
-          </Button>
-        </form>
-      </DialogContent>
-    </Dialog>
+    <Select onValueChange={handleValueChange}>
+      <SelectTrigger className="w-full sm:w-[280px] border-border/50 hover:border-accent hover:bg-accent/10 hover:text-primary font-semibold px-8 py-6 text-lg h-auto">
+        <Hash className="w-5 h-5 mr-2" />
+        <SelectValue placeholder="Go to Card Number" />
+      </SelectTrigger>
+      <SelectContent className="max-h-[400px] bg-card">
+        {cardNumbers.map((num) => (
+          <SelectItem 
+            key={num} 
+            value={num.toString()}
+            className="py-3"
+          >
+            <span className="font-semibold">Card {num}</span>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 };
