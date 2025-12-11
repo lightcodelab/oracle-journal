@@ -42,12 +42,9 @@ export const CardNumberSelector = ({ onSelectCard, deckId, deckName }: CardNumbe
   const getCardTitle = (card: OracleCard): string => {
     const sections = card.content_sections as any;
     
-    // AreekeerA - use card_subtitle (first title like "Feeling")
+    // AreekeerA - use card_title (one-word titles like "CHERUBIC", "WISE", etc.)
     if (deckName === 'AreekeerA') {
-      if (sections?.card_subtitle) {
-        return sections.card_subtitle;
-      }
-      return '';
+      return card.card_title || '';
     }
     
     // Art of Self-Healing - extract from activity_heading after "Exercise" or "Template"
