@@ -1,5 +1,6 @@
 import { CardImport } from "@/components/CardImport";
 import { MagicNotLogicImport } from "@/components/MagicNotLogicImport";
+import { ArtOfSelfHealingImport } from "@/components/ArtOfSelfHealingImport";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate } from "react-router-dom";
@@ -31,9 +32,10 @@ const ImportCards = () => {
           </div>
 
           <Tabs defaultValue="sacred-rewrite" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="sacred-rewrite">The Sacred Rewrite</TabsTrigger>
               <TabsTrigger value="magic-not-logic">Magic not Logic</TabsTrigger>
+              <TabsTrigger value="art-of-self-healing">Art of Self-Healing</TabsTrigger>
             </TabsList>
             
             <TabsContent value="sacred-rewrite" className="space-y-6">
@@ -63,6 +65,22 @@ const ImportCards = () => {
                   <li>Vimeo video column should contain just the video ID (e.g., 691209896)</li>
                   <li>First row should be the header row</li>
                   <li>Each subsequent row represents one card</li>
+                </ul>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="art-of-self-healing" className="space-y-6">
+              <ArtOfSelfHealingImport />
+              
+              <div className="bg-card/50 border border-border rounded-lg p-6">
+                <h3 className="font-semibold text-lg mb-3">CSV Format Requirements:</h3>
+                <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+                  <li>File must be in CSV format (.csv)</li>
+                  <li>Columns: Card File Name, Card number, Teaching, Activity</li>
+                  <li>Card File Name should match image files (e.g., TAoSH-1-8)</li>
+                  <li>Teaching column contains the main teaching content</li>
+                  <li>Activity column starts with "Exercise: [Title]" followed by instructions</li>
+                  <li>First row should be the header row</li>
                 </ul>
               </div>
             </TabsContent>
