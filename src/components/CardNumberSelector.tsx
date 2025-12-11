@@ -38,7 +38,7 @@ export const CardNumberSelector = ({ onSelectCard, totalCards }: CardNumberSelec
         <Button
           variant="outline"
           size="lg"
-          className="border-border/50 hover:border-accent hover:bg-accent/10 font-semibold px-8 py-6 text-lg"
+          className="border-border/50 hover:border-accent hover:bg-accent/10 hover:text-primary font-semibold px-8 py-6 text-lg"
         >
           <Hash className="w-5 h-5 mr-2" />
           Go to Card Number
