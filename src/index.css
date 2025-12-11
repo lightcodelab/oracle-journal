@@ -8,39 +8,45 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 250 35% 6%;
-    --foreground: 45 90% 88%;
+    --background: 34 100% 3%;
+    --foreground: 34 12% 88%;
 
-    --card: 250 30% 10%;
-    --card-foreground: 45 90% 88%;
+    --card: 34 40% 8%;
+    --card-foreground: 34 12% 88%;
 
-    --popover: 250 30% 10%;
-    --popover-foreground: 45 90% 88%;
+    --popover: 34 40% 8%;
+    --popover-foreground: 34 12% 88%;
 
-    --primary: 270 70% 65%;
-    --primary-foreground: 45 95% 95%;
+    --primary: 40 57% 43%;
+    --primary-foreground: 34 12% 95%;
 
-    --secondary: 250 25% 18%;
-    --secondary-foreground: 45 90% 88%;
+    --secondary: 34 20% 15%;
+    --secondary-foreground: 34 12% 88%;
 
-    --muted: 250 20% 20%;
-    --muted-foreground: 45 30% 65%;
+    --muted: 34 15% 18%;
+    --muted-foreground: 34 20% 60%;
 
-    --accent: 45 95% 65%;
-    --accent-foreground: 250 35% 10%;
+    --accent: 40 57% 50%;
+    --accent-foreground: 34 100% 3%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 55% 28%;
+    --destructive-foreground: 0 37% 90%;
 
-    --border: 250 20% 25%;
-    --input: 250 20% 20%;
-    --ring: 270 70% 65%;
+    --border: 34 20% 20%;
+    --input: 34 20% 15%;
+    --ring: 40 57% 43%;
 
     --radius: 1rem;
 
-    --gradient-cosmic: linear-gradient(135deg, hsl(270 70% 35%), hsl(250 60% 25%));
-    --gradient-card: linear-gradient(180deg, hsl(250 30% 12%), hsl(250 30% 8%));
-    --glow-mystical: 0 0 40px hsl(270 70% 65% / 0.3);
+    /* Brand secondary colors */
+    --brand-dark: 34 100% 3%;
+    --brand-cream: 34 12% 88%;
+    --brand-red-dark: 0 55% 28%;
+    --brand-red-light: 0 37% 66%;
+
+    --gradient-cosmic: linear-gradient(135deg, hsl(40 57% 35%), hsl(34 40% 15%));
+    --gradient-card: linear-gradient(180deg, hsl(34 40% 10%), hsl(34 40% 6%));
+    --glow-mystical: 0 0 40px hsl(40 57% 43% / 0.3);
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
