@@ -137,45 +137,32 @@ const Index = () => {
     }
   };
 
-  // Check if user can read today (daily limit for starter deck)
-  const checkDailyReadingLimit = () => {
-    const lastReadingDate = localStorage.getItem(DAILY_READING_KEY);
-    const today = new Date().toDateString();
+  // Check if user has already used their one-time free reading
+  const checkFreeReadingUsed = () => {
+    const hasUsedFreeReading = localStorage.getItem(DAILY_READING_KEY);
     
-    if (lastReadingDate === today) {
+    if (hasUsedFreeReading === 'true') {
       setCanReadToday(false);
       return false;
     }
     return true;
   };
 
-  // Mark today's reading as used
+  // Mark free reading as permanently used
   const markReadingUsed = () => {
-    const today = new Date().toDateString();
-    localStorage.setItem(DAILY_READING_KEY, today);
+    localStorage.setItem(DAILY_READING_KEY, 'true');
     setCanReadToday(false);
   };
 
   const initializeStarterDeck = async (userId: string, starterDeckId: string): Promise<OracleCard[]> => {
-    // Check daily limit first
-    const canRead = checkDailyReadingLimit();
-    const today = new Date().toDateString();
-    const storedDate = localStorage.getItem('starterCardsDate');
+    // Check if free reading has been used
+    const canRead = checkFreeReadingUsed();
     
-    // Check if user already has starter cards assigned
+    // Check if user already has starter cards assigned (permanent, not daily)
     const { data: existingCards } = await supabase
       .from('user_starter_deck_cards')
       .select('card_id, assigned_at')
       .eq('user_id', userId);
-
-    // If cards exist but are from a different day, delete them
-    if (existingCards && existingCards.length > 0 && storedDate !== today) {
-      await supabase
-        .from('user_starter_deck_cards')
-        .delete()
-        .eq('user_id', userId);
-      localStorage.removeItem('starterCardsDate');
-    }
 
     // Re-check for existing cards after potential cleanup
     const { data: todaysCards } = await supabase
@@ -205,20 +192,28 @@ const Index = () => {
       return [];
     }
 
-    // Get all cards from non-starter decks
-    const { data: allCards } = await supabase
-      .from('cards')
-      .select('id, deck_id')
-      .neq('deck_id', starterDeckId);
+    // Get all non-starter decks
+    const { data: allDecks } = await supabase
+      .from('decks')
+      .select('id')
+      .neq('id', starterDeckId);
 
-    if (!allCards || allCards.length === 0) return [];
+    if (!allDecks || allDecks.length === 0) return [];
 
-    // Randomly select 1 card from across all decks
-    const shuffled = [...allCards].sort(() => Math.random() - 0.5);
-    const selectedCardIds = shuffled.slice(0, 1);
-
-    // Insert into user_starter_deck_cards and store the date
-    localStorage.setItem('starterCardsDate', new Date().toDateString());
+    // Get one random card from each deck
+    const selectedCardIds: { id: string; deck_id: string }[] = [];
+    
+    for (const deck of allDecks) {
+      const { data: deckCards } = await supabase
+        .from('cards')
+        .select('id, deck_id')
+        .eq('deck_id', deck.id);
+      
+      if (deckCards && deckCards.length > 0) {
+        const randomCard = deckCards[Math.floor(Math.random() * deckCards.length)];
+        selectedCardIds.push(randomCard);
+      }
+    }
     await supabase
       .from('user_starter_deck_cards')
       .insert(
@@ -251,7 +246,7 @@ const Index = () => {
 
     // For starter deck, initialize and show spread
     if (deck.is_starter) {
-      checkDailyReadingLimit();
+      checkFreeReadingUsed();
       const cards = await initializeStarterDeck(user.id, deckId);
       if (cards.length > 0) {
         setShowStarterSpread(true);
