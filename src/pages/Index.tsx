@@ -228,15 +228,20 @@ const Index = () => {
         if (linksError) throw linksError;
 
         if (starterCardLinks && starterCardLinks.length > 0) {
-          // Fetch the actual card data
+          // Fetch the actual card data with deck info
           const cardIds = starterCardLinks.map(sc => sc.card_id);
           const { data: starterCards, error: cardsError } = await supabase
             .from('cards')
-            .select('*')
+            .select('*, decks(name)')
             .in('id', cardIds);
 
           if (cardsError) throw cardsError;
-          cards = starterCards || [];
+          
+          // Map deck name from joined data if deck_name is not set
+          cards = (starterCards || []).map(card => ({
+            ...card,
+            deck_name: card.deck_name || card.decks?.name || null
+          }));
         } else {
           cards = [];
         }

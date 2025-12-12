@@ -1,6 +1,7 @@
 import { OracleCard } from "@/data/oracleCards";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
+import { Badge } from "./ui/badge";
 import { Sparkles, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { FormattedContent } from "./FormattedContent";
@@ -27,6 +28,15 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
   // For Starter Collection, show basic content only
   const showBasicOnly = isStarterDeck;
 
+  // Get deck badge color based on deck name
+  const getDeckBadgeClass = () => {
+    if (isSacredRewrite) return "bg-purple-600/80 text-white";
+    if (isMagicNotLogic) return "bg-indigo-600/80 text-white";
+    if (isAreekeerA) return "bg-emerald-600/80 text-white";
+    if (isArtOfSelfHealing) return "bg-amber-600/80 text-white";
+    return "bg-primary/80 text-primary-foreground";
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -34,6 +44,15 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
       transition={{ duration: 0.6 }}
       className="max-w-3xl mx-auto space-y-8"
     >
+      {/* Deck Origin Badge - only show in Starter Collection */}
+      {isStarterDeck && card.deck_name && (
+        <div className="flex justify-center">
+          <Badge className={`${getDeckBadgeClass()} text-sm px-4 py-1`}>
+            From: {card.deck_name}
+          </Badge>
+        </div>
+      )}
+
       {/* Card Display */}
       <div className="flex justify-center">
         {card.image_file_name ? (
