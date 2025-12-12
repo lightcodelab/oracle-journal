@@ -159,16 +159,33 @@ const Index = () => {
   const initializeStarterDeck = async (userId: string, starterDeckId: string): Promise<OracleCard[]> => {
     // Check daily limit first
     const canRead = checkDailyReadingLimit();
+    const today = new Date().toDateString();
+    const storedDate = localStorage.getItem('starterCardsDate');
     
-    // Check if user already has starter cards assigned for today
+    // Check if user already has starter cards assigned
     const { data: existingCards } = await supabase
+      .from('user_starter_deck_cards')
+      .select('card_id, assigned_at')
+      .eq('user_id', userId);
+
+    // If cards exist but are from a different day, delete them
+    if (existingCards && existingCards.length > 0 && storedDate !== today) {
+      await supabase
+        .from('user_starter_deck_cards')
+        .delete()
+        .eq('user_id', userId);
+      localStorage.removeItem('starterCardsDate');
+    }
+
+    // Re-check for existing cards after potential cleanup
+    const { data: todaysCards } = await supabase
       .from('user_starter_deck_cards')
       .select('card_id')
       .eq('user_id', userId);
 
-    // If they have cards and haven't used today's reading, fetch them
-    if (existingCards && existingCards.length > 0) {
-      const cardIds = existingCards.map(c => c.card_id);
+    // If they have cards for today, fetch them
+    if (todaysCards && todaysCards.length > 0) {
+      const cardIds = todaysCards.map(c => c.card_id);
       const { data: cards } = await supabase
         .from('cards')
         .select('*, decks(name)')
@@ -183,7 +200,7 @@ const Index = () => {
       return mappedCards;
     }
 
-    // No existing cards - create new ones if they can read today
+    // No existing cards for today - create new ones if they can read today
     if (!canRead) {
       return [];
     }
@@ -200,7 +217,8 @@ const Index = () => {
     const shuffled = [...allCards].sort(() => Math.random() - 0.5);
     const selectedCardIds = shuffled.slice(0, 3);
 
-    // Insert into user_starter_deck_cards
+    // Insert into user_starter_deck_cards and store the date
+    localStorage.setItem('starterCardsDate', new Date().toDateString());
     await supabase
       .from('user_starter_deck_cards')
       .insert(
