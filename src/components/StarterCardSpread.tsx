@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { CardBack } from "./CardBack";
-import { ShoppingBag, ChevronLeft } from "lucide-react";
+import { ShoppingBag, ChevronLeft, RotateCcw } from "lucide-react";
 import sacredRewriteCardBack from "@/assets/card-back-v2.png";
 import mnlCardBack from "@/assets/mnl-card-back.png";
 import areekeeraCardBack from "@/assets/areekeera-card-back.png";
@@ -17,6 +17,8 @@ interface StarterCardSpreadProps {
   viewedCardIds: string[];
   canReadToday: boolean;
   onBuyDecks: () => void;
+  isAdmin?: boolean;
+  onAdminReset?: () => void;
 }
 
 export const StarterCardSpread = ({ 
@@ -25,7 +27,9 @@ export const StarterCardSpread = ({
   onBackToDecks,
   viewedCardIds,
   canReadToday,
-  onBuyDecks
+  onBuyDecks,
+  isAdmin,
+  onAdminReset
 }: StarterCardSpreadProps) => {
   
   // Get the appropriate card back image based on deck name
@@ -162,7 +166,7 @@ export const StarterCardSpread = ({
       )}
 
       {/* Buy Decks Button */}
-      <div className="pt-4">
+      <div className="pt-4 space-y-4">
         <Button
           onClick={onBuyDecks}
           size="lg"
@@ -171,9 +175,24 @@ export const StarterCardSpread = ({
           <ShoppingBag className="w-5 h-5 mr-2" />
           Buy Full Decks
         </Button>
-        <p className="text-sm text-foreground/60 mt-2">
+        <p className="text-sm text-foreground/60">
           Get unlimited access to all card content
         </p>
+        
+        {/* Admin Reset Button */}
+        {isAdmin && onAdminReset && (
+          <div className="pt-4 border-t border-border/30 mt-6">
+            <Button
+              onClick={onAdminReset}
+              variant="outline"
+              size="sm"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Reset Starter Data (Admin)
+            </Button>
+          </div>
+        )}
       </div>
     </motion.div>
   );
