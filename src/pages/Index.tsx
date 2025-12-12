@@ -219,15 +219,27 @@ const Index = () => {
       let cards;
 
       if (selectedDeck.is_starter) {
-        // For starter deck, fetch user's assigned starter cards
-        const { data: starterCards, error } = await supabase
+        // For starter deck, fetch user's assigned starter card IDs first
+        const { data: starterCardLinks, error: linksError } = await supabase
           .from('user_starter_deck_cards')
-          .select('card_id, cards(*)')
+          .select('card_id')
           .eq('user_id', user.id);
 
-        if (error) throw error;
+        if (linksError) throw linksError;
 
-        cards = starterCards?.map(sc => sc.cards).filter(Boolean) || [];
+        if (starterCardLinks && starterCardLinks.length > 0) {
+          // Fetch the actual card data
+          const cardIds = starterCardLinks.map(sc => sc.card_id);
+          const { data: starterCards, error: cardsError } = await supabase
+            .from('cards')
+            .select('*')
+            .in('id', cardIds);
+
+          if (cardsError) throw cardsError;
+          cards = starterCards || [];
+        } else {
+          cards = [];
+        }
       } else {
         // For regular decks, fetch all cards
         const { data: deckCards, error } = await supabase
