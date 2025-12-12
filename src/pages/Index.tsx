@@ -140,20 +140,23 @@ const Index = () => {
   };
 
   // Check if user has already used their one-time free reading
+  // TODO: Re-enable limit after testing by uncommenting the check below
   const checkFreeReadingUsed = () => {
-    const hasUsedFreeReading = localStorage.getItem(DAILY_READING_KEY);
-    
-    if (hasUsedFreeReading === 'true') {
-      setCanReadToday(false);
-      return false;
-    }
+    // TEMPORARILY DISABLED FOR TESTING
+    // const hasUsedFreeReading = localStorage.getItem(DAILY_READING_KEY);
+    // if (hasUsedFreeReading === 'true') {
+    //   setCanReadToday(false);
+    //   return false;
+    // }
     return true;
   };
 
   // Mark free reading as permanently used
+  // TODO: Re-enable after testing by uncommenting the localStorage line
   const markReadingUsed = () => {
-    localStorage.setItem(DAILY_READING_KEY, 'true');
-    setCanReadToday(false);
+    // TEMPORARILY DISABLED FOR TESTING
+    // localStorage.setItem(DAILY_READING_KEY, 'true');
+    // setCanReadToday(false);
   };
 
   // Reset starter deck data for admin testing
