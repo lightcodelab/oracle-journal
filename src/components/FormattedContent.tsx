@@ -1,7 +1,20 @@
+import React from 'react';
+
 interface FormattedContentProps {
   content: string;
   className?: string;
 }
+
+// Helper function to render text with markdown bold support
+const renderWithBold = (text: string): React.ReactNode => {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+    return part;
+  });
+};
 
 export const FormattedContent = ({ content, className = "" }: FormattedContentProps) => {
   // Replace em dashes with commas and remove spaces before commas
@@ -100,7 +113,7 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
         if (formatted.type === 'bullet' && !formatted.nested) {
           return (
             <li key={idx} className="ml-4 list-disc list-inside">
-              {formatted.content}
+              {renderWithBold(formatted.content)}
             </li>
           );
         }
@@ -118,12 +131,12 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
                 {formatted.index !== undefined && (
                   <span className="font-semibold mr-1">{formatted.index}.</span>
                 )}
-                {formatted.content}
+                {renderWithBold(formatted.content)}
               </p>
               {formatted.nestedBullets && formatted.nestedBullets.length > 0 && (
                 <ul className="ml-8 space-y-1 list-disc list-inside">
                   {formatted.nestedBullets.map((bullet, bulletIdx) => (
-                    <li key={bulletIdx}>{bullet}</li>
+                    <li key={bulletIdx}>{renderWithBold(bullet)}</li>
                   ))}
                 </ul>
               )}
@@ -139,10 +152,10 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
 
           return (
             <div key={idx} className="space-y-2">
-              <p className="font-semibold mb-3">{formatted.label}</p>
+              <p className="font-semibold mb-3">{renderWithBold(formatted.label)}</p>
               <div className="pl-8 space-y-1 italic leading-relaxed">
                 {sentences.map((sentence, lineIdx) => (
-                  <p key={lineIdx}>{sentence}</p>
+                  <p key={lineIdx}>{renderWithBold(sentence)}</p>
                 ))}
               </div>
             </div>
@@ -156,7 +169,7 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
           return (
             <div key={idx} className="pl-8 italic leading-relaxed space-y-1">
               {sentences.map((sentence, lineIdx) => (
-                <p key={lineIdx}>{sentence}</p>
+                <p key={lineIdx}>{renderWithBold(sentence)}</p>
               ))}
             </div>
           );
@@ -165,15 +178,15 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
         if (formatted.type === 'labeled') {
           return (
             <div key={idx} className="space-y-2">
-              <p className="font-semibold">{formatted.label}</p>
-              <p className="leading-relaxed">{formatted.content}</p>
+              <p className="font-semibold">{renderWithBold(formatted.label)}</p>
+              <p className="leading-relaxed">{renderWithBold(formatted.content)}</p>
             </div>
           );
         }
         
         return (
           <p key={idx} className="leading-relaxed">
-            {formatted.content}
+            {renderWithBold(formatted.content)}
           </p>
         );
       })}
