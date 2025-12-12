@@ -7,6 +7,7 @@ import tsrBanner from "@/assets/tsr-banner.png";
 import mnlBanner from "@/assets/mnl-banner.png";
 import areekeeraBanner from "@/assets/areekeera-banner.png";
 import taoshBanner from "@/assets/taosh-banner.png";
+import appGridBanner from "@/assets/app-grid-banner.png";
 
 interface Deck {
   id: string;
@@ -45,10 +46,16 @@ export const DeckSelection = ({
     >
       <div className="text-center mb-12">
         <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="mb-6"
         >
-          <Sparkles className="w-16 h-16 mx-auto text-accent animate-glow mb-4" />
+          <img 
+            src={appGridBanner} 
+            alt="Choose Your Deck" 
+            className="w-full max-w-4xl mx-auto h-32 md:h-40 object-cover"
+          />
         </motion.div>
         <h1 className="font-serif text-5xl md:text-6xl font-bold text-foreground mb-4">
           Choose Your Deck
