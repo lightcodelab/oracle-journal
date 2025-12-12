@@ -597,6 +597,7 @@ const Index = () => {
               card={selectedCard}
               onDrawAnother={handleDrawAnother}
               hasPremiumAccess={hasPremiumAccess}
+              isStarterDeck={selectedDeck?.is_starter}
             />
           </>
         )}

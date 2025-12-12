@@ -10,9 +10,10 @@ interface CardDetailProps {
   card: OracleCard;
   onDrawAnother: () => void;
   hasPremiumAccess?: boolean;
+  isStarterDeck?: boolean;
 }
 
-export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: CardDetailProps) => {
+export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isStarterDeck = false }: CardDetailProps) => {
   // Helper to get content from either JSON structure or legacy fields
   const getContent = (key: string): string | undefined => {
     return card.content_sections?.[key] || card[key as keyof OracleCard] as string | undefined;
@@ -20,6 +21,11 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
 
   const isAreekeerA = card.deck_name === 'AreekeerA';
   const isArtOfSelfHealing = card.deck_name === 'The Art of Self-Healing';
+  const isSacredRewrite = card.deck_name === 'The Sacred Rewrite';
+  const isMagicNotLogic = card.deck_name === 'Magic not Logic';
+  
+  // For Starter Collection, show basic content only
+  const showBasicOnly = isStarterDeck;
 
   return (
     <motion.div
@@ -56,7 +62,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
             )}
           </div>
 
-          {/* Card Content */}
+          {/* Card Content - always shown */}
           {getContent('card_content') && (
             <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
               <div className="flex items-center gap-2 mb-6">
@@ -67,8 +73,8 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
             </Card>
           )}
 
-          {/* Exercise */}
-          {getContent('exercise') && (
+          {/* Exercise - only show if not in Starter Collection */}
+          {!showBasicOnly && getContent('exercise') && (
             <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
               <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
                 {getContent('exercise_heading') || "Exercise"}
@@ -87,7 +93,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
             <h2 className="font-serif text-2xl font-semibold text-foreground">Card: {card.card_number}</h2>
           </div>
 
-          {/* Teaching */}
+          {/* Teaching - always shown */}
           {getContent('teaching') && (
             <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
               <div className="flex items-center gap-2 mb-6">
@@ -98,8 +104,8 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
             </Card>
           )}
 
-          {/* Activity */}
-          {getContent('activity') && (
+          {/* Activity - only show if not in Starter Collection */}
+          {!showBasicOnly && getContent('activity') && (
             <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
               <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
                 {getContent('activity_heading') || "Activity"}
@@ -110,8 +116,8 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
         </>
       )}
 
-      {/* Card Details Section (non-AreekeerA and non-Art of Self-Healing decks) */}
-      {!isAreekeerA && !isArtOfSelfHealing && getContent('card_details') && (
+      {/* Card Details Section - Sacred Rewrite and Magic not Logic */}
+      {(isSacredRewrite || isMagicNotLogic) && getContent('card_details') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-6 h-6 text-accent" />
@@ -121,8 +127,18 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
         </Card>
       )}
 
-      {/* Sacred Rewrite-specific content */}
-      {!isAreekeerA && !isArtOfSelfHealing && (
+      {/* Sacred Rewrite - Spiral of Inquiry (always shown for basic version) */}
+      {isSacredRewrite && getContent('spiral_of_inquiry_content') && (
+        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+            {getContent('spiral_of_inquiry_heading') || "Spiral of Inquiry"}
+          </h3>
+          <FormattedContent content={getContent('spiral_of_inquiry_content')!} className="text-foreground/80 text-lg" />
+        </Card>
+      )}
+
+      {/* Sacred Rewrite additional content - only shown if NOT in Starter Collection */}
+      {isSacredRewrite && !showBasicOnly && (
         <>
           {/* Opening Invocation */}
           {getContent('opening_invocation_content') && (
@@ -131,16 +147,6 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
                 {getContent('opening_invocation_heading') || "Opening Invocation"}
               </h3>
               <FormattedContent content={getContent('opening_invocation_content')!} className="text-foreground/80 text-lg" />
-            </Card>
-          )}
-
-          {/* Spiral of Inquiry */}
-          {getContent('spiral_of_inquiry_content') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                {getContent('spiral_of_inquiry_heading') || "Spiral of Inquiry"}
-              </h3>
-              <FormattedContent content={getContent('spiral_of_inquiry_content')!} className="text-foreground/80 text-lg" />
             </Card>
           )}
 
@@ -163,12 +169,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
               <FormattedContent content={getContent('spiral_of_seeing_content')!} className="text-foreground/80 text-lg" />
             </Card>
           )}
-        </>
-      )}
 
-      {/* Sacred Rewrite continued - Living Inquiry, Guided Audio, Embodiment, Benediction */}
-      {!isAreekeerA && !isArtOfSelfHealing && (
-        <>
           {/* Living Inquiry */}
           {getContent('living_inquiry_content') && (
             <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
@@ -211,8 +212,13 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
               <FormattedContent content={getContent('benediction_content')!} className="text-foreground/80 text-lg" />
             </Card>
           )}
+        </>
+      )}
 
-          {/* Journalling Activity (Magic not Logic) */}
+      {/* Magic not Logic - Card Details always shown */}
+      {isMagicNotLogic && !showBasicOnly && (
+        <>
+          {/* Journalling Activity */}
           {getContent('journalling_activity') && (
             <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
               <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
@@ -222,7 +228,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false }: Ca
             </Card>
           )}
 
-          {/* Vimeo Video Section (Magic not Logic) */}
+          {/* Vimeo Video Section */}
           {getContent('vimeo_video') && (
             <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
               <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
