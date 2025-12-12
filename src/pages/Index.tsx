@@ -213,9 +213,9 @@ const Index = () => {
 
     if (!allCards || allCards.length === 0) return [];
 
-    // Randomly select 3 cards from across all decks
+    // Randomly select 1 card from across all decks
     const shuffled = [...allCards].sort(() => Math.random() - 0.5);
-    const selectedCardIds = shuffled.slice(0, 3);
+    const selectedCardIds = shuffled.slice(0, 1);
 
     // Insert into user_starter_deck_cards and store the date
     localStorage.setItem('starterCardsDate', new Date().toDateString());
