@@ -79,7 +79,7 @@ export const StarterCardSpread = ({
           Your Starter Reading
         </h1>
         <p className="text-lg text-foreground/70 max-w-xl mx-auto">
-          Select a card to reveal its wisdom. You can explore all three cards from your daily reading.
+          Select your card to reveal its wisdom.
         </p>
       </div>
 
@@ -153,7 +153,7 @@ export const StarterCardSpread = ({
           className="space-y-4"
         >
           <p className="text-foreground/80 text-lg">
-            You've explored all three cards from your daily reading.
+            You've explored your daily card.
           </p>
         </motion.div>
       )}
