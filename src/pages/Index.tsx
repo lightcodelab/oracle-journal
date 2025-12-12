@@ -52,6 +52,7 @@ const Index = () => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [verifyDeckId, setVerifyDeckId] = useState<string | null>(null);
   const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   
   // Starter deck specific state
   const [starterCards, setStarterCards] = useState<OracleCard[]>([]);
@@ -114,6 +115,7 @@ const Index = () => {
       .maybeSingle();
 
     if (roleData) {
+      setIsAdmin(true);
       // Admin has access to all decks - fetch all deck IDs
       const { data: allDecks } = await supabase
         .from('decks')
@@ -152,6 +154,32 @@ const Index = () => {
   const markReadingUsed = () => {
     localStorage.setItem(DAILY_READING_KEY, 'true');
     setCanReadToday(false);
+  };
+
+  // Reset starter deck data for admin testing
+  const resetStarterDeckData = async () => {
+    if (!user || !isAdmin) return;
+    
+    // Clear database records
+    await supabase
+      .from('user_starter_deck_cards')
+      .delete()
+      .eq('user_id', user.id);
+    
+    // Clear localStorage
+    localStorage.removeItem(DAILY_READING_KEY);
+    
+    // Reset state
+    setStarterCards([]);
+    setViewedStarterCardIds([]);
+    setCanReadToday(true);
+    setShowStarterSpread(false);
+    setSelectedDeck(null);
+    
+    toast({
+      title: "Reset Complete",
+      description: "Starter deck data has been cleared. You can now access the free reading again.",
+    });
   };
 
   const initializeStarterDeck = async (userId: string, starterDeckId: string): Promise<OracleCard[]> => {
@@ -561,6 +589,8 @@ const Index = () => {
             viewedCardIds={viewedStarterCardIds}
             canReadToday={canReadToday}
             onBuyDecks={handleBuyDecks}
+            isAdmin={isAdmin}
+            onAdminReset={resetStarterDeckData}
           />
         )}
 
