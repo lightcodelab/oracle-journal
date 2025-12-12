@@ -412,12 +412,14 @@ const Index = () => {
     setIsRevealed(false);
 
     try {
+      // Force fresh fetch with no caching
       const { data: card, error } = await supabase
         .from('cards')
         .select('*')
         .eq('deck_id', selectedDeck.id)
         .eq('card_number', cardNumber)
-        .maybeSingle();
+        .maybeSingle()
+        .throwOnError();
 
       if (error) throw error;
 
