@@ -25,8 +25,8 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
   const isSacredRewrite = card.deck_name === 'The Sacred Rewrite';
   const isMagicNotLogic = card.deck_name === 'Magic not Logic';
   
-  // For Starter Collection, show basic content only
-  const showBasicOnly = isStarterDeck;
+  // For Starter Collection, now show FULL content (changed from basic-only)
+  const showBasicOnly = false;
 
   // Get deck badge color based on deck name
   const getDeckBadgeClass = () => {
