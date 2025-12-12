@@ -5,12 +5,13 @@ import { OracleCardComponent } from "@/components/OracleCardComponent";
 import { CardDetail } from "@/components/CardDetail";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
 import { MultiDeckShuffleAnimation } from "@/components/MultiDeckShuffleAnimation";
+import { StarterCardSpread } from "@/components/StarterCardSpread";
 import { DeckSelection } from "@/components/DeckSelection";
 import { PurchaseVerification } from "@/components/PurchaseVerification";
 import { CardNumberSelector } from "@/components/CardNumberSelector";
 import { CardDropdownSelector } from "@/components/CardDropdownSelector";
 import { supabase } from "@/integrations/supabase/client";
-import { Shuffle, Sparkles, LogOut } from "lucide-react";
+import { Shuffle, Sparkles, LogOut, ChevronLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import sacredRewriteCardBack from "@/assets/card-back-v2.png";
@@ -37,6 +38,8 @@ interface Deck {
   woocommerce_product_id_premium: string | null;
 }
 
+const DAILY_READING_KEY = 'starter_reading_date';
+
 const Index = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -49,6 +52,13 @@ const Index = () => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [verifyDeckId, setVerifyDeckId] = useState<string | null>(null);
   const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
+  
+  // Starter deck specific state
+  const [starterCards, setStarterCards] = useState<OracleCard[]>([]);
+  const [viewedStarterCardIds, setViewedStarterCardIds] = useState<string[]>([]);
+  const [showStarterSpread, setShowStarterSpread] = useState(false);
+  const [canReadToday, setCanReadToday] = useState(true);
+  
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -127,16 +137,55 @@ const Index = () => {
     }
   };
 
-  const initializeStarterDeck = async (userId: string, starterDeckId: string) => {
-    // Check if user already has starter cards assigned
+  // Check if user can read today (daily limit for starter deck)
+  const checkDailyReadingLimit = () => {
+    const lastReadingDate = localStorage.getItem(DAILY_READING_KEY);
+    const today = new Date().toDateString();
+    
+    if (lastReadingDate === today) {
+      setCanReadToday(false);
+      return false;
+    }
+    return true;
+  };
+
+  // Mark today's reading as used
+  const markReadingUsed = () => {
+    const today = new Date().toDateString();
+    localStorage.setItem(DAILY_READING_KEY, today);
+    setCanReadToday(false);
+  };
+
+  const initializeStarterDeck = async (userId: string, starterDeckId: string): Promise<OracleCard[]> => {
+    // Check daily limit first
+    const canRead = checkDailyReadingLimit();
+    
+    // Check if user already has starter cards assigned for today
     const { data: existingCards } = await supabase
       .from('user_starter_deck_cards')
-      .select('id')
-      .eq('user_id', userId)
-      .limit(1);
+      .select('card_id')
+      .eq('user_id', userId);
 
+    // If they have cards and haven't used today's reading, fetch them
     if (existingCards && existingCards.length > 0) {
-      return; // Already initialized
+      const cardIds = existingCards.map(c => c.card_id);
+      const { data: cards } = await supabase
+        .from('cards')
+        .select('*, decks(name)')
+        .in('id', cardIds);
+      
+      const mappedCards = (cards || []).map(card => ({
+        ...card,
+        deck_name: card.deck_name || card.decks?.name || null
+      })) as OracleCard[];
+      
+      setStarterCards(mappedCards);
+      return mappedCards;
+    }
+
+    // No existing cards - create new ones if they can read today
+    if (!canRead) {
+      return [];
     }
 
     // Get all cards from non-starter decks
@@ -145,25 +194,35 @@ const Index = () => {
       .select('id, deck_id')
       .neq('deck_id', starterDeckId);
 
-    if (!allCards || allCards.length === 0) return;
+    if (!allCards || allCards.length === 0) return [];
 
     // Randomly select 3 cards from across all decks
     const shuffled = [...allCards].sort(() => Math.random() - 0.5);
-    const selectedCards = shuffled.slice(0, 3);
+    const selectedCardIds = shuffled.slice(0, 3);
 
     // Insert into user_starter_deck_cards
-    const { error } = await supabase
+    await supabase
       .from('user_starter_deck_cards')
       .insert(
-        selectedCards.map(card => ({
+        selectedCardIds.map(card => ({
           user_id: userId,
           card_id: card.id,
         }))
       );
 
-    if (error) {
-      console.error('Error initializing starter deck:', error);
-    }
+    // Fetch the full card data
+    const { data: newCards } = await supabase
+      .from('cards')
+      .select('*, decks(name)')
+      .in('id', selectedCardIds.map(c => c.id));
+    
+    const mappedCards = (newCards || []).map(card => ({
+      ...card,
+      deck_name: card.deck_name || card.decks?.name || null
+    })) as OracleCard[];
+    
+    setStarterCards(mappedCards);
+    return mappedCards;
   };
 
   const handleSelectDeck = async (deckId: string) => {
@@ -172,9 +231,16 @@ const Index = () => {
 
     setSelectedDeck(deck);
 
-    // Initialize starter deck if needed
+    // For starter deck, initialize and show spread
     if (deck.is_starter) {
-      await initializeStarterDeck(user.id, deckId);
+      checkDailyReadingLimit();
+      const cards = await initializeStarterDeck(user.id, deckId);
+      if (cards.length > 0) {
+        setShowStarterSpread(true);
+        // Mark reading as used when they first access the spread
+        markReadingUsed();
+      }
+      return;
     }
 
     // Check if user has premium access
@@ -206,6 +272,36 @@ const Index = () => {
     } else {
       setHasPremiumAccess(false);
     }
+  };
+
+  // Handler for selecting a card from the starter spread
+  const handleSelectStarterCard = (card: OracleCard) => {
+    setSelectedCard(card);
+    setShowStarterSpread(false);
+    setShowCard(true);
+    setIsRevealed(true); // Go straight to revealed for starter cards
+    
+    // Add to viewed cards
+    if (!viewedStarterCardIds.includes(card.id)) {
+      setViewedStarterCardIds(prev => [...prev, card.id]);
+    }
+  };
+
+  // Handler to go back to starter spread
+  const handleBackToStarterSpread = () => {
+    setSelectedCard(null);
+    setShowCard(false);
+    setIsRevealed(false);
+    setShowStarterSpread(true);
+  };
+
+  // Handler for buy decks button
+  const handleBuyDecks = () => {
+    // For now, just show a toast - in future this will link to the shop
+    toast({
+      title: "Coming Soon",
+      description: "The shop link will be available soon!",
+    });
   };
 
   const handleShuffle = async () => {
@@ -341,6 +437,11 @@ const Index = () => {
   };
 
   const handleDrawAnother = () => {
+    // For starter deck, go back to spread
+    if (selectedDeck?.is_starter) {
+      handleBackToStarterSpread();
+      return;
+    }
     setShowCard(false);
     setIsRevealed(false);
     setSelectedCard(null);
@@ -351,6 +452,9 @@ const Index = () => {
     setShowCard(false);
     setIsRevealed(false);
     setSelectedCard(null);
+    setShowStarterSpread(false);
+    setStarterCards([]);
+    setViewedStarterCardIds([]);
   };
 
   const handleSignOut = async () => {
@@ -433,7 +537,20 @@ const Index = () => {
           />
         )}
 
-        {selectedDeck && !showCard && !isShuffling && (
+        {/* Starter Collection Card Spread */}
+        {selectedDeck?.is_starter && showStarterSpread && !showCard && (
+          <StarterCardSpread
+            cards={starterCards}
+            onSelectCard={handleSelectStarterCard}
+            onBackToDecks={handleBackToDecks}
+            viewedCardIds={viewedStarterCardIds}
+            canReadToday={canReadToday}
+            onBuyDecks={handleBuyDecks}
+          />
+        )}
+
+        {/* Regular deck UI - exclude starter decks */}
+        {selectedDeck && !selectedDeck.is_starter && !showCard && !isShuffling && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -592,11 +709,12 @@ const Index = () => {
         {isRevealed && selectedCard && (
           <>
             <Button
-              onClick={handleBackToDecks}
+              onClick={selectedDeck?.is_starter ? handleBackToStarterSpread : handleBackToDecks}
               variant="ghost"
               className="absolute top-4 left-4"
             >
-              ← Back to Decks
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              {selectedDeck?.is_starter ? 'Back to Reading' : 'Back to Decks'}
             </Button>
             <CardDetail 
               card={selectedCard}

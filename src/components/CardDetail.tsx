@@ -262,7 +262,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         </>
       )}
 
-      {/* Draw Another Button */}
+      {/* Back/Draw Another Button */}
       <div className="flex justify-center pt-4">
         <Button
           onClick={onDrawAnother}
@@ -270,7 +270,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
           className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-6 text-lg shadow-glow"
         >
           <RefreshCw className="w-5 h-5 mr-2" />
-          Draw Another Card
+          {isStarterDeck ? 'Back to Reading' : 'Draw Another Card'}
         </Button>
       </div>
     </motion.div>
