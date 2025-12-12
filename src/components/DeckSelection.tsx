@@ -54,7 +54,7 @@ export const DeckSelection = ({
           <img 
             src={appGridBanner} 
             alt="Choose Your Deck" 
-            className="w-full max-w-4xl mx-auto h-32 md:h-40 object-cover"
+            className="w-full h-32 md:h-40 object-cover"
           />
         </motion.div>
         <h1 className="font-serif text-5xl md:text-6xl font-bold text-foreground mb-4">
