@@ -56,6 +56,15 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
        return { type: 'numbered', index: numberIndex, content: contentText, nestedBullets, skipNext: nestedBullets.length };
      }
  
+      // Check for markdown bold heading (e.g., **Inquiry Questions**)
+      const boldHeadingPattern = /^\*\*([^*]+)\*\*$/;
+      if (boldHeadingPattern.test(text)) {
+        // This is a bold standalone heading - exit Mythic section
+        isInMythicSection = false;
+        const match = text.match(boldHeadingPattern);
+        return { type: 'bold-heading', content: match ? match[1] : text };
+      }
+
       // Check for bold labels (text ending with colon)
       if (labelPattern.test(text)) {
         const match = text.match(labelPattern);
@@ -181,6 +190,14 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
               <p className="font-semibold">{renderWithBold(formatted.label)}</p>
               <p className="leading-relaxed">{renderWithBold(formatted.content)}</p>
             </div>
+          );
+        }
+
+        if (formatted.type === 'bold-heading') {
+          return (
+            <p key={idx} className="font-semibold mt-6">
+              {formatted.content}
+            </p>
           );
         }
         
