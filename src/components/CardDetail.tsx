@@ -135,8 +135,112 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         </>
       )}
 
-      {/* Card Details Section - Sacred Rewrite and Magic not Logic */}
-      {(isSacredRewrite || isMagicNotLogic) && getContent('card_details') && (
+      {/* Sacred Rewrite content - in correct order */}
+      {isSacredRewrite && (
+        <>
+          {/* 1. The Card */}
+          {getContent('card_details') && (
+            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+              <div className="flex items-center gap-2 mb-6">
+                <Sparkles className="w-6 h-6 text-accent" />
+                <h3 className="font-serif text-3xl font-semibold text-foreground">The Card</h3>
+              </div>
+              <FormattedContent content={getContent('card_details')!} className="text-foreground/80 text-lg" />
+            </Card>
+          )}
+
+          {/* 2. Opening Invocation - only show if NOT in Starter Collection */}
+          {!showBasicOnly && getContent('opening_invocation_content') && (
+            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                {getContent('opening_invocation_heading') || "Opening Invocation & Altar Ritual"}
+              </h3>
+              <FormattedContent content={getContent('opening_invocation_content')!} className="text-foreground/80 text-lg" />
+            </Card>
+          )}
+
+          {/* 3. Spiral of Inquiry (always shown for basic version) */}
+          {getContent('spiral_of_inquiry_content') && (
+            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                {getContent('spiral_of_inquiry_heading') || "Spiral of Inquiry"}
+              </h3>
+              <FormattedContent content={getContent('spiral_of_inquiry_content')!} className="text-foreground/80 text-lg" />
+            </Card>
+          )}
+
+          {/* Additional content - only shown if NOT in Starter Collection */}
+          {!showBasicOnly && (
+            <>
+              {/* 4. Acknowledgement */}
+              {getContent('acknowledgement_content') && (
+                <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+                  <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                    {getContent('acknowledgement_heading') || "Acknowledgement of Distortion as Protection"}
+                  </h3>
+                  <FormattedContent content={getContent('acknowledgement_content')!} className="text-foreground/80 text-lg" />
+                </Card>
+              )}
+
+              {/* 5. Spiral of Seeing */}
+              {getContent('spiral_of_seeing_content') && (
+                <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+                  <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                    {getContent('spiral_of_seeing_heading') || "Spiral of Seeing"}
+                  </h3>
+                  <FormattedContent content={getContent('spiral_of_seeing_content')!} className="text-foreground/80 text-lg" />
+                </Card>
+              )}
+
+              {/* 6. Living Inquiry */}
+              {getContent('living_inquiry_content') && (
+                <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+                  <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                    {getContent('living_inquiry_heading') || "Living Inquiry"}
+                  </h3>
+                  <FormattedContent content={getContent('living_inquiry_content')!} className="text-foreground/80 text-lg" />
+                </Card>
+              )}
+
+              {/* 7. Guided Audio */}
+              {getContent('guided_audio_content') && (
+                <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+                  <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                    {getContent('guided_audio_heading') || "Guided Audio Journey"}
+                  </h3>
+                  <FormattedContent content={getContent('guided_audio_content')!} className="text-foreground/80 text-lg" />
+                </Card>
+              )}
+
+              {/* 8. Premium Content - Embodiment Ritual */}
+              {hasPremiumAccess && getContent('embodiment_ritual_content') && (
+                <Card className="bg-card/50 backdrop-blur-sm border-accent/30 p-8">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Sparkles className="w-6 h-6 text-accent animate-pulse" />
+                    <h3 className="font-serif text-3xl font-semibold text-foreground">
+                      {getContent('embodiment_ritual_heading') || "Embodiment Ritual"}
+                    </h3>
+                  </div>
+                  <FormattedContent content={getContent('embodiment_ritual_content')!} className="text-foreground/80 text-lg" />
+                </Card>
+              )}
+
+              {/* 9. Benediction */}
+              {getContent('benediction_content') && (
+                <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
+                  <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                    {getContent('benediction_heading') || "Closing Benediction"}
+                  </h3>
+                  <FormattedContent content={getContent('benediction_content')!} className="text-foreground/80 text-lg" />
+                </Card>
+              )}
+            </>
+          )}
+        </>
+      )}
+
+      {/* Magic not Logic - Card Details */}
+      {isMagicNotLogic && getContent('card_details') && (
         <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-6 h-6 text-accent" />
@@ -146,95 +250,6 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         </Card>
       )}
 
-      {/* Sacred Rewrite - Spiral of Inquiry (always shown for basic version) */}
-      {isSacredRewrite && getContent('spiral_of_inquiry_content') && (
-        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-          <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-            {getContent('spiral_of_inquiry_heading') || "Spiral of Inquiry"}
-          </h3>
-          <FormattedContent content={getContent('spiral_of_inquiry_content')!} className="text-foreground/80 text-lg" />
-        </Card>
-      )}
-
-      {/* Sacred Rewrite additional content - only shown if NOT in Starter Collection */}
-      {isSacredRewrite && !showBasicOnly && (
-        <>
-          {/* Opening Invocation */}
-          {getContent('opening_invocation_content') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                {getContent('opening_invocation_heading') || "Opening Invocation"}
-              </h3>
-              <FormattedContent content={getContent('opening_invocation_content')!} className="text-foreground/80 text-lg" />
-            </Card>
-          )}
-
-          {/* Acknowledgement */}
-          {getContent('acknowledgement_content') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                {getContent('acknowledgement_heading') || "Acknowledgement"}
-              </h3>
-              <FormattedContent content={getContent('acknowledgement_content')!} className="text-foreground/80 text-lg" />
-            </Card>
-          )}
-
-          {/* Spiral of Seeing */}
-          {getContent('spiral_of_seeing_content') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                {getContent('spiral_of_seeing_heading') || "Spiral of Seeing"}
-              </h3>
-              <FormattedContent content={getContent('spiral_of_seeing_content')!} className="text-foreground/80 text-lg" />
-            </Card>
-          )}
-
-          {/* Living Inquiry */}
-          {getContent('living_inquiry_content') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                {getContent('living_inquiry_heading') || "Living Inquiry"}
-              </h3>
-              <FormattedContent content={getContent('living_inquiry_content')!} className="text-foreground/80 text-lg" />
-            </Card>
-          )}
-
-          {/* Guided Audio */}
-          {getContent('guided_audio_content') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                {getContent('guided_audio_heading') || "Guided Audio Journey"}
-              </h3>
-              <FormattedContent content={getContent('guided_audio_content')!} className="text-foreground/80 text-lg" />
-            </Card>
-          )}
-
-          {/* Premium Content - Embodiment Ritual */}
-          {hasPremiumAccess && getContent('embodiment_ritual_content') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-accent/30 p-8">
-              <div className="flex items-center gap-2 mb-6">
-                <Sparkles className="w-6 h-6 text-accent animate-pulse" />
-                <h3 className="font-serif text-3xl font-semibold text-foreground">
-                  {getContent('embodiment_ritual_heading') || "Embodiment Ritual"}
-                </h3>
-              </div>
-              <FormattedContent content={getContent('embodiment_ritual_content')!} className="text-foreground/80 text-lg" />
-            </Card>
-          )}
-
-          {/* Benediction */}
-          {getContent('benediction_content') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
-                {getContent('benediction_heading') || "Closing Benediction"}
-              </h3>
-              <FormattedContent content={getContent('benediction_content')!} className="text-foreground/80 text-lg" />
-            </Card>
-          )}
-        </>
-      )}
-
-      {/* Magic not Logic - Card Details always shown */}
       {isMagicNotLogic && !showBasicOnly && (
         <>
           {/* Journalling Activity */}
