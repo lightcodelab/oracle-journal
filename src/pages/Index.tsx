@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { OracleCardComponent } from "@/components/OracleCardComponent";
 import { CardDetail } from "@/components/CardDetail";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
+import { MultiDeckShuffleAnimation } from "@/components/MultiDeckShuffleAnimation";
 import { DeckSelection } from "@/components/DeckSelection";
 import { PurchaseVerification } from "@/components/PurchaseVerification";
 import { CardNumberSelector } from "@/components/CardNumberSelector";
@@ -146,9 +147,9 @@ const Index = () => {
 
     if (!allCards || allCards.length === 0) return;
 
-    // Randomly select 8 cards
+    // Randomly select 3 cards from across all decks
     const shuffled = [...allCards].sort(() => Math.random() - 0.5);
-    const selectedCards = shuffled.slice(0, 8);
+    const selectedCards = shuffled.slice(0, 3);
 
     // Insert into user_starter_deck_cards
     const { error } = await supabase
@@ -343,23 +344,33 @@ const Index = () => {
     setVerifyDeckId(deckId);
   };
 
-  // Get the appropriate card back image for the selected deck
-  const getCardBackImage = () => {
-    if (!selectedDeck) return sacredRewriteCardBack;
+  // Get the appropriate card back image based on deck name
+  const getCardBackForDeck = (deckName: string | null | undefined) => {
+    if (!deckName) return sacredRewriteCardBack;
     
-    // Map deck names to their card back images
-    if (selectedDeck.name.toLowerCase().includes('magic not logic')) {
+    if (deckName.toLowerCase().includes('magic not logic')) {
       return mnlCardBack;
     }
-    if (selectedDeck.name.toLowerCase().includes('areekeera')) {
+    if (deckName.toLowerCase().includes('areekeera')) {
       return areekeeraCardBack;
     }
-    if (selectedDeck.name.toLowerCase().includes('art of self-healing')) {
+    if (deckName.toLowerCase().includes('art of self-healing')) {
       return taoshCardBack;
     }
     
-    // Default to Sacred Rewrite card back
     return sacredRewriteCardBack;
+  };
+
+  // Get the appropriate card back image for the selected deck or card
+  const getCardBackImage = () => {
+    // For starter deck, use the card's deck_name
+    if (selectedDeck?.is_starter && selectedCard?.deck_name) {
+      return getCardBackForDeck(selectedCard.deck_name);
+    }
+    
+    if (!selectedDeck) return sacredRewriteCardBack;
+    
+    return getCardBackForDeck(selectedDeck.name);
   };
 
   if (loading) {
@@ -525,7 +536,11 @@ const Index = () => {
             animate={{ opacity: 1 }}
             className="min-h-[80vh] flex justify-center items-center"
           >
-            <ShuffleAnimation cardBackImage={getCardBackImage()} />
+            {selectedDeck?.is_starter ? (
+              <MultiDeckShuffleAnimation />
+            ) : (
+              <ShuffleAnimation cardBackImage={getCardBackImage()} />
+            )}
           </motion.div>
         )}
 
