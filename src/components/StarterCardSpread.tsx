@@ -79,14 +79,17 @@ export const StarterCardSpread = ({
           Your Starter Reading
         </h1>
         <p className="text-lg text-foreground/70 max-w-xl mx-auto">
-          Select your card to reveal its wisdom.
+          Select a card from each deck to reveal its wisdom.
         </p>
       </div>
 
       {!canReadToday && (
-        <div className="bg-muted/50 border border-border rounded-lg p-4 max-w-md mx-auto">
+        <div className="bg-muted/50 border border-border rounded-lg p-6 max-w-lg mx-auto space-y-3">
+          <p className="text-foreground font-semibold text-lg">
+            You've used your free reading
+          </p>
           <p className="text-foreground/80">
-            You've already had your free reading today. Come back tomorrow for a new spread, or purchase a deck for unlimited access.
+            To access the full wisdom of these oracle decks with unlimited readings, purchase the decks from our shop.
           </p>
         </div>
       )}
@@ -153,7 +156,7 @@ export const StarterCardSpread = ({
           className="space-y-4"
         >
           <p className="text-foreground/80 text-lg">
-            You've explored your daily card.
+            You've explored all four cards from your free reading. Purchase the full decks to unlock unlimited access to all card content.
           </p>
         </motion.div>
       )}
