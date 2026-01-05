@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 
+import templeBanner from '@/assets/temple-banner.png';
 import doorRemembrance from '@/assets/door-remembrance.png';
 import doorDevotion from '@/assets/door-devotion.png';
 import doorSeeing from '@/assets/door-seeing.png';
@@ -86,12 +87,26 @@ const Temple = () => {
   return (
     <div className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-6xl mx-auto">
+        {/* Banner Image */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          className="mb-8"
+        >
+          <img
+            src={templeBanner}
+            alt="The Temple of Sustainment"
+            className="w-full h-auto"
+          />
+        </motion.div>
+
         {/* Header Text */}
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center font-serif text-3xl md:text-4xl text-primary mb-12"
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-center font-serif text-3xl md:text-4xl text-white mb-12"
         >
           The Temple is open to you.
         </motion.h1>
