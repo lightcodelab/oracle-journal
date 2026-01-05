@@ -108,7 +108,7 @@ const CoursePage = () => {
   };
 
   const handleLessonClick = (lessonId: string) => {
-    navigate(`/devotion/course/${courseId}/lesson/${lessonId}`);
+    navigate(`/seeing/course/${courseId}/lesson/${lessonId}`);
   };
 
   if (loading || courseLoading || lessonsLoading) {
@@ -126,8 +126,8 @@ const CoursePage = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground mb-4">Course not found</p>
-          <Button onClick={() => navigate('/devotion')}>
-            Return to Door of Devotion
+          <Button onClick={() => navigate('/seeing/courses')}>
+            Return to Courses
           </Button>
         </div>
       </div>
@@ -140,7 +140,7 @@ const CoursePage = () => {
       <div className="fixed top-0 left-0 right-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
         <div className="flex items-center justify-between px-4 py-3">
           <Button
-            onClick={() => navigate('/devotion')}
+            onClick={() => navigate('/seeing/courses')}
             variant="ghost"
             size="sm"
             className="text-foreground/70 hover:text-foreground"

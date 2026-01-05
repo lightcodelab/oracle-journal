@@ -13,7 +13,7 @@ interface Course {
   image_url: string | null;
 }
 
-const DoorOfDevotion = () => {
+const SeeingCourses = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
@@ -39,12 +39,12 @@ const DoorOfDevotion = () => {
   }, [navigate]);
 
   const { data: courses, isLoading: coursesLoading } = useQuery({
-    queryKey: ['devotion-courses'],
+    queryKey: ['seeing-courses'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('courses')
         .select('*')
-        .eq('door_type', 'devotion')
+        .eq('door_type', 'seeing')
         .eq('is_published', true)
         .order('display_order', { ascending: true });
 
@@ -60,14 +60,14 @@ const DoorOfDevotion = () => {
   };
 
   const handleCourseClick = (courseId: string) => {
-    navigate(`/devotion/course/${courseId}`);
+    navigate(`/seeing/course/${courseId}`);
   };
 
   if (loading || coursesLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
-          Opening the Door of Devotion...
+          Loading courses...
         </div>
       </div>
     );
@@ -78,13 +78,13 @@ const DoorOfDevotion = () => {
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <Button
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/seeing')}
           variant="ghost"
           size="sm"
           className="text-foreground/70 hover:text-foreground"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Temple
+          Door of Seeing
         </Button>
         <Button
           onClick={handleSignOut}
@@ -106,10 +106,10 @@ const DoorOfDevotion = () => {
           className="text-center mb-12"
         >
           <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
-            The Door of Devotion
+            Courses
           </h1>
           <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
-            Courses and teachings to support your spiritual practice and energetic well-being.
+            Structured teachings to support your spiritual practice and energetic well-being.
           </p>
         </motion.div>
 
@@ -173,4 +173,4 @@ const DoorOfDevotion = () => {
   );
 };
 
-export default DoorOfDevotion;
+export default SeeingCourses;

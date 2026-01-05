@@ -29,13 +29,13 @@ const doors: Door[] = [
     id: 'devotion',
     name: 'The Door of Devotion',
     image: doorDevotion,
-    route: '/devotion',
+    route: null, // Coming soon
   },
   {
     id: 'seeing',
     name: 'The Door of Seeing',
     image: doorSeeing,
-    route: null, // Coming soon
+    route: '/seeing',
   },
   {
     id: 'communion',
