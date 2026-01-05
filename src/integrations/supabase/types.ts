@@ -265,6 +265,7 @@ export type Database = {
       }
       lesson_journal_entries: {
         Row: {
+          audio_position: number | null
           created_at: string | null
           id: string
           journal_text: string | null
@@ -274,6 +275,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          audio_position?: number | null
           created_at?: string | null
           id?: string
           journal_text?: string | null
@@ -283,6 +285,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          audio_position?: number | null
           created_at?: string | null
           id?: string
           journal_text?: string | null

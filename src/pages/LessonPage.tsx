@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ArrowRight, LogOut, BookOpen, CheckCircle2, Menu, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, LogOut, BookOpen, CheckCircle2, Menu, RotateCcw } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -36,6 +36,7 @@ interface JournalEntry {
   lesson_id: string;
   selected_answer: number | null;
   journal_text: string | null;
+  audio_position: number | null;
 }
 
 interface LessonListItem {
@@ -52,6 +53,8 @@ const LessonPage = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<string>('');
   const [journalText, setJournalText] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const lastSavedPositionRef = useRef<number>(0);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -138,7 +141,7 @@ const LessonPage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('lesson_journal_entries')
-        .select('*')
+        .select('id, lesson_id, selected_answer, journal_text, audio_position')
         .eq('lesson_id', lessonId)
         .eq('user_id', userId)
         .maybeSingle();
@@ -176,11 +179,63 @@ const LessonPage = () => {
       if (existingEntry.journal_text) {
         setJournalText(existingEntry.journal_text);
       }
+      // Restore audio position
+      if (existingEntry.audio_position && audioRef.current) {
+        audioRef.current.currentTime = existingEntry.audio_position;
+        lastSavedPositionRef.current = existingEntry.audio_position;
+      }
     } else {
       setSelectedAnswer('');
       setJournalText('');
     }
   }, [existingEntry, lessonId]);
+
+  // Save audio position periodically
+  const saveAudioPosition = useCallback(async (position: number) => {
+    if (!userId || !lessonId) return;
+    
+    // Only save if position changed by more than 5 seconds
+    if (Math.abs(position - lastSavedPositionRef.current) < 5) return;
+    
+    lastSavedPositionRef.current = position;
+    
+    try {
+      if (existingEntry) {
+        await supabase
+          .from('lesson_journal_entries')
+          .update({ audio_position: position })
+          .eq('id', existingEntry.id);
+      } else {
+        await supabase
+          .from('lesson_journal_entries')
+          .insert({
+            user_id: userId,
+            lesson_id: lessonId,
+            audio_position: position,
+          });
+        // Invalidate to get the new entry
+        queryClient.invalidateQueries({ queryKey: ['journal-entry', lessonId, userId] });
+      }
+    } catch (error) {
+      console.error('Error saving audio position:', error);
+    }
+  }, [userId, lessonId, existingEntry, queryClient]);
+
+  // Handle audio time updates
+  const handleTimeUpdate = useCallback(() => {
+    if (audioRef.current) {
+      saveAudioPosition(audioRef.current.currentTime);
+    }
+  }, [saveAudioPosition]);
+
+  // Restart audio from beginning
+  const handleRestartAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+      lastSavedPositionRef.current = 0;
+    }
+  };
 
   const saveJournalMutation = useMutation({
     mutationFn: async () => {
@@ -376,19 +431,38 @@ const LessonPage = () => {
               {/* Audio Player */}
               {lesson.audio_url && (
                 <div className="mb-8 p-4 bg-card border border-border rounded-lg">
-                  <h3 className="font-sans text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3">
-                    Guided Practice
-                  </h3>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-sans text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                      Guided Practice
+                    </h3>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRestartAudio}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <RotateCcw className="w-4 h-4 mr-1" />
+                      Restart
+                    </Button>
+                  </div>
                   <audio 
+                    ref={audioRef}
                     controls 
                     className="w-full"
                     src={lesson.audio_url}
+                    onTimeUpdate={handleTimeUpdate}
+                    onPause={handleTimeUpdate}
                   >
                     Your browser does not support the audio element.
                   </audio>
+                  {existingEntry?.audio_position && existingEntry.audio_position > 0 && (
+                    <p className="text-xs text-primary mt-2">
+                      Resuming from where you left off
+                    </p>
+                  )}
                   {lesson.audio_timestamp && (
-                    <p className="text-xs text-muted-foreground mt-2">
-                      Returning? The guided practice begins at {lesson.audio_timestamp}.
+                    <p className="text-xs text-muted-foreground mt-1">
+                      The guided practice begins at {lesson.audio_timestamp}.
                     </p>
                   )}
                 </div>
