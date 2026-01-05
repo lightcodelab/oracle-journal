@@ -559,8 +559,17 @@ const Index = () => {
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background" />
 
-      {/* Sign Out Button */}
-      <div className="absolute top-4 right-4 z-20">
+      {/* Navigation Buttons */}
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+        <Button
+          onClick={() => navigate('/')}
+          variant="ghost"
+          size="sm"
+          className="text-foreground/70 hover:text-foreground"
+        >
+          <ChevronLeft className="w-4 h-4 mr-1" />
+          Temple
+        </Button>
         <Button
           onClick={handleSignOut}
           variant="ghost"
