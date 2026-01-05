@@ -290,7 +290,7 @@ const LessonPage = () => {
   const nextLesson = currentIndex < (allLessons?.length ?? 0) - 1 ? allLessons?.[currentIndex + 1] : null;
 
   const navigateToLesson = (targetLessonId: string) => {
-    navigate(`/devotion/course/${courseId}/lesson/${targetLessonId}`);
+    navigate(`/seeing/course/${courseId}/lesson/${targetLessonId}`);
     setMobileMenuOpen(false);
   };
 
@@ -309,7 +309,7 @@ const LessonPage = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground mb-4">Lesson not found</p>
-          <Button onClick={() => navigate(`/devotion/course/${courseId}`)}>
+          <Button onClick={() => navigate(`/seeing/course/${courseId}`)}>
             Return to Course
           </Button>
         </div>
@@ -373,7 +373,7 @@ const LessonPage = () => {
               </SheetContent>
             </Sheet>
             <Button
-              onClick={() => navigate(`/devotion/course/${courseId}`)}
+              onClick={() => navigate(`/seeing/course/${courseId}`)}
               variant="ghost"
               size="sm"
               className="text-foreground/70 hover:text-foreground"
