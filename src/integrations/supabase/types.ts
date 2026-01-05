@@ -141,6 +141,42 @@ export type Database = {
           },
         ]
       }
+      courses: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          door_type: string
+          id: string
+          image_url: string | null
+          is_published: boolean | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          door_type?: string
+          id?: string
+          image_url?: string | null
+          is_published?: boolean | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          door_type?: string
+          id?: string
+          image_url?: string | null
+          is_published?: boolean | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       deck_purchases: {
         Row: {
           deck_id: string
@@ -226,6 +262,97 @@ export type Database = {
           woocommerce_product_id_premium?: string | null
         }
         Relationships: []
+      }
+      lesson_journal_entries: {
+        Row: {
+          created_at: string | null
+          id: string
+          journal_text: string | null
+          lesson_id: string
+          selected_answer: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          journal_text?: string | null
+          lesson_id: string
+          selected_answer?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          journal_text?: string | null
+          lesson_id?: string
+          selected_answer?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_journal_entries_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lessons: {
+        Row: {
+          audio_timestamp: string | null
+          audio_url: string | null
+          content: string
+          course_id: string
+          created_at: string | null
+          description: string | null
+          id: string
+          lesson_number: number
+          survey_options: Json | null
+          survey_question: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          audio_timestamp?: string | null
+          audio_url?: string | null
+          content: string
+          course_id: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          lesson_number: number
+          survey_options?: Json | null
+          survey_question?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          audio_timestamp?: string | null
+          audio_url?: string | null
+          content?: string
+          course_id?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          lesson_number?: number
+          survey_options?: Json | null
+          survey_question?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lessons_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
