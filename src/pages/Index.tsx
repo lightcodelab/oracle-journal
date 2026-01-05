@@ -559,8 +559,8 @@ const Index = () => {
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background" />
 
-      {/* Navigation Buttons */}
-      <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+      {/* Navigation Header */}
+      <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <Button
           onClick={() => navigate('/')}
           variant="ghost"
