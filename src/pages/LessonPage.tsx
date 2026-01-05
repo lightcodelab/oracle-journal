@@ -461,10 +461,7 @@ const LessonPage = () => {
                     className="flex items-center gap-2"
                   >
                     <ArrowLeft className="w-4 h-4" />
-                    <div className="text-left">
-                      <span className="text-xs text-muted-foreground block">Previous</span>
-                      <span className="text-sm">{prevLesson.title}</span>
-                    </div>
+                    <span className="text-sm">Lesson {prevLesson.lesson_number}</span>
                   </Button>
                 ) : (
                   <div />
@@ -475,10 +472,7 @@ const LessonPage = () => {
                     onClick={() => navigateToLesson(nextLesson.id)}
                     className="flex items-center gap-2"
                   >
-                    <div className="text-right">
-                      <span className="text-xs text-primary-foreground/70 block">Next</span>
-                      <span className="text-sm">{nextLesson.title}</span>
-                    </div>
+                    <span className="text-sm">Lesson {nextLesson.lesson_number}</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 ) : (
