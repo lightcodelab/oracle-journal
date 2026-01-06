@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, LogOut, MessageCircleHeart, FolderHeart, Settings, Sparkles, Flame, Move, Zap, FileHeart } from 'lucide-react';
+import ProfileDropdown from '@/components/ProfileDropdown';
+import { ArrowLeft, MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -16,7 +17,6 @@ interface Category {
 const DoorOfDevotion = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -25,16 +25,6 @@ const DoorOfDevotion = () => {
         navigate('/auth');
         return;
       }
-
-      // Check if user is admin
-      const { data: roles } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', session.user.id)
-        .eq('role', 'admin')
-        .single();
-
-      setIsAdmin(!!roles);
       setLoading(false);
     };
 
@@ -49,11 +39,6 @@ const DoorOfDevotion = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/auth');
-  };
-
   const categories: Category[] = [
     {
       id: 'maelin',
@@ -61,13 +46,6 @@ const DoorOfDevotion = () => {
       description: 'Your personal healing companion who creates custom protocols based on your symptoms',
       icon: <MessageCircleHeart className="w-8 h-8" />,
       route: '/devotion/healing-bot',
-    },
-    {
-      id: 'my-protocols',
-      name: 'My Protocols',
-      description: 'View and manage your saved healing protocols',
-      icon: <FolderHeart className="w-8 h-8" />,
-      route: '/devotion/protocols',
     },
     {
       id: 'guided-meditations',
@@ -104,13 +82,6 @@ const DoorOfDevotion = () => {
       icon: <FileHeart className="w-8 h-8" />,
       route: null,
     },
-    ...(isAdmin ? [{
-      id: 'admin',
-      name: 'Admin Dashboard',
-      description: 'Manage healing content and view analytics',
-      icon: <Settings className="w-8 h-8" />,
-      route: '/devotion/admin',
-    }] : []),
   ];
 
   const handleCategoryClick = (category: Category) => {
@@ -142,15 +113,7 @@ const DoorOfDevotion = () => {
           <ArrowLeft className="w-4 h-4 mr-2" />
           Temple
         </Button>
-        <Button
-          onClick={handleSignOut}
-          variant="ghost"
-          size="sm"
-          className="text-foreground/70 hover:text-foreground"
-        >
-          <LogOut className="w-4 h-4 mr-2" />
-          Sign Out
-        </Button>
+        <ProfileDropdown />
       </div>
 
       <div className="max-w-4xl mx-auto pt-12">
