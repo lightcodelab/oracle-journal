@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Plus, Trash2, Save, Loader2, Search } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Save, Loader2, Search, Upload, X, FileAudio, FileVideo, File } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   Dialog,
@@ -59,6 +59,8 @@ const HealingContentAdmin = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingContent, setEditingContent] = useState<HealingContent | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
 
   // Form state
   const [form, setForm] = useState({
@@ -133,6 +135,58 @@ const HealingContentAdmin = () => {
       display_order: 0,
     });
     setEditingContent(null);
+    setUploadedFileUrl(null);
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `${form.content_type}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('healing-content')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('healing-content')
+        .getPublicUrl(filePath);
+
+      setUploadedFileUrl(publicUrl);
+      setForm({ ...form, content_url: publicUrl });
+
+      toast({
+        title: "Uploaded",
+        description: "File uploaded successfully.",
+      });
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast({
+        title: "Error",
+        description: "Failed to upload file.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeUploadedFile = () => {
+    setUploadedFileUrl(null);
+    setForm({ ...form, content_url: '' });
+  };
+
+  const getFileIcon = (url: string) => {
+    if (url.match(/\.(mp3|wav|ogg|m4a)$/i)) return FileAudio;
+    if (url.match(/\.(mp4|webm|mov)$/i)) return FileVideo;
+    return File;
   };
 
   const openEditDialog = (item: HealingContent) => {
@@ -352,7 +406,39 @@ const HealingContentAdmin = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="content_url">Content URL (audio/video link)</Label>
+                <Label>Upload File (audio/video)</Label>
+                {uploadedFileUrl || form.content_url ? (
+                  <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
+                    {(() => {
+                      const FileIcon = getFileIcon(form.content_url || '');
+                      return <FileIcon className="w-5 h-5 text-primary" />;
+                    })()}
+                    <span className="flex-1 text-sm truncate">{form.content_url}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={removeUploadedFile}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="file"
+                      accept="audio/*,video/*"
+                      onChange={handleFileUpload}
+                      disabled={uploading}
+                      className="flex-1"
+                    />
+                    {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="content_url">Or paste URL directly</Label>
                 <Input
                   id="content_url"
                   value={form.content_url}
