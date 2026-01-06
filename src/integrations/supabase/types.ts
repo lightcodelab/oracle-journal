@@ -263,6 +263,105 @@ export type Database = {
         }
         Relationships: []
       }
+      healing_content: {
+        Row: {
+          content_text: string | null
+          content_type: string
+          content_url: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          duration_minutes: number | null
+          id: string
+          is_published: boolean | null
+          symptom_tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content_text?: string | null
+          content_type: string
+          content_url?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean | null
+          symptom_tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content_text?: string | null
+          content_type?: string
+          content_url?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean | null
+          symptom_tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      healing_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          messages: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      healing_protocols: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          symptoms_addressed: string[]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          symptoms_addressed?: string[]
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          symptoms_addressed?: string[]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       lesson_journal_entries: {
         Row: {
           audio_position: number | null
@@ -380,6 +479,45 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      protocol_items: {
+        Row: {
+          added_at: string
+          content_id: string
+          id: string
+          notes: string | null
+          protocol_id: string
+        }
+        Insert: {
+          added_at?: string
+          content_id: string
+          id?: string
+          notes?: string | null
+          protocol_id: string
+        }
+        Update: {
+          added_at?: string
+          content_id?: string
+          id?: string
+          notes?: string | null
+          protocol_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "protocol_items_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "healing_content"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "protocol_items_protocol_id_fkey"
+            columns: ["protocol_id"]
+            isOneToOne: false
+            referencedRelation: "healing_protocols"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {

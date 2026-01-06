@@ -5,3 +5,6 @@ verify_jwt = true
 
 [functions.import-sacred-rewrite-cards]
 verify_jwt = false
+
+[functions.healing-bot]
+verify_jwt = false
