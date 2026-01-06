@@ -11,7 +11,8 @@ import { PurchaseVerification } from "@/components/PurchaseVerification";
 import { CardNumberSelector } from "@/components/CardNumberSelector";
 import { CardDropdownSelector } from "@/components/CardDropdownSelector";
 import { supabase } from "@/integrations/supabase/client";
-import { Shuffle, Sparkles, LogOut, ChevronLeft } from "lucide-react";
+import { Shuffle, Sparkles, ChevronLeft } from "lucide-react";
+import ProfileDropdown from "@/components/ProfileDropdown";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import sacredRewriteCardBack from "@/assets/card-back-v2.png";
@@ -503,10 +504,6 @@ const Index = () => {
     setViewedStarterCardIds([]);
   };
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-  };
-
   const handleVerifyPurchase = (deckId: string) => {
     setVerifyDeckId(deckId);
   };
@@ -570,15 +567,7 @@ const Index = () => {
           <ChevronLeft className="w-4 h-4 mr-1" />
           Temple
         </Button>
-        <Button
-          onClick={handleSignOut}
-          variant="ghost"
-          size="sm"
-          className="text-foreground/70 hover:text-foreground"
-        >
-          <LogOut className="w-4 h-4 mr-2" />
-          Sign Out
-        </Button>
+        <ProfileDropdown />
       </div>
 
       {/* Content */}

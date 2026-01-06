@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, LogOut, BookOpen, Video, Headphones, MessageCircle } from 'lucide-react';
+import { ArrowLeft, BookOpen, Video, Headphones, MessageCircle } from 'lucide-react';
+import ProfileDropdown from '@/components/ProfileDropdown';
 
 interface Category {
   id: string;
@@ -69,11 +70,6 @@ const DoorOfSeeing = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/auth');
-  };
-
   const handleCategoryClick = (category: Category) => {
     if (category.route) {
       navigate(category.route);
@@ -103,15 +99,7 @@ const DoorOfSeeing = () => {
           <ArrowLeft className="w-4 h-4 mr-2" />
           Temple
         </Button>
-        <Button
-          onClick={handleSignOut}
-          variant="ghost"
-          size="sm"
-          className="text-foreground/70 hover:text-foreground"
-        >
-          <LogOut className="w-4 h-4 mr-2" />
-          Sign Out
-        </Button>
+        <ProfileDropdown />
       </div>
 
       <div className="max-w-4xl mx-auto pt-12">

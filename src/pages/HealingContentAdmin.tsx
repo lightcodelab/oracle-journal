@@ -12,6 +12,7 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Plus, Trash2, Save, Loader2, Search, Upload, X, FileAudio, FileVideo, File } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import ProfileDropdown from '@/components/ProfileDropdown';
 import {
   Dialog,
   DialogContent,
@@ -335,16 +336,17 @@ const HealingContentAdmin = () => {
           Back
         </Button>
         <h1 className="font-serif text-xl text-foreground">Healing Content Admin</h1>
-        <Dialog open={isDialogOpen} onOpenChange={(open) => {
-          setIsDialogOpen(open);
-          if (!open) resetForm();
-        }}>
-          <DialogTrigger asChild>
-            <Button size="sm">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Content
-            </Button>
-          </DialogTrigger>
+        <div className="flex items-center gap-2">
+          <Dialog open={isDialogOpen} onOpenChange={(open) => {
+            setIsDialogOpen(open);
+            if (!open) resetForm();
+          }}>
+            <DialogTrigger asChild>
+              <Button size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Content
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingContent ? 'Edit Content' : 'Add New Content'}</DialogTitle>
@@ -505,6 +507,8 @@ const HealingContentAdmin = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        <ProfileDropdown />
+        </div>
       </div>
 
       <div className="max-w-6xl mx-auto p-6">

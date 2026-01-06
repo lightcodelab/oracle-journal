@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, LogOut } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
+import ProfileDropdown from '@/components/ProfileDropdown';
 
 interface Course {
   id: string;
@@ -54,11 +55,6 @@ const SeeingCourses = () => {
     enabled: !loading,
   });
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/auth');
-  };
-
   const handleCourseClick = (courseId: string) => {
     navigate(`/seeing/course/${courseId}`);
   };
@@ -86,15 +82,7 @@ const SeeingCourses = () => {
           <ArrowLeft className="w-4 h-4 mr-2" />
           Door of Seeing
         </Button>
-        <Button
-          onClick={handleSignOut}
-          variant="ghost"
-          size="sm"
-          className="text-foreground/70 hover:text-foreground"
-        >
-          <LogOut className="w-4 h-4 mr-2" />
-          Sign Out
-        </Button>
+        <ProfileDropdown />
       </div>
 
       <div className="max-w-6xl mx-auto pt-12">
