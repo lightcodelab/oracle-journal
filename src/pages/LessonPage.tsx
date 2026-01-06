@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ArrowRight, LogOut, BookOpen, CheckCircle2, Menu, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, Menu, RotateCcw } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { FormattedContent } from '@/components/FormattedContent';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import ProfileDropdown from '@/components/ProfileDropdown';
 
 interface Course {
   id: string;
@@ -279,11 +280,6 @@ const LessonPage = () => {
     },
   });
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/auth');
-  };
-
   // Navigation helpers
   const currentIndex = allLessons?.findIndex(l => l.id === lessonId) ?? -1;
   const prevLesson = currentIndex > 0 ? allLessons?.[currentIndex - 1] : null;
@@ -383,15 +379,7 @@ const LessonPage = () => {
               <span className="sm:hidden">Course</span>
             </Button>
           </div>
-          <Button
-            onClick={handleSignOut}
-            variant="ghost"
-            size="sm"
-            className="text-foreground/70 hover:text-foreground"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Sign Out</span>
-          </Button>
+          <ProfileDropdown />
         </div>
       </div>
 

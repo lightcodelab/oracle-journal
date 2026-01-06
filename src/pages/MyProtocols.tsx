@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ArrowLeft, Trash2, FolderHeart, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import ProfileDropdown from '@/components/ProfileDropdown';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -166,7 +167,7 @@ const MyProtocols = () => {
           Back
         </Button>
         <h1 className="font-serif text-xl text-foreground">My Protocols</h1>
-        <div className="w-20" />
+        <ProfileDropdown />
       </div>
 
       <div className="max-w-6xl mx-auto p-6">

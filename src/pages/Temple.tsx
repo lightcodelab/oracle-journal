@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { LogOut } from 'lucide-react';
+import ProfileDropdown from '@/components/ProfileDropdown';
 
 import templeBanner from '@/assets/temple-banner.png';
 import doorRemembrance from '@/assets/door-remembrance.png';
@@ -76,11 +75,6 @@ const Temple = () => {
     }
   };
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/auth');
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -93,17 +87,9 @@ const Temple = () => {
 
   return (
     <div className="min-h-screen bg-background py-12 px-4 relative">
-      {/* Sign Out Button */}
+      {/* Profile Dropdown */}
       <div className="absolute top-4 right-4 z-20">
-        <Button
-          onClick={handleSignOut}
-          variant="ghost"
-          size="sm"
-          className="text-foreground/70 hover:text-foreground"
-        >
-          <LogOut className="w-4 h-4 mr-2" />
-          Sign Out
-        </Button>
+        <ProfileDropdown />
       </div>
 
       <div className="max-w-6xl mx-auto">

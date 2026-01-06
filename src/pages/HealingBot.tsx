@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ArrowLeft, Send, Loader2, RefreshCw, Save, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import ProfileDropdown from '@/components/ProfileDropdown';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -313,14 +314,17 @@ const HealingBot = () => {
           Back
         </Button>
         <h1 className="font-serif text-xl text-foreground">Maelin</h1>
-        <Button
-          onClick={resetConversation}
-          variant="ghost"
-          size="sm"
-        >
-          <RefreshCw className="w-4 h-4 mr-2" />
-          New Chat
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={resetConversation}
+            variant="ghost"
+            size="sm"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            New Chat
+          </Button>
+          <ProfileDropdown />
+        </div>
       </div>
 
       {/* Messages */}
