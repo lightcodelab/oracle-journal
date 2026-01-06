@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, LogOut, MessageCircleHeart, FolderHeart, Settings } from 'lucide-react';
+import { ArrowLeft, LogOut, MessageCircleHeart, FolderHeart, Settings, Sparkles, Flame, Move, Zap, FileHeart } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -56,9 +56,9 @@ const DoorOfDevotion = () => {
 
   const categories: Category[] = [
     {
-      id: 'healing-bot',
-      name: 'Healing Guide',
-      description: 'Discover personalized healing protocols based on your symptoms',
+      id: 'maelin',
+      name: 'Maelin: Custom Protocols Guide',
+      description: 'Your personal healing companion who creates custom protocols based on your symptoms',
       icon: <MessageCircleHeart className="w-8 h-8" />,
       route: '/devotion/healing-bot',
     },
@@ -68,6 +68,41 @@ const DoorOfDevotion = () => {
       description: 'View and manage your saved healing protocols',
       icon: <FolderHeart className="w-8 h-8" />,
       route: '/devotion/protocols',
+    },
+    {
+      id: 'guided-meditations',
+      name: 'Guided Meditations',
+      description: 'Journey inward with guided meditation experiences',
+      icon: <Sparkles className="w-8 h-8" />,
+      route: null,
+    },
+    {
+      id: 'altar-practices',
+      name: 'Altar Practices',
+      description: 'Sacred rituals for creating and tending your personal altar',
+      icon: <Flame className="w-8 h-8" />,
+      route: null,
+    },
+    {
+      id: 'somatic-rituals',
+      name: 'Somatic Rituals',
+      description: 'Body-based practices for releasing and integration',
+      icon: <Move className="w-8 h-8" />,
+      route: null,
+    },
+    {
+      id: 'energy-hygiene',
+      name: 'Energy Hygiene Practices',
+      description: 'Tools for clearing and protecting your energetic field',
+      icon: <Zap className="w-8 h-8" />,
+      route: null,
+    },
+    {
+      id: 'healing-templates',
+      name: 'Healing Templates',
+      description: 'Pre-designed templates for common healing journeys',
+      icon: <FileHeart className="w-8 h-8" />,
+      route: null,
     },
     ...(isAdmin ? [{
       id: 'admin',
@@ -135,7 +170,7 @@ const DoorOfDevotion = () => {
         </motion.div>
 
         {/* Category Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category, index) => (
             <motion.div
               key={category.id}

@@ -312,7 +312,7 @@ const HealingBot = () => {
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
         </Button>
-        <h1 className="font-serif text-xl text-foreground">Healing Guide</h1>
+        <h1 className="font-serif text-xl text-foreground">Maelin</h1>
         <Button
           onClick={resetConversation}
           variant="ghost"
@@ -328,9 +328,9 @@ const HealingBot = () => {
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-12">
             <Sparkles className="w-12 h-12 text-primary mb-4" />
-            <h2 className="font-serif text-2xl text-foreground mb-2">Welcome to Your Healing Guide</h2>
+            <h2 className="font-serif text-2xl text-foreground mb-2">Hello, I'm Maelin</h2>
             <p className="text-muted-foreground max-w-md mb-6">
-              Share what you're experiencing—physically, emotionally, or spiritually—and I'll help create a personalized healing protocol just for you.
+              I'm your personal healing companion. Share what you're experiencing—physically, emotionally, or spiritually—and I'll help create a personalized healing protocol just for you.
             </p>
             <div className="flex flex-wrap gap-2 justify-center max-w-lg">
               {[
