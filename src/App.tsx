@@ -12,6 +12,10 @@ import DoorOfSeeing from "./pages/DoorOfSeeing";
 import SeeingCourses from "./pages/SeeingCourses";
 import CoursePage from "./pages/CoursePage";
 import LessonPage from "./pages/LessonPage";
+import DoorOfCommunion from "./pages/DoorOfCommunion";
+import HealingBot from "./pages/HealingBot";
+import MyProtocols from "./pages/MyProtocols";
+import HealingContentAdmin from "./pages/HealingContentAdmin";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +34,10 @@ const App = () => (
           <Route path="/seeing/courses" element={<SeeingCourses />} />
           <Route path="/seeing/course/:courseId" element={<CoursePage />} />
           <Route path="/seeing/course/:courseId/lesson/:lessonId" element={<LessonPage />} />
+          <Route path="/communion" element={<DoorOfCommunion />} />
+          <Route path="/communion/healing-bot" element={<HealingBot />} />
+          <Route path="/communion/protocols" element={<MyProtocols />} />
+          <Route path="/communion/admin" element={<HealingContentAdmin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

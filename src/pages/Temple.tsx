@@ -41,7 +41,7 @@ const doors: Door[] = [
     id: 'communion',
     name: 'The Door of Communion',
     image: doorCommunion,
-    route: null, // Coming soon
+    route: '/communion',
   },
 ];
 
