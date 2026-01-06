@@ -16,6 +16,7 @@ import DoorOfDevotion from "./pages/DoorOfDevotion";
 import HealingBot from "./pages/HealingBot";
 import MyProtocols from "./pages/MyProtocols";
 import HealingContentAdmin from "./pages/HealingContentAdmin";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/devotion/healing-bot" element={<HealingBot />} />
           <Route path="/devotion/protocols" element={<MyProtocols />} />
           <Route path="/devotion/admin" element={<HealingContentAdmin />} />
+          <Route path="/profile" element={<Profile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
