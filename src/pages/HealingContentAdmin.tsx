@@ -90,7 +90,7 @@ const HealingContentAdmin = () => {
         .single();
 
       if (!roles) {
-        navigate('/communion');
+        navigate('/devotion');
         return;
       }
 
@@ -273,7 +273,7 @@ const HealingContentAdmin = () => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
         <Button
-          onClick={() => navigate('/communion')}
+          onClick={() => navigate('/devotion')}
           variant="ghost"
           size="sm"
         >

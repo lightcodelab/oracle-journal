@@ -13,7 +13,7 @@ interface Category {
   route: string | null;
 }
 
-const DoorOfCommunion = () => {
+const DoorOfDevotion = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -60,21 +60,21 @@ const DoorOfCommunion = () => {
       name: 'Healing Guide',
       description: 'Discover personalized healing protocols based on your symptoms',
       icon: <MessageCircleHeart className="w-8 h-8" />,
-      route: '/communion/healing-bot',
+      route: '/devotion/healing-bot',
     },
     {
       id: 'my-protocols',
       name: 'My Protocols',
       description: 'View and manage your saved healing protocols',
       icon: <FolderHeart className="w-8 h-8" />,
-      route: '/communion/protocols',
+      route: '/devotion/protocols',
     },
     ...(isAdmin ? [{
       id: 'admin',
       name: 'Admin Dashboard',
       description: 'Manage healing content and view analytics',
       icon: <Settings className="w-8 h-8" />,
-      route: '/communion/admin',
+      route: '/devotion/admin',
     }] : []),
   ];
 
@@ -88,7 +88,7 @@ const DoorOfCommunion = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
-          Opening the Door of Communion...
+          Opening the Door of Devotion...
         </div>
       </div>
     );
@@ -127,7 +127,7 @@ const DoorOfCommunion = () => {
           className="text-center mb-12"
         >
           <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
-            The Door of Communion
+            The Door of Devotion
           </h1>
           <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
             Connect with personalized healing guidance tailored to your unique journey.
@@ -181,4 +181,4 @@ const DoorOfCommunion = () => {
   );
 };
 
-export default DoorOfCommunion;
+export default DoorOfDevotion;
