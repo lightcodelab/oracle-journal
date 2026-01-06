@@ -305,7 +305,7 @@ const HealingBot = () => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
         <Button
-          onClick={() => navigate('/communion')}
+          onClick={() => navigate('/devotion')}
           variant="ghost"
           size="sm"
         >

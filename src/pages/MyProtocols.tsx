@@ -158,7 +158,7 @@ const MyProtocols = () => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
         <Button
-          onClick={() => navigate('/communion')}
+          onClick={() => navigate('/devotion')}
           variant="ghost"
           size="sm"
         >
@@ -177,7 +177,7 @@ const MyProtocols = () => {
             <p className="text-muted-foreground max-w-md mb-6">
               Start a conversation with your Healing Guide to create personalized protocols.
             </p>
-            <Button onClick={() => navigate('/communion/healing-bot')}>
+            <Button onClick={() => navigate('/devotion/healing-bot')}>
               <Sparkles className="w-4 h-4 mr-2" />
               Talk to Healing Guide
             </Button>
