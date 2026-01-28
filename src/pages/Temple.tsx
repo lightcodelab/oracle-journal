@@ -7,7 +7,6 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import templeBanner from '@/assets/temple-banner.png';
 import doorRemembrance from '@/assets/door-remembrance.png';
 import doorDevotion from '@/assets/door-devotion.png';
-import doorSeeing from '@/assets/door-seeing.png';
 import doorCommunion from '@/assets/door-communion.png';
 
 interface Door {
@@ -29,12 +28,6 @@ const doors: Door[] = [
     name: 'The Door of Devotion',
     image: doorDevotion,
     route: '/devotion',
-  },
-  {
-    id: 'seeing',
-    name: 'The Door of Seeing',
-    image: doorSeeing,
-    route: '/seeing',
   },
   {
     id: 'communion',
