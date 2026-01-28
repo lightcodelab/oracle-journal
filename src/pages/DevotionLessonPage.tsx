@@ -342,28 +342,6 @@ const DevotionLessonPage = () => {
           </motion.div>
         )}
 
-        {/* Original Lesson Reflections */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="mb-8"
-        >
-          <div className="bg-card border border-border rounded-lg p-6">
-            <h3 className="font-serif text-xl text-foreground mb-4">
-              Your Reflections
-            </h3>
-            <Textarea
-              value={journalText}
-              onChange={(e) => handleJournalChange(e.target.value)}
-              placeholder="Write your thoughts, insights, and reflections here..."
-              className="min-h-[200px] bg-background border-border text-foreground placeholder:text-muted-foreground"
-            />
-            <p className="text-muted-foreground text-sm mt-2">
-              Your journal is saved automatically.
-            </p>
-          </div>
-        </motion.div>
 
         {/* Digital Journal (Rich Text) */}
         <motion.div
