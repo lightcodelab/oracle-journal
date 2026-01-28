@@ -107,7 +107,7 @@ const DevotionCoursePage = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
-          Loading course...
+          Loading sessions...
         </div>
       </div>
     );
@@ -191,7 +191,7 @@ const DevotionCoursePage = () => {
                     </div>
                     <div className="flex-grow">
                       <h3 className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">
-                        Lesson {lesson.lesson_number}: {lesson.title}
+                        Session {lesson.lesson_number}: {lesson.title}
                       </h3>
                       {lesson.description && (
                         <p className="text-muted-foreground text-sm mt-1">
@@ -206,7 +206,7 @@ const DevotionCoursePage = () => {
           ) : (
             <div className="text-center py-12">
               <p className="text-muted-foreground font-sans">
-                Lessons are being prepared for this course.
+                Sessions are being prepared for this course.
               </p>
             </div>
           )}

@@ -204,7 +204,7 @@ const DevotionLessonPage = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
-          Loading lesson...
+          Loading session...
         </div>
       </div>
     );
@@ -214,7 +214,7 @@ const DevotionLessonPage = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-muted-foreground font-serif text-xl">
-          Lesson not found
+          Session not found
         </div>
       </div>
     );
@@ -239,7 +239,7 @@ const DevotionLessonPage = () => {
       </div>
 
       <div className="max-w-3xl mx-auto pt-12">
-        {/* Lesson Header */}
+        {/* Session Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -247,7 +247,7 @@ const DevotionLessonPage = () => {
           className="text-center mb-8"
         >
           <p className="text-primary font-sans text-sm uppercase tracking-wider mb-2">
-            Lesson {lesson.lesson_number}
+            Session {lesson.lesson_number}
           </p>
           <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
             {lesson.title}
@@ -378,7 +378,7 @@ const DevotionLessonPage = () => {
               className="text-foreground/70 hover:text-foreground"
             >
               <ChevronLeft className="w-4 h-4 mr-2" />
-              Lesson {prevLesson.lesson_number}
+              Session {prevLesson.lesson_number}
             </Button>
           ) : (
             <div />
@@ -390,7 +390,7 @@ const DevotionLessonPage = () => {
               variant="ghost"
               className="text-foreground/70 hover:text-foreground"
             >
-              Lesson {nextLesson.lesson_number}
+              Session {nextLesson.lesson_number}
               <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
           ) : (
