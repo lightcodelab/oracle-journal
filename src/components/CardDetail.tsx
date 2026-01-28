@@ -6,6 +6,7 @@ import { Sparkles, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { FormattedContent } from "./FormattedContent";
 import { VimeoEmbed } from "./VimeoEmbed";
+import ContextualJournal from "./journal/ContextualJournal";
 
 interface CardDetailProps {
   card: OracleCard;
@@ -276,6 +277,15 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
           )}
         </>
       )}
+
+      {/* Digital Journal Section */}
+      <ContextualJournal
+        contextType="card"
+        contextId={card.id}
+        contextTitle={`${card.deck_name || 'Card'}: ${card.card_title}`}
+        placeholder="Reflect on what this card means to you..."
+        className="mt-8"
+      />
 
       {/* Back/Draw Another Button */}
       <div className="flex justify-center pt-4">

@@ -10,6 +10,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import ContextualJournal from '@/components/journal/ContextualJournal';
 
 interface Lesson {
   id: string;
@@ -341,12 +342,12 @@ const DevotionLessonPage = () => {
           </motion.div>
         )}
 
-        {/* Journal */}
+        {/* Original Lesson Reflections */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mb-12"
+          className="mb-8"
         >
           <div className="bg-card border border-border rounded-lg p-6">
             <h3 className="font-serif text-xl text-foreground mb-4">
@@ -362,6 +363,21 @@ const DevotionLessonPage = () => {
               Your journal is saved automatically.
             </p>
           </div>
+        </motion.div>
+
+        {/* Digital Journal (Rich Text) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+          className="mb-12"
+        >
+          <ContextualJournal
+            contextType="lesson"
+            contextId={lessonId || ''}
+            contextTitle={`Session ${lesson.lesson_number}: ${lesson.title}`}
+            placeholder="Add deeper reflections, insights, or notes to your digital journal..."
+          />
         </motion.div>
 
         {/* Navigation Footer */}
