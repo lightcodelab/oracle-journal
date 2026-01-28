@@ -1,9 +1,12 @@
 project_id = "gjaafbzhkdekgigmnafp"
 
 [functions.verify-woocommerce-purchase]
-verify_jwt = true
+verify_jwt = false
 
 [functions.import-sacred-rewrite-cards]
+verify_jwt = false
+
+[functions.fix-placeholder-cards]
 verify_jwt = false
 
 [functions.healing-bot]
