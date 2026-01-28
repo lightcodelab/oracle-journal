@@ -8,10 +8,6 @@ import Auth from "./pages/Auth";
 import Temple from "./pages/Temple";
 import ImportCards from "./pages/ImportCards";
 import NotFound from "./pages/NotFound";
-import DoorOfSeeing from "./pages/DoorOfSeeing";
-import SeeingCourses from "./pages/SeeingCourses";
-import CoursePage from "./pages/CoursePage";
-import LessonPage from "./pages/LessonPage";
 import DoorOfDevotion from "./pages/DoorOfDevotion";
 import HealingBot from "./pages/HealingBot";
 import MyProtocols from "./pages/MyProtocols";
@@ -34,10 +30,6 @@ const App = () => (
           <Route path="/decks" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/import-cards" element={<ImportCards />} />
-          <Route path="/seeing" element={<DoorOfSeeing />} />
-          <Route path="/seeing/courses" element={<SeeingCourses />} />
-          <Route path="/seeing/course/:courseId" element={<CoursePage />} />
-          <Route path="/seeing/course/:courseId/lesson/:lessonId" element={<LessonPage />} />
           <Route path="/devotion" element={<DoorOfDevotion />} />
           <Route path="/devotion/healing-bot" element={<HealingBot />} />
           <Route path="/devotion/protocols" element={<MyProtocols />} />
