@@ -17,6 +17,8 @@ import DevotionCourses from "./pages/DevotionCourses";
 import DevotionCoursePage from "./pages/DevotionCoursePage";
 import DevotionLessonPage from "./pages/DevotionLessonPage";
 import Journal from "./pages/Journal";
+import AreekeeraBot from "./pages/AreekeeraBot";
+import AreekeeraAdmin from "./pages/AreekeeraAdmin";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,8 @@ const App = () => (
           <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
           <Route path="/devotion/course/:courseId" element={<DevotionCoursePage />} />
           <Route path="/devotion/course/:courseId/lesson/:lessonId" element={<DevotionLessonPage />} />
+          <Route path="/devotion/areekeera" element={<AreekeeraBot />} />
+          <Route path="/devotion/areekeera/admin" element={<AreekeeraAdmin />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/journal" element={<Journal />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

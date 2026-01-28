@@ -41,11 +41,11 @@ const DoorOfDevotion = () => {
 
   const categories: Category[] = [
     {
-      id: 'maelin',
-      name: 'Maelin: Custom Protocols Guide',
-      description: 'Your personal healing companion who creates custom protocols based on your symptoms',
+      id: 'areekeera',
+      name: 'AreekeerA Protocol Guide',
+      description: 'AI-guided healing protocols personalized to your symptoms with trauma-informed safety',
       icon: <MessageCircleHeart className="w-8 h-8" />,
-      route: '/devotion/healing-bot',
+      route: '/devotion/areekeera',
     },
     {
       id: 'guided-meditations',

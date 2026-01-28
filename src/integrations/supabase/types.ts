@@ -14,6 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
+      areekeera_protocol_steps: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          duration_sec: number | null
+          id: string
+          is_completed: boolean | null
+          notes: string | null
+          protocol_id: string
+          resource_id: string | null
+          step_index: number
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          duration_sec?: number | null
+          id?: string
+          is_completed?: boolean | null
+          notes?: string | null
+          protocol_id: string
+          resource_id?: string | null
+          step_index: number
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          duration_sec?: number | null
+          id?: string
+          is_completed?: boolean | null
+          notes?: string | null
+          protocol_id?: string
+          resource_id?: string | null
+          step_index?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "areekeera_protocol_steps_protocol_id_fkey"
+            columns: ["protocol_id"]
+            isOneToOne: false
+            referencedRelation: "areekeera_protocols"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "areekeera_protocol_steps_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      areekeera_protocols: {
+        Row: {
+          created_at: string | null
+          id: string
+          recommendation_id: string | null
+          safety_notes: string | null
+          summary: string | null
+          title: string
+          updated_at: string | null
+          version: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          recommendation_id?: string | null
+          safety_notes?: string | null
+          summary?: string | null
+          title: string
+          updated_at?: string | null
+          version?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          recommendation_id?: string | null
+          safety_notes?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string | null
+          version?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "areekeera_protocols_recommendation_id_fkey"
+            columns: ["recommendation_id"]
+            isOneToOne: false
+            referencedRelation: "recommendation_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       card_draws: {
         Row: {
           card_id: string
@@ -137,6 +229,51 @@ export type Database = {
             columns: ["deck_id"]
             isOneToOne: false
             referencedRelation: "decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contraindications: {
+        Row: {
+          created_at: string | null
+          id: string
+          message: string | null
+          min_band: Database["public"]["Enums"]["severity_band"]
+          resource_id: string
+          rule: Database["public"]["Enums"]["contraindication_rule"]
+          symptom_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          min_band: Database["public"]["Enums"]["severity_band"]
+          resource_id: string
+          rule: Database["public"]["Enums"]["contraindication_rule"]
+          symptom_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          min_band?: Database["public"]["Enums"]["severity_band"]
+          resource_id?: string
+          rule?: Database["public"]["Enums"]["contraindication_rule"]
+          symptom_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contraindications_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contraindications_symptom_id_fkey"
+            columns: ["symptom_id"]
+            isOneToOne: false
+            referencedRelation: "symptoms"
             referencedColumns: ["id"]
           },
         ]
@@ -335,6 +472,80 @@ export type Database = {
           },
         ]
       }
+      escalation_events: {
+        Row: {
+          action_taken: Database["public"]["Enums"]["escalation_action"]
+          context_json: Json | null
+          created_at: string | null
+          id: string
+          rule_id: string | null
+          trigger_type: Database["public"]["Enums"]["escalation_trigger_type"]
+          user_id: string | null
+        }
+        Insert: {
+          action_taken: Database["public"]["Enums"]["escalation_action"]
+          context_json?: Json | null
+          created_at?: string | null
+          id?: string
+          rule_id?: string | null
+          trigger_type: Database["public"]["Enums"]["escalation_trigger_type"]
+          user_id?: string | null
+        }
+        Update: {
+          action_taken?: Database["public"]["Enums"]["escalation_action"]
+          context_json?: Json | null
+          created_at?: string | null
+          id?: string
+          rule_id?: string | null
+          trigger_type?: Database["public"]["Enums"]["escalation_trigger_type"]
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escalation_events_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "escalation_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      escalation_rules: {
+        Row: {
+          action: Database["public"]["Enums"]["escalation_action"]
+          condition_json: Json
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          locale: string | null
+          message: string
+          trigger_type: Database["public"]["Enums"]["escalation_trigger_type"]
+          updated_at: string | null
+        }
+        Insert: {
+          action: Database["public"]["Enums"]["escalation_action"]
+          condition_json: Json
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          locale?: string | null
+          message: string
+          trigger_type: Database["public"]["Enums"]["escalation_trigger_type"]
+          updated_at?: string | null
+        }
+        Update: {
+          action?: Database["public"]["Enums"]["escalation_action"]
+          condition_json?: Json
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          locale?: string | null
+          message?: string
+          trigger_type?: Database["public"]["Enums"]["escalation_trigger_type"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       healing_content: {
         Row: {
           content_text: string | null
@@ -433,6 +644,99 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      healing_resources: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          display_image_url: string | null
+          duration_sec: number | null
+          embedding: string | null
+          id: string
+          intensity: number | null
+          locale: string | null
+          modality: Database["public"]["Enums"]["resource_modality"]
+          status: Database["public"]["Enums"]["resource_status"] | null
+          teaching_description: string | null
+          tier: Database["public"]["Enums"]["resource_tier"] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          display_image_url?: string | null
+          duration_sec?: number | null
+          embedding?: string | null
+          id?: string
+          intensity?: number | null
+          locale?: string | null
+          modality: Database["public"]["Enums"]["resource_modality"]
+          status?: Database["public"]["Enums"]["resource_status"] | null
+          teaching_description?: string | null
+          tier?: Database["public"]["Enums"]["resource_tier"] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          display_image_url?: string | null
+          duration_sec?: number | null
+          embedding?: string | null
+          id?: string
+          intensity?: number | null
+          locale?: string | null
+          modality?: Database["public"]["Enums"]["resource_modality"]
+          status?: Database["public"]["Enums"]["resource_status"] | null
+          teaching_description?: string | null
+          tier?: Database["public"]["Enums"]["resource_tier"] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      intake_symptoms: {
+        Row: {
+          created_at: string | null
+          id: string
+          intake_id: string
+          notes: string | null
+          severity_score: number
+          symptom_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          intake_id: string
+          notes?: string | null
+          severity_score: number
+          symptom_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          intake_id?: string
+          notes?: string | null
+          severity_score?: number
+          symptom_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intake_symptoms_intake_id_fkey"
+            columns: ["intake_id"]
+            isOneToOne: false
+            referencedRelation: "protocol_intakes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intake_symptoms_symptom_id_fkey"
+            columns: ["symptom_id"]
+            isOneToOne: false
+            referencedRelation: "symptoms"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       journal_categories: {
         Row: {
@@ -704,6 +1008,41 @@ export type Database = {
           },
         ]
       }
+      outcomes_cache: {
+        Row: {
+          id: string
+          monthly_delta: number | null
+          symptom_id: string
+          updated_at: string | null
+          user_id: string
+          weekly_delta: number | null
+        }
+        Insert: {
+          id?: string
+          monthly_delta?: number | null
+          symptom_id: string
+          updated_at?: string | null
+          user_id: string
+          weekly_delta?: number | null
+        }
+        Update: {
+          id?: string
+          monthly_delta?: number | null
+          symptom_id?: string
+          updated_at?: string | null
+          user_id?: string
+          weekly_delta?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outcomes_cache_symptom_id_fkey"
+            columns: ["symptom_id"]
+            isOneToOne: false
+            referencedRelation: "symptoms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -725,6 +1064,87 @@ export type Database = {
           full_name?: string | null
           id?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      protocol_checkins: {
+        Row: {
+          context_json: Json | null
+          created_at: string | null
+          id: string
+          mood: string | null
+          notes: string | null
+          protocol_id: string | null
+          score: number
+          symptom_id: string | null
+          user_id: string
+        }
+        Insert: {
+          context_json?: Json | null
+          created_at?: string | null
+          id?: string
+          mood?: string | null
+          notes?: string | null
+          protocol_id?: string | null
+          score: number
+          symptom_id?: string | null
+          user_id: string
+        }
+        Update: {
+          context_json?: Json | null
+          created_at?: string | null
+          id?: string
+          mood?: string | null
+          notes?: string | null
+          protocol_id?: string | null
+          score?: number
+          symptom_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "protocol_checkins_protocol_id_fkey"
+            columns: ["protocol_id"]
+            isOneToOne: false
+            referencedRelation: "areekeera_protocols"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "protocol_checkins_symptom_id_fkey"
+            columns: ["symptom_id"]
+            isOneToOne: false
+            referencedRelation: "symptoms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      protocol_intakes: {
+        Row: {
+          created_at: string | null
+          goals: string | null
+          id: string
+          payload_json: Json
+          preferences: Json | null
+          session_time_minutes: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          goals?: string | null
+          id?: string
+          payload_json: Json
+          preferences?: Json | null
+          session_time_minutes?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          goals?: string | null
+          id?: string
+          payload_json?: Json
+          preferences?: Json | null
+          session_time_minutes?: number | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -763,6 +1183,441 @@ export type Database = {
             columns: ["protocol_id"]
             isOneToOne: false
             referencedRelation: "healing_protocols"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recommendation_events: {
+        Row: {
+          chosen_resources: Json | null
+          created_at: string | null
+          escalation_shown: boolean | null
+          followup_answer: string | null
+          followup_asked: boolean | null
+          followup_question: string | null
+          id: string
+          intake_id: string | null
+          rules_fired: Json | null
+          semantic_scores: Json | null
+          user_id: string
+        }
+        Insert: {
+          chosen_resources?: Json | null
+          created_at?: string | null
+          escalation_shown?: boolean | null
+          followup_answer?: string | null
+          followup_asked?: boolean | null
+          followup_question?: string | null
+          id?: string
+          intake_id?: string | null
+          rules_fired?: Json | null
+          semantic_scores?: Json | null
+          user_id: string
+        }
+        Update: {
+          chosen_resources?: Json | null
+          created_at?: string | null
+          escalation_shown?: boolean | null
+          followup_answer?: string | null
+          followup_asked?: boolean | null
+          followup_question?: string | null
+          id?: string
+          intake_id?: string | null
+          rules_fired?: Json | null
+          semantic_scores?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recommendation_events_intake_id_fkey"
+            columns: ["intake_id"]
+            isOneToOne: false
+            referencedRelation: "protocol_intakes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      resource_media: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          duration_sec: number | null
+          id: string
+          mime_type: string | null
+          resource_id: string
+          size_bytes: number | null
+          type: Database["public"]["Enums"]["media_type"]
+          url: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          duration_sec?: number | null
+          id?: string
+          mime_type?: string | null
+          resource_id: string
+          size_bytes?: number | null
+          type: Database["public"]["Enums"]["media_type"]
+          url: string
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          duration_sec?: number | null
+          id?: string
+          mime_type?: string | null
+          resource_id?: string
+          size_bytes?: number | null
+          type?: Database["public"]["Enums"]["media_type"]
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resource_media_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      resource_tag_assignments: {
+        Row: {
+          resource_id: string
+          tag_id: string
+        }
+        Insert: {
+          resource_id: string
+          tag_id: string
+        }
+        Update: {
+          resource_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resource_tag_assignments_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "resource_tag_assignments_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "resource_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      resource_tags: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      resource_teachers: {
+        Row: {
+          resource_id: string
+          teacher_id: string
+        }
+        Insert: {
+          resource_id: string
+          teacher_id: string
+        }
+        Update: {
+          resource_id?: string
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resource_teachers_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "resource_teachers_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      resource_transcripts: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_autogenerated: boolean | null
+          language: string | null
+          resource_id: string
+          updated_at: string | null
+          url: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_autogenerated?: boolean | null
+          language?: string | null
+          resource_id: string
+          updated_at?: string | null
+          url: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_autogenerated?: boolean | null
+          language?: string | null
+          resource_id?: string
+          updated_at?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resource_transcripts_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      resource_versions: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          data: Json
+          id: string
+          resource_id: string
+          version_number: number
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          data: Json
+          id?: string
+          resource_id: string
+          version_number: number
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          data?: Json
+          id?: string
+          resource_id?: string
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resource_versions_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      severity_thresholds: {
+        Row: {
+          allowed_intensity_max: number | null
+          allowed_intensity_min: number | null
+          band: Database["public"]["Enums"]["severity_band"]
+          created_at: string | null
+          id: string
+          max_score: number
+          min_score: number
+          notes: string | null
+          symptom_id: string
+        }
+        Insert: {
+          allowed_intensity_max?: number | null
+          allowed_intensity_min?: number | null
+          band: Database["public"]["Enums"]["severity_band"]
+          created_at?: string | null
+          id?: string
+          max_score: number
+          min_score: number
+          notes?: string | null
+          symptom_id: string
+        }
+        Update: {
+          allowed_intensity_max?: number | null
+          allowed_intensity_min?: number | null
+          band?: Database["public"]["Enums"]["severity_band"]
+          created_at?: string | null
+          id?: string
+          max_score?: number
+          min_score?: number
+          notes?: string | null
+          symptom_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "severity_thresholds_symptom_id_fkey"
+            columns: ["symptom_id"]
+            isOneToOne: false
+            referencedRelation: "symptoms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      symptom_resource_mappings: {
+        Row: {
+          created_at: string | null
+          id: string
+          max_band: Database["public"]["Enums"]["severity_band"] | null
+          min_band: Database["public"]["Enums"]["severity_band"] | null
+          notes: string | null
+          resource_id: string
+          symptom_id: string
+          weight: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          max_band?: Database["public"]["Enums"]["severity_band"] | null
+          min_band?: Database["public"]["Enums"]["severity_band"] | null
+          notes?: string | null
+          resource_id: string
+          symptom_id: string
+          weight?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          max_band?: Database["public"]["Enums"]["severity_band"] | null
+          min_band?: Database["public"]["Enums"]["severity_band"] | null
+          notes?: string | null
+          resource_id?: string
+          symptom_id?: string
+          weight?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "symptom_resource_mappings_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "symptom_resource_mappings_symptom_id_fkey"
+            columns: ["symptom_id"]
+            isOneToOne: false
+            referencedRelation: "symptoms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      symptoms: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          domain: Database["public"]["Enums"]["symptom_domain"]
+          id: string
+          name: string
+          severity_scale_max: number | null
+          severity_scale_min: number | null
+          taxonomy_path: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          domain: Database["public"]["Enums"]["symptom_domain"]
+          id?: string
+          name: string
+          severity_scale_max?: number | null
+          severity_scale_min?: number | null
+          taxonomy_path?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          domain?: Database["public"]["Enums"]["symptom_domain"]
+          id?: string
+          name?: string
+          severity_scale_max?: number | null
+          severity_scale_min?: number | null
+          taxonomy_path?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      teachers: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      user_areekeera_protocols: {
+        Row: {
+          id: string
+          protocol_id: string
+          saved_at: string | null
+          user_id: string
+          version: number | null
+        }
+        Insert: {
+          id?: string
+          protocol_id: string
+          saved_at?: string | null
+          user_id: string
+          version?: number | null
+        }
+        Update: {
+          id?: string
+          protocol_id?: string
+          saved_at?: string | null
+          user_id?: string
+          version?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_areekeera_protocols_protocol_id_fkey"
+            columns: ["protocol_id"]
+            isOneToOne: false
+            referencedRelation: "areekeera_protocols"
             referencedColumns: ["id"]
           },
         ]
@@ -832,6 +1687,23 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      contraindication_rule: "exclude" | "warn" | "gate"
+      escalation_action:
+        | "showUrgentCareBanner"
+        | "restrictToGrounding"
+        | "block"
+      escalation_trigger_type: "keyword" | "symptom" | "score"
+      media_type: "video" | "audio" | "image"
+      resource_modality:
+        | "meditation"
+        | "visualisation"
+        | "ritual"
+        | "somatic"
+        | "process"
+      resource_status: "draft" | "review" | "published"
+      resource_tier: "free" | "paid"
+      severity_band: "mild" | "moderate" | "severe" | "critical"
+      symptom_domain: "physical" | "mental" | "emotional" | "spiritual"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -960,6 +1832,25 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      contraindication_rule: ["exclude", "warn", "gate"],
+      escalation_action: [
+        "showUrgentCareBanner",
+        "restrictToGrounding",
+        "block",
+      ],
+      escalation_trigger_type: ["keyword", "symptom", "score"],
+      media_type: ["video", "audio", "image"],
+      resource_modality: [
+        "meditation",
+        "visualisation",
+        "ritual",
+        "somatic",
+        "process",
+      ],
+      resource_status: ["draft", "review", "published"],
+      resource_tier: ["free", "paid"],
+      severity_band: ["mild", "moderate", "severe", "critical"],
+      symptom_domain: ["physical", "mental", "emotional", "spiritual"],
     },
   },
 } as const
