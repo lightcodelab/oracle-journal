@@ -135,13 +135,25 @@ const HealingBot = () => {
     let assistantContent = '';
 
     try {
+      // Get the user's session token for proper authentication
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Session Expired",
+          description: "Please log in again to continue.",
+          variant: "destructive",
+        });
+        navigate('/auth');
+        return;
+      }
+
       const response = await fetch(CHAT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ messages: newMessages, userId }),
+        body: JSON.stringify({ messages: newMessages }),
       });
 
       if (!response.ok) {
@@ -208,7 +220,7 @@ const HealingBot = () => {
       setIsStreaming(false);
       inputRef.current?.focus();
     }
-  }, [input, isStreaming, messages, userId, toast]);
+  }, [input, isStreaming, messages, navigate, toast]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
