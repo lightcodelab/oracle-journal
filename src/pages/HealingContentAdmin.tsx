@@ -156,16 +156,10 @@ const HealingContentAdmin = () => {
 
       if (uploadError) throw uploadError;
 
-      // Use signed URL since bucket is now private (admin-only)
-      const { data: signedUrlData, error: signedUrlError } = await supabase.storage
-        .from('healing-content')
-        .createSignedUrl(filePath, 60 * 60 * 24 * 365); // 1 year expiry for stored URLs
-
-      if (signedUrlError) throw signedUrlError;
-
-      const signedUrl = signedUrlData.signedUrl;
-      setUploadedFileUrl(signedUrl);
-      setForm({ ...form, content_url: signedUrl });
+      // Store the file path (not signed URL) for security
+      // Signed URLs will be generated on-demand with short expiry
+      setUploadedFileUrl(filePath);
+      setForm({ ...form, content_url: filePath });
 
       toast({
         title: "Uploaded",

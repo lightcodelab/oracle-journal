@@ -67,15 +67,33 @@ serve(async (req) => {
     // Fetch all published healing content for context
     const { data: healingContent, error: contentError } = await supabase
       .from("healing_content")
-      .select("id, title, description, content_type, symptom_tags, duration_minutes")
+      .select("id, title, description, content_type, symptom_tags, duration_minutes, content_url")
       .eq("is_published", true);
 
     if (contentError) {
       console.error("Error fetching healing content:", contentError);
     }
 
+    // Generate short-lived signed URLs for content with storage paths
+    const contentWithUrls = await Promise.all(
+      (healingContent || []).map(async (item: HealingContent & { content_url?: string }) => {
+        let accessUrl = item.content_url;
+        
+        // If content_url is a storage path (not a full URL), generate a signed URL
+        if (item.content_url && !item.content_url.startsWith('http')) {
+          const { data: signedUrlData } = await supabase.storage
+            .from('healing-content')
+            .createSignedUrl(item.content_url, 60 * 15); // 15 minute expiry
+          
+          accessUrl = signedUrlData?.signedUrl || item.content_url;
+        }
+        
+        return { ...item, accessUrl };
+      })
+    );
+
     // Build context about available healing content
-    const contentContext = healingContent?.map((item: HealingContent) => 
+    const contentContext = contentWithUrls.map((item) => 
       `- ${item.title} (${item.content_type}): ${item.description || 'No description'}. Tags: ${item.symptom_tags.join(', ') || 'none'}${item.duration_minutes ? `. Duration: ${item.duration_minutes} minutes` : ''}`
     ).join('\n') || 'No healing content available yet.';
 
