@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.healing-bot]
 verify_jwt = false
+
+[functions.areekeera-bot]
+verify_jwt = false
