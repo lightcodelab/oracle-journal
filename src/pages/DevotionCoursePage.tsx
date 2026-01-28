@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Play, CheckCircle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import ContextualJournal from '@/components/journal/ContextualJournal';
 
 interface Lesson {
   id: string;
@@ -211,6 +212,23 @@ const DevotionCoursePage = () => {
             </div>
           )}
         </div>
+
+        {/* Course-level Journal */}
+        {courseId && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-12"
+          >
+            <ContextualJournal
+              contextType="course"
+              contextId={courseId}
+              contextTitle={course.title}
+              placeholder="Capture your overall course insights and reflections..."
+            />
+          </motion.div>
+        )}
       </div>
     </div>
   );

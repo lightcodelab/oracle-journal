@@ -16,6 +16,7 @@ import Profile from "./pages/Profile";
 import DevotionCourses from "./pages/DevotionCourses";
 import DevotionCoursePage from "./pages/DevotionCoursePage";
 import DevotionLessonPage from "./pages/DevotionLessonPage";
+import Journal from "./pages/Journal";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/devotion/course/:courseId" element={<DevotionCoursePage />} />
           <Route path="/devotion/course/:courseId/lesson/:lessonId" element={<DevotionLessonPage />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/journal" element={<Journal />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -263,6 +263,78 @@ export type Database = {
         }
         Relationships: []
       }
+      entry_categories: {
+        Row: {
+          added_at: string
+          added_by: string | null
+          category_id: string
+          entry_id: string
+        }
+        Insert: {
+          added_at?: string
+          added_by?: string | null
+          category_id: string
+          entry_id: string
+        }
+        Update: {
+          added_at?: string
+          added_by?: string | null
+          category_id?: string
+          entry_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entry_categories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "journal_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entry_categories_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entry_tags: {
+        Row: {
+          created_at: string
+          entry_id: string
+          tag_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entry_id: string
+          tag_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entry_id?: string
+          tag_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entry_tags_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entry_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "journal_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       healing_content: {
         Row: {
           content_text: string | null
@@ -357,6 +429,182 @@ export type Database = {
           id?: string
           symptoms_addressed?: string[]
           title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      journal_categories: {
+        Row: {
+          archived_at: string | null
+          color: string | null
+          created_at: string
+          description: string | null
+          emoji: string | null
+          id: string
+          is_system: boolean
+          name: string
+          normalized_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          emoji?: string | null
+          id?: string
+          is_system?: boolean
+          name: string
+          normalized_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          emoji?: string | null
+          id?: string
+          is_system?: boolean
+          name?: string
+          normalized_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      journal_entries: {
+        Row: {
+          captured_at: string
+          content_json: Json
+          content_text: string
+          context_id: string | null
+          context_title: string | null
+          context_type: string | null
+          deleted_at: string | null
+          id: string
+          is_pinned: boolean
+          is_quick_capture: boolean
+          last_revisited_at: string | null
+          revisit_count: number
+          title: string | null
+          updated_at: string
+          user_id: string
+          version: number
+        }
+        Insert: {
+          captured_at?: string
+          content_json?: Json
+          content_text?: string
+          context_id?: string | null
+          context_title?: string | null
+          context_type?: string | null
+          deleted_at?: string | null
+          id?: string
+          is_pinned?: boolean
+          is_quick_capture?: boolean
+          last_revisited_at?: string | null
+          revisit_count?: number
+          title?: string | null
+          updated_at?: string
+          user_id: string
+          version?: number
+        }
+        Update: {
+          captured_at?: string
+          content_json?: Json
+          content_text?: string
+          context_id?: string | null
+          context_title?: string | null
+          context_type?: string | null
+          deleted_at?: string | null
+          id?: string
+          is_pinned?: boolean
+          is_quick_capture?: boolean
+          last_revisited_at?: string | null
+          revisit_count?: number
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+          version?: number
+        }
+        Relationships: []
+      }
+      journal_entry_revisions: {
+        Row: {
+          client_ts: string | null
+          content: Json
+          content_text: string
+          created_at: string
+          entry_id: string
+          id: string
+          is_autosave: boolean
+          user_id: string
+          version: number
+        }
+        Insert: {
+          client_ts?: string | null
+          content: Json
+          content_text?: string
+          created_at?: string
+          entry_id: string
+          id?: string
+          is_autosave?: boolean
+          user_id: string
+          version: number
+        }
+        Update: {
+          client_ts?: string | null
+          content?: Json
+          content_text?: string
+          created_at?: string
+          entry_id?: string
+          id?: string
+          is_autosave?: boolean
+          user_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_entry_revisions_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journal_tags: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          is_archived: boolean
+          name: string
+          normalized_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          is_archived?: boolean
+          name: string
+          normalized_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          is_archived?: boolean
+          name?: string
+          normalized_name?: string
           updated_at?: string
           user_id?: string
         }
