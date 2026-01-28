@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, BookOpen } from 'lucide-react';
+import { Plus, BookOpen, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import JournalEditor from '@/components/journal/JournalEditor';
 import JournalEntryCard from '@/components/journal/JournalEntryCard';
@@ -160,6 +161,17 @@ export default function ContextualJournal({
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Link to full journal */}
+        <div className="mt-6 pt-4 border-t border-border/50 text-center">
+          <Link 
+            to="/journal" 
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+          >
+            View all journal entries
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
     </div>
   );
