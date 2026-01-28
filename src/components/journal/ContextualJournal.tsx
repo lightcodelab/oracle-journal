@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { 
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
 import JournalEditor from '@/components/journal/JournalEditor';
 import JournalEntryCard from '@/components/journal/JournalEntryCard';
 import { 
@@ -32,7 +27,6 @@ export default function ContextualJournal({
   placeholder = 'Write your reflection...',
   className,
 }: ContextualJournalProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const [isWriting, setIsWriting] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
 
@@ -79,99 +73,84 @@ export default function ContextualJournal({
 
   return (
     <div className={className}>
-      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        <CollapsibleTrigger asChild>
-          <Button
-            variant="outline"
-            className="w-full justify-between"
+      {/* Header */}
+      <div className="flex items-center gap-2 mb-4">
+        <BookOpen className="h-5 w-5 text-primary" />
+        <h3 className="font-serif text-lg text-foreground">Journal Reflections</h3>
+        {entries.length > 0 && (
+          <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+            {entries.length}
+          </span>
+        )}
+      </div>
+
+      <AnimatePresence mode="wait">
+        {isWriting && selectedEntry ? (
+          <motion.div
+            key="editor"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
           >
-            <div className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              <span>Journal Reflections</span>
-              {entries.length > 0 && (
-                <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-                  {entries.length}
-                </span>
-              )}
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">
+                Writing reflection...
+              </span>
+              <Button variant="ghost" size="sm" onClick={handleCloseEditor}>
+                Done
+              </Button>
             </div>
-            {isOpen ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </Button>
-        </CollapsibleTrigger>
+            <JournalEditor
+              initialContent={selectedEntry.content_json}
+              onAutoSave={handleAutoSave}
+              placeholder={placeholder}
+              isSaving={updateEntry.isPending}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="list"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {/* New entry button */}
+            <Button
+              variant="ghost"
+              className="w-full border border-dashed border-border hover:border-primary/50 mb-4"
+              onClick={handleNewEntry}
+              disabled={createEntry.isPending}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Reflection
+            </Button>
 
-        <CollapsibleContent className="mt-4">
-          <AnimatePresence mode="wait">
-            {isWriting && selectedEntry ? (
-              <motion.div
-                key="editor"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-              >
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Writing reflection...
-                  </span>
-                  <Button variant="ghost" size="sm" onClick={handleCloseEditor}>
-                    Done
-                  </Button>
-                </div>
-                <JournalEditor
-                  initialContent={selectedEntry.content_json}
-                  onAutoSave={handleAutoSave}
-                  placeholder={placeholder}
-                  isSaving={updateEntry.isPending}
-                />
-              </motion.div>
+            {/* Existing entries */}
+            {isLoading ? (
+              <div className="text-center py-4 text-muted-foreground">
+                Loading...
+              </div>
+            ) : entries.length > 0 ? (
+              <div className="space-y-3">
+                {entries.map((entry) => (
+                  <JournalEntryCard
+                    key={entry.id}
+                    entry={entry}
+                    onSelect={handleSelectEntry}
+                    isSelected={selectedEntry?.id === entry.id}
+                  />
+                ))}
+              </div>
             ) : (
-              <motion.div
-                key="list"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                {/* New entry button */}
-                <Button
-                  variant="ghost"
-                  className="w-full border border-dashed border-border hover:border-primary/50 mb-4"
-                  onClick={handleNewEntry}
-                  disabled={createEntry.isPending}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Reflection
-                </Button>
-
-                {/* Existing entries */}
-                {isLoading ? (
-                  <div className="text-center py-4 text-muted-foreground">
-                    Loading...
-                  </div>
-                ) : entries.length > 0 ? (
-                  <div className="space-y-3">
-                    {entries.map((entry) => (
-                      <JournalEntryCard
-                        key={entry.id}
-                        entry={entry}
-                        onSelect={handleSelectEntry}
-                        isSelected={selectedEntry?.id === entry.id}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-6 text-muted-foreground">
-                    <BookOpen className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    <p className="text-sm">No reflections yet.</p>
-                    <p className="text-xs mt-1">Add one to capture your thoughts.</p>
-                  </div>
-                )}
-              </motion.div>
+              <div className="text-center py-6 text-muted-foreground border border-dashed border-border rounded-lg">
+                <BookOpen className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                <p className="text-sm">No reflections yet.</p>
+                <p className="text-xs mt-1">Add one to capture your thoughts.</p>
+              </div>
             )}
-          </AnimatePresence>
-        </CollapsibleContent>
-      </Collapsible>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
