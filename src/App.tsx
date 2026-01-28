@@ -17,6 +17,9 @@ import HealingBot from "./pages/HealingBot";
 import MyProtocols from "./pages/MyProtocols";
 import HealingContentAdmin from "./pages/HealingContentAdmin";
 import Profile from "./pages/Profile";
+import DevotionCourses from "./pages/DevotionCourses";
+import DevotionCoursePage from "./pages/DevotionCoursePage";
+import DevotionLessonPage from "./pages/DevotionLessonPage";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +42,9 @@ const App = () => (
           <Route path="/devotion/healing-bot" element={<HealingBot />} />
           <Route path="/devotion/protocols" element={<MyProtocols />} />
           <Route path="/devotion/admin" element={<HealingContentAdmin />} />
+          <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
+          <Route path="/devotion/course/:courseId" element={<DevotionCoursePage />} />
+          <Route path="/devotion/course/:courseId/lesson/:lessonId" element={<DevotionLessonPage />} />
           <Route path="/profile" element={<Profile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
