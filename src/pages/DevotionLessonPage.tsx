@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ContextualJournal from '@/components/journal/ContextualJournal';
+import CourseSessionNav from '@/components/CourseSessionNav';
 
 interface Lesson {
   id: string;
@@ -128,6 +129,25 @@ const DevotionLessonPage = () => {
       return data as JournalEntry | null;
     },
     enabled: !loading && !!lessonId && !!userId,
+  });
+
+  // Fetch completed lesson IDs for the nav
+  const { data: completedLessonIds } = useQuery({
+    queryKey: ['devotion-lesson-progress-nav', courseId, userId],
+    queryFn: async () => {
+      if (!userId || !allLessons) return [];
+      
+      const lessonIds = allLessons.map(l => l.id);
+      const { data, error } = await supabase
+        .from('lesson_journal_entries')
+        .select('lesson_id')
+        .eq('user_id', userId)
+        .in('lesson_id', lessonIds);
+
+      if (error) throw error;
+      return data?.map(e => e.lesson_id) || [];
+    },
+    enabled: !loading && !!userId && !!allLessons && allLessons.length > 0,
   });
 
   // Initialize form state from journal entry
@@ -253,164 +273,183 @@ const DevotionLessonPage = () => {
         <ProfileDropdown />
       </div>
 
-      <div className="max-w-3xl mx-auto pt-12">
-        {/* Session Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-8"
-        >
-          <p className="text-primary font-sans text-sm uppercase tracking-wider mb-2">
-            Session {lesson.lesson_number}
-          </p>
-          <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
-            {lesson.title}
-          </h1>
-        </motion.div>
-
-        {/* Audio Player */}
-        {lesson.audio_url && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-8"
-          >
-            <div className="bg-card border border-border rounded-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-serif text-lg text-foreground">Audio Lesson</h3>
-                <Button
-                  onClick={handleRestartAudio}
-                  variant="ghost"
-                  size="sm"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  Restart
-                </Button>
-              </div>
-              <audio
-                ref={audioRef}
-                src={lesson.audio_url}
-                controls
-                className="w-full"
-                onTimeUpdate={handleAudioTimeUpdate}
-              />
-              {lesson.audio_timestamp && (
-                <p className="text-muted-foreground text-sm mt-2">
-                  Duration: {lesson.audio_timestamp}
-                </p>
+      <div className="max-w-6xl mx-auto pt-12">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Side Navigation - Sessions Panel */}
+          <aside className="lg:w-72 flex-shrink-0 order-2 lg:order-1">
+            <div className="lg:sticky lg:top-20">
+              {allLessons && allLessons.length > 0 && courseId && (
+                <CourseSessionNav
+                  lessons={allLessons}
+                  completedLessonIds={completedLessonIds || []}
+                  courseId={courseId}
+                  currentLessonId={lessonId}
+                />
               )}
             </div>
-          </motion.div>
-        )}
+          </aside>
 
-        {/* Lesson Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="prose prose-invert max-w-none mb-8"
-        >
-          <div 
-            className="text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap"
-            dangerouslySetInnerHTML={{ __html: lesson.content }}
-          />
-        </motion.div>
+          {/* Main Content */}
+          <main className="flex-1 min-w-0 order-1 lg:order-2">
+            {/* Session Header */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-8"
+            >
+              <p className="text-primary font-sans text-sm uppercase tracking-wider mb-2">
+                Session {lesson.lesson_number}
+              </p>
+              <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
+                {lesson.title}
+              </h1>
+            </motion.div>
 
-        {/* Survey Question */}
-        {lesson.survey_question && surveyOptions.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-8"
-          >
-            <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="font-serif text-xl text-foreground mb-4">
-                {lesson.survey_question}
-              </h3>
-              <RadioGroup
-                value={selectedAnswer?.toString()}
-                onValueChange={handleAnswerChange}
-                className="space-y-3"
+            {/* Audio Player */}
+            {lesson.audio_url && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="mb-8"
               >
-                {surveyOptions.map((option, index) => (
-                  <div key={index} className="flex items-center space-x-3">
-                    <RadioGroupItem
-                      value={index.toString()}
-                      id={`option-${index}`}
-                      className="border-primary"
-                    />
-                    <Label
-                      htmlFor={`option-${index}`}
-                      className="text-foreground/90 font-sans cursor-pointer"
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-serif text-lg text-foreground">Audio Lesson</h3>
+                    <Button
+                      onClick={handleRestartAudio}
+                      variant="ghost"
+                      size="sm"
+                      className="text-muted-foreground hover:text-foreground"
                     >
-                      {option}
-                    </Label>
+                      <RotateCcw className="w-4 h-4 mr-2" />
+                      Restart
+                    </Button>
                   </div>
-                ))}
-              </RadioGroup>
-            </div>
-          </motion.div>
-        )}
+                  <audio
+                    ref={audioRef}
+                    src={lesson.audio_url}
+                    controls
+                    className="w-full"
+                    onTimeUpdate={handleAudioTimeUpdate}
+                  />
+                  {lesson.audio_timestamp && (
+                    <p className="text-muted-foreground text-sm mt-2">
+                      Duration: {lesson.audio_timestamp}
+                    </p>
+                  )}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Lesson Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="prose prose-invert max-w-none mb-8"
+            >
+              <div 
+                className="text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{ __html: lesson.content }}
+              />
+            </motion.div>
+
+            {/* Survey Question */}
+            {lesson.survey_question && surveyOptions.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="mb-8"
+              >
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <h3 className="font-serif text-xl text-foreground mb-4">
+                    {lesson.survey_question}
+                  </h3>
+                  <RadioGroup
+                    value={selectedAnswer?.toString()}
+                    onValueChange={handleAnswerChange}
+                    className="space-y-3"
+                  >
+                    {surveyOptions.map((option, index) => (
+                      <div key={index} className="flex items-center space-x-3">
+                        <RadioGroupItem
+                          value={index.toString()}
+                          id={`option-${index}`}
+                          className="border-primary"
+                        />
+                        <Label
+                          htmlFor={`option-${index}`}
+                          className="text-foreground/90 font-sans cursor-pointer"
+                        >
+                          {option}
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+              </motion.div>
+            )}
 
 
-        {/* Digital Journal (Rich Text) */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.55 }}
-          className="mb-12"
-        >
-          <ContextualJournal
-            contextType="lesson"
-            contextId={lessonId || ''}
-            contextTitle={`Session ${lesson.lesson_number}: ${lesson.title}`}
-            placeholder="Add deeper reflections, insights, or notes to your digital journal..."
-          />
-        </motion.div>
+            {/* Digital Journal (Rich Text) */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.55 }}
+              className="mb-12"
+            >
+              <ContextualJournal
+                contextType="lesson"
+                contextId={lessonId || ''}
+                contextTitle={`Session ${lesson.lesson_number}: ${lesson.title}`}
+                placeholder="Add deeper reflections, insights, or notes to your digital journal..."
+              />
+            </motion.div>
 
-        {/* Navigation Footer */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="flex items-center justify-between border-t border-border pt-8"
-        >
-          {prevLesson ? (
-            <Button
-              onClick={() => navigate(`/devotion/course/${courseId}/lesson/${prevLesson.id}`)}
-              variant="ghost"
-              className="text-foreground/70 hover:text-foreground"
+            {/* Navigation Footer */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="flex items-center justify-between border-t border-border pt-8"
             >
-              <ChevronLeft className="w-4 h-4 mr-2" />
-              Session {prevLesson.lesson_number}
-            </Button>
-          ) : (
-            <div />
-          )}
-          
-          {nextLesson ? (
-            <Button
-              onClick={() => navigate(`/devotion/course/${courseId}/lesson/${nextLesson.id}`)}
-              variant="ghost"
-              className="text-foreground/70 hover:text-foreground"
-            >
-              Session {nextLesson.lesson_number}
-              <ChevronRight className="w-4 h-4 ml-2" />
-            </Button>
-          ) : (
-            <Button
-              onClick={() => navigate(`/devotion/course/${courseId}`)}
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              Complete Course
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          )}
-        </motion.div>
+              {prevLesson ? (
+                <Button
+                  onClick={() => navigate(`/devotion/course/${courseId}/lesson/${prevLesson.id}`)}
+                  variant="ghost"
+                  className="text-foreground/70 hover:text-foreground"
+                >
+                  <ChevronLeft className="w-4 h-4 mr-2" />
+                  Session {prevLesson.lesson_number}
+                </Button>
+              ) : (
+                <div />
+              )}
+              
+              {nextLesson ? (
+                <Button
+                  onClick={() => navigate(`/devotion/course/${courseId}/lesson/${nextLesson.id}`)}
+                  variant="ghost"
+                  className="text-foreground/70 hover:text-foreground"
+                >
+                  Session {nextLesson.lesson_number}
+                  <ChevronRight className="w-4 h-4 ml-2" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => navigate(`/devotion/course/${courseId}`)}
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  Complete Course
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              )}
+            </motion.div>
+          </main>
+        </div>
       </div>
     </div>
   );
