@@ -100,16 +100,6 @@ const Temple = () => {
           />
         </motion.div>
 
-        {/* Header Text */}
-        <motion.h1
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-center font-serif text-3xl md:text-4xl text-white mb-12"
-        >
-          The Temple is open to you.
-        </motion.h1>
-
         {/* Door Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
           {doors.map((door, index) => (
