@@ -1,6 +1,5 @@
 import { OracleCard } from "@/data/oracleCards";
 import { Button } from "./ui/button";
-import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Sparkles, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
@@ -60,10 +59,10 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
           <img 
             src={`/cards/${card.image_file_name}`} 
             alt={card.card_title}
-            className="w-72 h-96 object-cover rounded-2xl border-2 border-accent/50 shadow-glow"
+            className="w-72 h-96 object-cover rounded-2xl border border-border shadow-lg"
           />
         ) : (
-          <div className="w-72 h-96 bg-gradient-to-br from-purple-600 to-pink-500 rounded-2xl border-2 border-accent/50 shadow-glow p-6 flex flex-col items-center justify-center text-center">
+          <div className="w-72 h-96 bg-gradient-to-br from-purple-600 to-pink-500 rounded-2xl border border-border shadow-lg p-6 flex flex-col items-center justify-center text-center">
             <h2 className="font-serif text-3xl font-bold text-primary-foreground mb-4">
               {card.card_title}
             </h2>
@@ -84,23 +83,23 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
           {/* Card Content - always shown */}
           {getContent('card_content') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <div className="flex items-center gap-2 mb-6">
-                <Sparkles className="w-6 h-6 text-accent" />
-                <h3 className="font-serif text-3xl font-semibold text-foreground">Card Guidance</h3>
+            <div className="bg-card border border-border rounded-lg p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-5 h-5 text-primary" />
+                <h3 className="font-serif text-xl text-foreground">Card Guidance</h3>
               </div>
-              <FormattedContent content={getContent('card_content')!} className="text-foreground/80 text-lg" />
-            </Card>
+              <FormattedContent content={getContent('card_content')!} className="text-foreground/90 font-sans leading-relaxed" />
+            </div>
           )}
 
           {/* Exercise - only show if not in Starter Collection */}
           {!showBasicOnly && getContent('exercise') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('exercise_heading') || "Exercise"}
               </h3>
-              <FormattedContent content={getContent('exercise')!} className="text-foreground/80 text-lg" />
-            </Card>
+              <FormattedContent content={getContent('exercise')!} className="text-foreground/90 font-sans leading-relaxed" />
+            </div>
           )}
         </>
       )}
@@ -115,23 +114,23 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
           {/* Teaching - always shown */}
           {getContent('teaching') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <div className="flex items-center gap-2 mb-6">
-                <Sparkles className="w-6 h-6 text-accent" />
-                <h3 className="font-serif text-3xl font-semibold text-foreground">Teaching</h3>
+            <div className="bg-card border border-border rounded-lg p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-5 h-5 text-primary" />
+                <h3 className="font-serif text-xl text-foreground">Teaching</h3>
               </div>
-              <FormattedContent content={getContent('teaching')!} className="text-foreground/80 text-lg" />
-            </Card>
+              <FormattedContent content={getContent('teaching')!} className="text-foreground/90 font-sans leading-relaxed" />
+            </div>
           )}
 
           {/* Activity - only show if not in Starter Collection */}
           {!showBasicOnly && getContent('activity') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('activity_heading') || "Activity"}
               </h3>
-              <FormattedContent content={getContent('activity')!} className="text-foreground/80 text-lg" />
-            </Card>
+              <FormattedContent content={getContent('activity')!} className="text-foreground/90 font-sans leading-relaxed" />
+            </div>
           )}
         </>
       )}
@@ -141,33 +140,33 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         <>
           {/* 1. The Card */}
           {getContent('card_details') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <div className="flex items-center gap-2 mb-6">
-                <Sparkles className="w-6 h-6 text-accent" />
-                <h3 className="font-serif text-3xl font-semibold text-foreground">The Card</h3>
+            <div className="bg-card border border-border rounded-lg p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-5 h-5 text-primary" />
+                <h3 className="font-serif text-xl text-foreground">The Card</h3>
               </div>
-              <FormattedContent content={getContent('card_details')!} className="text-foreground/80 text-lg" />
-            </Card>
+              <FormattedContent content={getContent('card_details')!} className="text-foreground/90 font-sans leading-relaxed" />
+            </div>
           )}
 
           {/* 2. Opening Invocation - only show if NOT in Starter Collection */}
           {!showBasicOnly && getContent('opening_invocation_content') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('opening_invocation_heading') || "Opening Invocation & Altar Ritual"}
               </h3>
-              <FormattedContent content={getContent('opening_invocation_content')!} className="text-foreground/80 text-lg" />
-            </Card>
+              <FormattedContent content={getContent('opening_invocation_content')!} className="text-foreground/90 font-sans leading-relaxed" />
+            </div>
           )}
 
           {/* 3. Spiral of Inquiry (always shown for basic version) */}
           {getContent('spiral_of_inquiry_content') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('spiral_of_inquiry_heading') || "Spiral of Inquiry"}
               </h3>
-              <FormattedContent content={getContent('spiral_of_inquiry_content')!} className="text-foreground/80 text-lg" />
-            </Card>
+              <FormattedContent content={getContent('spiral_of_inquiry_content')!} className="text-foreground/90 font-sans leading-relaxed" />
+            </div>
           )}
 
           {/* Additional content - only shown if NOT in Starter Collection */}
@@ -175,65 +174,65 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
             <>
               {/* 4. Acknowledgement */}
               {getContent('acknowledgement_content') && (
-                <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-                  <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <h3 className="font-serif text-xl text-foreground mb-4">
                     {getContent('acknowledgement_heading') || "Acknowledgement of Distortion as Protection"}
                   </h3>
-                  <FormattedContent content={getContent('acknowledgement_content')!} className="text-foreground/80 text-lg" />
-                </Card>
+                  <FormattedContent content={getContent('acknowledgement_content')!} className="text-foreground/90 font-sans leading-relaxed" />
+                </div>
               )}
 
               {/* 5. Spiral of Seeing */}
               {getContent('spiral_of_seeing_content') && (
-                <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-                  <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <h3 className="font-serif text-xl text-foreground mb-4">
                     {getContent('spiral_of_seeing_heading') || "Spiral of Seeing"}
                   </h3>
-                  <FormattedContent content={getContent('spiral_of_seeing_content')!} className="text-foreground/80 text-lg" />
-                </Card>
+                  <FormattedContent content={getContent('spiral_of_seeing_content')!} className="text-foreground/90 font-sans leading-relaxed" />
+                </div>
               )}
 
               {/* 6. Living Inquiry */}
               {getContent('living_inquiry_content') && (
-                <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-                  <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <h3 className="font-serif text-xl text-foreground mb-4">
                     {getContent('living_inquiry_heading') || "Living Inquiry"}
                   </h3>
-                  <FormattedContent content={getContent('living_inquiry_content')!} className="text-foreground/80 text-lg" />
-                </Card>
+                  <FormattedContent content={getContent('living_inquiry_content')!} className="text-foreground/90 font-sans leading-relaxed" />
+                </div>
               )}
 
               {/* 7. Guided Audio */}
               {getContent('guided_audio_content') && (
-                <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-                  <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <h3 className="font-serif text-xl text-foreground mb-4">
                     {getContent('guided_audio_heading') || "Guided Audio Journey"}
                   </h3>
-                  <FormattedContent content={getContent('guided_audio_content')!} className="text-foreground/80 text-lg" />
-                </Card>
+                  <FormattedContent content={getContent('guided_audio_content')!} className="text-foreground/90 font-sans leading-relaxed" />
+                </div>
               )}
 
               {/* 8. Premium Content - Embodiment Ritual */}
               {hasPremiumAccess && getContent('embodiment_ritual_content') && (
-                <Card className="bg-card/50 backdrop-blur-sm border-accent/30 p-8">
-                  <div className="flex items-center gap-2 mb-6">
-                    <Sparkles className="w-6 h-6 text-accent animate-pulse" />
-                    <h3 className="font-serif text-3xl font-semibold text-foreground">
+                <div className="bg-card border border-primary/30 rounded-lg p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+                    <h3 className="font-serif text-xl text-foreground">
                       {getContent('embodiment_ritual_heading') || "Embodiment Ritual"}
                     </h3>
                   </div>
-                  <FormattedContent content={getContent('embodiment_ritual_content')!} className="text-foreground/80 text-lg" />
-                </Card>
+                  <FormattedContent content={getContent('embodiment_ritual_content')!} className="text-foreground/90 font-sans leading-relaxed" />
+                </div>
               )}
 
               {/* 9. Benediction */}
               {getContent('benediction_content') && (
-                <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-                  <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <h3 className="font-serif text-xl text-foreground mb-4">
                     {getContent('benediction_heading') || "Closing Benediction"}
                   </h3>
-                  <FormattedContent content={getContent('benediction_content')!} className="text-foreground/80 text-lg" />
-                </Card>
+                  <FormattedContent content={getContent('benediction_content')!} className="text-foreground/90 font-sans leading-relaxed" />
+                </div>
               )}
             </>
           )}
@@ -242,38 +241,38 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
       {/* Magic not Logic - Card Details */}
       {isMagicNotLogic && getContent('card_details') && (
-        <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-          <div className="flex items-center gap-2 mb-6">
-            <Sparkles className="w-6 h-6 text-accent" />
-            <h3 className="font-serif text-3xl font-semibold text-foreground">The Card</h3>
+        <div className="bg-card border border-border rounded-lg p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Sparkles className="w-5 h-5 text-primary" />
+            <h3 className="font-serif text-xl text-foreground">The Card</h3>
           </div>
-          <FormattedContent content={getContent('card_details')!} className="text-foreground/80 text-lg" />
-        </Card>
+          <FormattedContent content={getContent('card_details')!} className="text-foreground/90 font-sans leading-relaxed" />
+        </div>
       )}
 
       {isMagicNotLogic && !showBasicOnly && (
         <>
           {/* Journalling Activity */}
           {getContent('journalling_activity') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('journalling_activity_heading') || "Journalling Activity"}
               </h3>
-              <FormattedContent content={getContent('journalling_activity')!} className="text-foreground/80 text-lg" />
-            </Card>
+              <FormattedContent content={getContent('journalling_activity')!} className="text-foreground/90 font-sans leading-relaxed" />
+            </div>
           )}
 
           {/* Vimeo Video Section */}
           {getContent('vimeo_video') && (
-            <Card className="bg-card/50 backdrop-blur-sm border-primary/30 p-8">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-6">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="font-serif text-xl text-foreground mb-4">
                 Clearing Video
               </h3>
               <VimeoEmbed 
                 videoId={getContent('vimeo_video')!} 
                 title={`${card.card_title} - Clearing Video`}
               />
-            </Card>
+            </div>
           )}
         </>
       )}
@@ -288,13 +287,13 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
       />
 
       {/* Back/Draw Another Button */}
-      <div className="flex justify-center pt-4">
+      <div className="flex justify-center pt-4 border-t border-border mt-8">
         <Button
           onClick={onDrawAnother}
-          size="lg"
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-6 text-lg shadow-glow"
+          variant="ghost"
+          className="text-foreground/70 hover:text-foreground font-sans"
         >
-          <RefreshCw className="w-5 h-5 mr-2" />
+          <RefreshCw className="w-4 h-4 mr-2" />
           {isStarterDeck ? 'Back to Reading' : 'Draw Another Card'}
         </Button>
       </div>
