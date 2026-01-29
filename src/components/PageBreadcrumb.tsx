@@ -4,6 +4,7 @@ import { Home, ChevronRight } from 'lucide-react';
 export interface BreadcrumbItem {
   label: string;
   href?: string;
+  onClick?: () => void;
 }
 
 interface PageBreadcrumbProps {
@@ -12,6 +13,14 @@ interface PageBreadcrumbProps {
 
 const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
   const navigate = useNavigate();
+
+  const handleClick = (item: BreadcrumbItem) => {
+    if (item.onClick) {
+      item.onClick();
+    } else if (item.href && !item.href.startsWith('#')) {
+      navigate(item.href);
+    }
+  };
 
   return (
     <nav 
@@ -31,21 +40,26 @@ const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
       {/* Breadcrumb items */}
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
+        const isClickable = !isLast && (item.href || item.onClick);
         
         return (
           <div key={index} className="flex items-center gap-1.5">
             <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/50" />
-            {isLast || !item.href ? (
-              <span className={isLast ? 'text-foreground font-medium' : 'text-muted-foreground'}>
-                {item.label}
-              </span>
-            ) : (
+            {isClickable ? (
               <button
-                onClick={() => navigate(item.href!)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => handleClick(item)}
+                className="text-muted-foreground hover:text-foreground transition-colors truncate max-w-[120px] sm:max-w-[200px]"
+                title={item.label}
               >
                 {item.label}
               </button>
+            ) : (
+              <span 
+                className={`${isLast ? 'text-foreground font-medium' : 'text-muted-foreground'} truncate max-w-[120px] sm:max-w-[200px]`}
+                title={item.label}
+              >
+                {item.label}
+              </span>
             )}
           </div>
         );

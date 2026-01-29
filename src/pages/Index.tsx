@@ -11,7 +11,7 @@ import { PurchaseVerification } from "@/components/PurchaseVerification";
 import { CardNumberSelector } from "@/components/CardNumberSelector";
 import { CardDropdownSelector } from "@/components/CardDropdownSelector";
 import { supabase } from "@/integrations/supabase/client";
-import { Shuffle, Sparkles, ChevronLeft } from "lucide-react";
+import { Shuffle, Sparkles } from "lucide-react";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { motion } from "framer-motion";
@@ -560,9 +560,33 @@ const Index = () => {
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <PageBreadcrumb 
-          items={[
-            { label: 'Door of Remembrance' }
-          ]} 
+          items={
+            isRevealed && selectedCard
+              ? selectedDeck?.is_starter
+                ? [
+                    { label: 'Door of Remembrance', onClick: handleBackToDecks },
+                    { label: 'Your Reading', onClick: handleBackToStarterSpread },
+                    { label: selectedCard.card_title }
+                  ]
+                : [
+                    { label: 'Door of Remembrance', onClick: handleBackToDecks },
+                    { label: selectedDeck?.name || 'Deck', onClick: handleDrawAnother },
+                    { label: selectedCard.card_title }
+                  ]
+              : showCard && selectedCard && !isRevealed
+                ? [
+                    { label: 'Door of Remembrance', onClick: handleBackToDecks },
+                    { label: selectedDeck?.name || 'Deck' }
+                  ]
+              : selectedDeck
+                ? [
+                    { label: 'Door of Remembrance', onClick: handleBackToDecks },
+                    { label: selectedDeck.name }
+                  ]
+                : [
+                    { label: 'Door of Remembrance' }
+                  ]
+          } 
         />
         <ProfileDropdown />
       </div>
@@ -600,13 +624,7 @@ const Index = () => {
             transition={{ duration: 0.8 }}
             className="text-center space-y-8 max-w-2xl mx-auto min-h-[80vh] flex flex-col justify-center"
           >
-            <Button
-              onClick={handleBackToDecks}
-              variant="ghost"
-              className="absolute top-4 left-4"
-            >
-              ← Back to Decks
-            </Button>
+            {/* Breadcrumb handles navigation now */}
 
             {selectedDeck.name === "The Sacred Rewrite" ? (
               <motion.div
@@ -728,13 +746,7 @@ const Index = () => {
             transition={{ duration: 0.6 }}
             className="min-h-[80vh] flex flex-col justify-center items-center space-y-8"
           >
-            <Button
-              onClick={handleBackToDecks}
-              variant="ghost"
-              className="absolute top-4 left-4"
-            >
-              ← Back to Decks
-            </Button>
+            {/* Breadcrumb handles navigation now */}
 
             <h2 className="font-serif text-4xl text-foreground mb-8">
               Your Card Awaits
@@ -750,22 +762,14 @@ const Index = () => {
         )}
 
         {isRevealed && selectedCard && (
-          <>
-            <Button
-              onClick={selectedDeck?.is_starter ? handleBackToStarterSpread : handleBackToDecks}
-              variant="ghost"
-              className="absolute top-4 left-4"
-            >
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              {selectedDeck?.is_starter ? 'Back to Reading' : 'Back to Decks'}
-            </Button>
+          <div className="pt-8">
             <CardDetail 
               card={selectedCard}
               onDrawAnother={handleDrawAnother}
               hasPremiumAccess={hasPremiumAccess}
               isStarterDeck={selectedDeck?.is_starter}
             />
-          </>
+          </div>
         )}
       </div>
 
