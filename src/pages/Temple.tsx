@@ -85,7 +85,7 @@ const Temple = () => {
         <ProfileDropdown />
       </div>
 
-      <div className="max-w-6xl mx-auto pt-12">
+      <div className="max-w-6xl mx-auto pt-6">
         {/* Banner Image */}
         <motion.div
           initial={{ opacity: 0 }}
