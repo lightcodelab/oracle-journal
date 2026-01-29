@@ -1,6 +1,8 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { Play, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Play, CheckCircle, ChevronLeft, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
 interface Lesson {
   id: string;
@@ -13,6 +15,7 @@ interface CourseSessionNavProps {
   completedLessonIds?: string[];
   courseId: string;
   currentLessonId?: string;
+  courseTitle?: string;
 }
 
 export default function CourseSessionNav({
@@ -20,56 +23,132 @@ export default function CourseSessionNav({
   completedLessonIds = [],
   courseId,
   currentLessonId,
+  courseTitle,
 }: CourseSessionNavProps) {
   const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLessonClick = (lessonId: string) => {
     navigate(`/devotion/course/${courseId}/lesson/${lessonId}`);
+    setMobileOpen(false);
   };
 
-  return (
-    <div className="bg-card border border-border rounded-lg p-4">
-      <h3 className="font-serif text-lg text-foreground mb-4 px-2">Sessions</h3>
-      <nav className="space-y-1">
-        {lessons.map((lesson) => {
-          const isActive = lesson.id === currentLessonId;
-          const isCompleted = completedLessonIds.includes(lesson.id);
+  const handleBackToCourse = () => {
+    navigate(`/devotion/course/${courseId}`);
+    setMobileOpen(false);
+  };
 
-          return (
-            <button
-              key={lesson.id}
-              onClick={() => handleLessonClick(lesson.id)}
-              className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-colors",
-                isActive
-                  ? "bg-primary/10 text-primary"
-                  : "text-foreground/70 hover:bg-muted hover:text-foreground"
-              )}
-            >
-              <div className={cn(
-                "flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium",
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : isCompleted
-                    ? "bg-primary/20 text-primary"
-                    : "bg-muted text-muted-foreground"
-              )}>
-                {isCompleted ? (
-                  <CheckCircle className="w-4 h-4" />
-                ) : (
-                  lesson.lesson_number
+  const completedCount = lessons.filter(l => completedLessonIds.includes(l.id)).length;
+  const progressPercent = lessons.length > 0 ? (completedCount / lessons.length) * 100 : 0;
+
+  const navContent = (
+    <>
+      {/* Course Header */}
+      <div className="p-4 border-b border-border">
+        <button
+          onClick={handleBackToCourse}
+          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-3"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Back to Course
+        </button>
+        {courseTitle && (
+          <h2 className="font-serif text-lg text-foreground leading-tight">
+            {courseTitle}
+          </h2>
+        )}
+        {/* Progress Bar */}
+        <div className="mt-3">
+          <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+            <span>{completedCount} of {lessons.length} complete</span>
+            <span>{Math.round(progressPercent)}%</span>
+          </div>
+          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-primary transition-all duration-300"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Sessions List */}
+      <nav className="flex-1 overflow-y-auto p-2">
+        <div className="space-y-0.5">
+          {lessons.map((lesson) => {
+            const isActive = lesson.id === currentLessonId;
+            const isCompleted = completedLessonIds.includes(lesson.id);
+
+            return (
+              <button
+                key={lesson.id}
+                onClick={() => handleLessonClick(lesson.id)}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-3 rounded-md text-left transition-colors",
+                  isActive
+                    ? "bg-primary/10 text-primary border-l-2 border-primary"
+                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
                 )}
-              </div>
-              <span className={cn(
-                "text-sm truncate",
-                isActive && "font-medium"
-              )}>
-                {lesson.title}
-              </span>
-            </button>
-          );
-        })}
+              >
+                <div className={cn(
+                  "flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium",
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : isCompleted
+                      ? "bg-primary/20 text-primary"
+                      : "bg-muted text-muted-foreground"
+                )}>
+                  {isCompleted ? (
+                    <CheckCircle className="w-3.5 h-3.5" />
+                  ) : (
+                    lesson.lesson_number
+                  )}
+                </div>
+                <span className={cn(
+                  "text-sm leading-tight",
+                  isActive && "font-medium"
+                )}>
+                  {lesson.title}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </nav>
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile Toggle Button */}
+      <Button
+        variant="outline"
+        size="icon"
+        className="lg:hidden fixed bottom-4 left-4 z-50 shadow-lg"
+        onClick={() => setMobileOpen(!mobileOpen)}
+      >
+        {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+      </Button>
+
+      {/* Mobile Overlay */}
+      {mobileOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar - Desktop: fixed left, Mobile: slide-in */}
+      <aside className={cn(
+        "fixed top-0 left-0 h-full bg-card border-r border-border flex flex-col z-50 transition-transform duration-300",
+        "w-72",
+        // Mobile: hidden by default, shown when open
+        mobileOpen ? "translate-x-0" : "-translate-x-full",
+        // Desktop: always visible
+        "lg:translate-x-0"
+      )}>
+        {navContent}
+      </aside>
+    </>
   );
 }
