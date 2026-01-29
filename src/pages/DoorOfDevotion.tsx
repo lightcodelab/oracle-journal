@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import ProfileDropdown from '@/components/ProfileDropdown';
-import { ArrowLeft, MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Home, ChevronRight } from 'lucide-react';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
+import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -103,23 +103,8 @@ const DoorOfDevotion = () => {
   return (
     <div className="min-h-screen bg-background py-12 px-4 relative">
       {/* Navigation Header */}
-      <div className="absolute top-4 left-4 right-4 z-20 flex items-start justify-between">
-        {/* Stacked Breadcrumb Navigation */}
-        <div className="flex flex-col items-start gap-1">
-          {/* Home - Temple */}
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Home className="w-3 h-3" />
-            <span>Temple</span>
-          </button>
-          {/* Current Page Indicator */}
-          <div className="flex items-center gap-1.5 pl-1">
-            <ChevronRight className="w-3 h-3 text-muted-foreground/50" />
-            <span className="text-sm font-medium text-foreground">Door of Devotion</span>
-          </div>
-        </div>
+      <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
+        <PageBreadcrumb items={[{ label: 'Door of Devotion' }]} />
         <ProfileDropdown />
       </div>
 

@@ -9,9 +9,10 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, Send, Loader2, RefreshCw, Save, Sparkles, AlertTriangle, Shield, CheckCircle, ChevronRight, Play, Clock, Heart } from 'lucide-react';
+import { Send, Loader2, RefreshCw, Save, Sparkles, AlertTriangle, Shield, CheckCircle, ChevronRight, ChevronLeft, Play, Clock, Heart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -437,15 +438,12 @@ const AreekeeraBot = () => {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
-        <Button
-          onClick={() => navigate('/devotion')}
-          variant="ghost"
-          size="sm"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
-        <h1 className="font-serif text-xl text-foreground">AreekeerA Protocol Guide</h1>
+        <PageBreadcrumb 
+          items={[
+            { label: 'Door of Devotion', href: '/devotion' },
+            { label: 'AreekeerA Guide' }
+          ]} 
+        />
         <div className="flex items-center gap-2">
           <Button
             onClick={resetConversation}
@@ -837,7 +835,7 @@ const AreekeeraBot = () => {
                 onClick={() => setPhase('chat')}
                 className="w-full"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
+                <ChevronLeft className="w-4 h-4 mr-2" />
                 Continue Conversation
               </Button>
             </div>

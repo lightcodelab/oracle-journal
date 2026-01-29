@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Play, CheckCircle } from 'lucide-react';
+import { Play, CheckCircle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ContextualJournal from '@/components/journal/ContextualJournal';
 
 interface Lesson {
@@ -128,15 +128,13 @@ const DevotionCoursePage = () => {
     <div className="min-h-screen bg-background py-12 px-4 relative">
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-        <Button
-          onClick={() => navigate('/devotion/energy-hygiene')}
-          variant="ghost"
-          size="sm"
-          className="text-foreground/70 hover:text-foreground"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Energy Hygiene Practices
-        </Button>
+        <PageBreadcrumb 
+          items={[
+            { label: 'Door of Devotion', href: '/devotion' },
+            { label: 'Energy Hygiene', href: '/devotion/energy-hygiene' },
+            { label: course.title }
+          ]} 
+        />
         <ProfileDropdown />
       </div>
 
