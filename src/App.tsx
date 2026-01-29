@@ -19,6 +19,7 @@ import DevotionLessonPage from "./pages/DevotionLessonPage";
 import Journal from "./pages/Journal";
 import AreekeeraBot from "./pages/AreekeeraBot";
 import AreekeeraAdmin from "./pages/AreekeeraAdmin";
+import ContentAdmin from "./pages/ContentAdmin";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/devotion/healing-bot" element={<HealingBot />} />
           <Route path="/devotion/protocols" element={<MyProtocols />} />
           <Route path="/devotion/admin" element={<HealingContentAdmin />} />
+          <Route path="/devotion/admin/content" element={<ContentAdmin />} />
           <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
           <Route path="/devotion/course/:courseId" element={<DevotionCoursePage />} />
           <Route path="/devotion/course/:courseId/lesson/:lessonId" element={<DevotionLessonPage />} />
