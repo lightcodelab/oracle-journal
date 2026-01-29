@@ -333,8 +333,16 @@ const HealingContentAdmin = () => {
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
         </Button>
-        <h1 className="font-serif text-xl text-foreground">Healing Content Admin</h1>
+        <h1 className="font-serif text-xl text-foreground">Admin Dashboard</h1>
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate('/devotion/admin/content')}
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            Content Uploader
+          </Button>
           <Dialog open={isDialogOpen} onOpenChange={(open) => {
             setIsDialogOpen(open);
             if (!open) resetForm();
@@ -342,7 +350,7 @@ const HealingContentAdmin = () => {
             <DialogTrigger asChild>
               <Button size="sm">
                 <Plus className="w-4 h-4 mr-2" />
-                Add Content
+                Add Healing Content
               </Button>
             </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">

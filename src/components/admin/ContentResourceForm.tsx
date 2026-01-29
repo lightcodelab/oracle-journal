@@ -1,0 +1,716 @@
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, Upload, X, FileAudio, FileVideo, File, Image as ImageIcon, Link as LinkIcon } from 'lucide-react';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import LinkExtension from '@tiptap/extension-link';
+import Placeholder from '@tiptap/extension-placeholder';
+import { VimeoEmbed } from '@/components/VimeoEmbed';
+import CourseBuilder from './CourseBuilder';
+
+const resourceSchema = z.object({
+  title: z.string().min(3, 'Title must be at least 3 characters'),
+  slug: z.string().regex(/^[a-z0-9-]+$/, 'Slug must be lowercase letters, numbers, and hyphens only').optional(),
+  summary: z.string().max(500, 'Summary must be under 500 characters').optional(),
+  resource_type_id: z.string().uuid('Please select a resource type'),
+  location_id: z.string().uuid('Please select a location'),
+  main_media_kind: z.enum(['file', 'video_embed', 'none']),
+  main_media_embed_url: z.string().url().optional().or(z.literal('')),
+  status: z.enum(['draft', 'published']),
+  is_course: z.boolean(),
+});
+
+type ResourceFormData = z.infer<typeof resourceSchema>;
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  type: 'resource_type' | 'location';
+}
+
+interface ContentResourceFormProps {
+  resourceId?: string;
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}
+
+const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourceFormProps) => {
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+  const [mainMediaUrl, setMainMediaUrl] = useState<string | null>(null);
+  const [courseId, setCourseId] = useState<string | null>(null);
+
+  const form = useForm<ResourceFormData>({
+    resolver: zodResolver(resourceSchema),
+    defaultValues: {
+      title: '',
+      slug: '',
+      summary: '',
+      resource_type_id: '',
+      location_id: '',
+      main_media_kind: 'none',
+      main_media_embed_url: '',
+      status: 'draft',
+      is_course: false,
+    },
+  });
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      LinkExtension.configure({
+        openOnClick: false,
+      }),
+      Placeholder.configure({
+        placeholder: 'Start writing your content here...',
+      }),
+    ],
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm dark:prose-invert max-w-none min-h-[200px] focus:outline-none p-4 border rounded-md',
+      },
+    },
+  });
+
+  const isCourse = form.watch('is_course');
+  const mainMediaKind = form.watch('main_media_kind');
+  const embedUrl = form.watch('main_media_embed_url');
+
+  useEffect(() => {
+    fetchCategories();
+    if (resourceId) {
+      fetchResource();
+    }
+  }, [resourceId]);
+
+  const fetchCategories = async () => {
+    const { data, error } = await supabase
+      .from('content_categories')
+      .select('*')
+      .eq('active', true)
+      .order('name');
+
+    if (data) {
+      setCategories(data as Category[]);
+    }
+  };
+
+  const fetchResource = async () => {
+    if (!resourceId) return;
+    setLoading(true);
+
+    const { data: resource, error } = await supabase
+      .from('content_resources')
+      .select('*')
+      .eq('id', resourceId)
+      .single();
+
+    if (resource) {
+      form.reset({
+        title: resource.title,
+        slug: resource.slug,
+        summary: resource.summary || '',
+        resource_type_id: resource.resource_type_id || '',
+        location_id: resource.location_id || '',
+        main_media_kind: (resource.main_media_kind as 'file' | 'video_embed' | 'none') || 'none',
+        main_media_embed_url: resource.main_media_embed_url || '',
+        status: (resource.status as 'draft' | 'published') || 'draft',
+        is_course: resource.is_course || false,
+      });
+
+      setThumbnailUrl(resource.thumbnail_url);
+      setMainMediaUrl(resource.main_media_file_url);
+
+      if (editor && resource.body_richtext && typeof resource.body_richtext === 'object') {
+        editor.commands.setContent(resource.body_richtext as Record<string, unknown>);
+      }
+
+      // Check if this resource has a course record
+      if (resource.is_course) {
+        const { data: course } = await supabase
+          .from('content_courses')
+          .select('id')
+          .eq('resource_id', resourceId)
+          .single();
+        
+        if (course) {
+          setCourseId(course.id);
+        }
+      }
+    }
+
+    setLoading(false);
+  };
+
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const title = e.target.value;
+    form.setValue('title', title);
+    
+    if (!resourceId && !form.getValues('slug')) {
+      form.setValue('slug', generateSlug(title));
+    }
+  };
+
+  const handleFileUpload = async (
+    file: File,
+    bucket: string,
+    setUrl: (url: string | null) => void
+  ) => {
+    setUploading(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      setUrl(filePath);
+      toast({
+        title: 'Uploaded',
+        description: 'File uploaded successfully.',
+      });
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to upload file.',
+        variant: 'destructive',
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const extractVideoId = (url: string): { platform: string; id: string } | null => {
+    // Vimeo
+    const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+    if (vimeoMatch) return { platform: 'vimeo', id: vimeoMatch[1] };
+
+    // YouTube
+    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+    if (youtubeMatch) return { platform: 'youtube', id: youtubeMatch[1] };
+
+    return null;
+  };
+
+  const onSubmit = async (data: ResourceFormData) => {
+    setSaving(true);
+
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      if (!session.session) {
+        toast({ title: 'Error', description: 'Not authenticated', variant: 'destructive' });
+        return;
+      }
+
+      const payload = {
+        title: data.title,
+        slug: data.slug || generateSlug(data.title),
+        summary: data.summary || null,
+        resource_type_id: data.resource_type_id,
+        location_id: data.location_id,
+        body_richtext: editor?.getJSON() || null,
+        main_media_kind: data.main_media_kind,
+        main_media_file_url: mainMediaUrl,
+        main_media_embed_url: data.main_media_kind === 'video_embed' ? data.main_media_embed_url : null,
+        thumbnail_url: thumbnailUrl,
+        status: data.status,
+        is_course: data.is_course,
+        created_by: session.session.user.id,
+      };
+
+      let savedResourceId = resourceId;
+
+      if (resourceId) {
+        const { error } = await supabase
+          .from('content_resources')
+          .update(payload)
+          .eq('id', resourceId);
+
+        if (error) throw error;
+      } else {
+        const { data: newResource, error } = await supabase
+          .from('content_resources')
+          .insert(payload)
+          .select()
+          .single();
+
+        if (error) throw error;
+        savedResourceId = newResource.id;
+      }
+
+      // Handle course record creation/deletion
+      if (data.is_course && savedResourceId) {
+        const { data: existingCourse } = await supabase
+          .from('content_courses')
+          .select('id')
+          .eq('resource_id', savedResourceId)
+          .single();
+
+        if (!existingCourse) {
+          const { data: newCourse, error: courseError } = await supabase
+            .from('content_courses')
+            .insert({
+              resource_id: savedResourceId,
+              status: data.status,
+            })
+            .select()
+            .single();
+
+          if (courseError) throw courseError;
+          setCourseId(newCourse.id);
+        } else {
+          await supabase
+            .from('content_courses')
+            .update({ status: data.status })
+            .eq('id', existingCourse.id);
+        }
+      }
+
+      toast({
+        title: resourceId ? 'Updated' : 'Created',
+        description: `Resource has been ${resourceId ? 'updated' : 'created'}.`,
+      });
+
+      onSuccess?.();
+    } catch (error: any) {
+      console.error('Error saving resource:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to save resource.',
+        variant: 'destructive',
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const getFileIcon = (url: string) => {
+    if (url.match(/\.(mp3|wav|ogg|m4a)$/i)) return FileAudio;
+    if (url.match(/\.(mp4|webm|mov)$/i)) return FileVideo;
+    if (url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) return ImageIcon;
+    return File;
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="w-6 h-6 animate-spin" />
+      </div>
+    );
+  }
+
+  const resourceTypes = categories.filter(c => c.type === 'resource_type');
+  const locations = categories.filter(c => c.type === 'location');
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <Tabs defaultValue="details" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="details">Details</TabsTrigger>
+            <TabsTrigger value="content">Content</TabsTrigger>
+            <TabsTrigger value="media">Media</TabsTrigger>
+            <TabsTrigger value="publishing">Publishing</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="details" className="space-y-4 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title *</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        onChange={handleTitleChange}
+                        placeholder="Enter title"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Slug</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="auto-generated-slug" />
+                    </FormControl>
+                    <FormDescription>URL-friendly identifier</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="summary"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Summary</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      placeholder="Brief description (max 500 characters)"
+                      rows={3}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="resource_type_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Resource Type *</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {resourceTypes.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="location_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location *</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select location" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {locations.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Thumbnail</Label>
+              {thumbnailUrl ? (
+                <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
+                  <ImageIcon className="w-5 h-5 text-primary" />
+                  <span className="flex-1 text-sm truncate">{thumbnailUrl}</span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setThumbnailUrl(null)}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleFileUpload(file, 'content-thumbnails', setThumbnailUrl);
+                    }}
+                    disabled={uploading}
+                    className="flex-1"
+                  />
+                  {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="content" className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <Label>Body Content</Label>
+              <div className="border rounded-md">
+                <div className="border-b bg-muted/50 p-2 flex gap-1">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor?.chain().focus().toggleBold().run()}
+                    className={editor?.isActive('bold') ? 'bg-muted' : ''}
+                  >
+                    B
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor?.chain().focus().toggleItalic().run()}
+                    className={editor?.isActive('italic') ? 'bg-muted' : ''}
+                  >
+                    I
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+                    className={editor?.isActive('heading', { level: 2 }) ? 'bg-muted' : ''}
+                  >
+                    H2
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor?.chain().focus().toggleBulletList().run()}
+                    className={editor?.isActive('bulletList') ? 'bg-muted' : ''}
+                  >
+                    • List
+                  </Button>
+                </div>
+                <EditorContent editor={editor} />
+              </div>
+            </div>
+
+            <FormField
+              control={form.control}
+              name="is_course"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">This is a Course</FormLabel>
+                    <FormDescription>
+                      Enable to add modules and lessons
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            {isCourse && courseId && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Course Builder</CardTitle>
+                  <CardDescription>Organize modules and lessons</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <CourseBuilder courseId={courseId} />
+                </CardContent>
+              </Card>
+            )}
+
+            {isCourse && !courseId && (
+              <Card>
+                <CardContent className="pt-6">
+                  <p className="text-muted-foreground text-sm">
+                    Save the resource first to enable the course builder.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="media" className="space-y-4 mt-4">
+            <FormField
+              control={form.control}
+              name="main_media_kind"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Main Media Type</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="none">No media</SelectItem>
+                      <SelectItem value="file">Upload file</SelectItem>
+                      <SelectItem value="video_embed">Video embed (YouTube/Vimeo)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {mainMediaKind === 'file' && (
+              <div className="space-y-2">
+                <Label>Upload Main Media</Label>
+                {mainMediaUrl ? (
+                  <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
+                    {(() => {
+                      const FileIcon = getFileIcon(mainMediaUrl);
+                      return <FileIcon className="w-5 h-5 text-primary" />;
+                    })()}
+                    <span className="flex-1 text-sm truncate">{mainMediaUrl}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setMainMediaUrl(null)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="file"
+                      accept="image/*,audio/*,video/*,.pdf"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleFileUpload(file, 'content-main-media', setMainMediaUrl);
+                      }}
+                      disabled={uploading}
+                      className="flex-1"
+                    />
+                    {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {mainMediaKind === 'video_embed' && (
+              <FormField
+                control={form.control}
+                name="main_media_embed_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Video URL</FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-2">
+                        <LinkIcon className="w-4 h-4 text-muted-foreground" />
+                        <Input
+                          {...field}
+                          placeholder="https://vimeo.com/123456789 or https://youtube.com/watch?v=..."
+                        />
+                      </div>
+                    </FormControl>
+                    <FormDescription>
+                      Paste a YouTube or Vimeo URL
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {mainMediaKind === 'video_embed' && embedUrl && extractVideoId(embedUrl)?.platform === 'vimeo' && (
+              <div className="mt-4">
+                <Label className="mb-2 block">Preview</Label>
+                <VimeoEmbed videoId={extractVideoId(embedUrl)!.id} />
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="publishing" className="space-y-4 mt-4">
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="published">Published</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Only published resources are visible to users
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </TabsContent>
+        </Tabs>
+
+        <div className="flex justify-end gap-2 pt-4 border-t">
+          {onCancel && (
+            <Button type="button" variant="outline" onClick={onCancel}>
+              Cancel
+            </Button>
+          )}
+          <Button type="submit" disabled={saving}>
+            {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            {resourceId ? 'Update Resource' : 'Create Resource'}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+};
+
+export default ContentResourceForm;
