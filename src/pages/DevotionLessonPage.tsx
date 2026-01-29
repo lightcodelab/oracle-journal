@@ -12,6 +12,7 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ContextualJournal from '@/components/journal/ContextualJournal';
 import CourseSessionNav from '@/components/CourseSessionNav';
+import DOMPurify from 'dompurify';
 
 interface Lesson {
   id: string;
@@ -348,7 +349,7 @@ const DevotionLessonPage = () => {
           >
             <div 
               className="text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap"
-              dangerouslySetInnerHTML={{ __html: lesson.content }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.content) }}
             />
           </motion.div>
 
