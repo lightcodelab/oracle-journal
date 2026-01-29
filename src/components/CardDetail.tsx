@@ -1,20 +1,25 @@
+import { useState } from "react";
 import { OracleCard } from "@/data/oracleCards";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Sparkles, RefreshCw } from "lucide-react";
+import { Sparkles, RefreshCw, Bookmark } from "lucide-react";
 import { motion } from "framer-motion";
 import { FormattedContent } from "./FormattedContent";
 import { VimeoEmbed } from "./VimeoEmbed";
 import ContextualJournal from "./journal/ContextualJournal";
+import SaveReadingDialog from "./SaveReadingDialog";
 
 interface CardDetailProps {
   card: OracleCard;
   onDrawAnother: () => void;
   hasPremiumAccess?: boolean;
   isStarterDeck?: boolean;
+  deckId: string;
 }
 
-export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isStarterDeck = false }: CardDetailProps) => {
+export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isStarterDeck = false, deckId }: CardDetailProps) => {
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+
   // Helper to get content from either JSON structure or legacy fields
   const getContent = (key: string): string | undefined => {
     return card.content_sections?.[key] || card[key as keyof OracleCard] as string | undefined;
@@ -286,8 +291,16 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         className="mt-8"
       />
 
-      {/* Back/Draw Another Button */}
-      <div className="flex justify-center pt-4 border-t border-border mt-8">
+      {/* Action Buttons */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-border mt-8">
+        <Button
+          onClick={() => setSaveDialogOpen(true)}
+          variant="outline"
+          className="font-sans"
+        >
+          <Bookmark className="w-4 h-4 mr-2" />
+          Save This Reading
+        </Button>
         <Button
           onClick={onDrawAnother}
           variant="ghost"
@@ -297,6 +310,14 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
           {isStarterDeck ? 'Back to Reading' : 'Draw Another Card'}
         </Button>
       </div>
+
+      {/* Save Reading Dialog */}
+      <SaveReadingDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        card={card}
+        deckId={deckId}
+      />
     </motion.div>
   );
 };
