@@ -1773,6 +1773,63 @@ export type Database = {
           },
         ]
       }
+      saved_readings: {
+        Row: {
+          card_id: string | null
+          card_title: string
+          created_at: string
+          deck_id: string | null
+          deck_name: string | null
+          id: string
+          image_file_name: string | null
+          notes: string | null
+          saved_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          card_id?: string | null
+          card_title: string
+          created_at?: string
+          deck_id?: string | null
+          deck_name?: string | null
+          id?: string
+          image_file_name?: string | null
+          notes?: string | null
+          saved_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          card_id?: string | null
+          card_title?: string
+          created_at?: string
+          deck_id?: string | null
+          deck_name?: string | null
+          id?: string
+          image_file_name?: string | null
+          notes?: string | null
+          saved_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_readings_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saved_readings_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       severity_thresholds: {
         Row: {
           allowed_intensity_max: number | null

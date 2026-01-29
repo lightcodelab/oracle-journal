@@ -17,6 +17,7 @@ import DevotionCourses from "./pages/DevotionCourses";
 import DevotionCoursePage from "./pages/DevotionCoursePage";
 import DevotionLessonPage from "./pages/DevotionLessonPage";
 import Journal from "./pages/Journal";
+import MyReadings from "./pages/MyReadings";
 import AreekeeraBot from "./pages/AreekeeraBot";
 import AreekeeraAdmin from "./pages/AreekeeraAdmin";
 import ContentAdmin from "./pages/ContentAdmin";
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/devotion/areekeera/admin" element={<AreekeeraAdmin />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/journal" element={<Journal />} />
+          <Route path="/readings" element={<MyReadings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

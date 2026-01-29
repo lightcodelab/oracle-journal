@@ -756,6 +756,7 @@ const Index = () => {
               onDrawAnother={handleDrawAnother}
               hasPremiumAccess={hasPremiumAccess}
               isStarterDeck={selectedDeck?.is_starter}
+              deckId={selectedDeck?.id || ''}
             />
           </div>
         )}
