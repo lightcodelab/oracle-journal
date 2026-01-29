@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, ChevronLeft } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Lesson {
@@ -29,10 +29,6 @@ export default function CourseSessionNav({
     navigate(`/devotion/course/${courseId}/lesson/${lessonId}`);
   };
 
-  const handleBackToCourse = () => {
-    navigate(`/devotion/course/${courseId}`);
-  };
-
   const completedCount = lessons.filter(l => completedLessonIds.includes(l.id)).length;
   const progressPercent = lessons.length > 0 ? (completedCount / lessons.length) * 100 : 0;
 
@@ -40,13 +36,6 @@ export default function CourseSessionNav({
     <>
       {/* Course Header */}
       <div className="p-4 border-b border-border">
-        <button
-          onClick={handleBackToCourse}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-3"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          Back to Course
-        </button>
         {courseTitle && (
           <h2 className="font-serif text-lg text-foreground leading-tight">
             {courseTitle}
