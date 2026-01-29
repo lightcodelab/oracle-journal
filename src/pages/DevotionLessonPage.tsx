@@ -3,13 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ArrowRight, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ContextualJournal from '@/components/journal/ContextualJournal';
 
 interface Lesson {
@@ -68,6 +68,21 @@ const DevotionLessonPage = () => {
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  const { data: course } = useQuery({
+    queryKey: ['devotion-course-for-lesson', courseId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('courses')
+        .select('title')
+        .eq('id', courseId)
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !loading && !!courseId,
+  });
 
   const { data: lesson, isLoading: lessonLoading } = useQuery({
     queryKey: ['devotion-lesson', lessonId],
@@ -227,15 +242,14 @@ const DevotionLessonPage = () => {
     <div className="min-h-screen bg-background py-12 px-4 relative">
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-        <Button
-          onClick={() => navigate(`/devotion/course/${courseId}`)}
-          variant="ghost"
-          size="sm"
-          className="text-foreground/70 hover:text-foreground"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Course
-        </Button>
+        <PageBreadcrumb 
+          items={[
+            { label: 'Devotion', href: '/devotion' },
+            { label: 'Energy Hygiene', href: '/devotion/energy-hygiene' },
+            { label: course?.title || 'Course', href: `/devotion/course/${courseId}` },
+            { label: `Session ${lesson.lesson_number}` }
+          ]} 
+        />
         <ProfileDropdown />
       </div>
 

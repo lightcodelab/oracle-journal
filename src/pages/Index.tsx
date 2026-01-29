@@ -13,6 +13,7 @@ import { CardDropdownSelector } from "@/components/CardDropdownSelector";
 import { supabase } from "@/integrations/supabase/client";
 import { Shuffle, Sparkles, ChevronLeft } from "lucide-react";
 import ProfileDropdown from "@/components/ProfileDropdown";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import sacredRewriteCardBack from "@/assets/card-back-v2.png";
@@ -558,15 +559,11 @@ const Index = () => {
 
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-        <Button
-          onClick={() => navigate('/')}
-          variant="ghost"
-          size="sm"
-          className="text-foreground/70 hover:text-foreground"
-        >
-          <ChevronLeft className="w-4 h-4 mr-1" />
-          Temple
-        </Button>
+        <PageBreadcrumb 
+          items={[
+            { label: 'Door of Remembrance' }
+          ]} 
+        />
         <ProfileDropdown />
       </div>
 

@@ -5,9 +5,10 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ArrowLeft, Trash2, FolderHeart, Sparkles } from 'lucide-react';
+import { Trash2, FolderHeart, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -158,15 +159,12 @@ const MyProtocols = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
-        <Button
-          onClick={() => navigate('/devotion')}
-          variant="ghost"
-          size="sm"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
-        <h1 className="font-serif text-xl text-foreground">My Protocols</h1>
+        <PageBreadcrumb 
+          items={[
+            { label: 'Door of Devotion', href: '/devotion' },
+            { label: 'My Protocols' }
+          ]} 
+        />
         <ProfileDropdown />
       </div>
 

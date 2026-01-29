@@ -13,8 +13,9 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { 
-  ArrowLeft, Plus, Search, Upload, Save, Trash2, Edit2, 
+  Plus, Search, Upload, Save, Trash2, Edit2, 
   FileAudio, FileVideo, Image, BookOpen, Users, Tag, 
   AlertTriangle, Sparkles, Filter, MoreVertical, Eye, EyeOff 
 } from 'lucide-react';
@@ -633,20 +634,17 @@ const AreekeeraAdmin = () => {
       <div className="border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button
-              onClick={() => navigate('/devotion')}
-              variant="ghost"
-              size="sm"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
-            <div>
-              <h1 className="font-serif text-2xl text-foreground">AreekeerA Admin</h1>
-              <p className="text-sm text-muted-foreground">Manage healing resources, symptoms, and protocols</p>
-            </div>
+            <PageBreadcrumb 
+              items={[
+                { label: 'Door of Devotion', href: '/devotion' },
+                { label: 'AreekeerA Admin' }
+              ]} 
+            />
           </div>
           <ProfileDropdown />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 pb-4">
+          <p className="text-sm text-muted-foreground">Manage healing resources, symptoms, and protocols</p>
         </div>
       </div>
 

@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import JournalEditor from '@/components/journal/JournalEditor';
 import JournalEntryCard from '@/components/journal/JournalEntryCard';
 import TagPicker from '@/components/journal/TagPicker';
@@ -197,20 +198,11 @@ const Journal = () => {
                 Back
               </Button>
             ) : (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/')}
-                className="text-foreground/70 hover:text-foreground"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Temple
-              </Button>
+              <PageBreadcrumb items={[{ label: 'My Journal' }]} />
             )}
-            <h1 className="font-serif text-xl md:text-2xl text-foreground flex items-center gap-2">
+            {viewMode === 'list' && (
               <BookOpen className="h-5 w-5 text-primary" />
-              My Journal
-            </h1>
+            )}
           </div>
           <ProfileDropdown />
         </div>

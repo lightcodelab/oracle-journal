@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Save, User } from "lucide-react";
+import { Save, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ProfileDropdown from "@/components/ProfileDropdown";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -101,15 +102,7 @@ const Profile = () => {
       {/* Header */}
       <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between px-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/")}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Temple
-          </Button>
+          <PageBreadcrumb items={[{ label: 'My Profile' }]} />
           <ProfileDropdown />
         </div>
       </header>
