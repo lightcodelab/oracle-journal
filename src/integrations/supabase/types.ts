@@ -233,6 +233,344 @@ export type Database = {
           },
         ]
       }
+      content_categories: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          id: string
+          name: string
+          slug: string
+          type: Database["public"]["Enums"]["content_category_type"]
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          id?: string
+          name: string
+          slug: string
+          type: Database["public"]["Enums"]["content_category_type"]
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          type?: Database["public"]["Enums"]["content_category_type"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      content_courses: {
+        Row: {
+          created_at: string | null
+          id: string
+          resource_id: string
+          status: Database["public"]["Enums"]["content_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          resource_id: string
+          status?: Database["public"]["Enums"]["content_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          resource_id?: string
+          status?: Database["public"]["Enums"]["content_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_courses_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: true
+            referencedRelation: "content_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_courses_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: true
+            referencedRelation: "v_content_resources_published"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_lesson_attachments: {
+        Row: {
+          created_at: string | null
+          file_type: Database["public"]["Enums"]["content_file_type"]
+          file_url: string
+          id: string
+          lesson_id: string
+          name: string | null
+          size_bytes: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          file_type: Database["public"]["Enums"]["content_file_type"]
+          file_url: string
+          id?: string
+          lesson_id: string
+          name?: string | null
+          size_bytes?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          file_type?: Database["public"]["Enums"]["content_file_type"]
+          file_url?: string
+          id?: string
+          lesson_id?: string
+          name?: string | null
+          size_bytes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_lesson_attachments_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "content_lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_lesson_attachments_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "v_content_lessons_published"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_lessons: {
+        Row: {
+          body_richtext: Json | null
+          created_at: string | null
+          id: string
+          main_media_embed_url: string | null
+          main_media_file_url: string | null
+          main_media_kind:
+            | Database["public"]["Enums"]["content_media_kind"]
+            | null
+          module_id: string
+          order_index: number
+          status: Database["public"]["Enums"]["content_status"] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          body_richtext?: Json | null
+          created_at?: string | null
+          id?: string
+          main_media_embed_url?: string | null
+          main_media_file_url?: string | null
+          main_media_kind?:
+            | Database["public"]["Enums"]["content_media_kind"]
+            | null
+          module_id: string
+          order_index?: number
+          status?: Database["public"]["Enums"]["content_status"] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          body_richtext?: Json | null
+          created_at?: string | null
+          id?: string
+          main_media_embed_url?: string | null
+          main_media_file_url?: string | null
+          main_media_kind?:
+            | Database["public"]["Enums"]["content_media_kind"]
+            | null
+          module_id?: string
+          order_index?: number
+          status?: Database["public"]["Enums"]["content_status"] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_lessons_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "content_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_modules: {
+        Row: {
+          course_id: string
+          created_at: string | null
+          id: string
+          order_index: number
+          status: Database["public"]["Enums"]["content_status"] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          course_id: string
+          created_at?: string | null
+          id?: string
+          order_index?: number
+          status?: Database["public"]["Enums"]["content_status"] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          course_id?: string
+          created_at?: string | null
+          id?: string
+          order_index?: number
+          status?: Database["public"]["Enums"]["content_status"] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_modules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "content_courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_modules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "v_content_courses_published"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_resource_attachments: {
+        Row: {
+          created_at: string | null
+          file_type: Database["public"]["Enums"]["content_file_type"]
+          file_url: string
+          id: string
+          name: string | null
+          resource_id: string
+          size_bytes: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          file_type: Database["public"]["Enums"]["content_file_type"]
+          file_url: string
+          id?: string
+          name?: string | null
+          resource_id: string
+          size_bytes?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          file_type?: Database["public"]["Enums"]["content_file_type"]
+          file_url?: string
+          id?: string
+          name?: string | null
+          resource_id?: string
+          size_bytes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_resource_attachments_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "content_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_resource_attachments_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "v_content_resources_published"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_resources: {
+        Row: {
+          body_richtext: Json | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_course: boolean | null
+          location_id: string | null
+          main_media_embed_url: string | null
+          main_media_file_url: string | null
+          main_media_kind:
+            | Database["public"]["Enums"]["content_media_kind"]
+            | null
+          resource_type_id: string | null
+          slug: string
+          status: Database["public"]["Enums"]["content_status"] | null
+          summary: string | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          body_richtext?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_course?: boolean | null
+          location_id?: string | null
+          main_media_embed_url?: string | null
+          main_media_file_url?: string | null
+          main_media_kind?:
+            | Database["public"]["Enums"]["content_media_kind"]
+            | null
+          resource_type_id?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["content_status"] | null
+          summary?: string | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          body_richtext?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_course?: boolean | null
+          location_id?: string | null
+          main_media_embed_url?: string | null
+          main_media_file_url?: string | null
+          main_media_kind?:
+            | Database["public"]["Enums"]["content_media_kind"]
+            | null
+          resource_type_id?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["content_status"] | null
+          summary?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_resources_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "content_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_resources_resource_type_id_fkey"
+            columns: ["resource_type_id"]
+            isOneToOne: false
+            referencedRelation: "content_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contraindications: {
         Row: {
           created_at: string | null
@@ -1666,7 +2004,155 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_content_courses_published: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          resource_id: string | null
+          slug: string | null
+          status: Database["public"]["Enums"]["content_status"] | null
+          summary: string | null
+          thumbnail_url: string | null
+          title: string | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_courses_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: true
+            referencedRelation: "content_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_courses_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: true
+            referencedRelation: "v_content_resources_published"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_content_lessons_published: {
+        Row: {
+          body_richtext: Json | null
+          course_id: string | null
+          created_at: string | null
+          id: string | null
+          main_media_embed_url: string | null
+          main_media_file_url: string | null
+          main_media_kind:
+            | Database["public"]["Enums"]["content_media_kind"]
+            | null
+          module_id: string | null
+          module_title: string | null
+          order_index: number | null
+          status: Database["public"]["Enums"]["content_status"] | null
+          title: string | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_lessons_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "content_modules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_modules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "content_courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_modules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "v_content_courses_published"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_content_resources_published: {
+        Row: {
+          body_richtext: Json | null
+          created_at: string | null
+          created_by: string | null
+          id: string | null
+          is_course: boolean | null
+          location_id: string | null
+          main_media_embed_url: string | null
+          main_media_file_url: string | null
+          main_media_kind:
+            | Database["public"]["Enums"]["content_media_kind"]
+            | null
+          resource_type_id: string | null
+          slug: string | null
+          status: Database["public"]["Enums"]["content_status"] | null
+          summary: string | null
+          thumbnail_url: string | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          body_richtext?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string | null
+          is_course?: boolean | null
+          location_id?: string | null
+          main_media_embed_url?: string | null
+          main_media_file_url?: string | null
+          main_media_kind?:
+            | Database["public"]["Enums"]["content_media_kind"]
+            | null
+          resource_type_id?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["content_status"] | null
+          summary?: string | null
+          thumbnail_url?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          body_richtext?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string | null
+          is_course?: boolean | null
+          location_id?: string | null
+          main_media_embed_url?: string | null
+          main_media_file_url?: string | null
+          main_media_kind?:
+            | Database["public"]["Enums"]["content_media_kind"]
+            | null
+          resource_type_id?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["content_status"] | null
+          summary?: string | null
+          thumbnail_url?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_resources_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "content_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_resources_resource_type_id_fkey"
+            columns: ["resource_type_id"]
+            isOneToOne: false
+            referencedRelation: "content_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       has_role: {
@@ -1687,6 +2173,10 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      content_category_type: "resource_type" | "location"
+      content_file_type: "image" | "pdf" | "audio" | "video"
+      content_media_kind: "file" | "video_embed" | "none"
+      content_status: "draft" | "published"
       contraindication_rule: "exclude" | "warn" | "gate"
       escalation_action:
         | "showUrgentCareBanner"
@@ -1832,6 +2322,10 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      content_category_type: ["resource_type", "location"],
+      content_file_type: ["image", "pdf", "audio", "video"],
+      content_media_kind: ["file", "video_embed", "none"],
+      content_status: ["draft", "published"],
       contraindication_rule: ["exclude", "warn", "gate"],
       escalation_action: [
         "showUrgentCareBanner",
