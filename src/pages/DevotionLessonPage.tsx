@@ -280,7 +280,6 @@ const DevotionLessonPage = () => {
               { label: 'Devotion', href: '/devotion' },
               { label: 'Energy Hygiene', href: '/devotion/energy-hygiene' },
               { label: course?.title || 'Course', href: `/devotion/course/${courseId}` },
-              { label: `Session ${lesson.lesson_number}` }
             ]} 
           />
           <ProfileDropdown />
