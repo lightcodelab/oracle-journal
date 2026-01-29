@@ -561,23 +561,11 @@ const Index = () => {
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <PageBreadcrumb 
           items={
-            isRevealed && selectedCard
-              ? selectedDeck?.is_starter
-                ? [
-                    { label: 'Door of Remembrance', onClick: handleBackToDecks },
-                    { label: 'Your Reading', onClick: handleBackToStarterSpread },
-                    { label: selectedCard.card_title }
-                  ]
-                : [
-                    { label: 'Door of Remembrance', onClick: handleBackToDecks },
-                    { label: selectedDeck?.name || 'Deck', onClick: handleDrawAnother },
-                    { label: selectedCard.card_title }
-                  ]
-              : showCard && selectedCard && !isRevealed
-                ? [
-                    { label: 'Door of Remembrance', onClick: handleBackToDecks },
-                    { label: selectedDeck?.name || 'Deck' }
-                  ]
+            selectedDeck?.is_starter && (showStarterSpread || isRevealed)
+              ? [
+                  { label: 'Door of Remembrance', onClick: handleBackToDecks },
+                  { label: 'Your Reading' }
+                ]
               : selectedDeck
                 ? [
                     { label: 'Door of Remembrance', onClick: handleBackToDecks },
