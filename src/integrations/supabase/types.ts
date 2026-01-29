@@ -2061,6 +2061,44 @@ export type Database = {
       }
     }
     Views: {
+      deck_purchases_admin: {
+        Row: {
+          deck_id: string | null
+          id: string | null
+          is_premium: boolean | null
+          purchased_at: string | null
+          user_id: string | null
+          verified: boolean | null
+          woocommerce_order_id: string | null
+        }
+        Insert: {
+          deck_id?: string | null
+          id?: string | null
+          is_premium?: boolean | null
+          purchased_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+          woocommerce_order_id?: string | null
+        }
+        Update: {
+          deck_id?: string | null
+          id?: string | null
+          is_premium?: boolean | null
+          purchased_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+          woocommerce_order_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deck_purchases_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_content_courses_published: {
         Row: {
           created_at: string | null
