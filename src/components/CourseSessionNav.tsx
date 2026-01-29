@@ -1,8 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { Play, CheckCircle, ChevronLeft, Menu, X } from 'lucide-react';
+import { CheckCircle, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
 
 interface Lesson {
   id: string;
@@ -26,16 +24,13 @@ export default function CourseSessionNav({
   courseTitle,
 }: CourseSessionNavProps) {
   const navigate = useNavigate();
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLessonClick = (lessonId: string) => {
     navigate(`/devotion/course/${courseId}/lesson/${lessonId}`);
-    setMobileOpen(false);
   };
 
   const handleBackToCourse = () => {
     navigate(`/devotion/course/${courseId}`);
-    setMobileOpen(false);
   };
 
   const completedCount = lessons.filter(l => completedLessonIds.includes(l.id)).length;
@@ -119,36 +114,8 @@ export default function CourseSessionNav({
   );
 
   return (
-    <>
-      {/* Mobile Toggle Button */}
-      <Button
-        variant="outline"
-        size="icon"
-        className="lg:hidden fixed bottom-4 left-4 z-50 shadow-lg"
-        onClick={() => setMobileOpen(!mobileOpen)}
-      >
-        {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-      </Button>
-
-      {/* Mobile Overlay */}
-      {mobileOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
-
-      {/* Sidebar - Desktop: fixed left, Mobile: slide-in */}
-      <aside className={cn(
-        "fixed top-0 left-0 h-full bg-card border-r border-border flex flex-col z-50 transition-transform duration-300",
-        "w-72",
-        // Mobile: hidden by default, shown when open
-        mobileOpen ? "translate-x-0" : "-translate-x-full",
-        // Desktop: always visible
-        "lg:translate-x-0"
-      )}>
-        {navContent}
-      </aside>
-    </>
+    <aside className="fixed top-0 left-0 h-full w-64 md:w-72 bg-card border-r border-border flex flex-col z-40">
+      {navContent}
+    </aside>
   );
 }
