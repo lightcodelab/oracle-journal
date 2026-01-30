@@ -48,10 +48,10 @@ const Auth = () => {
       return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       toast({
         title: "Error",
-        description: "Password must be at least 6 characters",
+        description: "Password must be at least 8 characters",
         variant: "destructive",
       });
       return;
@@ -254,10 +254,10 @@ const Auth = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      minLength={6}
+                      minLength={8}
                     />
                     <p className="text-xs text-foreground/60">
-                      Must be at least 6 characters
+                      Must be at least 8 characters
                     </p>
                   </div>
                   <Button
