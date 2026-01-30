@@ -49,16 +49,17 @@ export function LiveSessionCard({
 
     const title = encodeURIComponent(session.title);
     const description = encodeURIComponent(session.description || 'Live session at Temple of Sustainment');
+    const sessionJoinUrl = window.location.origin + '/all-live-sessions/' + session.id + '/join';
     const location = encodeURIComponent(window.location.origin + '/all-live-sessions/' + session.id);
 
     // Google Calendar
-    const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${formatGoogleDate(startDate)}/${formatGoogleDate(endDate)}&details=${description}&location=${location}`;
+    const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${formatGoogleDate(startDate)}/${formatGoogleDate(endDate)}&details=${description}&location=${encodeURIComponent(sessionJoinUrl)}`;
 
     // Outlook Web
-    const outlookUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${title}&startdt=${startDate.toISOString()}&enddt=${endDate.toISOString()}&body=${description}&location=${location}`;
+    const outlookUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${title}&startdt=${startDate.toISOString()}&enddt=${endDate.toISOString()}&body=${description}&location=${encodeURIComponent(sessionJoinUrl)}`;
 
     // Yahoo Calendar
-    const yahooUrl = `https://calendar.yahoo.com/?v=60&title=${title}&st=${formatGoogleDate(startDate)}&et=${formatGoogleDate(endDate)}&desc=${description}&in_loc=${location}`;
+    const yahooUrl = `https://calendar.yahoo.com/?v=60&title=${title}&st=${formatGoogleDate(startDate)}&et=${formatGoogleDate(endDate)}&desc=${description}&in_loc=${encodeURIComponent(sessionJoinUrl)}`;
 
     return { googleUrl, outlookUrl, yahooUrl };
   };
@@ -81,7 +82,7 @@ DTSTART:${formatIcsDate(startDate)}
 DTEND:${formatIcsDate(endDate)}
 SUMMARY:${session.title}
 DESCRIPTION:${session.description || 'Live session at Temple of Sustainment'}
-URL:${window.location.origin}/all-live-sessions/${session.id}
+URL:${window.location.origin}/all-live-sessions/${session.id}/join
 END:VEVENT
 END:VCALENDAR`;
 
