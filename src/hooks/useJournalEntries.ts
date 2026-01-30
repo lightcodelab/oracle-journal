@@ -1,7 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useEncryption } from '@/hooks/useEncryption';
 import type { Json } from '@/integrations/supabase/types';
+import type { EncryptedField } from '@/lib/encryption';
 
 export interface JournalEntry {
   id: string;
@@ -20,6 +22,11 @@ export interface JournalEntry {
   context_type: string | null;
   context_id: string | null;
   context_title: string | null;
+  // Encrypted fields
+  content_json_encrypted?: Json | null;
+  content_text_encrypted?: Json | null;
+  title_encrypted?: Json | null;
+  is_encrypted?: boolean;
 }
 
 export interface CreateEntryData {
@@ -44,8 +51,10 @@ export function useJournalEntries(options?: {
   contextId?: string;
   limit?: number;
 }) {
+  const { isUnlocked, decryptText, decryptObject } = useEncryption();
+
   return useQuery({
-    queryKey: ['journal-entries', options],
+    queryKey: ['journal-entries', options, isUnlocked],
     queryFn: async () => {
       let query = supabase
         .from('journal_entries')
@@ -65,14 +74,73 @@ export function useJournalEntries(options?: {
 
       const { data, error } = await query;
       if (error) throw error;
-      return data as JournalEntry[];
+
+      // Decrypt entries if encryption is unlocked
+      const entries = data as JournalEntry[];
+      
+      if (isUnlocked) {
+        const decryptedEntries = await Promise.all(
+          entries.map(async (entry) => {
+            if (!entry.is_encrypted) return entry;
+
+            try {
+              // Decrypt fields
+              const decryptedEntry = { ...entry };
+              
+              if (entry.content_json_encrypted) {
+                decryptedEntry.content_json = await decryptObject<Json>(
+                  entry.content_json_encrypted as unknown as EncryptedField
+                );
+              }
+              
+              if (entry.content_text_encrypted) {
+                decryptedEntry.content_text = await decryptText(
+                  entry.content_text_encrypted as unknown as EncryptedField
+                );
+              }
+              
+              if (entry.title_encrypted) {
+                decryptedEntry.title = await decryptText(
+                  entry.title_encrypted as unknown as EncryptedField
+                );
+              }
+              
+              return decryptedEntry;
+            } catch (error) {
+              console.error('Failed to decrypt entry:', entry.id, error);
+              // Return entry with placeholder for failed decryption
+              return {
+                ...entry,
+                content_text: '[Unable to decrypt - check your encryption key]',
+                title: '[Encrypted]',
+              };
+            }
+          })
+        );
+        return decryptedEntries;
+      }
+
+      // If encryption not unlocked, filter out encrypted entries or show placeholder
+      return entries.map(entry => {
+        if (entry.is_encrypted) {
+          return {
+            ...entry,
+            content_text: '[Encrypted - unlock to view]',
+            content_json: {},
+            title: '[Encrypted]',
+          };
+        }
+        return entry;
+      });
     },
   });
 }
 
 export function useJournalEntry(entryId: string | undefined) {
+  const { isUnlocked, decryptText, decryptObject } = useEncryption();
+
   return useQuery({
-    queryKey: ['journal-entry', entryId],
+    queryKey: ['journal-entry', entryId, isUnlocked],
     queryFn: async () => {
       if (!entryId) return null;
       const { data, error } = await supabase
@@ -81,7 +149,39 @@ export function useJournalEntry(entryId: string | undefined) {
         .eq('id', entryId)
         .single();
       if (error) throw error;
-      return data as JournalEntry;
+      
+      const entry = data as JournalEntry;
+      
+      // Decrypt if encrypted and unlocked
+      if (entry.is_encrypted && isUnlocked) {
+        try {
+          if (entry.content_json_encrypted) {
+            entry.content_json = await decryptObject<Json>(
+              entry.content_json_encrypted as unknown as EncryptedField
+            );
+          }
+          if (entry.content_text_encrypted) {
+            entry.content_text = await decryptText(
+              entry.content_text_encrypted as unknown as EncryptedField
+            );
+          }
+          if (entry.title_encrypted) {
+            entry.title = await decryptText(
+              entry.title_encrypted as unknown as EncryptedField
+            );
+          }
+        } catch (error) {
+          console.error('Failed to decrypt entry:', entryId, error);
+          entry.content_text = '[Unable to decrypt]';
+          entry.title = '[Encrypted]';
+        }
+      } else if (entry.is_encrypted) {
+        entry.content_text = '[Encrypted - unlock to view]';
+        entry.title = '[Encrypted]';
+        entry.content_json = {};
+      }
+      
+      return entry;
     },
     enabled: !!entryId,
   });

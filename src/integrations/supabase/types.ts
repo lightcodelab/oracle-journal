@@ -933,21 +933,27 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          is_encrypted: boolean | null
           messages: Json
+          messages_encrypted: Json | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
+          is_encrypted?: boolean | null
           messages?: Json
+          messages_encrypted?: Json | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
+          is_encrypted?: boolean | null
           messages?: Json
+          messages_encrypted?: Json | null
           updated_at?: string
           user_id?: string
         }
@@ -1122,17 +1128,21 @@ export type Database = {
         Row: {
           captured_at: string
           content_json: Json
+          content_json_encrypted: Json | null
           content_text: string
+          content_text_encrypted: Json | null
           context_id: string | null
           context_title: string | null
           context_type: string | null
           deleted_at: string | null
           id: string
+          is_encrypted: boolean | null
           is_pinned: boolean
           is_quick_capture: boolean
           last_revisited_at: string | null
           revisit_count: number
           title: string | null
+          title_encrypted: Json | null
           updated_at: string
           user_id: string
           version: number
@@ -1140,17 +1150,21 @@ export type Database = {
         Insert: {
           captured_at?: string
           content_json?: Json
+          content_json_encrypted?: Json | null
           content_text?: string
+          content_text_encrypted?: Json | null
           context_id?: string | null
           context_title?: string | null
           context_type?: string | null
           deleted_at?: string | null
           id?: string
+          is_encrypted?: boolean | null
           is_pinned?: boolean
           is_quick_capture?: boolean
           last_revisited_at?: string | null
           revisit_count?: number
           title?: string | null
+          title_encrypted?: Json | null
           updated_at?: string
           user_id: string
           version?: number
@@ -1158,17 +1172,21 @@ export type Database = {
         Update: {
           captured_at?: string
           content_json?: Json
+          content_json_encrypted?: Json | null
           content_text?: string
+          content_text_encrypted?: Json | null
           context_id?: string | null
           context_title?: string | null
           context_type?: string | null
           deleted_at?: string | null
           id?: string
+          is_encrypted?: boolean | null
           is_pinned?: boolean
           is_quick_capture?: boolean
           last_revisited_at?: string | null
           revisit_count?: number
           title?: string | null
+          title_encrypted?: Json | null
           updated_at?: string
           user_id?: string
           version?: number
@@ -1443,7 +1461,9 @@ export type Database = {
           created_at: string | null
           email: string | null
           full_name: string | null
+          full_name_encrypted: Json | null
           id: string
+          is_encrypted: boolean | null
           must_change_password: boolean | null
           updated_at: string | null
         }
@@ -1451,7 +1471,9 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           full_name?: string | null
+          full_name_encrypted?: Json | null
           id: string
+          is_encrypted?: boolean | null
           must_change_password?: boolean | null
           updated_at?: string | null
         }
@@ -1459,7 +1481,9 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           full_name?: string | null
+          full_name_encrypted?: Json | null
           id?: string
+          is_encrypted?: boolean | null
           must_change_password?: boolean | null
           updated_at?: string | null
         }
@@ -1842,7 +1866,9 @@ export type Database = {
           deck_name: string | null
           id: string
           image_file_name: string | null
+          is_encrypted: boolean | null
           notes: string | null
+          notes_encrypted: Json | null
           saved_at: string
           updated_at: string
           user_id: string
@@ -1855,7 +1881,9 @@ export type Database = {
           deck_name?: string | null
           id?: string
           image_file_name?: string | null
+          is_encrypted?: boolean | null
           notes?: string | null
+          notes_encrypted?: Json | null
           saved_at?: string
           updated_at?: string
           user_id: string
@@ -1868,7 +1896,9 @@ export type Database = {
           deck_name?: string | null
           id?: string
           image_file_name?: string | null
+          is_encrypted?: boolean | null
           notes?: string | null
+          notes_encrypted?: Json | null
           saved_at?: string
           updated_at?: string
           user_id?: string
@@ -2179,6 +2209,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_encryption_keys: {
+        Row: {
+          created_at: string
+          encrypted_master_key: string
+          id: string
+          key_iv: string
+          key_salt: string
+          key_version: number
+          recovery_key_hash: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          encrypted_master_key: string
+          id?: string
+          key_iv: string
+          key_salt: string
+          key_version?: number
+          recovery_key_hash?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          encrypted_master_key?: string
+          id?: string
+          key_iv?: string
+          key_salt?: string
+          key_version?: number
+          recovery_key_hash?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
