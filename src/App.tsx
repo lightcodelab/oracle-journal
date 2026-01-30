@@ -12,7 +12,6 @@ import NotFound from "./pages/NotFound";
 import DoorOfDevotion from "./pages/DoorOfDevotion";
 import HealingBot from "./pages/HealingBot";
 import MyProtocols from "./pages/MyProtocols";
-import HealingContentAdmin from "./pages/HealingContentAdmin";
 import AdminDashboard from "./pages/AdminDashboard";
 import Profile from "./pages/Profile";
 import DevotionCourses from "./pages/DevotionCourses";
@@ -50,7 +49,6 @@ const App = () => (
             <Route path="/devotion/healing-bot" element={<HealingBot />} />
             <Route path="/devotion/protocols" element={<MyProtocols />} />
             <Route path="/devotion/admin" element={<AdminDashboard />} />
-            <Route path="/devotion/admin/healing-content" element={<HealingContentAdmin />} />
             <Route path="/devotion/admin/content" element={<ContentAdmin />} />
             <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
             <Route path="/devotion/course/:courseId" element={<DevotionCoursePage />} />

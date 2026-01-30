@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, Upload, Heart, Settings } from 'lucide-react';
+import { Calendar, Upload, Settings } from 'lucide-react';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 
@@ -23,14 +23,6 @@ const adminTasks = [
     href: '/devotion/admin/content',
     color: 'text-amber-500',
     bgColor: 'bg-amber-500/10',
-  },
-  {
-    title: 'Add Healing Content',
-    description: 'Create and manage healing templates, meditations, and guides',
-    icon: Heart,
-    href: '/devotion/admin/healing-content',
-    color: 'text-emerald-500',
-    bgColor: 'bg-emerald-500/10',
   },
   {
     title: 'AreekeerA Admin',
