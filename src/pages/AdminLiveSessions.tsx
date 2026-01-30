@@ -28,11 +28,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Plus, Calendar, Users, Loader2, ArrowLeft, Video, CalendarIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { SessionType } from '@/hooks/useLiveSessions';
 
 export default function AdminLiveSessions() {
   const navigate = useNavigate();
@@ -46,6 +54,7 @@ export default function AdminLiveSessions() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    sessionType: 'class' as SessionType,
     durationMinutes: 60,
     capacity: 100,
   });
@@ -85,6 +94,7 @@ export default function AdminLiveSessions() {
         body: {
           title: formData.title,
           description: formData.description,
+          sessionType: formData.sessionType,
           scheduledAt: scheduledDateTime.toISOString(),
           durationMinutes: formData.durationMinutes,
           capacity: formData.capacity,
@@ -103,6 +113,7 @@ export default function AdminLiveSessions() {
       setFormData({
         title: '',
         description: '',
+        sessionType: 'class',
         durationMinutes: 60,
         capacity: 100,
       });
@@ -196,6 +207,23 @@ export default function AdminLiveSessions() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
                 />
+              </div>
+
+              <div>
+                <Label>Session Type</Label>
+                <Select
+                  value={formData.sessionType}
+                  onValueChange={(value: SessionType) => setFormData({ ...formData, sessionType: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="reading">Live Reading</SelectItem>
+                    <SelectItem value="class">Live Class</SelectItem>
+                    <SelectItem value="workshop">Live Workshop</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
@@ -295,6 +323,7 @@ export default function AdminLiveSessions() {
             <TableHeader>
               <TableRow>
                 <TableHead>Title</TableHead>
+                <TableHead>Type</TableHead>
                 <TableHead>Date & Time</TableHead>
                 <TableHead>Duration</TableHead>
                 <TableHead>Status</TableHead>
@@ -305,6 +334,11 @@ export default function AdminLiveSessions() {
               {sessions.map((session) => (
                 <TableRow key={session.id}>
                   <TableCell className="font-medium">{session.title}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="capitalize">
+                      {session.session_type || 'class'}
+                    </Badge>
+                  </TableCell>
                   <TableCell>
                     {format(new Date(session.scheduled_at), 'PPp')}
                   </TableCell>
