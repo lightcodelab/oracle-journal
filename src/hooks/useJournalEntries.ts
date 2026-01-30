@@ -190,26 +190,49 @@ export function useJournalEntry(entryId: string | undefined) {
 export function useCreateJournalEntry() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { isUnlocked, encryptText, encryptObject } = useEncryption();
 
   return useMutation({
     mutationFn: async (data: CreateEntryData) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      const insertData = {
+      // Base insert data (unencrypted)
+      const insertData: Record<string, unknown> = {
         user_id: user.id,
-        title: data.title || null,
-        content_json: data.content_json || {},
-        content_text: data.content_text || '',
         is_quick_capture: data.is_quick_capture ?? true,
         context_type: data.context_type || null,
         context_id: data.context_id || null,
         context_title: data.context_title || null,
       };
 
+      // Encrypt if available
+      if (isUnlocked) {
+        if (data.title) {
+          insertData.title_encrypted = await encryptText(data.title);
+          insertData.title = null;
+        }
+        if (data.content_json) {
+          insertData.content_json_encrypted = await encryptObject(data.content_json);
+          insertData.content_json = {};
+        }
+        if (data.content_text) {
+          insertData.content_text_encrypted = await encryptText(data.content_text);
+          insertData.content_text = '';
+        }
+        insertData.is_encrypted = true;
+      } else {
+        // Store unencrypted
+        insertData.title = data.title || null;
+        insertData.content_json = data.content_json || {};
+        insertData.content_text = data.content_text || '';
+        insertData.is_encrypted = false;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data: entry, error } = await supabase
         .from('journal_entries')
-        .insert(insertData)
+        .insert(insertData as any)
         .select()
         .single();
 
@@ -236,14 +259,43 @@ export function useCreateJournalEntry() {
 export function useUpdateJournalEntry() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { isUnlocked, encryptText, encryptObject } = useEncryption();
 
   return useMutation({
     mutationFn: async ({ id, ...data }: UpdateEntryData & { id: string }) => {
       const updateData: Record<string, unknown> = {};
-      if (data.title !== undefined) updateData.title = data.title;
-      if (data.content_json !== undefined) updateData.content_json = data.content_json;
-      if (data.content_text !== undefined) updateData.content_text = data.content_text;
+      
+      // Handle non-content fields
       if (data.is_pinned !== undefined) updateData.is_pinned = data.is_pinned;
+
+      // If encryption is unlocked, encrypt content fields
+      if (isUnlocked) {
+        if (data.title !== undefined) {
+          if (data.title) {
+            updateData.title_encrypted = await encryptText(data.title);
+            updateData.title = null;
+          } else {
+            updateData.title_encrypted = null;
+            updateData.title = null;
+          }
+        }
+        if (data.content_json !== undefined) {
+          updateData.content_json_encrypted = await encryptObject(data.content_json);
+          updateData.content_json = {};
+        }
+        if (data.content_text !== undefined) {
+          updateData.content_text_encrypted = await encryptText(data.content_text);
+          updateData.content_text = '';
+        }
+        if (data.title !== undefined || data.content_json !== undefined || data.content_text !== undefined) {
+          updateData.is_encrypted = true;
+        }
+      } else {
+        // Store unencrypted
+        if (data.title !== undefined) updateData.title = data.title;
+        if (data.content_json !== undefined) updateData.content_json = data.content_json;
+        if (data.content_text !== undefined) updateData.content_text = data.content_text;
+      }
 
       const { data: entry, error } = await supabase
         .from('journal_entries')
