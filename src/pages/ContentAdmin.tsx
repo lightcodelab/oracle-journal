@@ -77,14 +77,20 @@ const ContentAdmin = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <PageBreadcrumb 
-          items={[
-            { label: 'Admin', href: '/admin' },
-            { label: 'Content Uploader' }
-          ]} 
-        />
-        <ProfileDropdown />
+      <div className="border-b border-border">
+        <div className="flex items-center justify-between p-4">
+          <PageBreadcrumb 
+            items={[
+              { label: 'Admin', href: '/admin' },
+              { label: 'Content Uploader' }
+            ]} 
+          />
+          <ProfileDropdown />
+        </div>
+        <div className="max-w-6xl mx-auto px-6 pb-4">
+          <h1 className="text-2xl font-serif text-foreground">Content Uploader</h1>
+          <p className="text-sm text-muted-foreground">Upload and manage courses, resources, and media content</p>
+        </div>
       </div>
 
       <div className="max-w-6xl mx-auto p-6">
