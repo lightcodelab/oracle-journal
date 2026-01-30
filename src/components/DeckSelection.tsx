@@ -7,7 +7,6 @@ import tsrBanner from "@/assets/tsr-banner.png";
 import mnlBanner from "@/assets/mnl-banner.png";
 import areekeeraBanner from "@/assets/areekeera-banner.png";
 import taoshBanner from "@/assets/taosh-banner.png";
-import appGridBanner from "@/assets/app-grid-banner.png";
 
 interface Deck {
   id: string;
@@ -44,26 +43,19 @@ export const DeckSelection = ({
       animate={{ opacity: 1 }}
       className="container mx-auto px-4 py-12"
     >
-      <div className="text-center mb-12">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-6"
-        >
-          <img 
-            src={appGridBanner} 
-            alt="Choose Your Deck" 
-            className="w-full max-w-6xl mx-auto h-32 md:h-40 object-cover"
-          />
-        </motion.div>
-        <h1 className="font-serif text-5xl md:text-6xl font-bold text-foreground mb-4">
-          Choose Your Deck
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="text-center mb-12"
+      >
+        <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
+          The Door of Remembrance
         </h1>
-        <p className="text-xl text-foreground/80 max-w-2xl mx-auto">
-          Select a deck to receive divine guidance tailored to your spiritual journey
+        <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
+          Select a deck to receive divine guidance tailored to your spiritual journey.
         </p>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {decks.map((deck, index) => {
