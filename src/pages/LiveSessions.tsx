@@ -28,11 +28,11 @@ export default function LiveSessions() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
+            <h1 className="text-3xl font-serif flex items-center gap-3">
               <Video className="h-8 w-8 text-primary" />
               Live Sessions
             </h1>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-muted-foreground font-sans mt-2">
               Join live video sessions with our community
             </p>
           </div>
@@ -68,8 +68,8 @@ export default function LiveSessions() {
         ) : (
           <div className="text-center py-16">
             <Video className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl font-medium mb-2">No upcoming sessions</h2>
-            <p className="text-muted-foreground">
+            <h2 className="text-xl font-serif mb-2">No upcoming sessions</h2>
+            <p className="text-muted-foreground font-sans">
               Check back later for scheduled live sessions
             </p>
           </div>
