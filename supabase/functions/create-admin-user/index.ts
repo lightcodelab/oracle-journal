@@ -87,22 +87,23 @@ serve(async (req) => {
       throw roleError;
     }
 
-    // Send password reset email so they can set their own password
-    const { error: resetError } = await supabaseAdmin.auth.admin.generateLink({
-      type: "recovery",
-      email,
-      options: {
-        redirectTo: `${req.headers.get("origin") || Deno.env.get("SUPABASE_URL")}/auth`,
-      },
-    });
+    // Mark user as needing to change password on first login
+    const { error: profileError } = await supabaseAdmin
+      .from("profiles")
+      .update({ must_change_password: true })
+      .eq("id", newUser.user.id);
 
-    // Note: generateLink returns a link but doesn't send an email
-    // We'll just return success and let the caller know to share the temp password
+    if (profileError) {
+      console.error("Failed to set must_change_password flag:", profileError);
+      // Don't fail the whole operation, just log it
+    }
+
+    console.log(`Admin user created: ${email} (${newUser.user.id}) - must change password on first login`);
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Admin user created for ${email}. Share the temporary password securely.`,
+        message: `Admin user created for ${email}. They will be prompted to change their password on first login.`,
         userId: newUser.user.id,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
