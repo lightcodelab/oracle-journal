@@ -48,6 +48,13 @@ const DoorOfDevotion = () => {
       route: '/devotion/areekeera',
     },
     {
+      id: 'energy-hygiene',
+      name: 'Energy Hygiene Kit',
+      description: 'Tools for clearing and protecting your energetic field',
+      icon: <Zap className="w-8 h-8" />,
+      route: '/devotion/energy-hygiene',
+    },
+    {
       id: 'guided-meditations',
       name: 'Guided Meditations',
       description: 'Journey inward with guided meditation experiences',
@@ -67,13 +74,6 @@ const DoorOfDevotion = () => {
       description: 'Body-based practices for releasing and integration',
       icon: <Move className="w-8 h-8" />,
       route: null,
-    },
-    {
-      id: 'energy-hygiene',
-      name: 'Energy Hygiene Kit',
-      description: 'Tools for clearing and protecting your energetic field',
-      icon: <Zap className="w-8 h-8" />,
-      route: '/devotion/energy-hygiene',
     },
     {
       id: 'healing-templates',
