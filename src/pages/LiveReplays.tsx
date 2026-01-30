@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, Video, Play, Clock, Sparkles, GraduationCap, Users } from 'lucide-react';
+import { Loader2, Video, Play, Clock, Sparkles, GraduationCap, Users, Flower2 } from 'lucide-react';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
@@ -21,7 +21,7 @@ interface SessionReplay {
   id: string;
   title: string;
   description: string | null;
-  replay_type: 'reading' | 'class' | 'workshop';
+  replay_type: 'reading' | 'class' | 'workshop' | 'meditation';
   video_url: string | null;
   video_file_path: string | null;
   thumbnail_url: string | null;
@@ -51,10 +51,17 @@ const replayTypeConfig = {
     bgColor: 'bg-emerald-500/10',
     borderColor: 'border-emerald-500/30',
   },
+  meditation: {
+    label: 'Meditation Replay',
+    icon: Flower2,
+    color: 'text-cyan-500',
+    bgColor: 'bg-cyan-500/10',
+    borderColor: 'border-cyan-500/30',
+  },
 };
 
 export default function LiveReplays() {
-  const [filter, setFilter] = useState<'all' | 'reading' | 'class' | 'workshop'>('all');
+  const [filter, setFilter] = useState<'all' | 'reading' | 'class' | 'workshop' | 'meditation'>('all');
   const [selectedReplay, setSelectedReplay] = useState<SessionReplay | null>(null);
 
   const { data: replays, isLoading } = useQuery({
@@ -128,6 +135,10 @@ export default function LiveReplays() {
                 <TabsTrigger value="workshop" className="flex items-center gap-1">
                   <Users className="h-3 w-3" />
                   Workshops
+                </TabsTrigger>
+                <TabsTrigger value="meditation" className="flex items-center gap-1">
+                  <Flower2 className="h-3 w-3" />
+                  Meditations
                 </TabsTrigger>
               </TabsList>
             </Tabs>
