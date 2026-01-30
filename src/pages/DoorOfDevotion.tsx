@@ -50,7 +50,7 @@ const DoorOfDevotion = () => {
     {
       id: 'energy-hygiene',
       name: 'Energy Hygiene Kit',
-      description: 'Tools for clearing and protecting your energetic field',
+      description: 'Tools for clearing, cleansing, and protecting your energetic field from outside interference',
       icon: <Zap className="w-8 h-8" />,
       route: '/devotion/energy-hygiene',
     },
