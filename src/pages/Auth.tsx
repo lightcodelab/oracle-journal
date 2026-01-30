@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import templeBanner from "@/assets/temple-banner.png";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -158,17 +158,19 @@ const Auth = () => {
       >
         <div className="text-center mb-8">
           <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="inline-block"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-4"
           >
-            <Sparkles className="w-16 h-16 mx-auto text-accent animate-glow mb-4" />
+            <img 
+              src={templeBanner} 
+              alt="Temple of Sustainment" 
+              className="w-full max-w-md mx-auto"
+            />
           </motion.div>
-          <h1 className="font-serif text-4xl font-bold text-foreground mb-2">
-            Mystic Oracle
-          </h1>
-          <p className="text-foreground/70">
-            Sign in to access your personal card readings
+          <p className="text-foreground/70 text-sm leading-relaxed max-w-sm mx-auto">
+            Sign in to access our digital card decks, AreekeerA Templates, Energy Hygiene Resources, Guided Meditations, Courses, and a Digital Journal.
           </p>
         </div>
 
