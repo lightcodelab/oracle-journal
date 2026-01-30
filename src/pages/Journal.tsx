@@ -26,6 +26,7 @@ import PageBreadcrumb from '@/components/PageBreadcrumb';
 import JournalEditor from '@/components/journal/JournalEditor';
 import JournalEntryCard from '@/components/journal/JournalEntryCard';
 import TagPicker from '@/components/journal/TagPicker';
+import EncryptionGate from '@/components/EncryptionGate';
 import { 
   useJournalEntries, 
   useCreateJournalEntry, 
@@ -44,7 +45,7 @@ import type { Json } from '@/integrations/supabase/types';
 type ViewMode = 'list' | 'editor';
 type FilterType = 'all' | 'pinned' | 'card' | 'lesson' | 'course';
 
-const Journal = () => {
+const JournalContent = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
@@ -357,6 +358,15 @@ const Journal = () => {
         </AnimatePresence>
       </div>
     </div>
+  );
+};
+
+// Wrap with EncryptionGate to ensure encryption is set up before accessing journal
+const Journal = () => {
+  return (
+    <EncryptionGate required allowSkip>
+      <JournalContent />
+    </EncryptionGate>
   );
 };
 
