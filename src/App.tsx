@@ -25,6 +25,7 @@ import ContentAdmin from "./pages/ContentAdmin";
 import LiveSessions from "./pages/LiveSessions";
 import LiveSessionJoin from "./pages/LiveSessionJoin";
 import AdminLiveSessions from "./pages/AdminLiveSessions";
+import DoorOfCommunion from "./pages/DoorOfCommunion";
 import CommunionLiveReadings from "./pages/CommunionLiveReadings";
 import CommunionLiveClasses from "./pages/CommunionLiveClasses";
 import CommunionLiveWorkshops from "./pages/CommunionLiveWorkshops";
@@ -56,9 +57,10 @@ const App = () => (
             <Route path="/profile" element={<Profile />} />
             <Route path="/journal" element={<Journal />} />
             <Route path="/readings" element={<MyReadings />} />
-            <Route path="/live-sessions" element={<LiveSessions />} />
-            <Route path="/live-sessions/:sessionId/join" element={<LiveSessionJoin />} />
+            <Route path="/all-live-sessions" element={<LiveSessions />} />
+            <Route path="/all-live-sessions/:sessionId/join" element={<LiveSessionJoin />} />
             <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
+            <Route path="/communion" element={<DoorOfCommunion />} />
             <Route path="/communion/live-readings" element={<CommunionLiveReadings />} />
             <Route path="/communion/live-classes" element={<CommunionLiveClasses />} />
             <Route path="/communion/live-workshops" element={<CommunionLiveWorkshops />} />

@@ -50,7 +50,7 @@ export default function LiveSessionJoin() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-lg mb-4">Session not found</p>
-          <Button onClick={() => navigate('/live-sessions')}>
+          <Button onClick={() => navigate('/all-live-sessions')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Sessions
           </Button>
@@ -64,7 +64,7 @@ export default function LiveSessionJoin() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-lg mb-4">This session is not yet configured</p>
-          <Button onClick={() => navigate('/live-sessions')}>
+          <Button onClick={() => navigate('/all-live-sessions')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Sessions
           </Button>
@@ -78,7 +78,7 @@ export default function LiveSessionJoin() {
       <ZoomMeetingPlayer
         sessionId={session.id}
         meetingNumber={session.zoom_meeting_id}
-        onLeave={() => navigate('/live-sessions')}
+        onLeave={() => navigate('/all-live-sessions')}
       />
     </div>
   );

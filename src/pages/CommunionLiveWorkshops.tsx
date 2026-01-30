@@ -52,7 +52,7 @@ export default function CommunionLiveWorkshops() {
               session={session}
               onRegister={() => register(session.id)}
               onCancel={() => cancelRegistration(session.id)}
-              onJoin={() => navigate(`/live-sessions/${session.id}/join`)}
+              onJoin={() => navigate(`/all-live-sessions/${session.id}/join`)}
               isRegistering={isRegistering}
               isCancelling={isCancelling}
             />

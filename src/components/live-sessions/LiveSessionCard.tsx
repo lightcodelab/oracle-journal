@@ -49,7 +49,7 @@ export function LiveSessionCard({
 
     const title = encodeURIComponent(session.title);
     const description = encodeURIComponent(session.description || 'Live session at Temple of Sustainment');
-    const location = encodeURIComponent(window.location.origin + '/live-sessions/' + session.id);
+    const location = encodeURIComponent(window.location.origin + '/all-live-sessions/' + session.id);
 
     // Google Calendar
     const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${formatGoogleDate(startDate)}/${formatGoogleDate(endDate)}&details=${description}&location=${location}`;
@@ -81,7 +81,7 @@ DTSTART:${formatIcsDate(startDate)}
 DTEND:${formatIcsDate(endDate)}
 SUMMARY:${session.title}
 DESCRIPTION:${session.description || 'Live session at Temple of Sustainment'}
-URL:${window.location.origin}/live-sessions/${session.id}
+URL:${window.location.origin}/all-live-sessions/${session.id}
 END:VEVENT
 END:VCALENDAR`;
 

@@ -108,7 +108,7 @@ export function ZoomMeetingPlayer({ sessionId, meetingNumber, onLeave }: ZoomMee
         window.ZoomMtg.prepareWebSDK();
 
         window.ZoomMtg.init({
-          leaveUrl: window.location.origin + '/live-sessions',
+          leaveUrl: window.location.origin + '/all-live-sessions',
           isSupportAV: true,
           success: () => {
             console.log('Zoom SDK initialized');
