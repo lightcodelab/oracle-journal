@@ -1,5 +1,5 @@
 import { format, differenceInMinutes } from 'date-fns';
-import { Calendar, Clock, Users, Video, ChevronDown, DoorOpen } from 'lucide-react';
+import { Calendar, Clock, Users, Video, ChevronDown, DoorOpen, Play, Square, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -7,12 +7,17 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LiveSession } from '@/hooks/useLiveSessions';
 import { useAuth } from '@/hooks/useAuth';
 import { getSessionTypeConfig } from '@/lib/sessionTypeConfig';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const EARLY_ACCESS_MINUTES = 15;
 
@@ -33,11 +38,14 @@ export function LiveSessionCard({
   isRegistering,
   isCancelling,
 }: LiveSessionCardProps) {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const now = new Date();
   const scheduledDate = new Date(session.scheduled_at);
   const isUpcoming = scheduledDate > now;
   const isLive = session.status === 'live';
+  const isScheduled = session.status === 'scheduled';
   const isFull = (session.registrations_count || 0) >= session.capacity;
   const isRegistered = session.user_registration?.status === 'registered';
   const isWaitlisted = session.user_registration?.status === 'waitlist';
@@ -45,6 +53,42 @@ export function LiveSessionCard({
   // Check if within early access window (15 minutes before start)
   const minutesUntilStart = differenceInMinutes(scheduledDate, now);
   const canEnterWaitingRoom = isRegistered && minutesUntilStart <= EARLY_ACCESS_MINUTES && minutesUntilStart > 0 && !isLive;
+
+  // Admin mutation to update session status
+  const updateStatusMutation = useMutation({
+    mutationFn: async (status: string) => {
+      const { error } = await supabase
+        .from('live_sessions')
+        .update({ status })
+        .eq('id', session.id);
+
+      if (error) throw error;
+    },
+    onSuccess: (_, status) => {
+      queryClient.invalidateQueries({ queryKey: ['live-sessions'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-live-sessions'] });
+      queryClient.invalidateQueries({ queryKey: ['my-registered-sessions'] });
+      
+      if (status === 'live') {
+        toast.success('Session is now LIVE!');
+      } else if (status === 'completed') {
+        toast.success('Session ended');
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleStartMeeting = () => {
+    updateStatusMutation.mutate('live');
+    // Also join the meeting as admin
+    onJoin();
+  };
+
+  const handleEndMeeting = () => {
+    updateStatusMutation.mutate('completed');
+  };
 
   const getCalendarUrls = () => {
     const startDate = new Date(session.scheduled_at);
@@ -57,7 +101,6 @@ export function LiveSessionCard({
     const title = encodeURIComponent(session.title);
     const description = encodeURIComponent(session.description || 'Live session at Temple of Sustainment');
     const sessionJoinUrl = window.location.origin + '/all-live-sessions/' + session.id + '/join';
-    const location = encodeURIComponent(window.location.origin + '/all-live-sessions/' + session.id);
 
     // Google Calendar
     const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${formatGoogleDate(startDate)}/${formatGoogleDate(endDate)}&details=${description}&location=${encodeURIComponent(sessionJoinUrl)}`;
@@ -136,11 +179,17 @@ END:VCALENDAR`;
               {session.description}
             </CardDescription>
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 items-end">
             {isRegistered && <Badge variant="default">Registered</Badge>}
             {isWaitlisted && <Badge variant="secondary">Waitlist</Badge>}
             {isFull && !isRegistered && !isWaitlisted && (
               <Badge variant="destructive">Full</Badge>
+            )}
+            {/* Admin badge */}
+            {isAdmin && (
+              <Badge variant="outline" className="text-xs">
+                Admin
+              </Badge>
             )}
           </div>
         </div>
@@ -162,6 +211,50 @@ END:VCALENDAR`;
           </div>
         </div>
 
+        {/* Admin Controls */}
+        {isAdmin && (
+          <div className="flex flex-wrap gap-2 pt-2 pb-2 border-t border-b border-dashed">
+            {isScheduled && (
+              <Button 
+                onClick={handleStartMeeting} 
+                className="bg-green-600 hover:bg-green-700"
+                disabled={updateStatusMutation.isPending}
+              >
+                <Play className="h-4 w-4 mr-2" />
+                Start Meeting
+              </Button>
+            )}
+            {isLive && (
+              <>
+                <Button 
+                  onClick={onJoin}
+                  className="bg-red-500 hover:bg-red-600"
+                >
+                  <Video className="h-4 w-4 mr-2" />
+                  Join as Host
+                </Button>
+                <Button 
+                  onClick={handleEndMeeting}
+                  variant="outline"
+                  disabled={updateStatusMutation.isPending}
+                >
+                  <Square className="h-4 w-4 mr-2" />
+                  End Session
+                </Button>
+              </>
+            )}
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => navigate('/admin/live-sessions')}
+            >
+              <Settings className="h-4 w-4 mr-1" />
+              Manage
+            </Button>
+          </div>
+        )}
+
+        {/* User Controls */}
         <div className="flex flex-wrap gap-2 pt-2">
           {!user ? (
             <Button variant="outline" disabled>
@@ -206,6 +299,7 @@ END:VCALENDAR`;
                   <DropdownMenuItem onClick={() => window.open(yahooUrl, '_blank')}>
                     Yahoo Calendar
                   </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={downloadIcsFile}>
                     Download .ics file
                   </DropdownMenuItem>
