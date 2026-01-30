@@ -368,14 +368,14 @@ export default function AdminSessionReplays() {
                   <div>
                     <Label>Link to Session (optional)</Label>
                     <Select
-                      value={formData.sessionId}
-                      onValueChange={(value) => setFormData({ ...formData, sessionId: value })}
+                      value={formData.sessionId || '__none__'}
+                      onValueChange={(value) => setFormData({ ...formData, sessionId: value === '__none__' ? '' : value })}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select session" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="__none__">None</SelectItem>
                         {completedSessions?.map((session) => (
                           <SelectItem key={session.id} value={session.id}>
                             {session.title} ({format(new Date(session.scheduled_at), 'MMM d')})
