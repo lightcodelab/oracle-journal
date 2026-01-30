@@ -10,7 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Plus, Trash2, Save, Loader2, Search, Upload, X, FileAudio, FileVideo, File } from 'lucide-react';
+import { Plus, Trash2, Save, Loader2, Search, Upload, X, FileAudio, FileVideo, File } from 'lucide-react';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import {
@@ -325,223 +326,212 @@ const HealingContentAdmin = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
-        <Button
-          onClick={() => navigate('/devotion')}
-          variant="ghost"
-          size="sm"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
-        <h1 className="font-serif text-xl text-foreground">Admin Dashboard</h1>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate('/devotion/admin/content')}
-          >
-            <Upload className="w-4 h-4 mr-2" />
-            Content Uploader
-          </Button>
+        <PageBreadcrumb items={[
+          { label: 'Admin Dashboard', href: '/devotion/admin' },
+          { label: 'Healing Content' }
+        ]} />
+        <h1 className="font-serif text-xl text-foreground">Add Healing Content</h1>
+        <ProfileDropdown />
+      </div>
+
+      <div className="max-w-6xl mx-auto p-6">
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6 items-start sm:items-center justify-between">
+          <div className="flex flex-col sm:flex-row gap-4 flex-1">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by title or symptom tags..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={filterType} onValueChange={setFilterType}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                {CONTENT_TYPES.map((type) => (
+                  <SelectItem key={type} value={type} className="capitalize">
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
           <Dialog open={isDialogOpen} onOpenChange={(open) => {
             setIsDialogOpen(open);
             if (!open) resetForm();
           }}>
             <DialogTrigger asChild>
-              <Button size="sm">
+              <Button>
                 <Plus className="w-4 h-4 mr-2" />
-                Add Healing Content
+                Add Content
               </Button>
             </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{editingContent ? 'Edit Content' : 'Add New Content'}</DialogTitle>
-              <DialogDescription>
-                {editingContent ? 'Update the healing content details.' : 'Add a new healing template or meditation.'}
-              </DialogDescription>
-            </DialogHeader>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>{editingContent ? 'Edit Content' : 'Add New Content'}</DialogTitle>
+                <DialogDescription>
+                  {editingContent ? 'Update the healing content details.' : 'Add a new healing template or meditation.'}
+                </DialogDescription>
+              </DialogHeader>
 
-            <div className="space-y-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Title *</Label>
-                  <Input
-                    id="title"
-                    value={form.title}
-                    onChange={(e) => setForm({ ...form, title: e.target.value })}
-                    placeholder="Enter title"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="type">Type *</Label>
-                  <Select
-                    value={form.content_type}
-                    onValueChange={(value) => setForm({ ...form, content_type: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {CONTENT_TYPES.map((type) => (
-                        <SelectItem key={type} value={type} className="capitalize">
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  placeholder="Brief description of the content"
-                  rows={3}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="symptom_tags">Symptom Tags (comma-separated)</Label>
-                <Input
-                  id="symptom_tags"
-                  value={form.symptom_tags}
-                  onChange={(e) => setForm({ ...form, symptom_tags: e.target.value })}
-                  placeholder="anxiety, stress, insomnia, grief..."
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Upload File (audio/video)</Label>
-                {uploadedFileUrl || form.content_url ? (
-                  <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
-                    {(() => {
-                      const FileIcon = getFileIcon(form.content_url || '');
-                      return <FileIcon className="w-5 h-5 text-primary" />;
-                    })()}
-                    <span className="flex-1 text-sm truncate">{form.content_url}</span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={removeUploadedFile}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
+              <div className="space-y-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title">Title *</Label>
                     <Input
-                      type="file"
-                      accept="audio/*,video/*"
-                      onChange={handleFileUpload}
-                      disabled={uploading}
-                      className="flex-1"
+                      id="title"
+                      value={form.title}
+                      onChange={(e) => setForm({ ...form, title: e.target.value })}
+                      placeholder="Enter title"
                     />
-                    {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
                   </div>
-                )}
-              </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="type">Type *</Label>
+                    <Select
+                      value={form.content_type}
+                      onValueChange={(value) => setForm({ ...form, content_type: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CONTENT_TYPES.map((type) => (
+                          <SelectItem key={type} value={type} className="capitalize">
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="content_url">Or paste URL directly</Label>
-                <Input
-                  id="content_url"
-                  value={form.content_url}
-                  onChange={(e) => setForm({ ...form, content_url: e.target.value })}
-                  placeholder="https://..."
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="content_text">Content Text (for templates/guides)</Label>
-                <Textarea
-                  id="content_text"
-                  value={form.content_text}
-                  onChange={(e) => setForm({ ...form, content_text: e.target.value })}
-                  placeholder="Full text content..."
-                  rows={5}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="duration">Duration (minutes)</Label>
-                  <Input
-                    id="duration"
-                    type="number"
-                    value={form.duration_minutes}
-                    onChange={(e) => setForm({ ...form, duration_minutes: e.target.value })}
-                    placeholder="15"
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    placeholder="Brief description of the content"
+                    rows={3}
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="order">Display Order</Label>
+                  <Label htmlFor="symptom_tags">Symptom Tags (comma-separated)</Label>
                   <Input
-                    id="order"
-                    type="number"
-                    value={form.display_order}
-                    onChange={(e) => setForm({ ...form, display_order: parseInt(e.target.value) || 0 })}
+                    id="symptom_tags"
+                    value={form.symptom_tags}
+                    onChange={(e) => setForm({ ...form, symptom_tags: e.target.value })}
+                    placeholder="anxiety, stress, insomnia, grief..."
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Upload File (audio/video)</Label>
+                  {uploadedFileUrl || form.content_url ? (
+                    <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
+                      {(() => {
+                        const FileIcon = getFileIcon(form.content_url || '');
+                        return <FileIcon className="w-5 h-5 text-primary" />;
+                      })()}
+                      <span className="flex-1 text-sm truncate">{form.content_url}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={removeUploadedFile}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="file"
+                        accept="audio/*,video/*"
+                        onChange={handleFileUpload}
+                        disabled={uploading}
+                        className="flex-1"
+                      />
+                      {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="content_url">Or paste URL directly</Label>
+                  <Input
+                    id="content_url"
+                    value={form.content_url}
+                    onChange={(e) => setForm({ ...form, content_url: e.target.value })}
+                    placeholder="https://..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="content_text">Content Text (for templates/guides)</Label>
+                  <Textarea
+                    id="content_text"
+                    value={form.content_text}
+                    onChange={(e) => setForm({ ...form, content_text: e.target.value })}
+                    placeholder="Full text content..."
+                    rows={5}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="duration">Duration (minutes)</Label>
+                    <Input
+                      id="duration"
+                      type="number"
+                      value={form.duration_minutes}
+                      onChange={(e) => setForm({ ...form, duration_minutes: e.target.value })}
+                      placeholder="15"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="order">Display Order</Label>
+                    <Input
+                      id="order"
+                      type="number"
+                      value={form.display_order}
+                      onChange={(e) => setForm({ ...form, display_order: parseInt(e.target.value) || 0 })}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="published"
+                    checked={form.is_published}
+                    onCheckedChange={(checked) => setForm({ ...form, is_published: checked })}
+                  />
+                  <Label htmlFor="published">Published (visible to users)</Label>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="published"
-                  checked={form.is_published}
-                  onCheckedChange={(checked) => setForm({ ...form, is_published: checked })}
-                />
-                <Label htmlFor="published">Published (visible to users)</Label>
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleSave} disabled={saving}>
-                {saving ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <Save className="w-4 h-4 mr-2" />
-                )}
-                {editingContent ? 'Update' : 'Create'}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        <ProfileDropdown />
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto p-6">
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by title or symptom tags..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              {CONTENT_TYPES.map((type) => (
-                <SelectItem key={type} value={type} className="capitalize">
-                  {type}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleSave} disabled={saving}>
+                  {saving ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4 mr-2" />
+                  )}
+                  {editingContent ? 'Update' : 'Create'}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Stats */}
