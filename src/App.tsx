@@ -29,6 +29,7 @@ import DoorOfCommunion from "./pages/DoorOfCommunion";
 import CommunionLiveReadings from "./pages/CommunionLiveReadings";
 import CommunionLiveClasses from "./pages/CommunionLiveClasses";
 import CommunionLiveWorkshops from "./pages/CommunionLiveWorkshops";
+import CommunionLiveMeditations from "./pages/CommunionLiveMeditations";
 import LiveReplays from "./pages/LiveReplays";
 import AdminSessionReplays from "./pages/AdminSessionReplays";
 import MyCalendar from "./pages/MyCalendar";
@@ -69,6 +70,7 @@ const App = () => (
             <Route path="/communion/live-readings" element={<CommunionLiveReadings />} />
             <Route path="/communion/live-classes" element={<CommunionLiveClasses />} />
             <Route path="/communion/live-workshops" element={<CommunionLiveWorkshops />} />
+            <Route path="/communion/live-meditations" element={<CommunionLiveMeditations />} />
             <Route path="/communion/live-replays" element={<LiveReplays />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

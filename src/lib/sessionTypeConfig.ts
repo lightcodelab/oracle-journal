@@ -1,4 +1,4 @@
-import { Sparkles, GraduationCap, Users } from 'lucide-react';
+import { Sparkles, GraduationCap, Users, Flower2 } from 'lucide-react';
 import { SessionType } from '@/hooks/useLiveSessions';
 
 export interface SessionTypeConfig {
@@ -38,6 +38,15 @@ export const sessionTypeConfig: Record<SessionType, SessionTypeConfig> = {
     borderColor: 'border-emerald-500/30',
     badgeClass: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
     calendarClass: 'bg-emerald-500/20 border-l-4 border-l-emerald-500 hover:bg-emerald-500/30',
+  },
+  meditation: {
+    label: 'Live Meditation',
+    icon: Flower2,
+    bgColor: 'bg-cyan-500/20',
+    textColor: 'text-cyan-400',
+    borderColor: 'border-cyan-500/30',
+    badgeClass: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+    calendarClass: 'bg-cyan-500/20 border-l-4 border-l-cyan-500 hover:bg-cyan-500/30',
   },
 };
 

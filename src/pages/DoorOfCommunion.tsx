@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sparkles, GraduationCap, Users, CalendarDays, Video } from 'lucide-react';
+import { Sparkles, GraduationCap, Users, CalendarDays, Video, Flower2 } from 'lucide-react';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import { cn } from '@/lib/utils';
@@ -42,6 +42,15 @@ const categories: CommunionCategory[] = [
     route: '/communion/live-workshops',
     colorClass: 'text-emerald-400',
     borderColor: 'border-emerald-500/30 group-hover:border-emerald-500/50',
+  },
+  {
+    id: 'live-meditations',
+    title: 'Live Meditation Classes',
+    description: 'Join guided meditation sessions for inner peace and spiritual connection.',
+    icon: Flower2,
+    route: '/communion/live-meditations',
+    colorClass: 'text-cyan-400',
+    borderColor: 'border-cyan-500/30 group-hover:border-cyan-500/50',
   },
   {
     id: 'all-sessions',

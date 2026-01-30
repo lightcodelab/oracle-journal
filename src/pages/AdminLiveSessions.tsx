@@ -321,6 +321,7 @@ export default function AdminLiveSessions() {
                       <SelectItem value="reading">Live Reading</SelectItem>
                       <SelectItem value="class">Live Class</SelectItem>
                       <SelectItem value="workshop">Live Workshop</SelectItem>
+                      <SelectItem value="meditation">Live Meditation</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -458,6 +459,7 @@ export default function AdminLiveSessions() {
                     <SelectItem value="reading">Live Reading</SelectItem>
                     <SelectItem value="class">Live Class</SelectItem>
                     <SelectItem value="workshop">Live Workshop</SelectItem>
+                    <SelectItem value="meditation">Live Meditation</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
