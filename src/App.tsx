@@ -51,8 +51,8 @@ const App = () => (
             <Route path="/devotion" element={<DoorOfDevotion />} />
             <Route path="/devotion/healing-bot" element={<HealingBot />} />
             <Route path="/devotion/protocols" element={<MyProtocols />} />
-            <Route path="/devotion/admin" element={<AdminDashboard />} />
-            <Route path="/devotion/admin/content" element={<ContentAdmin />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/content" element={<ContentAdmin />} />
             <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
             <Route path="/devotion/course/:courseId" element={<DevotionCoursePage />} />
             <Route path="/devotion/course/:courseId/lesson/:lessonId" element={<DevotionLessonPage />} />

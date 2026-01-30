@@ -327,7 +327,7 @@ const HealingContentAdmin = () => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
         <PageBreadcrumb items={[
-          { label: 'Admin Dashboard', href: '/devotion/admin' },
+          { label: 'Admin Dashboard', href: '/admin' },
           { label: 'Healing Content' }
         ]} />
         <h1 className="font-serif text-xl text-foreground">Add Healing Content</h1>

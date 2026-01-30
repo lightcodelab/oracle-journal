@@ -255,7 +255,7 @@ export default function AdminLiveSessions() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
         <PageBreadcrumb items={[
-          { label: 'Admin Dashboard', href: '/devotion/admin' },
+          { label: 'Admin Dashboard', href: '/admin' },
           { label: 'Live Sessions' }
         ]} />
         <ProfileDropdown />

@@ -5,10 +5,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -31,12 +29,21 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Plus, Video, Loader2, Pencil, Trash2, Upload, ExternalLink } from 'lucide-react';
+import { Plus, Video, Loader2, Pencil, Trash2, CalendarIcon } from 'lucide-react';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
+import JournalEditor from '@/components/journal/JournalEditor';
 import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
+import type { Json } from '@/integrations/supabase/types';
 
 interface SessionReplay {
   id: string;
@@ -51,6 +58,8 @@ interface SessionReplay {
   is_published: boolean;
   published_at: string | null;
   created_at: string;
+  content_richtext: Json | null;
+  original_session_date: string | null;
 }
 
 interface LiveSession {
@@ -76,7 +85,6 @@ export default function AdminSessionReplays() {
   
   const [formData, setFormData] = useState({
     title: '',
-    description: '',
     replayType: 'class' as 'reading' | 'class' | 'workshop' | 'meditation',
     videoUrl: '',
     videoFilePath: '',
@@ -85,6 +93,10 @@ export default function AdminSessionReplays() {
     isPublished: false,
     sessionId: '',
   });
+  
+  const [contentRichtext, setContentRichtext] = useState<Json | null>(null);
+  const [originalSessionDate, setOriginalSessionDate] = useState<Date | undefined>();
+  const [originalSessionTime, setOriginalSessionTime] = useState('12:00');
 
   // Fetch completed sessions for linking
   const { data: completedSessions } = useQuery({
@@ -121,12 +133,15 @@ export default function AdminSessionReplays() {
     if (preselectedSessionId && completedSessions) {
       const session = completedSessions.find(s => s.id === preselectedSessionId);
       if (session) {
+        const sessionDate = new Date(session.scheduled_at);
         setFormData(prev => ({
           ...prev,
           sessionId: session.id,
           title: `${session.title} - Replay`,
           replayType: (session.session_type || 'class') as 'reading' | 'class' | 'workshop' | 'meditation',
         }));
+        setOriginalSessionDate(sessionDate);
+        setOriginalSessionTime(format(sessionDate, 'HH:mm'));
         setIsDialogOpen(true);
       }
     }
@@ -135,7 +150,6 @@ export default function AdminSessionReplays() {
   const resetForm = () => {
     setFormData({
       title: '',
-      description: '',
       replayType: 'class',
       videoUrl: '',
       videoFilePath: '',
@@ -144,6 +158,9 @@ export default function AdminSessionReplays() {
       isPublished: false,
       sessionId: '',
     });
+    setContentRichtext(null);
+    setOriginalSessionDate(undefined);
+    setOriginalSessionTime('12:00');
     setEditingReplay(null);
   };
 
@@ -173,13 +190,23 @@ export default function AdminSessionReplays() {
     }
   };
 
+  const getOriginalSessionDateTime = () => {
+    if (!originalSessionDate) return null;
+    const [hours, minutes] = originalSessionTime.split(':').map(Number);
+    const dateTime = new Date(originalSessionDate);
+    dateTime.setHours(hours, minutes, 0, 0);
+    return dateTime;
+  };
+
   const saveMutation = useMutation({
     mutationFn: async () => {
       setIsSaving(true);
       
+      const originalDateTime = getOriginalSessionDateTime();
+      
       const payload = {
         title: formData.title,
-        description: formData.description || null,
+        description: null, // Replaced by content_richtext
         replay_type: formData.replayType,
         video_url: formData.videoUrl || null,
         video_file_path: formData.videoFilePath || null,
@@ -188,6 +215,8 @@ export default function AdminSessionReplays() {
         is_published: formData.isPublished,
         published_at: formData.isPublished ? new Date().toISOString() : null,
         session_id: formData.sessionId || null,
+        content_richtext: contentRichtext,
+        original_session_date: originalDateTime?.toISOString() || null,
       };
 
       if (editingReplay) {
@@ -238,7 +267,6 @@ export default function AdminSessionReplays() {
     setEditingReplay(replay);
     setFormData({
       title: replay.title,
-      description: replay.description || '',
       replayType: replay.replay_type,
       videoUrl: replay.video_url || '',
       videoFilePath: replay.video_file_path || '',
@@ -247,6 +275,15 @@ export default function AdminSessionReplays() {
       isPublished: replay.is_published,
       sessionId: replay.session_id || '',
     });
+    setContentRichtext(replay.content_richtext);
+    if (replay.original_session_date) {
+      const date = new Date(replay.original_session_date);
+      setOriginalSessionDate(date);
+      setOriginalSessionTime(format(date, 'HH:mm'));
+    } else {
+      setOriginalSessionDate(undefined);
+      setOriginalSessionTime('12:00');
+    }
     setIsDialogOpen(true);
   };
 
@@ -262,7 +299,7 @@ export default function AdminSessionReplays() {
     <div className="min-h-screen bg-background">
       <div className="flex items-center justify-between p-4 border-b border-border">
         <PageBreadcrumb items={[
-          { label: 'Admin Dashboard', href: '/devotion/admin' },
+          { label: 'Admin Dashboard', href: '/admin' },
           { label: 'Session Replays' }
         ]} />
         <ProfileDropdown />
@@ -288,7 +325,7 @@ export default function AdminSessionReplays() {
               <Plus className="h-4 w-4 mr-2" />
               Add Replay
             </Button>
-            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="font-serif">
                   {editingReplay ? 'Edit Replay' : 'Add New Replay'}
@@ -297,22 +334,13 @@ export default function AdminSessionReplays() {
               
               <form onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(); }} className="space-y-4">
                 <div>
-                  <Label htmlFor="title">Title *</Label>
+                  <Label htmlFor="title">Class Name *</Label>
                   <Input
                     id="title"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    placeholder="e.g., Sacred Breathwork Session"
                     required
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    rows={3}
                   />
                 </div>
 
@@ -358,14 +386,57 @@ export default function AdminSessionReplays() {
                   </div>
                 </div>
 
+                {/* Original Session Date & Time */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Original Class Date</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !originalSessionDate && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {originalSessionDate ? format(originalSessionDate, "PPP") : <span>Pick a date</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0 bg-background border z-50" align="start">
+                        <CalendarComponent
+                          mode="single"
+                          selected={originalSessionDate}
+                          onSelect={setOriginalSessionDate}
+                          initialFocus
+                          className="p-3 pointer-events-auto"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="sessionTime">Original Class Time</Label>
+                    <Input
+                      id="sessionTime"
+                      type="time"
+                      value={originalSessionTime}
+                      onChange={(e) => setOriginalSessionTime(e.target.value)}
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <Label htmlFor="videoUrl">Video URL (YouTube/Vimeo)</Label>
+                  <Label htmlFor="videoUrl">Vimeo Embed Link</Label>
                   <Input
                     id="videoUrl"
                     value={formData.videoUrl}
                     onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
-                    placeholder="https://vimeo.com/..."
+                    placeholder="https://vimeo.com/123456789"
                   />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Paste the Vimeo video URL (e.g., https://vimeo.com/123456789)
+                  </p>
                 </div>
 
                 <div>
@@ -397,24 +468,40 @@ export default function AdminSessionReplays() {
                 </div>
 
                 <div>
-                  <Label htmlFor="thumbnailUrl">Thumbnail URL (optional)</Label>
-                  <Input
-                    id="thumbnailUrl"
-                    value={formData.thumbnailUrl}
-                    onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-                    placeholder="https://..."
+                  <Label>Text Content</Label>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Add description, notes, or supporting materials for this replay
+                  </p>
+                  <JournalEditor
+                    initialContent={contentRichtext || undefined}
+                    onAutoSave={(content) => setContentRichtext(content)}
+                    placeholder="Add class description, notes, or supporting materials..."
+                    showToolbar={true}
+                    className="min-h-[150px]"
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="duration">Duration (minutes)</Label>
-                  <Input
-                    id="duration"
-                    type="number"
-                    value={formData.durationMinutes}
-                    onChange={(e) => setFormData({ ...formData, durationMinutes: e.target.value })}
-                    placeholder="60"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="thumbnailUrl">Thumbnail URL (optional)</Label>
+                    <Input
+                      id="thumbnailUrl"
+                      value={formData.thumbnailUrl}
+                      onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
+                      placeholder="https://..."
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="duration">Duration (minutes)</Label>
+                    <Input
+                      id="duration"
+                      type="number"
+                      value={formData.durationMinutes}
+                      onChange={(e) => setFormData({ ...formData, durationMinutes: e.target.value })}
+                      placeholder="60"
+                    />
+                  </div>
                 </div>
 
                 <div className="flex items-center space-x-2">
@@ -451,9 +538,9 @@ export default function AdminSessionReplays() {
                 <TableRow>
                   <TableHead>Title</TableHead>
                   <TableHead>Type</TableHead>
+                  <TableHead>Original Date</TableHead>
                   <TableHead>Duration</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Created</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -467,15 +554,18 @@ export default function AdminSessionReplays() {
                       </Badge>
                     </TableCell>
                     <TableCell>
+                      {replay.original_session_date 
+                        ? format(new Date(replay.original_session_date), 'MMM d, yyyy h:mm a')
+                        : '-'
+                      }
+                    </TableCell>
+                    <TableCell>
                       {replay.duration_minutes ? `${replay.duration_minutes} min` : '-'}
                     </TableCell>
                     <TableCell>
                       <Badge variant={replay.is_published ? 'default' : 'secondary'}>
                         {replay.is_published ? 'Published' : 'Draft'}
                       </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {format(new Date(replay.created_at), 'MMM d, yyyy')}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
@@ -506,15 +596,17 @@ export default function AdminSessionReplays() {
             </Table>
           </div>
         ) : (
-          <Card>
-            <CardContent className="text-center py-16">
-              <Video className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-              <h2 className="text-xl font-serif mb-2">No replays yet</h2>
-              <p className="text-muted-foreground mb-4">
-                Upload your first session replay to get started
-              </p>
-            </CardContent>
-          </Card>
+          <div className="text-center py-16 border rounded-lg">
+            <Video className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <h2 className="text-xl font-serif mb-2">No replays yet</h2>
+            <p className="text-muted-foreground mb-4">
+              Upload your first session replay
+            </p>
+            <Button onClick={() => setIsDialogOpen(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Replay
+            </Button>
+          </div>
         )}
       </div>
     </div>
