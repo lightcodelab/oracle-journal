@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useEncryption } from '@/hooks/useEncryption';
 import { OracleCard } from '@/data/oracleCards';
 
 interface SaveReadingDialogProps {
@@ -26,6 +27,7 @@ const SaveReadingDialog = ({ open, onOpenChange, card, deckId }: SaveReadingDial
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
+  const { isUnlocked, encryptText } = useEncryption();
 
   const handleSave = async () => {
     setSaving(true);
@@ -43,18 +45,33 @@ const SaveReadingDialog = ({ open, onOpenChange, card, deckId }: SaveReadingDial
         return;
       }
 
+      // Prepare insert data with optional encryption
+      let insertData: Record<string, unknown> = {
+        user_id: session.user.id,
+        card_id: card.id,
+        deck_id: deckId,
+        card_title: card.card_title,
+        deck_name: card.deck_name || null,
+        image_file_name: card.image_file_name || null,
+        notes: notes.trim() || null,
+        saved_at: new Date().toISOString(),
+      };
+
+      // Encrypt notes if encryption is unlocked
+      if (isUnlocked && notes.trim()) {
+        const encryptedNotes = await encryptText(notes.trim());
+        insertData = {
+          ...insertData,
+          notes: '', // Clear plaintext
+          notes_encrypted: encryptedNotes,
+          is_encrypted: true,
+        };
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await supabase
         .from('saved_readings')
-        .insert({
-          user_id: session.user.id,
-          card_id: card.id,
-          deck_id: deckId,
-          card_title: card.card_title,
-          deck_name: card.deck_name || null,
-          image_file_name: card.image_file_name || null,
-          notes: notes.trim() || null,
-          saved_at: new Date().toISOString(),
-        });
+        .insert(insertData as any);
 
       if (error) {
         console.error('Error saving reading:', error);
