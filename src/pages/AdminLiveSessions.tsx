@@ -131,7 +131,7 @@ export default function AdminLiveSessions() {
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
+            <h1 className="text-3xl font-serif flex items-center gap-3">
               <Calendar className="h-8 w-8 text-primary" />
               Manage Live Sessions
             </h1>
@@ -147,7 +147,7 @@ export default function AdminLiveSessions() {
           </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>Create New Live Session</DialogTitle>
+              <DialogTitle className="font-serif">Create New Live Session</DialogTitle>
             </DialogHeader>
             <form
               onSubmit={(e) => {
@@ -318,8 +318,8 @@ export default function AdminLiveSessions() {
       ) : (
         <div className="text-center py-16 border rounded-lg">
           <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-          <h2 className="text-xl font-medium mb-2">No sessions yet</h2>
-          <p className="text-muted-foreground mb-4">
+          <h2 className="text-xl font-serif mb-2">No sessions yet</h2>
+          <p className="text-muted-foreground font-sans mb-4">
             Create your first live session to get started
           </p>
         </div>

@@ -73,8 +73,8 @@ END:VCALENDAR`;
       <CardHeader className={isLive ? 'pt-10' : ''}>
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-xl">{session.title}</CardTitle>
-            <CardDescription className="mt-2">
+            <CardTitle className="text-xl font-serif">{session.title}</CardTitle>
+            <CardDescription className="mt-2 font-sans">
               {session.description}
             </CardDescription>
           </div>
