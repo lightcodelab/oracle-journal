@@ -1928,6 +1928,65 @@ export type Database = {
           },
         ]
       }
+      session_replays: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          is_published: boolean | null
+          published_at: string | null
+          replay_type: string
+          session_id: string | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string | null
+          video_file_path: string | null
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean | null
+          published_at?: string | null
+          replay_type: string
+          session_id?: string | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string | null
+          video_file_path?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean | null
+          published_at?: string | null
+          replay_type?: string
+          session_id?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string | null
+          video_file_path?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_replays_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       severity_thresholds: {
         Row: {
           allowed_intensity_max: number | null
