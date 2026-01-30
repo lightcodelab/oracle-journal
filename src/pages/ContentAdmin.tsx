@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, FileText, BookOpen, Settings } from 'lucide-react';
+import { ArrowLeft, FileText, Settings } from 'lucide-react';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ContentLibrary from '@/components/admin/ContentLibrary';
 import ContentResourceForm from '@/components/admin/ContentResourceForm';
 import CategoryManager from '@/components/admin/CategoryManager';
-
 type View = 'library' | 'form' | 'categories';
 
 const ContentAdmin = () => {
@@ -78,15 +78,12 @@ const ContentAdmin = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
-        <Button
-          onClick={() => navigate('/admin')}
-          variant="ghost"
-          size="sm"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Admin
-        </Button>
-        <h1 className="font-serif text-xl text-foreground">Content Uploader</h1>
+        <PageBreadcrumb 
+          items={[
+            { label: 'Admin', href: '/admin' },
+            { label: 'Content Uploader' }
+          ]} 
+        />
         <ProfileDropdown />
       </div>
 
