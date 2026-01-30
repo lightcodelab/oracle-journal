@@ -28,10 +28,10 @@ const ForcePasswordChange = ({ open, onPasswordChanged }: ForcePasswordChangePro
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (newPassword.length < 6) {
+    if (newPassword.length < 8) {
       toast({
         title: "Password too short",
-        description: "Password must be at least 6 characters",
+        description: "Password must be at least 8 characters",
         variant: "destructive",
       });
       return;
@@ -112,7 +112,7 @@ const ForcePasswordChange = ({ open, onPasswordChanged }: ForcePasswordChangePro
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={8}
                 className="pr-10"
               />
               <button
@@ -124,7 +124,7 @@ const ForcePasswordChange = ({ open, onPasswordChanged }: ForcePasswordChangePro
               </button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Must be at least 6 characters
+              Must be at least 8 characters
             </p>
           </div>
 
@@ -137,7 +137,7 @@ const ForcePasswordChange = ({ open, onPasswordChanged }: ForcePasswordChangePro
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={8}
             />
           </div>
 
