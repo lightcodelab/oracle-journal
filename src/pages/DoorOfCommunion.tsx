@@ -12,7 +12,7 @@ interface CommunionCategory {
   icon: typeof Sparkles;
   route: string;
   colorClass: string;
-  bgClass: string;
+  borderColor: string;
 }
 
 const categories: CommunionCategory[] = [
@@ -23,7 +23,7 @@ const categories: CommunionCategory[] = [
     icon: Sparkles,
     route: '/communion/live-readings',
     colorClass: 'text-purple-400',
-    bgClass: 'bg-purple-500/10 hover:bg-purple-500/20 border-purple-500/30',
+    borderColor: 'border-purple-500/30 group-hover:border-purple-500/50',
   },
   {
     id: 'live-classes',
@@ -32,7 +32,7 @@ const categories: CommunionCategory[] = [
     icon: GraduationCap,
     route: '/communion/live-classes',
     colorClass: 'text-amber-400',
-    bgClass: 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/30',
+    borderColor: 'border-amber-500/30 group-hover:border-amber-500/50',
   },
   {
     id: 'live-workshops',
@@ -41,7 +41,7 @@ const categories: CommunionCategory[] = [
     icon: Users,
     route: '/communion/live-workshops',
     colorClass: 'text-emerald-400',
-    bgClass: 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30',
+    borderColor: 'border-emerald-500/30 group-hover:border-emerald-500/50',
   },
   {
     id: 'all-sessions',
@@ -50,7 +50,7 @@ const categories: CommunionCategory[] = [
     icon: CalendarDays,
     route: '/all-live-sessions',
     colorClass: 'text-primary',
-    bgClass: 'bg-primary/10 hover:bg-primary/20 border-primary/30',
+    borderColor: 'border-primary/30 group-hover:border-primary/50',
   },
 ];
 
@@ -58,49 +58,61 @@ export default function DoorOfCommunion() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Profile Dropdown */}
-      <div className="absolute top-4 right-4 z-20">
+    <div className="min-h-screen bg-background py-12 px-4 relative">
+      {/* Navigation Header */}
+      <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
+        <PageBreadcrumb items={[{ label: 'Door of Communion' }]} />
         <ProfileDropdown />
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <div className="mb-6">
-          <PageBreadcrumb items={[{ label: 'Door of Communion' }]} />
-        </div>
-
+      <div className="max-w-4xl mx-auto pt-12">
         {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-3xl font-serif mb-2">The Door of Communion</h1>
-          <p className="text-muted-foreground font-sans">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-12"
+        >
+          <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
+            The Door of Communion
+          </h1>
+          <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
             Connect with our community through live sessions, readings, and interactive experiences.
           </p>
-        </div>
+        </motion.div>
 
         {/* Category Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category, index) => {
             const Icon = category.icon;
             return (
-              <motion.button
+              <motion.div
                 key={category.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
                 onClick={() => navigate(category.route)}
-                className={cn(
-                  'p-6 rounded-lg border text-left transition-all duration-300',
-                  'hover:shadow-lg hover:scale-[1.02]',
-                  category.bgClass
-                )}
+                className="cursor-pointer group"
               >
-                <Icon className={cn('h-10 w-10 mb-4', category.colorClass)} />
-                <h2 className="text-xl font-serif mb-2">{category.title}</h2>
-                <p className="text-muted-foreground font-sans text-sm">
-                  {category.description}
-                </p>
-              </motion.button>
+                <div className={cn(
+                  'bg-card border rounded-lg p-8 transition-all duration-300',
+                  'group-hover:shadow-lg group-hover:scale-[1.01]',
+                  category.borderColor
+                )}>
+                  <div className={cn('mb-4 transition-colors', category.colorClass)}>
+                    <Icon className="w-8 h-8" />
+                  </div>
+                  <h3 className={cn(
+                    'font-serif text-2xl mb-2 transition-colors text-foreground',
+                    `group-hover:${category.colorClass}`
+                  )}>
+                    {category.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    {category.description}
+                  </p>
+                </div>
+              </motion.div>
             );
           })}
         </div>
