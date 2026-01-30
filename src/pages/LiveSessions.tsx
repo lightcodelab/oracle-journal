@@ -36,7 +36,7 @@ export default function LiveSessions() {
   } = useLiveSessions();
 
   const handleJoinSession = (sessionId: string) => {
-    navigate(`/live-sessions/${sessionId}/join`);
+    navigate(`/all-live-sessions/${sessionId}/join`);
   };
 
   const handleSessionClick = (session: LiveSession) => {

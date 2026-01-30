@@ -159,7 +159,7 @@ export default function AdminLiveSessions() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => navigate('/live-sessions')}>
+          <Button variant="ghost" onClick={() => navigate('/all-live-sessions')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
