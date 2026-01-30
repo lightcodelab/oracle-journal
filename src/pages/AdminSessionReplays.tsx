@@ -14,7 +14,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog';
 import {
@@ -44,7 +43,7 @@ interface SessionReplay {
   session_id: string | null;
   title: string;
   description: string | null;
-  replay_type: 'reading' | 'class' | 'workshop';
+  replay_type: 'reading' | 'class' | 'workshop' | 'meditation';
   video_url: string | null;
   video_file_path: string | null;
   thumbnail_url: string | null;
@@ -78,7 +77,7 @@ export default function AdminSessionReplays() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    replayType: 'class' as 'reading' | 'class' | 'workshop',
+    replayType: 'class' as 'reading' | 'class' | 'workshop' | 'meditation',
     videoUrl: '',
     videoFilePath: '',
     thumbnailUrl: '',
@@ -126,7 +125,7 @@ export default function AdminSessionReplays() {
           ...prev,
           sessionId: session.id,
           title: `${session.title} - Replay`,
-          replayType: (session.session_type || 'class') as 'reading' | 'class' | 'workshop',
+          replayType: (session.session_type || 'class') as 'reading' | 'class' | 'workshop' | 'meditation',
         }));
         setIsDialogOpen(true);
       }
@@ -285,12 +284,10 @@ export default function AdminSessionReplays() {
             setIsDialogOpen(open);
             if (!open) resetForm();
           }}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Replay
-              </Button>
-            </DialogTrigger>
+            <Button onClick={() => setIsDialogOpen(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Replay
+            </Button>
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="font-serif">
@@ -324,7 +321,7 @@ export default function AdminSessionReplays() {
                     <Label>Replay Type</Label>
                     <Select
                       value={formData.replayType}
-                      onValueChange={(value: 'reading' | 'class' | 'workshop') => 
+                      onValueChange={(value: 'reading' | 'class' | 'workshop' | 'meditation') => 
                         setFormData({ ...formData, replayType: value })
                       }
                     >
@@ -335,6 +332,7 @@ export default function AdminSessionReplays() {
                         <SelectItem value="reading">Reading Replay</SelectItem>
                         <SelectItem value="class">Class Replay</SelectItem>
                         <SelectItem value="workshop">Workshop Replay</SelectItem>
+                        <SelectItem value="meditation">Meditation Replay</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
