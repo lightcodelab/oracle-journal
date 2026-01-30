@@ -1,8 +1,14 @@
 import { format } from 'date-fns';
-import { Calendar, Clock, Users, Video, Download } from 'lucide-react';
+import { Calendar, Clock, Users, Video, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { LiveSession } from '@/hooks/useLiveSessions';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -31,7 +37,31 @@ export function LiveSessionCard({
   const isRegistered = session.user_registration?.status === 'registered';
   const isWaitlisted = session.user_registration?.status === 'waitlist';
 
-  const generateIcsFile = () => {
+  const getCalendarUrls = () => {
+    const startDate = new Date(session.scheduled_at);
+    const endDate = new Date(startDate.getTime() + session.duration_minutes * 60000);
+    
+    const formatGoogleDate = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const title = encodeURIComponent(session.title);
+    const description = encodeURIComponent(session.description || 'Live session at Temple of Sustainment');
+    const location = encodeURIComponent(window.location.origin + '/live-sessions/' + session.id);
+
+    // Google Calendar
+    const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${formatGoogleDate(startDate)}/${formatGoogleDate(endDate)}&details=${description}&location=${location}`;
+
+    // Outlook Web
+    const outlookUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${title}&startdt=${startDate.toISOString()}&enddt=${endDate.toISOString()}&body=${description}&location=${location}`;
+
+    // Yahoo Calendar
+    const yahooUrl = `https://calendar.yahoo.com/?v=60&title=${title}&st=${formatGoogleDate(startDate)}&et=${formatGoogleDate(endDate)}&desc=${description}&in_loc=${location}`;
+
+    return { googleUrl, outlookUrl, yahooUrl };
+  };
+
+  const downloadIcsFile = () => {
     const startDate = new Date(session.scheduled_at);
     const endDate = new Date(startDate.getTime() + session.duration_minutes * 60000);
     
@@ -61,6 +91,8 @@ END:VCALENDAR`;
     link.click();
     document.body.removeChild(link);
   };
+
+  const { googleUrl, outlookUrl, yahooUrl } = getCalendarUrls();
 
   return (
     <Card className="relative overflow-hidden">
@@ -116,10 +148,29 @@ END:VCALENDAR`;
             </Button>
           ) : isRegistered ? (
             <>
-              <Button variant="outline" onClick={generateIcsFile}>
-                <Download className="h-4 w-4 mr-2" />
-                Add to Calendar
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Add to Calendar
+                    <ChevronDown className="h-4 w-4 ml-2" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onClick={() => window.open(googleUrl, '_blank')}>
+                    Google Calendar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.open(outlookUrl, '_blank')}>
+                    Outlook
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.open(yahooUrl, '_blank')}>
+                    Yahoo Calendar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={downloadIcsFile}>
+                    Download .ics file
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button 
                 variant="ghost" 
                 onClick={onCancel}
