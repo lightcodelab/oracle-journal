@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Temple from "./pages/Temple";
@@ -27,31 +28,33 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Temple />} />
-          <Route path="/decks" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/import-cards" element={<ImportCards />} />
-          <Route path="/devotion" element={<DoorOfDevotion />} />
-          <Route path="/devotion/healing-bot" element={<HealingBot />} />
-          <Route path="/devotion/protocols" element={<MyProtocols />} />
-          <Route path="/devotion/admin" element={<HealingContentAdmin />} />
-          <Route path="/devotion/admin/content" element={<ContentAdmin />} />
-          <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
-          <Route path="/devotion/course/:courseId" element={<DevotionCoursePage />} />
-          <Route path="/devotion/course/:courseId/lesson/:lessonId" element={<DevotionLessonPage />} />
-          <Route path="/devotion/areekeera" element={<AreekeeraBot />} />
-          <Route path="/devotion/areekeera/admin" element={<AreekeeraAdmin />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/journal" element={<Journal />} />
-          <Route path="/readings" element={<MyReadings />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Temple />} />
+            <Route path="/decks" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/import-cards" element={<ImportCards />} />
+            <Route path="/devotion" element={<DoorOfDevotion />} />
+            <Route path="/devotion/healing-bot" element={<HealingBot />} />
+            <Route path="/devotion/protocols" element={<MyProtocols />} />
+            <Route path="/devotion/admin" element={<HealingContentAdmin />} />
+            <Route path="/devotion/admin/content" element={<ContentAdmin />} />
+            <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
+            <Route path="/devotion/course/:courseId" element={<DevotionCoursePage />} />
+            <Route path="/devotion/course/:courseId/lesson/:lessonId" element={<DevotionLessonPage />} />
+            <Route path="/devotion/areekeera" element={<AreekeeraBot />} />
+            <Route path="/devotion/areekeera/admin" element={<AreekeeraAdmin />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/journal" element={<Journal />} />
+            <Route path="/readings" element={<MyReadings />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
