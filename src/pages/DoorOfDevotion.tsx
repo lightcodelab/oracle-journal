@@ -70,7 +70,7 @@ const DoorOfDevotion = () => {
     },
     {
       id: 'energy-hygiene',
-      name: 'Energy Hygiene Practices',
+      name: 'Energy Hygiene Kit',
       description: 'Tools for clearing and protecting your energetic field',
       icon: <Zap className="w-8 h-8" />,
       route: '/devotion/energy-hygiene',
