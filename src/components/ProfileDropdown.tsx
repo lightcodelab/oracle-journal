@@ -15,6 +15,7 @@ import {
   FolderHeart, 
   BookOpen, 
   Sparkles,
+  CalendarDays,
   LogOut,
   ChevronDown
 } from 'lucide-react';
@@ -59,6 +60,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       label: 'My Profile',
       icon: <User className="w-4 h-4 mr-2" />,
       route: '/profile',
+    },
+    {
+      label: 'My Calendar',
+      icon: <CalendarDays className="w-4 h-4 mr-2" />,
+      route: '/my-calendar',
     },
     {
       label: 'My Protocols',

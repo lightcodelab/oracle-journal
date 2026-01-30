@@ -29,6 +29,7 @@ import DoorOfCommunion from "./pages/DoorOfCommunion";
 import CommunionLiveReadings from "./pages/CommunionLiveReadings";
 import CommunionLiveClasses from "./pages/CommunionLiveClasses";
 import CommunionLiveWorkshops from "./pages/CommunionLiveWorkshops";
+import MyCalendar from "./pages/MyCalendar";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
             <Route path="/profile" element={<Profile />} />
             <Route path="/journal" element={<Journal />} />
             <Route path="/readings" element={<MyReadings />} />
+            <Route path="/my-calendar" element={<MyCalendar />} />
             <Route path="/all-live-sessions" element={<LiveSessions />} />
             <Route path="/all-live-sessions/:sessionId/join" element={<LiveSessionJoin />} />
             <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
