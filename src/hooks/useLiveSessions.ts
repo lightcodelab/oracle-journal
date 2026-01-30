@@ -89,12 +89,16 @@ export function useLiveSessions() {
         ? 'waitlist' 
         : 'registered';
 
+      // Use upsert to handle re-registration after cancellation
       const { data, error } = await supabase
         .from('session_registrations')
-        .insert({
+        .upsert({
           session_id: sessionId,
           user_id: user.id,
           status,
+          registered_at: new Date().toISOString(),
+        }, {
+          onConflict: 'session_id,user_id',
         })
         .select()
         .single();
