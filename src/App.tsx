@@ -25,6 +25,9 @@ import ContentAdmin from "./pages/ContentAdmin";
 import LiveSessions from "./pages/LiveSessions";
 import LiveSessionJoin from "./pages/LiveSessionJoin";
 import AdminLiveSessions from "./pages/AdminLiveSessions";
+import CommunionLiveReadings from "./pages/CommunionLiveReadings";
+import CommunionLiveClasses from "./pages/CommunionLiveClasses";
+import CommunionLiveWorkshops from "./pages/CommunionLiveWorkshops";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +59,9 @@ const App = () => (
             <Route path="/live-sessions" element={<LiveSessions />} />
             <Route path="/live-sessions/:sessionId/join" element={<LiveSessionJoin />} />
             <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
+            <Route path="/communion/live-readings" element={<CommunionLiveReadings />} />
+            <Route path="/communion/live-classes" element={<CommunionLiveClasses />} />
+            <Route path="/communion/live-workshops" element={<CommunionLiveWorkshops />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

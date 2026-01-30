@@ -1356,6 +1356,7 @@ export type Database = {
           host_user_id: string | null
           id: string
           scheduled_at: string
+          session_type: string
           status: string
           title: string
           updated_at: string
@@ -1373,6 +1374,7 @@ export type Database = {
           host_user_id?: string | null
           id?: string
           scheduled_at: string
+          session_type?: string
           status?: string
           title: string
           updated_at?: string
@@ -1390,6 +1392,7 @@ export type Database = {
           host_user_id?: string | null
           id?: string
           scheduled_at?: string
+          session_type?: string
           status?: string
           title?: string
           updated_at?: string

@@ -133,7 +133,7 @@ serve(async (req) => {
       });
     }
 
-    const { title, description, scheduledAt, durationMinutes, capacity } = await req.json();
+    const { title, description, sessionType, scheduledAt, durationMinutes, capacity } = await req.json();
 
     if (!title || !scheduledAt || !durationMinutes) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), {
@@ -141,6 +141,10 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    // Validate session type
+    const validSessionTypes = ['reading', 'class', 'workshop'];
+    const finalSessionType = validSessionTypes.includes(sessionType) ? sessionType : 'class';
 
     console.log('Creating Zoom meeting for:', title);
 
@@ -163,6 +167,7 @@ serve(async (req) => {
       .insert({
         title,
         description,
+        session_type: finalSessionType,
         scheduled_at: scheduledAt,
         duration_minutes: durationMinutes,
         capacity: capacity || 100,
