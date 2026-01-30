@@ -120,7 +120,7 @@ const DoorOfDevotion = () => {
             The Door of Devotion
           </h1>
           <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
-            Resources for nervous system regulation, physical wellbeing restoration, and embodied repair.
+            Resources for nervous system regulation, physical wellbeing restoration, and embodied repair through Energetic Healing.
           </p>
         </motion.div>
 
