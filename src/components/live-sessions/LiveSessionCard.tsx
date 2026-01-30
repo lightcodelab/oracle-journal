@@ -11,6 +11,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LiveSession } from '@/hooks/useLiveSessions';
 import { useAuth } from '@/hooks/useAuth';
+import { getSessionTypeConfig } from '@/lib/sessionTypeConfig';
+import { cn } from '@/lib/utils';
 
 interface LiveSessionCardProps {
   session: LiveSession;
@@ -103,14 +105,25 @@ END:VCALENDAR`;
       )}
       
       <CardHeader className={isLive ? 'pt-10' : ''}>
-        <div className="flex justify-between items-start">
-          <div>
+        <div className="flex justify-between items-start gap-2">
+          <div className="flex-1">
+            {/* Session Type Badge */}
+            {(() => {
+              const config = getSessionTypeConfig(session.session_type);
+              const TypeIcon = config.icon;
+              return (
+                <Badge className={cn('gap-1 mb-2', config.badgeClass)}>
+                  <TypeIcon className="h-3 w-3" />
+                  {config.label}
+                </Badge>
+              );
+            })()}
             <CardTitle className="text-xl font-serif">{session.title}</CardTitle>
             <CardDescription className="mt-2 font-sans">
               {session.description}
             </CardDescription>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-1">
             {isRegistered && <Badge variant="default">Registered</Badge>}
             {isWaitlisted && <Badge variant="secondary">Waitlist</Badge>}
             {isFull && !isRegistered && !isWaitlisted && (
