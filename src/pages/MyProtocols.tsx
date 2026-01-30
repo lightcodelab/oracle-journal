@@ -176,7 +176,7 @@ const MyProtocols = () => {
             <p className="text-muted-foreground max-w-md mb-6">
               Start a conversation with your Healing Guide to create personalized protocols.
             </p>
-            <Button onClick={() => navigate('/devotion/healing-bot')}>
+            <Button onClick={() => navigate('/devotion/areekeera-bot')}>
               <Sparkles className="w-4 h-4 mr-2" />
               Talk to Healing Guide
             </Button>
