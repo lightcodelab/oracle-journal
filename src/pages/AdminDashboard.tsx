@@ -13,32 +13,24 @@ const adminTasks = [
     description: 'Create, edit, and manage live readings, classes, and workshops',
     icon: Calendar,
     href: '/admin/live-sessions',
-    color: 'text-purple-500',
-    bgColor: 'bg-purple-500/10',
   },
   {
     title: 'Session Replays',
     description: 'Upload and manage replay videos from completed live sessions',
     icon: Video,
     href: '/admin/session-replays',
-    color: 'text-rose-500',
-    bgColor: 'bg-rose-500/10',
   },
   {
     title: 'Content Uploader',
     description: 'Upload and manage courses, resources, and media content',
     icon: Upload,
     href: '/devotion/admin/content',
-    color: 'text-amber-500',
-    bgColor: 'bg-amber-500/10',
   },
   {
     title: 'AreekeerA Admin',
     description: 'Manage the AreekeerA healing protocol system',
     icon: Settings,
     href: '/devotion/areekeera/admin',
-    color: 'text-rose-500',
-    bgColor: 'bg-rose-500/10',
   },
 ];
 
@@ -119,8 +111,8 @@ const AdminDashboard = () => {
                     onClick={() => navigate(task.href)}
                   >
                     <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                      <div className={`p-3 rounded-lg ${task.bgColor}`}>
-                        <Icon className={`w-6 h-6 ${task.color}`} />
+                      <div className="p-3 rounded-lg bg-primary/10">
+                        <Icon className="w-6 h-6 text-primary" />
                       </div>
                       <div className="flex-1">
                         <CardTitle className="text-lg font-serif">
