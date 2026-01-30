@@ -294,3 +294,86 @@ export function useMyRegistrations() {
     },
   });
 }
+
+export function useMyRegisteredSessions() {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  const { data: sessions, isLoading } = useQuery({
+    queryKey: ['my-registered-sessions', user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      // First get user's registrations
+      const { data: registrations, error: regError } = await supabase
+        .from('session_registrations')
+        .select('session_id, status')
+        .eq('user_id', user!.id)
+        .in('status', ['registered', 'waitlist']);
+
+      if (regError) throw regError;
+      if (!registrations || registrations.length === 0) return [];
+
+      const sessionIds = registrations.map(r => r.session_id);
+
+      // Then get those sessions
+      const { data, error } = await supabase
+        .from('live_sessions')
+        .select('*')
+        .in('id', sessionIds)
+        .in('status', ['scheduled', 'live'])
+        .order('scheduled_at', { ascending: true });
+
+      if (error) throw error;
+
+      // Enrich with registration data
+      const sessionsWithDetails = await Promise.all(
+        (data || []).map(async (session) => {
+          const { count } = await supabase
+            .from('session_registrations')
+            .select('*', { count: 'exact', head: true })
+            .eq('session_id', session.id)
+            .eq('status', 'registered');
+
+          const userReg = registrations.find(r => r.session_id === session.id);
+
+          return {
+            ...session,
+            registrations_count: count || 0,
+            user_registration: userReg ? { id: session.id, status: userReg.status } : null,
+          };
+        })
+      );
+
+      return sessionsWithDetails as LiveSession[];
+    },
+  });
+
+  const cancelRegistrationMutation = useMutation({
+    mutationFn: async (sessionId: string) => {
+      if (!user) throw new Error('Must be logged in');
+
+      const { error } = await supabase
+        .from('session_registrations')
+        .update({ status: 'cancelled' })
+        .eq('session_id', sessionId)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-registered-sessions', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['live-sessions'] });
+      toast.success('Registration cancelled');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  return {
+    sessions,
+    isLoading,
+    cancelRegistration: cancelRegistrationMutation.mutate,
+    isCancelling: cancelRegistrationMutation.isPending,
+  };
+}
