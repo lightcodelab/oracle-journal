@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sparkles, GraduationCap, Users, CalendarDays } from 'lucide-react';
+import { Sparkles, GraduationCap, Users, CalendarDays, Video } from 'lucide-react';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import { cn } from '@/lib/utils';
@@ -51,6 +51,15 @@ const categories: CommunionCategory[] = [
     route: '/all-live-sessions',
     colorClass: 'text-primary',
     borderColor: 'border-primary/30 group-hover:border-primary/50',
+  },
+  {
+    id: 'live-replays',
+    title: 'Live Replays',
+    description: 'Watch recordings of past live readings, classes, and workshops.',
+    icon: Video,
+    route: '/communion/live-replays',
+    colorClass: 'text-rose-400',
+    borderColor: 'border-rose-500/30 group-hover:border-rose-500/50',
   },
 ];
 

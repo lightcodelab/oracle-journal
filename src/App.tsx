@@ -29,6 +29,8 @@ import DoorOfCommunion from "./pages/DoorOfCommunion";
 import CommunionLiveReadings from "./pages/CommunionLiveReadings";
 import CommunionLiveClasses from "./pages/CommunionLiveClasses";
 import CommunionLiveWorkshops from "./pages/CommunionLiveWorkshops";
+import LiveReplays from "./pages/LiveReplays";
+import AdminSessionReplays from "./pages/AdminSessionReplays";
 import MyCalendar from "./pages/MyCalendar";
 
 const queryClient = new QueryClient();
@@ -62,10 +64,12 @@ const App = () => (
             <Route path="/all-live-sessions" element={<LiveSessions />} />
             <Route path="/all-live-sessions/:sessionId/join" element={<LiveSessionJoin />} />
             <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
+            <Route path="/admin/session-replays" element={<AdminSessionReplays />} />
             <Route path="/communion" element={<DoorOfCommunion />} />
             <Route path="/communion/live-readings" element={<CommunionLiveReadings />} />
             <Route path="/communion/live-classes" element={<CommunionLiveClasses />} />
             <Route path="/communion/live-workshops" element={<CommunionLiveWorkshops />} />
+            <Route path="/communion/live-replays" element={<LiveReplays />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

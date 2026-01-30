@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, Upload, Settings } from 'lucide-react';
+import { Calendar, Upload, Settings, Video } from 'lucide-react';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 
@@ -15,6 +15,14 @@ const adminTasks = [
     href: '/admin/live-sessions',
     color: 'text-purple-500',
     bgColor: 'bg-purple-500/10',
+  },
+  {
+    title: 'Session Replays',
+    description: 'Upload and manage replay videos from completed live sessions',
+    icon: Video,
+    href: '/admin/session-replays',
+    color: 'text-rose-500',
+    bgColor: 'bg-rose-500/10',
   },
   {
     title: 'Content Uploader',

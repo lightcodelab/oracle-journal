@@ -1,5 +1,5 @@
-import { format, differenceInMinutes } from 'date-fns';
-import { Calendar, Clock, Users, Video, ChevronDown, DoorOpen, Play, Square, Settings } from 'lucide-react';
+import { format, differenceInMinutes, isPast } from 'date-fns';
+import { Calendar, Clock, Users, Video, ChevronDown, DoorOpen, Play, Square, Settings, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -46,6 +46,8 @@ export function LiveSessionCard({
   const isUpcoming = scheduledDate > now;
   const isLive = session.status === 'live';
   const isScheduled = session.status === 'scheduled';
+  const isCompleted = session.status === 'completed';
+  const sessionHasPassed = isPast(new Date(scheduledDate.getTime() + session.duration_minutes * 60000));
   const isFull = (session.registrations_count || 0) >= session.capacity;
   const isRegistered = session.user_registration?.status === 'registered';
   const isWaitlisted = session.user_registration?.status === 'waitlist';
@@ -251,6 +253,17 @@ END:VCALENDAR`;
               <Settings className="h-4 w-4 mr-1" />
               Manage
             </Button>
+            {/* Upload Replay button - only shows when session is completed or has passed */}
+            {(isCompleted || sessionHasPassed) && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate(`/admin/session-replays?sessionId=${session.id}`)}
+              >
+                <Upload className="h-4 w-4 mr-1" />
+                Upload Replay
+              </Button>
+            )}
           </div>
         )}
 
