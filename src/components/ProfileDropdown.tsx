@@ -100,7 +100,7 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
         {isAdmin && (
           <>
             <DropdownMenuItem 
-              onClick={() => navigate('/devotion/admin')}
+              onClick={() => navigate('/admin')}
               className="cursor-pointer"
             >
               <Settings className="w-4 h-4 mr-2" />

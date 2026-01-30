@@ -24,7 +24,7 @@ const adminTasks = [
     title: 'Content Uploader',
     description: 'Upload and manage courses, resources, and media content',
     icon: Upload,
-    href: '/devotion/admin/content',
+    href: '/admin/content',
   },
   {
     title: 'AreekeerA Admin',

@@ -1930,12 +1930,14 @@ export type Database = {
       }
       session_replays: {
         Row: {
+          content_richtext: Json | null
           created_at: string | null
           created_by: string | null
           description: string | null
           duration_minutes: number | null
           id: string
           is_published: boolean | null
+          original_session_date: string | null
           published_at: string | null
           replay_type: string
           session_id: string | null
@@ -1946,12 +1948,14 @@ export type Database = {
           video_url: string | null
         }
         Insert: {
+          content_richtext?: Json | null
           created_at?: string | null
           created_by?: string | null
           description?: string | null
           duration_minutes?: number | null
           id?: string
           is_published?: boolean | null
+          original_session_date?: string | null
           published_at?: string | null
           replay_type: string
           session_id?: string | null
@@ -1962,12 +1966,14 @@ export type Database = {
           video_url?: string | null
         }
         Update: {
+          content_richtext?: Json | null
           created_at?: string | null
           created_by?: string | null
           description?: string | null
           duration_minutes?: number | null
           id?: string
           is_published?: boolean | null
+          original_session_date?: string | null
           published_at?: string | null
           replay_type?: string
           session_id?: string | null
