@@ -636,8 +636,8 @@ const AreekeeraAdmin = () => {
           <div className="flex items-center gap-4">
             <PageBreadcrumb 
               items={[
-                { label: 'Door of Devotion', href: '/devotion' },
-                { label: 'AreekeerA Admin' }
+                { label: 'Admin', href: '/admin' },
+                { label: 'AreekeerA' }
               ]} 
             />
           </div>

@@ -30,7 +30,7 @@ const adminTasks = [
     title: 'AreekeerA Admin',
     description: 'Manage the AreekeerA healing protocol system',
     icon: Settings,
-    href: '/devotion/areekeera/admin',
+    href: '/admin/areekeera',
   },
 ];
 
