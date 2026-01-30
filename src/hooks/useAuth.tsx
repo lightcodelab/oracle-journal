@@ -8,6 +8,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   mustChangePassword: boolean;
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   loading: true,
   mustChangePassword: false,
+  isAdmin: false,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -24,6 +26,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [mustChangePassword, setMustChangePassword] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const checkAdminRole = async (userId: string) => {
+    const { data, error } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("role", "admin")
+      .single();
+
+    setIsAdmin(!error && !!data);
+  };
 
   const checkMustChangePassword = async (userId: string) => {
     const { data, error } = await supabase
@@ -47,15 +61,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Check must_change_password flag when user signs in
+        // Check must_change_password flag and admin role when user signs in
         if (session?.user && event === "SIGNED_IN") {
           setTimeout(() => {
             checkMustChangePassword(session.user.id);
+            checkAdminRole(session.user.id);
           }, 0);
         }
 
         if (event === "SIGNED_OUT") {
           setMustChangePassword(false);
+          setIsAdmin(false);
         }
       }
     );
@@ -68,6 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (session?.user) {
         checkMustChangePassword(session.user.id);
+        checkAdminRole(session.user.id);
       }
     });
 
@@ -79,7 +96,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, mustChangePassword }}>
+    <AuthContext.Provider value={{ user, session, loading, mustChangePassword, isAdmin }}>
       {children}
       <ForcePasswordChange 
         open={mustChangePassword && !!user} 

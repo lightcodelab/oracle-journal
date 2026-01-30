@@ -22,6 +22,9 @@ import MyReadings from "./pages/MyReadings";
 import AreekeeraBot from "./pages/AreekeeraBot";
 import AreekeeraAdmin from "./pages/AreekeeraAdmin";
 import ContentAdmin from "./pages/ContentAdmin";
+import LiveSessions from "./pages/LiveSessions";
+import LiveSessionJoin from "./pages/LiveSessionJoin";
+import AdminLiveSessions from "./pages/AdminLiveSessions";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +53,9 @@ const App = () => (
             <Route path="/profile" element={<Profile />} />
             <Route path="/journal" element={<Journal />} />
             <Route path="/readings" element={<MyReadings />} />
+            <Route path="/live-sessions" element={<LiveSessions />} />
+            <Route path="/live-sessions/:sessionId/join" element={<LiveSessionJoin />} />
+            <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

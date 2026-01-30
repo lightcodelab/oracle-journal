@@ -1346,6 +1346,60 @@ export type Database = {
           },
         ]
       }
+      live_sessions: {
+        Row: {
+          capacity: number | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          duration_minutes: number
+          host_user_id: string | null
+          id: string
+          scheduled_at: string
+          status: string
+          title: string
+          updated_at: string
+          zoom_join_url: string | null
+          zoom_meeting_id: string | null
+          zoom_password: string | null
+          zoom_start_url: string | null
+        }
+        Insert: {
+          capacity?: number | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number
+          host_user_id?: string | null
+          id?: string
+          scheduled_at: string
+          status?: string
+          title: string
+          updated_at?: string
+          zoom_join_url?: string | null
+          zoom_meeting_id?: string | null
+          zoom_password?: string | null
+          zoom_start_url?: string | null
+        }
+        Update: {
+          capacity?: number | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number
+          host_user_id?: string | null
+          id?: string
+          scheduled_at?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          zoom_join_url?: string | null
+          zoom_meeting_id?: string | null
+          zoom_password?: string | null
+          zoom_start_url?: string | null
+        }
+        Relationships: []
+      }
       outcomes_cache: {
         Row: {
           id: string
@@ -1829,6 +1883,44 @@ export type Database = {
             columns: ["deck_id"]
             isOneToOne: false
             referencedRelation: "decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_registrations: {
+        Row: {
+          attended_at: string | null
+          calendar_added: boolean | null
+          id: string
+          registered_at: string
+          session_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          attended_at?: string | null
+          calendar_added?: boolean | null
+          id?: string
+          registered_at?: string
+          session_id: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          attended_at?: string | null
+          calendar_added?: boolean | null
+          id?: string
+          registered_at?: string
+          session_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_registrations_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions"
             referencedColumns: ["id"]
           },
         ]
