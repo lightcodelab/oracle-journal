@@ -7,6 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Dialog,
   DialogContent,
@@ -24,8 +30,9 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Plus, Calendar, Users, Loader2, ArrowLeft, Video } from 'lucide-react';
+import { Plus, Calendar, Users, Loader2, ArrowLeft, Video, CalendarIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 export default function AdminLiveSessions() {
   const navigate = useNavigate();
@@ -33,11 +40,12 @@ export default function AdminLiveSessions() {
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [selectedTime, setSelectedTime] = useState('12:00');
   
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    scheduledAt: '',
     durationMinutes: 60,
     capacity: 100,
   });
@@ -56,15 +64,28 @@ export default function AdminLiveSessions() {
     },
   });
 
+  const getScheduledDateTime = () => {
+    if (!selectedDate) return null;
+    const [hours, minutes] = selectedTime.split(':').map(Number);
+    const dateTime = new Date(selectedDate);
+    dateTime.setHours(hours, minutes, 0, 0);
+    return dateTime;
+  };
+
   const createSessionMutation = useMutation({
     mutationFn: async () => {
+      const scheduledDateTime = getScheduledDateTime();
+      if (!scheduledDateTime) {
+        throw new Error('Please select a date and time');
+      }
+
       setIsCreating(true);
       
       const { data, error } = await supabase.functions.invoke('zoom-create-meeting', {
         body: {
           title: formData.title,
           description: formData.description,
-          scheduledAt: new Date(formData.scheduledAt).toISOString(),
+          scheduledAt: scheduledDateTime.toISOString(),
           durationMinutes: formData.durationMinutes,
           capacity: formData.capacity,
         },
@@ -82,10 +103,11 @@ export default function AdminLiveSessions() {
       setFormData({
         title: '',
         description: '',
-        scheduledAt: '',
         durationMinutes: 60,
         capacity: 100,
       });
+      setSelectedDate(undefined);
+      setSelectedTime('12:00');
     },
     onError: (error: Error) => {
       console.error('Error creating session:', error);
@@ -176,15 +198,45 @@ export default function AdminLiveSessions() {
                 />
               </div>
               
-              <div>
-                <Label htmlFor="scheduledAt">Date & Time</Label>
-                <Input
-                  id="scheduledAt"
-                  type="datetime-local"
-                  value={formData.scheduledAt}
-                  onChange={(e) => setFormData({ ...formData, scheduledAt: e.target.value })}
-                  required
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !selectedDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 bg-background border z-50" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                
+                <div>
+                  <Label htmlFor="time">Time</Label>
+                  <Input
+                    id="time"
+                    type="time"
+                    value={selectedTime}
+                    onChange={(e) => setSelectedTime(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
@@ -215,7 +267,7 @@ export default function AdminLiveSessions() {
                 </div>
               </div>
               
-              <Button type="submit" className="w-full" disabled={isCreating}>
+              <Button type="submit" className="w-full" disabled={isCreating || !selectedDate}>
                 {isCreating ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
