@@ -1,12 +1,16 @@
-import { Loader2, Sparkles } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { Loader2 } from 'lucide-react';
 import { useLiveSessionsByType } from '@/hooks/useLiveSessions';
 import { LiveSessionCard } from '@/components/live-sessions/LiveSessionCard';
 import { useNavigate } from 'react-router-dom';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
+import { getSessionTypeConfig } from '@/lib/sessionTypeConfig';
+import { cn } from '@/lib/utils';
 
 export default function CommunionLiveReadings() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const config = getSessionTypeConfig('reading');
+  const Icon = config.icon;
+  
   const { 
     sessions, 
     isLoading, 
@@ -18,9 +22,17 @@ export default function CommunionLiveReadings() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Breadcrumb */}
+      <div className="mb-6">
+        <PageBreadcrumb items={[
+          { label: 'Door of Communion', href: '/communion' },
+          { label: 'Live Readings' }
+        ]} />
+      </div>
+
       <div className="mb-8">
         <h1 className="text-3xl font-serif flex items-center gap-3 mb-2">
-          <Sparkles className="h-8 w-8 text-primary" />
+          <Icon className={cn('h-8 w-8', config.textColor)} />
           Live Readings
         </h1>
         <p className="text-muted-foreground font-sans">
@@ -40,7 +52,7 @@ export default function CommunionLiveReadings() {
               session={session}
               onRegister={() => register(session.id)}
               onCancel={() => cancelRegistration(session.id)}
-              onJoin={() => navigate(`/live-sessions/${session.id}`)}
+              onJoin={() => navigate(`/live-sessions/${session.id}/join`)}
               isRegistering={isRegistering}
               isCancelling={isCancelling}
             />
@@ -48,7 +60,7 @@ export default function CommunionLiveReadings() {
         </div>
       ) : (
         <div className="text-center py-16 border rounded-lg">
-          <Sparkles className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+          <Icon className={cn('h-16 w-16 mx-auto mb-4', config.textColor)} />
           <h2 className="text-xl font-serif mb-2">No live readings scheduled</h2>
           <p className="text-muted-foreground font-sans">
             Check back soon for upcoming live reading sessions.
