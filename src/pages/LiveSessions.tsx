@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/useAuth';
 import { Skeleton } from '@/components/ui/skeleton';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
+import ProfileDropdown from '@/components/ProfileDropdown';
 import {
   Dialog,
   DialogContent,
@@ -44,13 +45,17 @@ export default function LiveSessions() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <div className="mb-6">
-          <PageBreadcrumb items={[{ label: 'All Sessions' }]} />
-        </div>
+    <div className="min-h-screen bg-background py-12 px-4 relative">
+      {/* Navigation Header */}
+      <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
+        <PageBreadcrumb items={[
+          { label: 'Door of Communion', href: '/communion' },
+          { label: 'All Sessions' }
+        ]} />
+        <ProfileDropdown />
+      </div>
 
+      <div className="max-w-6xl mx-auto pt-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
