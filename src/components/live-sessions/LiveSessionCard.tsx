@@ -1,5 +1,5 @@
-import { format } from 'date-fns';
-import { Calendar, Clock, Users, Video, ChevronDown } from 'lucide-react';
+import { format, differenceInMinutes } from 'date-fns';
+import { Calendar, Clock, Users, Video, ChevronDown, DoorOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +13,8 @@ import { LiveSession } from '@/hooks/useLiveSessions';
 import { useAuth } from '@/hooks/useAuth';
 import { getSessionTypeConfig } from '@/lib/sessionTypeConfig';
 import { cn } from '@/lib/utils';
+
+const EARLY_ACCESS_MINUTES = 15;
 
 interface LiveSessionCardProps {
   session: LiveSession;
@@ -32,12 +34,17 @@ export function LiveSessionCard({
   isCancelling,
 }: LiveSessionCardProps) {
   const { user } = useAuth();
+  const now = new Date();
   const scheduledDate = new Date(session.scheduled_at);
-  const isUpcoming = scheduledDate > new Date();
+  const isUpcoming = scheduledDate > now;
   const isLive = session.status === 'live';
   const isFull = (session.registrations_count || 0) >= session.capacity;
   const isRegistered = session.user_registration?.status === 'registered';
   const isWaitlisted = session.user_registration?.status === 'waitlist';
+  
+  // Check if within early access window (15 minutes before start)
+  const minutesUntilStart = differenceInMinutes(scheduledDate, now);
+  const canEnterWaitingRoom = isRegistered && minutesUntilStart <= EARLY_ACCESS_MINUTES && minutesUntilStart > 0 && !isLive;
 
   const getCalendarUrls = () => {
     const startDate = new Date(session.scheduled_at);
@@ -104,8 +111,13 @@ END:VCALENDAR`;
           🔴 LIVE NOW
         </div>
       )}
+      {canEnterWaitingRoom && (
+        <div className="absolute top-0 left-0 right-0 bg-primary text-primary-foreground text-center py-1 text-sm font-medium">
+          🚪 Room Open — Starts in {minutesUntilStart} min
+        </div>
+      )}
       
-      <CardHeader className={isLive ? 'pt-10' : ''}>
+      <CardHeader className={isLive || canEnterWaitingRoom ? 'pt-10' : ''}>
         <div className="flex justify-between items-start gap-2">
           <div className="flex-1">
             {/* Session Type Badge */}
@@ -160,6 +172,20 @@ END:VCALENDAR`;
               <Video className="h-4 w-4 mr-2" />
               Join Session
             </Button>
+          ) : canEnterWaitingRoom ? (
+            <>
+              <Button onClick={onJoin} variant="default">
+                <DoorOpen className="h-4 w-4 mr-2" />
+                Enter Waiting Room
+              </Button>
+              <Button 
+                variant="ghost" 
+                onClick={onCancel}
+                disabled={isCancelling}
+              >
+                Cancel
+              </Button>
+            </>
           ) : isRegistered ? (
             <>
               <DropdownMenu>
