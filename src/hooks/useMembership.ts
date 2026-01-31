@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -36,16 +37,24 @@ interface TierWithPricing extends Tier {
 export function useMembership() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [tiers, setTiers] = useState<TierWithPricing[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [currentTier, setCurrentTier] = useState<string | null>(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState<string | null>(null);
+  const [pendingPriceId, setPendingPriceId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTiersAndPricing();
     if (user) {
       fetchUserMembership();
+      // Check if there's a pending checkout after auth
+      const storedPriceId = sessionStorage.getItem("pendingCheckoutPriceId");
+      if (storedPriceId) {
+        sessionStorage.removeItem("pendingCheckoutPriceId");
+        startCheckout(storedPriceId);
+      }
     }
   }, [user]);
 
@@ -125,11 +134,13 @@ export function useMembership() {
 
   const startCheckout = async (priceId: string) => {
     if (!user) {
+      // Store the intended price and redirect to auth
+      sessionStorage.setItem("pendingCheckoutPriceId", priceId);
       toast({
         title: "Sign in required",
-        description: "Please sign in to subscribe to a membership.",
-        variant: "destructive",
+        description: "Please sign in or create an account to start your free trial.",
       });
+      navigate("/auth?redirect=/membership");
       return;
     }
 
