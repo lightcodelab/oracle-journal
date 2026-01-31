@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Sparkles, X } from 'lucide-react';
 
 import templeBanner from '@/assets/temple-banner.png';
 import doorRemembrance from '@/assets/door-remembrance.png';
@@ -40,18 +43,41 @@ const doors: Door[] = [
 const Temple = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [showTrialPrompt, setShowTrialPrompt] = useState(false);
+  const [promptDismissed, setPromptDismissed] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuthAndSubscription = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         navigate('/auth');
         return;
       }
+
+      // Check if user has an active subscription
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('member_tier_code, subscription_status')
+        .eq('id', session.user.id)
+        .single();
+
+      // Show trial prompt if no tier or no active subscription
+      const hasActiveSubscription = profile?.subscription_status === 'active' || 
+                                     profile?.subscription_status === 'trialing';
+      const hasTier = !!profile?.member_tier_code;
+      
+      if (!hasTier || !hasActiveSubscription) {
+        // Check if they dismissed the prompt in this session
+        const dismissed = sessionStorage.getItem('trialPromptDismissed');
+        if (!dismissed) {
+          setShowTrialPrompt(true);
+        }
+      }
+
       setLoading(false);
     };
 
-    checkAuth();
+    checkAuthAndSubscription();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) {
@@ -66,6 +92,16 @@ const Temple = () => {
     if (door.route) {
       navigate(door.route);
     }
+  };
+
+  const handleDismissPrompt = () => {
+    sessionStorage.setItem('trialPromptDismissed', 'true');
+    setPromptDismissed(true);
+    setShowTrialPrompt(false);
+  };
+
+  const handleStartTrial = () => {
+    navigate('/');
   };
 
   if (loading) {
@@ -86,6 +122,44 @@ const Temple = () => {
       </div>
 
       <div className="max-w-6xl mx-auto pt-6">
+        {/* Trial Completion Prompt */}
+        {showTrialPrompt && !promptDismissed && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-6"
+          >
+            <Card className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 border-primary/20">
+              <CardContent className="p-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">Complete Your Free Trial</p>
+                    <p className="text-sm text-muted-foreground">
+                      Start your 7-day free trial to unlock all the sacred content within the Temple.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <Button onClick={handleStartTrial} size="sm">
+                    Start Free Trial
+                  </Button>
+                  <button
+                    onClick={handleDismissPrompt}
+                    className="p-1.5 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                    aria-label="Dismiss"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
         {/* Banner Image */}
         <motion.div
           initial={{ opacity: 0 }}
