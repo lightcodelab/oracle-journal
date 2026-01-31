@@ -91,12 +91,14 @@ const Auth = () => {
     // Check if user is already logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        // Check for pending trial checkout
+        // Check for pending trial checkout - redirect to home where useMembership will handle it
         const pendingPriceId = sessionStorage.getItem("pendingTrialPriceId");
         if (pendingPriceId) {
+          // Transfer to the key that useMembership expects
+          sessionStorage.setItem("pendingCheckoutPriceId", pendingPriceId);
           sessionStorage.removeItem("pendingTrialPriceId");
-          // Redirect to checkout with priceId
-          navigate(`/membership/success?checkout=true&priceId=${pendingPriceId}`);
+          // Redirect to home/temple - the useMembership hook will pick up the pending checkout
+          navigate("/");
         } else {
           navigate(redirectTo);
         }
@@ -109,8 +111,11 @@ const Auth = () => {
         // Check for pending trial checkout
         const pendingPriceId = sessionStorage.getItem("pendingTrialPriceId");
         if (pendingPriceId) {
+          // Transfer to the key that useMembership expects
+          sessionStorage.setItem("pendingCheckoutPriceId", pendingPriceId);
           sessionStorage.removeItem("pendingTrialPriceId");
-          navigate(`/membership/success?checkout=true&priceId=${pendingPriceId}`);
+          // Redirect to home - the Membership page's useMembership hook will initiate checkout
+          navigate("/");
         } else {
           navigate(redirectTo);
         }

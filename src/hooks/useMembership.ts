@@ -50,9 +50,12 @@ export function useMembership() {
     if (user) {
       fetchUserMembership();
       // Check if there's a pending checkout after auth
-      const storedPriceId = sessionStorage.getItem("pendingCheckoutPriceId");
+      // Support both keys for compatibility (pendingCheckoutPriceId from direct flow, pendingTrialPriceId from OAuth)
+      const storedPriceId = sessionStorage.getItem("pendingCheckoutPriceId") || 
+                            sessionStorage.getItem("pendingTrialPriceId");
       if (storedPriceId) {
         sessionStorage.removeItem("pendingCheckoutPriceId");
+        sessionStorage.removeItem("pendingTrialPriceId");
         startCheckout(storedPriceId);
       }
     }
