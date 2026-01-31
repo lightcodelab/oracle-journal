@@ -1956,6 +1956,13 @@ export type Database = {
             referencedRelation: "live_sessions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "session_registrations_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       session_replays: {
@@ -2019,6 +2026,13 @@ export type Database = {
             columns: ["session_id"]
             isOneToOne: false
             referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_replays_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions_public"
             referencedColumns: ["id"]
           },
         ]
@@ -2290,43 +2304,50 @@ export type Database = {
       }
     }
     Views: {
-      deck_purchases_admin: {
+      live_sessions_public: {
         Row: {
-          deck_id: string | null
+          capacity: number | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          duration_minutes: number | null
+          host_user_id: string | null
           id: string | null
-          is_premium: boolean | null
-          purchased_at: string | null
-          user_id: string | null
-          verified: boolean | null
-          woocommerce_order_id: string | null
+          scheduled_at: string | null
+          session_type: string | null
+          status: string | null
+          title: string | null
+          updated_at: string | null
         }
         Insert: {
-          deck_id?: string | null
+          capacity?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          host_user_id?: string | null
           id?: string | null
-          is_premium?: boolean | null
-          purchased_at?: string | null
-          user_id?: string | null
-          verified?: boolean | null
-          woocommerce_order_id?: string | null
+          scheduled_at?: string | null
+          session_type?: string | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
         }
         Update: {
-          deck_id?: string | null
+          capacity?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          host_user_id?: string | null
           id?: string | null
-          is_premium?: boolean | null
-          purchased_at?: string | null
-          user_id?: string | null
-          verified?: boolean | null
-          woocommerce_order_id?: string | null
+          scheduled_at?: string | null
+          session_type?: string | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "deck_purchases_deck_id_fkey"
-            columns: ["deck_id"]
-            isOneToOne: false
-            referencedRelation: "decks"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       v_content_courses_published: {
         Row: {
@@ -2479,6 +2500,18 @@ export type Database = {
       }
     }
     Functions: {
+      get_deck_purchases_admin: {
+        Args: never
+        Returns: {
+          deck_id: string
+          id: string
+          is_premium: boolean
+          purchased_at: string
+          user_id: string
+          verified: boolean
+          woocommerce_order_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
