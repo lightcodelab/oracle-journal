@@ -34,7 +34,8 @@ import CommunionLiveMeditations from "./pages/CommunionLiveMeditations";
 import LiveReplays from "./pages/LiveReplays";
 import AdminSessionReplays from "./pages/AdminSessionReplays";
 import MyCalendar from "./pages/MyCalendar";
-
+import Membership from "./pages/Membership";
+import MembershipSuccess from "./pages/MembershipSuccess";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -74,6 +75,8 @@ const App = () => (
             <Route path="/communion/live-workshops" element={<CommunionLiveWorkshops />} />
             <Route path="/communion/live-meditations" element={<CommunionLiveMeditations />} />
             <Route path="/communion/live-replays" element={<LiveReplays />} />
+            <Route path="/membership" element={<Membership />} />
+            <Route path="/membership/success" element={<MembershipSuccess />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
