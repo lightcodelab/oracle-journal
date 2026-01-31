@@ -519,37 +519,34 @@ const Membership = () => {
               Your Guides
             </h2>
             
-            <div className="grid md:grid-cols-2 gap-10 items-start">
+            <div className="grid md:grid-cols-3 gap-8 items-start">
               {/* Photo */}
-              <div className="flex justify-center md:justify-start">
+              <div className="flex justify-center">
                 <img 
                   src={guidesPhoto}
                   alt="Julie and Tash Lewin"
-                  className="w-full max-w-md object-cover grayscale"
+                  className="w-full object-cover grayscale"
                 />
               </div>
               
-              {/* Bios */}
-              <div className="grid md:grid-cols-2 gap-8">
-                {/* Julie's Bio */}
-                <div>
-                  <p className="text-foreground/90 font-sans leading-relaxed mb-4">
-                    <span className="font-semibold text-foreground">Julie Lewin</span> is a medical intuitive with over 40 years of experience working with the body as an intelligent, communicative system. Her work focuses on identifying how trauma, stress, and unresolved emotional patterns become stored in the physical body and nervous system — often long before symptoms appear.
-                  </p>
-                  <p className="text-foreground/90 font-sans leading-relaxed">
-                    Rather than treating symptoms in isolation, Julie tracks chronic pain and illness patterns through time, using the AreekeerA® approach to read the body's energetic and neurological history. Her work supports the release of long-held survival responses so the system can return to safety, repair, and resilience.
-                  </p>
-                </div>
-                
-                {/* Tash's Bio */}
-                <div>
-                  <p className="text-foreground/90 font-sans leading-relaxed mb-4">
-                    <span className="font-semibold text-foreground">Tash Lewin</span> works at the intersection of trauma, identity, and nervous system regulation. Her role within AreekeerA® focuses on helping people understand how subconscious beliefs, protective patterns, and energetic contracts form around unresolved trauma — and how these patterns quietly shape health, relationships, and life outcomes.
-                  </p>
-                  <p className="text-foreground/90 font-sans leading-relaxed">
-                    Through structured, trauma-informed processes, Tash supports the rewriting of identity at both psychological and energetic levels, allowing new patterns of safety, capacity, and self-trust to emerge without force or bypassing.
-                  </p>
-                </div>
+              {/* Julie's Bio */}
+              <div>
+                <p className="text-foreground/90 font-sans leading-relaxed mb-4">
+                  <span className="font-semibold text-foreground">Julie Lewin</span> is a medical intuitive with over 40 years of experience working with the body as an intelligent, communicative system. Her work focuses on identifying how trauma, stress, and unresolved emotional patterns become stored in the physical body and nervous system — often long before symptoms appear.
+                </p>
+                <p className="text-foreground/90 font-sans leading-relaxed">
+                  Rather than treating symptoms in isolation, Julie tracks chronic pain and illness patterns through time, using the AreekeerA® approach to read the body's energetic and neurological history. Her work supports the release of long-held survival responses so the system can return to safety, repair, and resilience.
+                </p>
+              </div>
+              
+              {/* Tash's Bio */}
+              <div>
+                <p className="text-foreground/90 font-sans leading-relaxed mb-4">
+                  <span className="font-semibold text-foreground">Tash Lewin</span> works at the intersection of trauma, identity, and nervous system regulation. Her role within AreekeerA® focuses on helping people understand how subconscious beliefs, protective patterns, and energetic contracts form around unresolved trauma — and how these patterns quietly shape health, relationships, and life outcomes.
+                </p>
+                <p className="text-foreground/90 font-sans leading-relaxed">
+                  Through structured, trauma-informed processes, Tash supports the rewriting of identity at both psychological and energetic levels, allowing new patterns of safety, capacity, and self-trust to emerge without force or bypassing.
+                </p>
               </div>
             </div>
           </motion.div>
