@@ -85,8 +85,8 @@ export function useMembership() {
 
       // Combine data
       const tiersWithPricing: TierWithPricing[] = (tiersData || []).map((tier) => {
-        const plan = plansData?.find((p) => p.code === tier.code.toLowerCase()) || null;
-        const tierPrices = pricesData?.filter((p) => p.plan_code === plan?.code) || [];
+        const plan = plansData?.find((p) => p.code === tier.code) || null;
+        const tierPrices = pricesData?.filter((p) => p.plan_code === tier.code) || [];
         const buckets = bucketAccessData
           ?.filter((ba) => ba.tier_code === tier.code)
           .map((ba) => ba.bucket_key) || [];
