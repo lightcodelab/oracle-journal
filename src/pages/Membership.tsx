@@ -107,19 +107,6 @@ const Membership = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between px-4">
-          <PageBreadcrumb items={[{ label: "Membership", href: "/membership" }]} />
-          {user ? (
-            <ProfileDropdown />
-          ) : (
-            <Button variant="outline" onClick={() => navigate("/auth")}>
-              Sign In
-            </Button>
-          )}
-        </div>
-      </header>
 
       {/* Sales Hero Section */}
       <section className="relative overflow-hidden">
@@ -197,7 +184,7 @@ const Membership = () => {
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">4 Complete Oracle Card Decks with shuffle animations</span>
+                  <span className="text-foreground/80">4 Complete Oracle Card Decks with shuffle animations (7 more decks to come)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
@@ -269,7 +256,7 @@ const Membership = () => {
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Live oracle readings with Tash</span>
+                  <span className="text-foreground/80">Live oracle readings with Julie</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
