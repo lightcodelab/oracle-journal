@@ -2629,6 +2629,7 @@ export type Database = {
         Row: {
           code: string
           created_at: string | null
+          display_order: number | null
           is_active: boolean | null
           name: string
           rank: number
@@ -2637,6 +2638,7 @@ export type Database = {
         Insert: {
           code: string
           created_at?: string | null
+          display_order?: number | null
           is_active?: boolean | null
           name: string
           rank: number
@@ -2645,6 +2647,7 @@ export type Database = {
         Update: {
           code?: string
           created_at?: string | null
+          display_order?: number | null
           is_active?: boolean | null
           name?: string
           rank?: number
