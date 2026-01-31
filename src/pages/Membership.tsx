@@ -9,6 +9,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Check, X, Sparkles, Heart, Crown, Loader2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { motion } from "framer-motion";
+import templeBanner from "@/assets/temple-banner.png";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 
@@ -119,11 +121,200 @@ const Membership = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-16 px-4 text-center">
-        <h1 className="text-4xl md:text-5xl font-serif mb-4 text-foreground">
+      {/* Sales Hero Section */}
+      <section className="relative overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-background" />
+        
+        <div className="relative max-w-6xl mx-auto px-4 py-20 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <img 
+              src={templeBanner} 
+              alt="Temple of Sustainment" 
+              className="w-full max-w-2xl mx-auto mb-8"
+            />
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif mb-6 text-foreground leading-tight">
+              Your Sacred Digital Sanctuary<br />
+              <span className="text-primary">for Healing & Transformation</span>
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
+              Step through the doors of ancient wisdom, reimagined for the modern seeker. 
+              Access powerful healing protocols, oracle guidance, live ceremonies, and a 
+              supportive community — all in one sacred space.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 mb-8">
+              <Badge variant="secondary" className="px-4 py-2 text-sm bg-primary/10 text-primary border-primary/20">
+                ✨ 7-Day Free Trial
+              </Badge>
+              <Badge variant="secondary" className="px-4 py-2 text-sm bg-muted text-muted-foreground">
+                Cancel Anytime
+              </Badge>
+              <Badge variant="secondary" className="px-4 py-2 text-sm bg-muted text-muted-foreground">
+                Instant Access
+              </Badge>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-20 px-4 bg-muted/30">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
+              Three Doors to Your Transformation
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Each door opens to deeper levels of healing, wisdom, and connection. 
+              Choose the path that calls to your soul.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Door of Remembrance */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="bg-card border border-amber-500/20 rounded-lg p-6 hover:border-amber-500/40 transition-colors"
+            >
+              <div className="w-14 h-14 rounded-full bg-amber-500/10 flex items-center justify-center mb-4">
+                <Sparkles className="w-7 h-7 text-amber-500" />
+              </div>
+              <h3 className="text-xl font-serif mb-2 text-foreground">The Door of Remembrance</h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                Reconnect with your inner wisdom through sacred oracle guidance and self-reflection.
+              </p>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">4 Complete Oracle Card Decks with shuffle animations</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Unlimited card readings with deep interpretations</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Save & revisit meaningful readings</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Private digital journal for reflections</span>
+                </li>
+              </ul>
+            </motion.div>
+
+            {/* Door of Devotion */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="bg-card border border-rose-500/20 rounded-lg p-6 hover:border-rose-500/40 transition-colors"
+            >
+              <div className="w-14 h-14 rounded-full bg-rose-500/10 flex items-center justify-center mb-4">
+                <Heart className="w-7 h-7 text-rose-500" />
+              </div>
+              <h3 className="text-xl font-serif mb-2 text-foreground">The Door of Devotion</h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                Deepen your practice with personalized healing protocols and sacred rituals.
+              </p>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">AI-powered AreekeerA healing protocols</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Library of guided meditations</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Sacred altar rituals & ceremonies</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Energy hygiene & protection practices</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Healing templates & somatic tools</span>
+                </li>
+              </ul>
+            </motion.div>
+
+            {/* Door of Communion */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="bg-card border border-violet-500/20 rounded-lg p-6 hover:border-violet-500/40 transition-colors"
+            >
+              <div className="w-14 h-14 rounded-full bg-violet-500/10 flex items-center justify-center mb-4">
+                <Crown className="w-7 h-7 text-violet-500" />
+              </div>
+              <h3 className="text-xl font-serif mb-2 text-foreground">The Door of Communion</h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                Join live ceremonies and connect with a global community of seekers.
+              </p>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Live oracle readings with Tash</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Weekly healing classes & teachings</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Interactive workshops & intensives</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Group meditation ceremonies</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Full replay library access</span>
+                </li>
+              </ul>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof / Trust Section */}
+      <section className="py-16 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            <p className="text-xl md:text-2xl font-serif italic text-foreground/80 mb-6">
+              "This is not just an app — it's a living temple. A place to return to again and again 
+              for guidance, healing, and remembrance of who you truly are."
+            </p>
+            <p className="text-muted-foreground">— Tash Lewin, Creator</p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Choose Your Path Section */}
+      <section className="py-16 px-4 text-center bg-muted/20">
+        <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
           Choose Your Path
-        </h1>
+        </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
           Begin your journey of healing and transformation with a 7-day free trial.
           Cancel anytime.
