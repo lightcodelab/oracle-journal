@@ -233,6 +233,30 @@ export type Database = {
           },
         ]
       }
+      content_buckets: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          key: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          key: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          key?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       content_categories: {
         Row: {
           active: boolean | null
@@ -1082,6 +1106,66 @@ export type Database = {
           },
         ]
       }
+      invoices: {
+        Row: {
+          amount_due_cents: number
+          amount_paid_cents: number | null
+          created_at: string | null
+          currency: string | null
+          id: string
+          paid_at: string | null
+          period_end: string | null
+          period_start: string | null
+          profile_id: string
+          provider_invoice_id: string | null
+          status: string
+          subscription_id: string | null
+        }
+        Insert: {
+          amount_due_cents: number
+          amount_paid_cents?: number | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          paid_at?: string | null
+          period_end?: string | null
+          period_start?: string | null
+          profile_id: string
+          provider_invoice_id?: string | null
+          status: string
+          subscription_id?: string | null
+        }
+        Update: {
+          amount_due_cents?: number
+          amount_paid_cents?: number | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          paid_at?: string | null
+          period_end?: string | null
+          period_start?: string | null
+          profile_id?: string
+          provider_invoice_id?: string | null
+          status?: string
+          subscription_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       journal_categories: {
         Row: {
           archived_at: string | null
@@ -1421,6 +1505,44 @@ export type Database = {
         }
         Relationships: []
       }
+      membership_audit: {
+        Row: {
+          id: string
+          new_tier_code: string | null
+          occurred_at: string | null
+          old_tier_code: string | null
+          reason: string | null
+          source: Database["public"]["Enums"]["audit_source"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          new_tier_code?: string | null
+          occurred_at?: string | null
+          old_tier_code?: string | null
+          reason?: string | null
+          source: Database["public"]["Enums"]["audit_source"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          new_tier_code?: string | null
+          occurred_at?: string | null
+          old_tier_code?: string | null
+          reason?: string | null
+          source?: Database["public"]["Enums"]["audit_source"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "membership_audit_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       outcomes_cache: {
         Row: {
           id: string
@@ -1456,35 +1578,171 @@ export type Database = {
           },
         ]
       }
+      payments: {
+        Row: {
+          amount_cents: number
+          created_at: string | null
+          currency: string | null
+          id: string
+          invoice_id: string | null
+          provider: Database["public"]["Enums"]["payment_provider"]
+          provider_payment_id: string | null
+          received_at: string | null
+          status: string
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          invoice_id?: string | null
+          provider: Database["public"]["Enums"]["payment_provider"]
+          provider_payment_id?: string | null
+          received_at?: string | null
+          status: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          invoice_id?: string | null
+          provider?: Database["public"]["Enums"]["payment_provider"]
+          provider_payment_id?: string | null
+          received_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plans: {
+        Row: {
+          active: boolean | null
+          code: string
+          created_at: string | null
+          description: string | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          code: string
+          created_at?: string | null
+          description?: string | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          code?: string
+          created_at?: string | null
+          description?: string | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      prices: {
+        Row: {
+          active: boolean | null
+          cadence: Database["public"]["Enums"]["billing_cadence"]
+          created_at: string | null
+          currency: string | null
+          id: string
+          plan_code: string
+          provider: Database["public"]["Enums"]["payment_provider"]
+          provider_price_id: string | null
+          provider_product_id: string | null
+          unit_amount_cents: number
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          cadence: Database["public"]["Enums"]["billing_cadence"]
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          plan_code: string
+          provider: Database["public"]["Enums"]["payment_provider"]
+          provider_price_id?: string | null
+          provider_product_id?: string | null
+          unit_amount_cents: number
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          cadence?: Database["public"]["Enums"]["billing_cadence"]
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          plan_code?: string
+          provider?: Database["public"]["Enums"]["payment_provider"]
+          provider_price_id?: string | null
+          provider_product_id?: string | null
+          unit_amount_cents?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prices_plan_code_fkey"
+            columns: ["plan_code"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string | null
+          current_period_end: string | null
           email: string | null
           full_name: string | null
           full_name_encrypted: Json | null
           id: string
           is_encrypted: boolean | null
+          member_tier_code: string | null
           must_change_password: boolean | null
+          plan_cadence: string | null
+          stripe_customer_id: string | null
+          subscription_status: string | null
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
+          current_period_end?: string | null
           email?: string | null
           full_name?: string | null
           full_name_encrypted?: Json | null
           id: string
           is_encrypted?: boolean | null
+          member_tier_code?: string | null
           must_change_password?: boolean | null
+          plan_cadence?: string | null
+          stripe_customer_id?: string | null
+          subscription_status?: string | null
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
+          current_period_end?: string | null
           email?: string | null
           full_name?: string | null
           full_name_encrypted?: Json | null
           id?: string
           is_encrypted?: boolean | null
+          member_tier_code?: string | null
           must_change_password?: boolean | null
+          plan_cadence?: string | null
+          stripe_customer_id?: string | null
+          subscription_status?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -2081,6 +2339,142 @@ export type Database = {
           },
         ]
       }
+      subscription_events: {
+        Row: {
+          error_message: string | null
+          event_id: string
+          event_type: string
+          id: string
+          invoice_id: string | null
+          payload: Json
+          processed_at: string | null
+          processing_status: string | null
+          profile_id: string | null
+          provider: Database["public"]["Enums"]["payment_provider"]
+          received_at: string | null
+          subscription_id: string | null
+        }
+        Insert: {
+          error_message?: string | null
+          event_id: string
+          event_type: string
+          id?: string
+          invoice_id?: string | null
+          payload: Json
+          processed_at?: string | null
+          processing_status?: string | null
+          profile_id?: string | null
+          provider: Database["public"]["Enums"]["payment_provider"]
+          received_at?: string | null
+          subscription_id?: string | null
+        }
+        Update: {
+          error_message?: string | null
+          event_id?: string
+          event_type?: string
+          id?: string
+          invoice_id?: string | null
+          payload?: Json
+          processed_at?: string | null
+          processing_status?: string | null
+          profile_id?: string | null
+          provider?: Database["public"]["Enums"]["payment_provider"]
+          received_at?: string | null
+          subscription_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscription_events_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscription_events_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscription_events_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          cadence: Database["public"]["Enums"]["billing_cadence"]
+          cancel_at_period_end: boolean | null
+          canceled_at: string | null
+          created_at: string | null
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          plan_code: string
+          profile_id: string
+          provider: Database["public"]["Enums"]["payment_provider"]
+          provider_subscription_id: string | null
+          quantity: number | null
+          status: Database["public"]["Enums"]["subscription_status"]
+          trial_end: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          cadence: Database["public"]["Enums"]["billing_cadence"]
+          cancel_at_period_end?: boolean | null
+          canceled_at?: string | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan_code: string
+          profile_id: string
+          provider: Database["public"]["Enums"]["payment_provider"]
+          provider_subscription_id?: string | null
+          quantity?: number | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          trial_end?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          cadence?: Database["public"]["Enums"]["billing_cadence"]
+          cancel_at_period_end?: boolean | null
+          canceled_at?: string | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan_code?: string
+          profile_id?: string
+          provider?: Database["public"]["Enums"]["payment_provider"]
+          provider_subscription_id?: string | null
+          quantity?: number | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          trial_end?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_plan_code_fkey"
+            columns: ["plan_code"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "subscriptions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       symptom_resource_mappings: {
         Row: {
           created_at: string | null
@@ -2188,6 +2582,72 @@ export type Database = {
           created_at?: string | null
           id?: string
           name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      tier_bucket_access: {
+        Row: {
+          bucket_key: string
+          created_at: string | null
+          id: string
+          is_granted: boolean | null
+          tier_code: string
+        }
+        Insert: {
+          bucket_key: string
+          created_at?: string | null
+          id?: string
+          is_granted?: boolean | null
+          tier_code: string
+        }
+        Update: {
+          bucket_key?: string
+          created_at?: string | null
+          id?: string
+          is_granted?: boolean | null
+          tier_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tier_bucket_access_bucket_key_fkey"
+            columns: ["bucket_key"]
+            isOneToOne: false
+            referencedRelation: "content_buckets"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "tier_bucket_access_tier_code_fkey"
+            columns: ["tier_code"]
+            isOneToOne: false
+            referencedRelation: "tiers"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
+      tiers: {
+        Row: {
+          code: string
+          created_at: string | null
+          is_active: boolean | null
+          name: string
+          rank: number
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          is_active?: boolean | null
+          name: string
+          rank: number
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          is_active?: boolean | null
+          name?: string
+          rank?: number
           updated_at?: string | null
         }
         Relationships: []
@@ -2512,6 +2972,21 @@ export type Database = {
           woocommerce_order_id: string
         }[]
       }
+      get_user_entitlements: {
+        Args: never
+        Returns: {
+          bucket_access: Json
+          cadence: string
+          period_end: string
+          status: string
+          tier_code: string
+          tier_name: string
+        }[]
+      }
+      has_bucket_access: {
+        Args: { bucket_key_param: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -2530,6 +3005,8 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      audit_source: "webhook" | "admin" | "member"
+      billing_cadence: "monthly" | "yearly"
       content_category_type: "resource_type" | "location"
       content_file_type: "image" | "pdf" | "audio" | "video"
       content_media_kind: "file" | "video_embed" | "none"
@@ -2541,6 +3018,7 @@ export type Database = {
         | "block"
       escalation_trigger_type: "keyword" | "symptom" | "score"
       media_type: "video" | "audio" | "image"
+      payment_provider: "stripe" | "paypal"
       resource_modality:
         | "meditation"
         | "visualisation"
@@ -2550,7 +3028,14 @@ export type Database = {
       resource_status: "draft" | "review" | "published"
       resource_tier: "free" | "paid"
       severity_band: "mild" | "moderate" | "severe" | "critical"
+      subscription_status:
+        | "active"
+        | "past_due"
+        | "canceled"
+        | "trialing"
+        | "incomplete"
       symptom_domain: "physical" | "mental" | "emotional" | "spiritual"
+      tier_code: "T1" | "T2" | "T3"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2679,6 +3164,8 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      audit_source: ["webhook", "admin", "member"],
+      billing_cadence: ["monthly", "yearly"],
       content_category_type: ["resource_type", "location"],
       content_file_type: ["image", "pdf", "audio", "video"],
       content_media_kind: ["file", "video_embed", "none"],
@@ -2691,6 +3178,7 @@ export const Constants = {
       ],
       escalation_trigger_type: ["keyword", "symptom", "score"],
       media_type: ["video", "audio", "image"],
+      payment_provider: ["stripe", "paypal"],
       resource_modality: [
         "meditation",
         "visualisation",
@@ -2701,7 +3189,15 @@ export const Constants = {
       resource_status: ["draft", "review", "published"],
       resource_tier: ["free", "paid"],
       severity_band: ["mild", "moderate", "severe", "critical"],
+      subscription_status: [
+        "active",
+        "past_due",
+        "canceled",
+        "trialing",
+        "incomplete",
+      ],
       symptom_domain: ["physical", "mental", "emotional", "spiritual"],
+      tier_code: ["T1", "T2", "T3"],
     },
   },
 } as const
