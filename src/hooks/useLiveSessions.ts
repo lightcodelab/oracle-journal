@@ -5,6 +5,9 @@ import { toast } from 'sonner';
 
 export type SessionType = 'reading' | 'class' | 'workshop' | 'meditation';
 
+// Safe columns that can be publicly exposed (no Zoom credentials)
+const SAFE_SESSION_COLUMNS = 'id, title, description, scheduled_at, duration_minutes, capacity, session_type, status, created_at, updated_at, host_user_id, created_by';
+
 export interface LiveSession {
   id: string;
   title: string;
@@ -12,11 +15,14 @@ export interface LiveSession {
   scheduled_at: string;
   duration_minutes: number;
   capacity: number;
-  zoom_meeting_id: string | null;
-  zoom_join_url: string | null;
+  zoom_meeting_id?: string | null;
+  zoom_join_url?: string | null;
   status: 'scheduled' | 'live' | 'completed' | 'cancelled';
   session_type: SessionType;
   created_at: string;
+  host_user_id?: string | null;
+  created_by?: string | null;
+  updated_at?: string;
   registrations_count?: number;
   user_registration?: {
     id: string;
@@ -40,10 +46,10 @@ export function useLiveSessions() {
   const { data: sessions, isLoading } = useQuery({
     queryKey: ['live-sessions'],
     queryFn: async () => {
+      // Use safe public view to avoid exposing Zoom credentials
       const { data, error } = await supabase
-        .from('live_sessions')
-        .select('*')
-        .in('status', ['scheduled', 'live'])
+        .from('live_sessions_public')
+        .select(SAFE_SESSION_COLUMNS)
         .order('scheduled_at', { ascending: true });
 
       if (error) throw error;
@@ -160,11 +166,11 @@ export function useLiveSessionsByType(sessionType: SessionType) {
   const { data: sessions, isLoading } = useQuery({
     queryKey: ['live-sessions', sessionType],
     queryFn: async () => {
+      // Use safe public view to avoid exposing Zoom credentials
       const { data, error } = await supabase
-        .from('live_sessions')
-        .select('*')
+        .from('live_sessions_public')
+        .select(SAFE_SESSION_COLUMNS)
         .eq('session_type', sessionType)
-        .in('status', ['scheduled', 'live'])
         .order('scheduled_at', { ascending: true });
 
       if (error) throw error;
@@ -315,10 +321,11 @@ export function useMyRegisteredSessions() {
 
       const sessionIds = registrations.map(r => r.session_id);
 
-      // Then get those sessions
+      // Then get those sessions - use base table since user is registered (RLS allows)
+      // Only select safe columns to avoid exposing host URLs
       const { data, error } = await supabase
         .from('live_sessions')
-        .select('*')
+        .select(`${SAFE_SESSION_COLUMNS}, zoom_meeting_id, zoom_join_url`)
         .in('id', sessionIds)
         .in('status', ['scheduled', 'live'])
         .order('scheduled_at', { ascending: true });

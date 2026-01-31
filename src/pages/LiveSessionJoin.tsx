@@ -33,9 +33,10 @@ export default function LiveSessionJoin() {
     queryKey: ['live-session', sessionId],
     enabled: !!sessionId && !!user,
     queryFn: async () => {
+      // Only select fields needed for the join page - excludes zoom_start_url and zoom_password
       const { data, error } = await supabase
         .from('live_sessions')
-        .select('*')
+        .select('id, title, description, scheduled_at, duration_minutes, capacity, session_type, status, zoom_meeting_id, zoom_join_url, created_at')
         .eq('id', sessionId)
         .single();
 
