@@ -132,10 +132,28 @@ const Auth = () => {
       return;
     }
 
+    // Strong password validation
+    const passwordErrors: string[] = [];
     if (password.length < 8) {
+      passwordErrors.push("at least 8 characters");
+    }
+    if (!/[A-Z]/.test(password)) {
+      passwordErrors.push("an uppercase letter");
+    }
+    if (!/[a-z]/.test(password)) {
+      passwordErrors.push("a lowercase letter");
+    }
+    if (!/[0-9]/.test(password)) {
+      passwordErrors.push("a number");
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      passwordErrors.push("a special character (!@#$%^&*)");
+    }
+
+    if (passwordErrors.length > 0) {
       toast({
-        title: "Error",
-        description: "Password must be at least 8 characters",
+        title: "Password requirements not met",
+        description: `Password must include: ${passwordErrors.join(", ")}`,
         variant: "destructive",
       });
       return;
@@ -378,9 +396,16 @@ const Auth = () => {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  <p className="text-xs text-foreground/60">
-                    Must be at least 8 characters
-                  </p>
+                  <div className="text-xs text-foreground/60 space-y-0.5">
+                    <p>Password must contain:</p>
+                    <ul className="list-disc list-inside ml-1 space-y-0.5">
+                      <li>At least 8 characters</li>
+                      <li>An uppercase letter (A-Z)</li>
+                      <li>A lowercase letter (a-z)</li>
+                      <li>A number (0-9)</li>
+                      <li>A special character (!@#$%^&*)</li>
+                    </ul>
+                  </div>
                 </div>
                 <Button
                   type="submit"
