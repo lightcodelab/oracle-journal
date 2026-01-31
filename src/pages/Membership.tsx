@@ -113,7 +113,7 @@ const Membership = () => {
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-end">
           <Button 
             variant="outline" 
-            onClick={() => navigate('/auth')}
+            onClick={() => navigate('/temple')}
             className="text-sm"
           >
             Login
