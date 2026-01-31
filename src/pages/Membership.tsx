@@ -11,6 +11,7 @@ import { Check, X, Sparkles, Heart, Crown, Loader2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { motion } from "framer-motion";
 import templeBanner from "@/assets/temple-banner.png";
+import guidesPhoto from "@/assets/julie-tash-guides.jpg";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 
@@ -503,6 +504,55 @@ const Membership = () => {
               </TableBody>
             </Table>
           </div>
+        </div>
+      </section>
+
+      {/* Your Guides Section */}
+      <section className="py-20 px-4 border-t border-border/40">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-serif mb-12 text-center text-foreground">
+              Your Guides
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-10 items-start">
+              {/* Photo */}
+              <div className="flex justify-center md:justify-start">
+                <img 
+                  src={guidesPhoto}
+                  alt="Julie and Tash Lewin"
+                  className="w-full max-w-md object-cover grayscale"
+                />
+              </div>
+              
+              {/* Bios */}
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Julie's Bio */}
+                <div>
+                  <p className="text-foreground/90 font-sans leading-relaxed mb-4">
+                    <span className="font-semibold text-foreground">Julie Lewin</span> is a medical intuitive with over 40 years of experience working with the body as an intelligent, communicative system. Her work focuses on identifying how trauma, stress, and unresolved emotional patterns become stored in the physical body and nervous system — often long before symptoms appear.
+                  </p>
+                  <p className="text-foreground/90 font-sans leading-relaxed">
+                    Rather than treating symptoms in isolation, Julie tracks chronic pain and illness patterns through time, using the AreekeerA® approach to read the body's energetic and neurological history. Her work supports the release of long-held survival responses so the system can return to safety, repair, and resilience.
+                  </p>
+                </div>
+                
+                {/* Tash's Bio */}
+                <div>
+                  <p className="text-foreground/90 font-sans leading-relaxed mb-4">
+                    <span className="font-semibold text-foreground">Tash Lewin</span> works at the intersection of trauma, identity, and nervous system regulation. Her role within AreekeerA® focuses on helping people understand how subconscious beliefs, protective patterns, and energetic contracts form around unresolved trauma — and how these patterns quietly shape health, relationships, and life outcomes.
+                  </p>
+                  <p className="text-foreground/90 font-sans leading-relaxed">
+                    Through structured, trauma-informed processes, Tash supports the rewriting of identity at both psychological and energetic levels, allowing new patterns of safety, capacity, and self-trust to emerge without force or bypassing.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
