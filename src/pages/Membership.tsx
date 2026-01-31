@@ -7,9 +7,48 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Check, Sparkles, Heart, Crown, Loader2 } from "lucide-react";
+import { Check, X, Sparkles, Heart, Crown, Loader2 } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+
+// Feature row component for comparison table
+const FeatureRow = ({ 
+  feature, 
+  t1 = false, 
+  t2 = false, 
+  t3 = false 
+}: { 
+  feature: string; 
+  t1?: boolean; 
+  t2?: boolean; 
+  t3?: boolean;
+}) => (
+  <TableRow>
+    <TableCell className="text-muted-foreground">{feature}</TableCell>
+    <TableCell className="text-center">
+      {t1 ? (
+        <Check className="w-5 h-5 text-primary mx-auto" />
+      ) : (
+        <X className="w-5 h-5 text-muted-foreground/40 mx-auto" />
+      )}
+    </TableCell>
+    <TableCell className="text-center">
+      {t2 ? (
+        <Check className="w-5 h-5 text-primary mx-auto" />
+      ) : (
+        <X className="w-5 h-5 text-muted-foreground/40 mx-auto" />
+      )}
+    </TableCell>
+    <TableCell className="text-center">
+      {t3 ? (
+        <Check className="w-5 h-5 text-primary mx-auto" />
+      ) : (
+        <X className="w-5 h-5 text-muted-foreground/40 mx-auto" />
+      )}
+    </TableCell>
+  </TableRow>
+);
 
 const tierIcons = {
   T1: Sparkles,
@@ -213,6 +252,79 @@ const Membership = () => {
               </Card>
             );
           })}
+        </div>
+      </section>
+
+      {/* Feature Comparison Table */}
+      <section className="py-16 px-4 border-t border-border/40">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-serif mb-8 text-center text-foreground">
+            Compare Features
+          </h2>
+          
+          <div className="overflow-x-auto rounded-lg border border-border">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50">
+                  <TableHead className="w-[300px] font-serif text-foreground">Features</TableHead>
+                  <TableHead className="text-center font-serif text-foreground">
+                    <div className="flex flex-col items-center gap-1">
+                      <Sparkles className="w-5 h-5 text-amber-500" />
+                      <span>Seeker</span>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-center font-serif text-foreground">
+                    <div className="flex flex-col items-center gap-1">
+                      <Heart className="w-5 h-5 text-rose-500" />
+                      <span>Devotee</span>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-center font-serif text-foreground">
+                    <div className="flex flex-col items-center gap-1">
+                      <Crown className="w-5 h-5 text-violet-500" />
+                      <span>Initiate</span>
+                    </div>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {/* Door of Remembrance Section */}
+                <TableRow className="bg-amber-500/10">
+                  <TableCell colSpan={4} className="font-serif text-amber-400 font-medium">
+                    The Door of Remembrance
+                  </TableCell>
+                </TableRow>
+                <FeatureRow feature="All Digital Card Decks with Shuffle" t1 t2 t3 />
+                <FeatureRow feature="Unlimited Card Readings" t1 t2 t3 />
+                <FeatureRow feature="Save Card Readings" t1 t2 t3 />
+                <FeatureRow feature="Digital Journal" t1 t2 t3 />
+                
+                {/* Door of Devotion Section */}
+                <TableRow className="bg-rose-500/10">
+                  <TableCell colSpan={4} className="font-serif text-rose-400 font-medium">
+                    The Door of Devotion
+                  </TableCell>
+                </TableRow>
+                <FeatureRow feature="Guided Meditations" t2 t3 />
+                <FeatureRow feature="AI AreekeerA Guide for Personalized Protocols" t2 t3 />
+                <FeatureRow feature="Altar Rituals" t2 t3 />
+                <FeatureRow feature="Energy Hygiene Practices" t2 t3 />
+                <FeatureRow feature="Healing Templates" t2 t3 />
+                
+                {/* Door of Communion Section */}
+                <TableRow className="bg-violet-500/10">
+                  <TableCell colSpan={4} className="font-serif text-violet-400 font-medium">
+                    The Door of Communion
+                  </TableCell>
+                </TableRow>
+                <FeatureRow feature="Live Readings" t3 />
+                <FeatureRow feature="Live Classes" t3 />
+                <FeatureRow feature="Live Workshops" t3 />
+                <FeatureRow feature="Live Meditation Classes" t3 />
+                <FeatureRow feature="All Session Replays" t3 />
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </section>
 
