@@ -134,13 +134,13 @@ export function useMembership() {
 
   const startCheckout = async (priceId: string) => {
     if (!user) {
-      // Store the intended price and redirect to auth
+      // Store the intended price and redirect to auth with signup mode
       sessionStorage.setItem("pendingCheckoutPriceId", priceId);
       toast({
-        title: "Sign in required",
-        description: "Please sign in or create an account to start your free trial.",
+        title: "Create your account",
+        description: "Sign up to start your 7-day free trial.",
       });
-      navigate("/auth?redirect=/membership");
+      navigate(`/auth?mode=signup&priceId=${priceId}`);
       return;
     }
 
