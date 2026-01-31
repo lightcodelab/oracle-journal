@@ -108,9 +108,21 @@ const Membership = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Top Navigation */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border/50">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-end">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/auth')}
+            className="text-sm"
+          >
+            Login
+          </Button>
+        </div>
+      </header>
 
       {/* Sales Hero Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden pt-16">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-background" />
         

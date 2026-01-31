@@ -47,7 +47,8 @@ const App = () => (
           <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Temple />} />
+            <Route path="/" element={<Membership />} />
+            <Route path="/temple" element={<Temple />} />
             <Route path="/decks" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/import-cards" element={<ImportCards />} />
@@ -75,7 +76,6 @@ const App = () => (
             <Route path="/communion/live-workshops" element={<CommunionLiveWorkshops />} />
             <Route path="/communion/live-meditations" element={<CommunionLiveMeditations />} />
             <Route path="/communion/live-replays" element={<LiveReplays />} />
-            <Route path="/membership" element={<Membership />} />
             <Route path="/membership/success" element={<MembershipSuccess />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
