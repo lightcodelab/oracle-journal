@@ -36,6 +36,7 @@ import AdminSessionReplays from "./pages/AdminSessionReplays";
 import MyCalendar from "./pages/MyCalendar";
 import Membership from "./pages/Membership";
 import MembershipSuccess from "./pages/MembershipSuccess";
+import MyAccount from "./pages/MyAccount";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -63,6 +64,7 @@ const App = () => (
             <Route path="/devotion/areekeera" element={<AreekeeraBot />} />
             <Route path="/admin/areekeera" element={<AreekeeraAdmin />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/account" element={<MyAccount />} />
             <Route path="/journal" element={<Journal />} />
             <Route path="/readings" element={<MyReadings />} />
             <Route path="/my-calendar" element={<MyCalendar />} />
