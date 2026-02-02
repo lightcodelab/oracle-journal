@@ -42,7 +42,7 @@ const DoorOfDevotion = () => {
   const categories: Category[] = [
     {
       id: 'areekeera',
-      name: 'AreekeerA Protocol Guide',
+      name: 'AreekeerA® Protocol Guide',
       description: 'AI-guided healing protocols personalized to your symptoms with trauma-informed safety',
       icon: <MessageCircleHeart className="w-8 h-8" />,
       route: '/devotion/areekeera',

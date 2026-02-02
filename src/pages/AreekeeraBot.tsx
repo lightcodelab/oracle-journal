@@ -428,7 +428,7 @@ const AreekeeraBot = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
-          Connecting to AreekeerA...
+          Connecting to AreekeerA®...
         </div>
       </div>
     );
