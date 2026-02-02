@@ -139,7 +139,7 @@ const Membership = () => {
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-background" />
         
-        <div className="relative max-w-6xl mx-auto px-4 py-20 text-center">
+        <div className="relative max-w-6xl mx-auto px-4 py-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
