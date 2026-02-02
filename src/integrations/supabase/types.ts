@@ -2963,6 +2963,11 @@ export type Database = {
       }
     }
     Functions: {
+      can_view_card: {
+        Args: { _deck_id: string; _user_id: string }
+        Returns: boolean
+      }
+      can_view_lesson: { Args: { _user_id: string }; Returns: boolean }
       get_deck_purchases_admin: {
         Args: never
         Returns: {
@@ -2986,6 +2991,7 @@ export type Database = {
           tier_name: string
         }[]
       }
+      has_active_membership: { Args: { _user_id: string }; Returns: boolean }
       has_bucket_access: {
         Args: { bucket_key_param: string }
         Returns: boolean
