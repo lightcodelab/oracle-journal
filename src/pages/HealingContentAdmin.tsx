@@ -85,7 +85,10 @@ const HealingContentAdmin = () => {
         return;
       }
 
-      // Check if user is admin
+      // UX-only admin check: This prevents non-admins from seeing the admin UI.
+      // SECURITY NOTE: Actual authorization is enforced by RLS policies on all tables.
+      // The has_role() SECURITY DEFINER function and RLS policies prevent unauthorized
+      // data access even if this client-side check is bypassed.
       const { data: roles } = await supabase
         .from('user_roles')
         .select('role')
