@@ -10,12 +10,11 @@ import RecoveryKeySetup from '@/components/RecoveryKeySetup';
 
 interface EncryptionSetupFlowProps {
   onComplete: () => void;
-  onSkip?: () => void;
 }
 
 type SetupStep = 'password' | 'recovery';
 
-export default function EncryptionSetupFlow({ onComplete, onSkip }: EncryptionSetupFlowProps) {
+export default function EncryptionSetupFlow({ onComplete }: EncryptionSetupFlowProps) {
   const { initializeEncryption } = useEncryption();
   const [step, setStep] = useState<SetupStep>('password');
   const [password, setPassword] = useState('');
@@ -127,18 +126,6 @@ export default function EncryptionSetupFlow({ onComplete, onSkip }: EncryptionSe
                 </>
               )}
             </Button>
-
-            {onSkip && (
-              <Button
-                type="button"
-                variant="ghost"
-                className="w-full text-muted-foreground"
-                onClick={onSkip}
-                disabled={loading}
-              >
-                Skip for now
-              </Button>
-            )}
           </form>
         </CardContent>
       </Card>

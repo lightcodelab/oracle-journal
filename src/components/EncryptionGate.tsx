@@ -67,7 +67,6 @@ export default function EncryptionGate({
     return (
       <EncryptionSetupFlow
         onComplete={() => onReady?.()}
-        onSkip={allowSkip ? () => onReady?.() : undefined}
       />
     );
   }
