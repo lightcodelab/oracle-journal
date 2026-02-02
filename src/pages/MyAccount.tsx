@@ -4,13 +4,35 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CreditCard, Sparkles, ArrowUpRight, Check, Loader2 } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { 
+  CreditCard, 
+  Sparkles, 
+  ArrowUpRight, 
+  Check, 
+  Loader2, 
+  Pause, 
+  Play, 
+  XCircle,
+  AlertTriangle
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useTierAccess, TIER_NAMES } from "@/hooks/useTierAccess";
 import { useMembership } from "@/hooks/useMembership";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { motion } from "framer-motion";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const TIER_FEATURES: Record<string, string[]> = {
   T1: [
@@ -40,9 +62,11 @@ const TIER_FEATURES: Record<string, string[]> = {
 const MyAccount = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { memberTierCode, subscriptionStatus, tierName, loading: tierLoading, isAdmin } = useTierAccess();
+  const { memberTierCode, subscriptionStatus, tierName, loading: tierLoading, isAdmin, refetch } = useTierAccess();
   const { tiers, loading: tiersLoading, startCheckout, checkoutLoading } = useMembership();
   const [portalLoading, setPortalLoading] = useState(false);
+  const [pauseLoading, setPauseLoading] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [billingCadence, setBillingCadence] = useState<"monthly" | "yearly">("monthly");
 
@@ -91,11 +115,71 @@ const MyAccount = () => {
     }
   };
 
+  const handlePauseResume = async (action: "pause" | "resume") => {
+    setPauseLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("stripe-pause-subscription", {
+        body: { action },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: action === "pause" ? "Membership Paused" : "Membership Resumed",
+        description: action === "pause" 
+          ? "Your membership has been paused. You can resume anytime."
+          : "Welcome back! Your membership is now active.",
+      });
+
+      // Refresh the tier access data
+      await refetch();
+    } catch (error) {
+      console.error("Pause/resume error:", error);
+      toast({
+        title: "Error",
+        description: `Unable to ${action} membership. Please try again.`,
+        variant: "destructive",
+      });
+    } finally {
+      setPauseLoading(false);
+    }
+  };
+
+  const handleCancel = async () => {
+    setCancelLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("stripe-cancel-subscription", {
+        body: { immediate: true },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Membership Canceled",
+        description: "Your membership has been canceled. We're sorry to see you go.",
+      });
+
+      // Refresh the tier access data
+      await refetch();
+    } catch (error) {
+      console.error("Cancel error:", error);
+      toast({
+        title: "Error",
+        description: "Unable to cancel membership. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setCancelLoading(false);
+    }
+  };
+
   const handleUpgrade = (priceId: string) => {
     startCheckout(priceId);
   };
 
   const isActiveMember = subscriptionStatus === "active" || subscriptionStatus === "trialing";
+  const isPaused = subscriptionStatus === "paused";
+  const hasSubscription = isActiveMember || isPaused;
 
   if (loading || tierLoading || tiersLoading) {
     return (
@@ -127,6 +211,43 @@ const MyAccount = () => {
           </p>
         </div>
 
+        {/* Paused Membership Banner */}
+        {isPaused && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6"
+          >
+            <Card className="bg-amber-500/10 border-amber-500/30">
+              <CardContent className="p-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+                    <Pause className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">Membership Paused</p>
+                    <p className="text-sm text-muted-foreground">
+                      Your access is currently paused. Resume anytime to regain access.
+                    </p>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => handlePauseResume("resume")}
+                  disabled={pauseLoading}
+                  className="flex-shrink-0"
+                >
+                  {pauseLoading ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Play className="w-4 h-4 mr-2" />
+                  )}
+                  Resume Membership
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
         {/* Current Membership Status */}
         <Card className="mb-8 border-border/50 bg-card/50 backdrop-blur">
           <CardHeader>
@@ -138,6 +259,12 @@ const MyAccount = () => {
                   {subscriptionStatus === "trialing" ? "Trial" : "Active"}
                 </Badge>
               )}
+              {isPaused && (
+                <Badge variant="outline" className="text-amber-600 border-amber-500/30 bg-amber-500/10">
+                  <Pause className="w-3 h-3 mr-1" />
+                  Paused
+                </Badge>
+              )}
               {isAdmin && (
                 <Badge variant="secondary">Admin</Badge>
               )}
@@ -145,47 +272,33 @@ const MyAccount = () => {
             <CardDescription>
               {isActiveMember
                 ? `You are currently on the ${tierName || "Member"} tier`
+                : isPaused
+                ? `Your ${tierName || "membership"} is paused`
                 : "You don't have an active membership"}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {isActiveMember && memberTierCode && (
+            {(isActiveMember || isPaused) && memberTierCode && (
               <>
-                <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+                <div className={`p-4 rounded-lg border ${isPaused ? 'bg-muted/50 border-muted' : 'bg-primary/5 border-primary/20'}`}>
                   <h3 className="font-medium mb-2">{tierName}</h3>
                   <ul className="space-y-1">
                     {TIER_FEATURES[memberTierCode]?.map((feature) => (
-                      <li key={feature} className="text-sm text-muted-foreground flex items-center gap-2">
-                        <Check className="w-4 h-4 text-primary" />
+                      <li key={feature} className={`text-sm flex items-center gap-2 ${isPaused ? 'text-muted-foreground/60' : 'text-muted-foreground'}`}>
+                        <Check className={`w-4 h-4 ${isPaused ? 'text-muted-foreground/60' : 'text-primary'}`} />
                         {feature}
                       </li>
                     ))}
                   </ul>
-                </div>
-                <Button
-                  onClick={handleManageBilling}
-                  disabled={portalLoading}
-                  variant="outline"
-                  className="w-full"
-                >
-                  {portalLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Opening...
-                    </>
-                  ) : (
-                    <>
-                      <CreditCard className="w-4 h-4 mr-2" />
-                      Manage Billing & Subscription
-                    </>
+                  {isPaused && (
+                    <p className="text-sm text-amber-600 mt-3">
+                      Access paused — resume to use these features
+                    </p>
                   )}
-                </Button>
-                <p className="text-xs text-center text-muted-foreground">
-                  Update payment method, view invoices, or cancel subscription
-                </p>
+                </div>
               </>
             )}
-            {!isActiveMember && !isAdmin && (
+            {!hasSubscription && !isAdmin && (
               <div className="text-center py-4">
                 <p className="text-muted-foreground mb-4">
                   Start your membership to access exclusive content
@@ -198,6 +311,44 @@ const MyAccount = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Payment & Billing Section */}
+        {hasSubscription && (
+          <Card className="mb-8 border-border/50 bg-card/50 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <CreditCard className="w-5 h-5" />
+                Payment & Billing
+              </CardTitle>
+              <CardDescription>
+                Update your payment method, view invoices, and manage billing
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button
+                onClick={handleManageBilling}
+                disabled={portalLoading}
+                variant="outline"
+                className="w-full"
+              >
+                {portalLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Opening...
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Update Payment Method & View Invoices
+                  </>
+                )}
+              </Button>
+              <p className="text-xs text-center text-muted-foreground">
+                Opens Stripe's secure billing portal where you can update your credit card, view past invoices, and download receipts.
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Upgrade/Downgrade Options */}
         {isActiveMember && (
@@ -234,7 +385,7 @@ const MyAccount = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
               {tiers
                 .filter((tier) => tier.is_active)
                 .sort((a, b) => (a.rank || 0) - (b.rank || 0))
@@ -316,11 +467,141 @@ const MyAccount = () => {
                   );
                 })}
             </div>
-
-            <p className="text-center text-sm text-muted-foreground mt-6">
-              Need to cancel? Use the "Manage Billing & Subscription" button above.
-            </p>
           </>
+        )}
+
+        {/* Pause & Cancel Section */}
+        {hasSubscription && (
+          <Card className="border-border/50 bg-card/50 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="text-lg">Pause or Cancel</CardTitle>
+              <CardDescription>
+                Need a break? You can pause or cancel your membership anytime.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Pause Membership */}
+              {isActiveMember && (
+                <div className="p-4 rounded-lg border border-border bg-background/50">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                      <Pause className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-medium mb-1">Pause Membership</h3>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Take a break without losing your account. Your billing will be paused and you can resume anytime. 
+                        While paused, you'll keep access to your profile and account but not the Temple content.
+                      </p>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" size="sm" disabled={pauseLoading}>
+                            {pauseLoading ? (
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            ) : (
+                              <Pause className="w-4 h-4 mr-2" />
+                            )}
+                            Pause Membership
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Pause your membership?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Your billing will be paused immediately. You'll lose access to Temple content but can still log in and view your account. 
+                              Resume anytime to restore full access.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Keep Membership Active</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handlePauseResume("pause")}>
+                              Yes, Pause Membership
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Resume Membership (shown when paused) */}
+              {isPaused && (
+                <div className="p-4 rounded-lg border border-primary/30 bg-primary/5">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Play className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-medium mb-1">Resume Membership</h3>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Ready to come back? Resume your membership to restore full access to all Temple content.
+                      </p>
+                      <Button onClick={() => handlePauseResume("resume")} disabled={pauseLoading}>
+                        {pauseLoading ? (
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        ) : (
+                          <Play className="w-4 h-4 mr-2" />
+                        )}
+                        Resume Membership
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <Separator />
+
+              {/* Cancel Membership */}
+              <div className="p-4 rounded-lg border border-destructive/30 bg-destructive/5">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
+                    <XCircle className="w-5 h-5 text-destructive" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-medium mb-1">Cancel Membership</h3>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Cancel your membership completely. You'll lose access immediately. 
+                      You can always rejoin later if you change your mind.
+                    </p>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" size="sm" disabled={cancelLoading}>
+                          {cancelLoading ? (
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          ) : (
+                            <XCircle className="w-4 h-4 mr-2" />
+                          )}
+                          Cancel Membership
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="flex items-center gap-2">
+                            <AlertTriangle className="w-5 h-5 text-destructive" />
+                            Cancel your membership?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will cancel your membership immediately. You'll lose access to all Temple content. 
+                            Your account will remain active so you can rejoin anytime.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Keep Membership</AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={handleCancel}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            Yes, Cancel Membership
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         )}
       </main>
     </div>
