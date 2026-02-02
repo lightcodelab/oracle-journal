@@ -1,0 +1,116 @@
+import { useState, useEffect, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface TierAccess {
+  memberTierCode: string | null;
+  subscriptionStatus: string | null;
+  bucketAccess: Record<string, boolean>;
+  loading: boolean;
+  hasAccess: (bucket: string) => boolean;
+  tierName: string | null;
+  refetch: () => Promise<void>;
+}
+
+const TIER_NAMES: Record<string, string> = {
+  T1: "The Seeker",
+  T2: "The Devotee",
+  T3: "The Initiate",
+};
+
+const BUCKET_TO_TIER: Record<string, { minTier: string; tierName: string }> = {
+  remembrance: { minTier: "T1", tierName: "The Seeker" },
+  devotion: { minTier: "T2", tierName: "The Devotee" },
+  communion: { minTier: "T3", tierName: "The Initiate" },
+};
+
+export function useTierAccess(): TierAccess {
+  const [memberTierCode, setMemberTierCode] = useState<string | null>(null);
+  const [subscriptionStatus, setSubscriptionStatus] = useState<string | null>(null);
+  const [bucketAccess, setBucketAccess] = useState<Record<string, boolean>>({});
+  const [tierName, setTierName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchAccess = useCallback(async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setLoading(false);
+        return;
+      }
+
+      // Get user's profile
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("member_tier_code, subscription_status")
+        .eq("id", session.user.id)
+        .single();
+
+      if (profileError) {
+        console.error("Error fetching profile:", profileError);
+        setLoading(false);
+        return;
+      }
+
+      setMemberTierCode(profile?.member_tier_code || null);
+      setSubscriptionStatus(profile?.subscription_status || null);
+      setTierName(profile?.member_tier_code ? TIER_NAMES[profile.member_tier_code] || null : null);
+
+      // Get bucket access for user's tier
+      if (profile?.member_tier_code && 
+          (profile?.subscription_status === 'active' || profile?.subscription_status === 'trialing')) {
+        const { data: accessData, error: accessError } = await supabase
+          .from("tier_bucket_access")
+          .select("bucket_key, is_granted")
+          .eq("tier_code", profile.member_tier_code);
+
+        if (!accessError && accessData) {
+          const access: Record<string, boolean> = {};
+          accessData.forEach((item) => {
+            access[item.bucket_key] = item.is_granted;
+          });
+          setBucketAccess(access);
+        }
+      } else {
+        setBucketAccess({});
+      }
+    } catch (error) {
+      console.error("Error in useTierAccess:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAccess();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      fetchAccess();
+    });
+
+    return () => subscription.unsubscribe();
+  }, [fetchAccess]);
+
+  const hasAccess = useCallback((bucket: string): boolean => {
+    // Check if user has active/trialing subscription
+    if (subscriptionStatus !== 'active' && subscriptionStatus !== 'trialing') {
+      return false;
+    }
+    return bucketAccess[bucket] === true;
+  }, [bucketAccess, subscriptionStatus]);
+
+  return {
+    memberTierCode,
+    subscriptionStatus,
+    bucketAccess,
+    loading,
+    hasAccess,
+    tierName,
+    refetch: fetchAccess,
+  };
+}
+
+export function getRequiredTierForBucket(bucket: string): { minTier: string; tierName: string } | null {
+  return BUCKET_TO_TIER[bucket] || null;
+}
+
+export { TIER_NAMES, BUCKET_TO_TIER };

@@ -5,7 +5,9 @@ import { motion } from 'framer-motion';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Sparkles, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Sparkles, X, Lock, ArrowUpRight } from 'lucide-react';
+import { useTierAccess, TIER_NAMES, getRequiredTierForBucket } from '@/hooks/useTierAccess';
 
 import templeBanner from '@/assets/temple-banner.png';
 import doorRemembrance from '@/assets/door-remembrance.png';
@@ -16,7 +18,8 @@ interface Door {
   id: string;
   name: string;
   image: string;
-  route: string | null;
+  route: string;
+  bucket: string;
 }
 
 const doors: Door[] = [
@@ -25,18 +28,21 @@ const doors: Door[] = [
     name: 'The Door of Remembrance',
     image: doorRemembrance,
     route: '/decks',
+    bucket: 'remembrance',
   },
   {
     id: 'devotion',
     name: 'The Door of Devotion',
     image: doorDevotion,
     route: '/devotion',
+    bucket: 'devotion',
   },
   {
     id: 'communion',
     name: 'The Door of Communion',
     image: doorCommunion,
     route: '/communion',
+    bucket: 'communion',
   },
 ];
 
@@ -45,39 +51,21 @@ const Temple = () => {
   const [loading, setLoading] = useState(true);
   const [showTrialPrompt, setShowTrialPrompt] = useState(false);
   const [promptDismissed, setPromptDismissed] = useState(false);
+  const { hasAccess, memberTierCode, subscriptionStatus, tierName, loading: tierLoading } = useTierAccess();
+
+  const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
 
   useEffect(() => {
-    const checkAuthAndSubscription = async () => {
+    const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         navigate('/auth');
         return;
       }
-
-      // Check if user has an active subscription
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('member_tier_code, subscription_status')
-        .eq('id', session.user.id)
-        .single();
-
-      // Show trial prompt if no tier or no active subscription
-      const hasActiveSubscription = profile?.subscription_status === 'active' || 
-                                     profile?.subscription_status === 'trialing';
-      const hasTier = !!profile?.member_tier_code;
-      
-      if (!hasTier || !hasActiveSubscription) {
-        // Check if they dismissed the prompt in this session
-        const dismissed = sessionStorage.getItem('trialPromptDismissed');
-        if (!dismissed) {
-          setShowTrialPrompt(true);
-        }
-      }
-
       setLoading(false);
     };
 
-    checkAuthAndSubscription();
+    checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) {
@@ -88,8 +76,18 @@ const Temple = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  useEffect(() => {
+    // Show trial prompt if not an active member
+    if (!tierLoading && !isActiveMember) {
+      const dismissed = sessionStorage.getItem('trialPromptDismissed');
+      if (!dismissed) {
+        setShowTrialPrompt(true);
+      }
+    }
+  }, [tierLoading, isActiveMember]);
+
   const handleDoorClick = (door: Door) => {
-    if (door.route) {
+    if (hasAccess(door.bucket)) {
       navigate(door.route);
     }
   };
@@ -100,11 +98,11 @@ const Temple = () => {
     setShowTrialPrompt(false);
   };
 
-  const handleStartTrial = () => {
-    navigate('/');
+  const handleUpgrade = () => {
+    navigate('/membership');
   };
 
-  if (loading) {
+  if (loading || tierLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
@@ -122,6 +120,29 @@ const Temple = () => {
       </div>
 
       <div className="max-w-6xl mx-auto pt-6">
+        {/* Current Membership Status */}
+        {isActiveMember && tierName && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 flex items-center justify-between"
+          >
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">
+                <Sparkles className="w-3 h-3 mr-1" />
+                {tierName}
+              </Badge>
+              <span className="text-sm text-muted-foreground">
+                {subscriptionStatus === 'trialing' ? '(Trial)' : ''}
+              </span>
+            </div>
+            <Button variant="ghost" size="sm" onClick={handleUpgrade} className="text-muted-foreground hover:text-foreground">
+              Upgrade Membership
+              <ArrowUpRight className="w-4 h-4 ml-1" />
+            </Button>
+          </motion.div>
+        )}
+
         {/* Trial Completion Prompt */}
         {showTrialPrompt && !promptDismissed && (
           <motion.div
@@ -137,15 +158,15 @@ const Temple = () => {
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">Complete Your Free Trial</p>
+                    <p className="font-medium text-foreground">Start Your Membership</p>
                     <p className="text-sm text-muted-foreground">
-                      Start your 7-day free trial to unlock all the sacred content within the Temple.
+                      Choose a membership tier to unlock the sacred content within the Temple.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <Button onClick={handleStartTrial} size="sm">
-                    Start Free Trial
+                  <Button onClick={handleUpgrade} size="sm">
+                    View Memberships
                   </Button>
                   <button
                     onClick={handleDismissPrompt}
@@ -176,37 +197,52 @@ const Temple = () => {
 
         {/* Door Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-          {doors.map((door, index) => (
-            <motion.div
-              key={door.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
-              onClick={() => handleDoorClick(door)}
-              className={`relative group ${
-                door.route 
-                  ? 'cursor-pointer' 
-                  : 'cursor-not-allowed opacity-70'
-              }`}
-            >
-              <div className="overflow-hidden rounded-lg transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20">
-                <img
-                  src={door.image}
-                  alt={door.name}
-                  className={`w-full h-auto transition-transform duration-500 ${
-                    door.route ? 'group-hover:scale-105' : ''
-                  }`}
-                />
-              </div>
-              {!door.route && (
-                <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-lg">
-                  <span className="font-sans text-sm text-muted-foreground">
-                    Coming Soon
-                  </span>
+          {doors.map((door, index) => {
+            const canAccess = hasAccess(door.bucket);
+            const requiredTier = getRequiredTierForBucket(door.bucket);
+
+            return (
+              <motion.div
+                key={door.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
+                onClick={() => canAccess && handleDoorClick(door)}
+                className={`relative group ${canAccess ? 'cursor-pointer' : ''}`}
+              >
+                <div className={`overflow-hidden rounded-lg transition-all duration-300 ${
+                  canAccess ? 'group-hover:shadow-lg group-hover:shadow-primary/20' : ''
+                }`}>
+                  <img
+                    src={door.image}
+                    alt={door.name}
+                    className={`w-full h-auto transition-transform duration-500 ${
+                      canAccess ? 'group-hover:scale-105' : 'opacity-60'
+                    }`}
+                  />
                 </div>
-              )}
-            </motion.div>
-          ))}
+                
+                {/* Locked Overlay */}
+                {!canAccess && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/70 rounded-lg backdrop-blur-sm">
+                    <Lock className="w-8 h-8 text-muted-foreground mb-3" />
+                    <p className="text-sm text-muted-foreground mb-2 text-center px-4">
+                      Requires {requiredTier?.tierName || 'Membership'}
+                    </p>
+                    <Button 
+                      size="sm" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/membership');
+                      }}
+                    >
+                      {isActiveMember ? 'Upgrade' : 'Join Now'}
+                    </Button>
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Footer Text */}
