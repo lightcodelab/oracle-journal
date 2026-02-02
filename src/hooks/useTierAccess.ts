@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface TierAccess {
   memberTierCode: string | null;
@@ -9,6 +10,7 @@ interface TierAccess {
   hasAccess: (bucket: string) => boolean;
   tierName: string | null;
   refetch: () => Promise<void>;
+  isAdmin: boolean;
 }
 
 const TIER_NAMES: Record<string, string> = {
@@ -24,6 +26,7 @@ const BUCKET_TO_TIER: Record<string, { minTier: string; tierName: string }> = {
 };
 
 export function useTierAccess(): TierAccess {
+  const { isAdmin } = useAuth();
   const [memberTierCode, setMemberTierCode] = useState<string | null>(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState<string | null>(null);
   const [bucketAccess, setBucketAccess] = useState<Record<string, boolean>>({});
@@ -91,12 +94,16 @@ export function useTierAccess(): TierAccess {
   }, [fetchAccess]);
 
   const hasAccess = useCallback((bucket: string): boolean => {
+    // Admins have full access to all content
+    if (isAdmin) {
+      return true;
+    }
     // Check if user has active/trialing subscription
     if (subscriptionStatus !== 'active' && subscriptionStatus !== 'trialing') {
       return false;
     }
     return bucketAccess[bucket] === true;
-  }, [bucketAccess, subscriptionStatus]);
+  }, [bucketAccess, subscriptionStatus, isAdmin]);
 
   return {
     memberTierCode,
@@ -106,6 +113,7 @@ export function useTierAccess(): TierAccess {
     hasAccess,
     tierName,
     refetch: fetchAccess,
+    isAdmin,
   };
 }
 
