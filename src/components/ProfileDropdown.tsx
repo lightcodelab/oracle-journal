@@ -17,7 +17,8 @@ import {
   Sparkles,
   CalendarDays,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  CreditCard
 } from 'lucide-react';
 
 interface ProfileDropdownProps {
@@ -60,6 +61,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       label: 'My Profile',
       icon: <User className="w-4 h-4 mr-2" />,
       route: '/profile',
+    },
+    {
+      label: 'My Account',
+      icon: <CreditCard className="w-4 h-4 mr-2" />,
+      route: '/account',
     },
     {
       label: 'My Calendar',

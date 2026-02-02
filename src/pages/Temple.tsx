@@ -51,9 +51,13 @@ const Temple = () => {
   const [loading, setLoading] = useState(true);
   const [showTrialPrompt, setShowTrialPrompt] = useState(false);
   const [promptDismissed, setPromptDismissed] = useState(false);
-  const { hasAccess, memberTierCode, subscriptionStatus, tierName, loading: tierLoading } = useTierAccess();
+  const { hasAccess, memberTierCode, subscriptionStatus, tierName, loading: tierLoading, isAdmin } = useTierAccess();
 
   const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
+  
+  // Show trial prompt only if user has started signup but hasn't completed payment
+  // Don't show to admins or users with active memberships
+  const shouldShowTrialPrompt = !isAdmin && !isActiveMember;
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -77,14 +81,16 @@ const Temple = () => {
   }, [navigate]);
 
   useEffect(() => {
-    // Show trial prompt if not an active member
-    if (!tierLoading && !isActiveMember) {
+    // Show trial prompt only if user should see it (not admin, not active member)
+    if (!tierLoading && shouldShowTrialPrompt) {
       const dismissed = sessionStorage.getItem('trialPromptDismissed');
       if (!dismissed) {
         setShowTrialPrompt(true);
       }
+    } else {
+      setShowTrialPrompt(false);
     }
-  }, [tierLoading, isActiveMember]);
+  }, [tierLoading, shouldShowTrialPrompt]);
 
   const handleDoorClick = (door: Door) => {
     if (hasAccess(door.bucket)) {
