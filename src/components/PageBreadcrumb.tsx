@@ -29,7 +29,7 @@ const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
     >
       {/* Home - Temple */}
       <button
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/temple')}
         className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
         aria-label="Go to Temple"
       >
