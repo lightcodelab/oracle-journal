@@ -2968,6 +2968,10 @@ export type Database = {
         Returns: boolean
       }
       can_view_lesson: { Args: { _user_id: string }; Returns: boolean }
+      can_view_lesson_by_door: {
+        Args: { _course_id: string; _user_id: string }
+        Returns: boolean
+      }
       get_deck_purchases_admin: {
         Args: never
         Returns: {
