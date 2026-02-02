@@ -108,7 +108,10 @@ const Index = () => {
   };
 
   const fetchUserPurchases = async (userId: string) => {
-    // First check if user is admin
+    // UX-only admin check: Determines UI display (e.g., showing all decks).
+    // SECURITY NOTE: Actual data access is enforced by RLS policies. The can_view_card()
+    // and user_has_deck_access() SECURITY DEFINER functions enforce authorization
+    // at the database level regardless of client-side state.
     const { data: roleData } = await supabase
       .from('user_roles')
       .select('role')
@@ -291,7 +294,9 @@ const Index = () => {
 
     // Check if user has premium access
     if (!deck.is_free && !deck.is_starter) {
-      // First check if user is admin
+      // UX-only admin check: Controls UI display for premium content.
+      // SECURITY NOTE: Actual premium access is enforced by user_has_premium_deck_access()
+      // SECURITY DEFINER function and RLS policies at the database level.
       const { data: roleData } = await supabase
         .from('user_roles')
         .select('role')
