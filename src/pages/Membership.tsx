@@ -367,9 +367,9 @@ const Membership = () => {
                 <div className="w-16 h-16 rounded-full bg-destructive/20 flex items-center justify-center mb-4">
                   <Heart className="w-8 h-8 text-destructive-foreground" />
                 </div>
-                <h3 className="text-xl font-serif mb-2 text-foreground">Root Cause Focus</h3>
+                <h3 className="text-xl font-serif mb-2 text-foreground">Guided Creative Visualisations</h3>
                 <p className="text-muted-foreground text-sm">
-                  Not just symptoms — the energetic origin
+                  A body-based healing modality that works with the energy blueprint beneath physical symptoms
                 </p>
               </div>
 
