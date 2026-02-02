@@ -637,7 +637,7 @@ const AreekeeraAdmin = () => {
             <PageBreadcrumb 
               items={[
                 { label: 'Admin', href: '/admin' },
-                { label: 'AreekeerA' }
+                { label: 'AreekeerA®' }
               ]} 
             />
           </div>

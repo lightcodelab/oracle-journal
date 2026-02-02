@@ -649,7 +649,7 @@ const Index = () => {
               >
                 <img 
                   src={areekeeraBanner} 
-                  alt="AreekeerA Energy Medicine Codes" 
+                  alt="AreekeerA® Energy Medicine Codes" 
                   className="w-full max-w-3xl mx-auto shadow-lg"
                 />
               </motion.div>

@@ -27,8 +27,8 @@ const adminTasks = [
     href: '/admin/content',
   },
   {
-    title: 'AreekeerA Admin',
-    description: 'Manage the AreekeerA healing protocol system',
+    title: 'AreekeerA® Admin',
+    description: 'Manage the AreekeerA® healing protocol system',
     icon: Settings,
     href: '/admin/areekeera',
   },

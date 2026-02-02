@@ -340,7 +340,7 @@ const Auth = () => {
           <p className="text-foreground/70 text-sm leading-relaxed max-w-sm mx-auto">
             {isSignupMode 
               ? "Create your account to start your 7-day free trial and access our digital card decks, courses, and more."
-              : "Sign in to access our digital card decks, AreekeerA Templates, Energy Hygiene Resources, Guided Meditations, Courses, and a Digital Journal."
+              : "Sign in to access our digital card decks, AreekeerA® Templates, Energy Hygiene Resources, Guided Meditations, Courses, and a Digital Journal."
             }
           </p>
         </div>
