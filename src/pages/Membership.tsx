@@ -143,7 +143,7 @@ const Membership = () => {
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
               Step through the doors of ancient wisdom, reimagined for the modern seeker. 
-              Access powerful healing protocols, oracle guidance, live ceremonies, and a 
+              Julie & Tash Lewin welcome you to access their powerful proprietary healing protocols, oracle guidance, live ceremonies, and a 
               supportive community — all in one sacred space.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mb-8">
