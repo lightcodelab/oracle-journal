@@ -394,7 +394,7 @@ const Membership = () => {
             className="mt-12 text-center max-w-4xl mx-auto"
           >
             <p className="text-muted-foreground leading-relaxed">
-              For over 40 years, Julie Lewin has been a pioneer in Medical Intuition. Her AreekeerA® Modality was channelled through after appearing on the TV Show The Extraordinary twice to international acclaim. With over 1.1 million listens on Insight Timer and a lifetime of clinical practice, she has helped thousands move from chronic pain to extraordinary health. She is excited to finally make her whole body of work available to everyone. It is a paid app because reciprocation is required for true healing to occur.
+              For over 40 years, Julie Lewin has been a pioneer in Medical Intuition. Her AreekeerA® Modality was channelled through after appearing on the TV Show The Extraordinary twice to international acclaim. With over 1.1 million listens on Insight Timer and a lifetime of clinical practice, she has helped thousands move from chronic pain to extraordinary health. She is excited to finally make her whole body of work available to everyone. It is a paid app because reciprocation is required for true lasting healing to occur.
             </p>
           </motion.div>
         </div>
