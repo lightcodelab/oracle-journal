@@ -37,6 +37,8 @@ import MyCalendar from "./pages/MyCalendar";
 import Membership from "./pages/Membership";
 import MembershipSuccess from "./pages/MembershipSuccess";
 import MyAccount from "./pages/MyAccount";
+import DevotionSectionPage from "./pages/DevotionSectionPage";
+import DevotionResourcePage from "./pages/DevotionResourcePage";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -59,6 +61,9 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/content" element={<ContentAdmin />} />
             <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
+            <Route path="/devotion/section/:section" element={<DevotionSectionPage />} />
+            <Route path="/devotion/resources/:slug" element={<DevotionResourcePage />} />
+            <Route path="/devotion/courses/:slug" element={<DevotionCoursePage />} />
             <Route path="/devotion/course/:courseId" element={<DevotionCoursePage />} />
             <Route path="/devotion/course/:courseId/lesson/:lessonId" element={<DevotionLessonPage />} />
             <Route path="/devotion/areekeera" element={<AreekeeraBot />} />

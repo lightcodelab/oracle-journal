@@ -66,28 +66,28 @@ const DoorOfDevotion = () => {
       name: 'Guided Meditations',
       description: 'Journey inward with guided meditation experiences',
       icon: <Sparkles className="w-8 h-8" />,
-      route: null,
+      route: '/devotion/section/guided-meditations',
     },
     {
       id: 'altar-practices',
       name: 'Altar Practices',
       description: 'Sacred rituals for creating and tending your personal altar',
       icon: <Flame className="w-8 h-8" />,
-      route: null,
+      route: '/devotion/section/altar-practices',
     },
     {
       id: 'somatic-rituals',
       name: 'Somatic Rituals',
       description: 'Body-based practices for releasing and integration',
       icon: <Move className="w-8 h-8" />,
-      route: null,
+      route: '/devotion/section/somatic-rituals',
     },
     {
       id: 'healing-templates',
       name: 'Healing Templates',
       description: 'Pre-designed templates for common healing journeys',
       icon: <FileHeart className="w-8 h-8" />,
-      route: null,
+      route: '/devotion/section/healing-templates',
     },
   ];
 
@@ -192,35 +192,18 @@ const DoorOfDevotion = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               onClick={() => handleCategoryClick(category)}
-              className={`relative group ${
-                category.route 
-                  ? 'cursor-pointer' 
-                  : 'cursor-not-allowed'
-              }`}
+              className="relative group cursor-pointer"
             >
-              <div className={`bg-card border border-border rounded-lg p-8 transition-all duration-300 ${
-                category.route 
-                  ? 'group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30' 
-                  : 'opacity-60'
-              }`}>
-                <div className={`mb-4 transition-colors ${
-                  category.route ? 'text-primary group-hover:text-primary' : 'text-muted-foreground'
-                }`}>
+              <div className="bg-card border border-border rounded-lg p-8 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30">
+                <div className="mb-4 text-primary transition-colors group-hover:text-primary">
                   {category.icon}
                 </div>
-                <h3 className={`font-serif text-2xl mb-2 transition-colors ${
-                  category.route ? 'text-foreground group-hover:text-primary' : 'text-muted-foreground'
-                }`}>
+                <h3 className="font-serif text-2xl mb-2 text-foreground group-hover:text-primary transition-colors">
                   {category.name}
                 </h3>
                 <p className="text-muted-foreground text-sm">
                   {category.description}
                 </p>
-                {!category.route && (
-                  <span className="inline-block mt-4 text-xs text-muted-foreground/70 font-sans">
-                    Coming Soon
-                  </span>
-                )}
               </div>
             </motion.div>
           ))}
