@@ -79,6 +79,17 @@ All colors MUST be HSL.
   outline: none;
 }
 
+/* Gold selection highlight for rich text editors */
+.ProseMirror ::selection {
+  background-color: hsl(var(--primary) / 0.4);
+  color: hsl(var(--foreground));
+}
+
+.ProseMirror::-moz-selection {
+  background-color: hsl(var(--primary) / 0.4);
+  color: hsl(var(--foreground));
+}
+
 .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   float: left;
