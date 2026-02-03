@@ -216,6 +216,12 @@ const AreekeeraBot = () => {
     if (!userId) return;
 
     try {
+      // Build stated feelings from selected symptoms
+      const statedFeelings = selectedSymptoms.map(entry => {
+        const symptom = symptoms.find(s => s.id === entry.symptomId);
+        return symptom?.name || '';
+      }).filter(Boolean);
+
       // Create the protocol
       const { data: protocolData, error: protocolError } = await supabase
         .from('areekeera_protocols')
@@ -223,6 +229,7 @@ const AreekeeraBot = () => {
           title: protocol.title,
           summary: protocol.summary,
           safety_notes: protocol.safety_notes,
+          stated_feelings: statedFeelings,
         })
         .select()
         .single();

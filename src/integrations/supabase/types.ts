@@ -71,6 +71,7 @@ export type Database = {
           id: string
           recommendation_id: string | null
           safety_notes: string | null
+          stated_feelings: string[] | null
           summary: string | null
           title: string
           updated_at: string | null
@@ -81,6 +82,7 @@ export type Database = {
           id?: string
           recommendation_id?: string | null
           safety_notes?: string | null
+          stated_feelings?: string[] | null
           summary?: string | null
           title: string
           updated_at?: string | null
@@ -91,6 +93,7 @@ export type Database = {
           id?: string
           recommendation_id?: string | null
           safety_notes?: string | null
+          stated_feelings?: string[] | null
           summary?: string | null
           title?: string
           updated_at?: string | null
