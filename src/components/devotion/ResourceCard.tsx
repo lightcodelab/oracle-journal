@@ -74,7 +74,7 @@ const ResourceCard = ({ resource, index, showDraftBadge = false }: ResourceCardP
               <Button
                 variant="secondary"
                 size="sm"
-                className="h-7 px-2 bg-white/90 hover:bg-white text-foreground shadow-sm"
+                className="h-7 px-2 bg-white/90 hover:bg-white text-zinc-800 shadow-sm"
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate(`/admin/content?edit=${resource.id}`);
