@@ -113,10 +113,10 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const loadLocations = async () => {
     const { data, error } = await supabase
       .from('content_categories')
-      .select('id, name')
+      .select('id, name, display_order')
       .eq('type', 'location')
       .eq('active', true)
-      .order('name');
+      .order('display_order');
     
     if (data) {
       setLocations(data);
