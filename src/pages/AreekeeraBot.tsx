@@ -9,6 +9,7 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Send, Loader2, RefreshCw, Save, Sparkles, AlertTriangle, Shield, CheckCircle, ChevronRight, ChevronLeft, Play, Clock, Heart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
@@ -77,6 +78,7 @@ const AreekeeraBot = () => {
   const [currentDomain, setCurrentDomain] = useState<'physical' | 'mental' | 'emotional' | 'spiritual'>('physical');
   const [goals, setGoals] = useState('');
   const [sessionTime, setSessionTime] = useState(15);
+  const [medicalConfirmation, setMedicalConfirmation] = useState(false);
 
   // Protocol state
   const [generatedProtocol, setGeneratedProtocol] = useState<ProtocolData | null>(null);
@@ -144,6 +146,26 @@ const AreekeeraBot = () => {
     );
   };
 
+  // Keywords that indicate anxiety-related symptoms requiring medical confirmation
+  const ANXIETY_KEYWORDS = [
+    'anxiety', 'panic', 'heart racing', 'palpitations', 'chest tightness',
+    'shortness of breath', 'breathing difficulty', 'dizziness', 'lightheaded',
+    'nausea', 'trembling', 'shaking', 'sweating', 'numbness', 'tingling',
+    'fear', 'worry', 'nervous', 'overwhelm', 'stress', 'tension'
+  ];
+
+  // Check if any selected symptoms match anxiety-related keywords
+  const hasAnxietySymptoms = selectedSymptoms.some(entry => {
+    const symptom = symptoms.find(s => s.id === entry.symptomId);
+    if (!symptom) return false;
+    const symptomName = symptom.name.toLowerCase();
+    return ANXIETY_KEYWORDS.some(keyword => symptomName.includes(keyword));
+  });
+
+  // Medical confirmation is required if anxiety symptoms are present
+  const needsMedicalConfirmation = hasAnxietySymptoms;
+  const canProceed = !needsMedicalConfirmation || medicalConfirmation;
+
   const handleStartChat = () => {
     if (selectedSymptoms.length === 0) {
       toast({
@@ -153,6 +175,16 @@ const AreekeeraBot = () => {
       });
       return;
     }
+
+    if (needsMedicalConfirmation && !medicalConfirmation) {
+      toast({
+        title: "Medical confirmation required",
+        description: "Please confirm you've been cleared of underlying medical conditions.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setPhase('chat');
     
     // Send initial message to bot with symptom data
@@ -401,6 +433,7 @@ const AreekeeraBot = () => {
     setSelectedSymptoms([]);
     setGoals('');
     setSessionTime(15);
+    setMedicalConfirmation(false);
     setGeneratedProtocol(null);
     setShowEscalation(false);
     setPhase('consent');
@@ -695,11 +728,44 @@ const AreekeeraBot = () => {
                 </CardContent>
               </Card>
 
+              {/* Medical Confirmation - appears when anxiety-related symptoms are selected */}
+              {needsMedicalConfirmation && (
+                <Card className="border-amber-500/30 bg-amber-500/5">
+                  <CardContent className="pt-6">
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="medical-confirmation"
+                        checked={medicalConfirmation}
+                        onCheckedChange={(checked) => setMedicalConfirmation(checked === true)}
+                        className="mt-1"
+                      />
+                      <div className="space-y-2">
+                        <label 
+                          htmlFor="medical-confirmation" 
+                          className="text-sm font-medium cursor-pointer leading-relaxed"
+                        >
+                          Medical Confirmation Required
+                        </label>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          I understand that these physical sensations have been identified as part of an anxiety response 
+                          and have been cleared of underlying medical emergencies by a healthcare professional.
+                        </p>
+                        <p className="text-xs text-muted-foreground/70 italic">
+                          Some physical symptoms (such as chest tightness, palpitations, or shortness of breath) 
+                          can indicate serious medical conditions. This protocol is designed for anxiety-related 
+                          symptoms only.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               <Button 
                 onClick={handleStartChat} 
                 className="w-full" 
                 size="lg"
-                disabled={selectedSymptoms.length === 0}
+                disabled={selectedSymptoms.length === 0 || !canProceed}
               >
                 <Sparkles className="w-4 h-4 mr-2" />
                 Generate My Healing Protocol
