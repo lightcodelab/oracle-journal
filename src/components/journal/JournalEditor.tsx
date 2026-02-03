@@ -49,6 +49,7 @@ const MenuButton = ({
     variant="ghost"
     size="sm"
     onClick={onClick}
+    onMouseDown={(e) => e.preventDefault()}
     className={cn(
       'h-8 w-8 p-0 transition-colors',
       isActive 

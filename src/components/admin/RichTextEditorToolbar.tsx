@@ -57,6 +57,7 @@ const ToolbarButton = ({
     variant="ghost"
     size="sm"
     onClick={onClick}
+    onMouseDown={(e) => e.preventDefault()}
     disabled={disabled}
     className={cn(
       'h-8 w-8 p-0 transition-colors',
@@ -304,6 +305,7 @@ export default function RichTextEditorToolbar({ editor }: RichTextEditorToolbarP
             variant="ghost"
             size="sm"
             onClick={openLinkPopover}
+            onMouseDown={(e) => e.preventDefault()}
             className={cn(
               'h-8 w-8 p-0 transition-colors',
               editor.isActive('link') 
