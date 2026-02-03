@@ -83,9 +83,10 @@ const DoorOfDevotion = () => {
     const fetchLocations = async () => {
       const { data, error } = await supabase
         .from('content_categories')
-        .select('id, name, slug, display_order')
+        .select('id, name, slug, display_order, page')
         .eq('type', 'location')
         .eq('active', true)
+        .eq('page', 'devotion')
         .order('display_order');
 
       if (data) {

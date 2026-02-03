@@ -40,6 +40,7 @@ import MyAccount from "./pages/MyAccount";
 import DevotionSectionPage from "./pages/DevotionSectionPage";
 import DevotionResourcePage from "./pages/DevotionResourcePage";
 import ProtocolDetailPage from "./pages/ProtocolDetailPage";
+import RemembranceSectionPage from "./pages/RemembranceSectionPage";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -54,6 +55,9 @@ const App = () => (
             <Route path="/" element={<Membership />} />
             <Route path="/temple" element={<Temple />} />
             <Route path="/decks" element={<Index />} />
+            <Route path="/decks/section/:section" element={<RemembranceSectionPage />} />
+            <Route path="/decks/resources/:slug" element={<DevotionResourcePage />} />
+            <Route path="/decks/courses/:slug" element={<DevotionCoursePage />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/import-cards" element={<ImportCards />} />
             <Route path="/devotion" element={<DoorOfDevotion />} />
