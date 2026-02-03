@@ -18,8 +18,12 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import LinkExtension from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
+import Image from '@tiptap/extension-image';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import CourseBuilder from './CourseBuilder';
+import RichTextEditorToolbar from './RichTextEditorToolbar';
 
 const resourceSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
@@ -82,10 +86,19 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
       Placeholder.configure({
         placeholder: 'Start writing your content here...',
       }),
+      Image.configure({
+        HTMLAttributes: {
+          class: 'max-w-full h-auto rounded-md',
+        },
+      }),
+      Underline,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
     ],
     editorProps: {
       attributes: {
-        class: 'prose prose-sm dark:prose-invert max-w-none min-h-[200px] focus:outline-none p-4 border rounded-md',
+        class: 'prose prose-sm dark:prose-invert max-w-none min-h-[200px] focus:outline-none p-4',
       },
     },
   });
@@ -488,45 +501,8 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
           <TabsContent value="content" className="space-y-4 mt-4">
             <div className="space-y-2">
               <Label>Body Content</Label>
-              <div className="border rounded-md">
-                <div className="border-b bg-muted/50 p-2 flex gap-1">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor?.chain().focus().toggleBold().run()}
-                    className={editor?.isActive('bold') ? 'bg-muted' : ''}
-                  >
-                    B
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor?.chain().focus().toggleItalic().run()}
-                    className={editor?.isActive('italic') ? 'bg-muted' : ''}
-                  >
-                    I
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-                    className={editor?.isActive('heading', { level: 2 }) ? 'bg-muted' : ''}
-                  >
-                    H2
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor?.chain().focus().toggleBulletList().run()}
-                    className={editor?.isActive('bulletList') ? 'bg-muted' : ''}
-                  >
-                    • List
-                  </Button>
-                </div>
+              <div className="border rounded-md overflow-hidden">
+                {editor && <RichTextEditorToolbar editor={editor} />}
                 <EditorContent editor={editor} />
               </div>
             </div>
