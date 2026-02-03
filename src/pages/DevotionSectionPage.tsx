@@ -11,51 +11,57 @@ import { useTierAccess } from '@/hooks/useTierAccess';
 import { useContentByLocation } from '@/hooks/useContentByLocation';
 import ResourceCard from '@/components/devotion/ResourceCard';
 
-// Map URL slugs to location slugs in the database
-const SECTION_LOCATION_MAP: Record<string, string> = {
-  'guided-meditations': 'loc-guided-meditation',
-  'altar-practices': 'loc-altar-practices',
-  'somatic-rituals': 'loc-somatic-rituals',
-  'healing-templates': 'loc-healing-templates',
-  'energy-hygiene-practices': 'loc-energy-hygiene-practices',
-};
-
-// Section metadata for display
-const SECTION_META: Record<string, { title: string; description: string }> = {
-  'guided-meditations': {
-    title: 'Guided Meditations',
-    description: 'Journey inward with guided meditation experiences designed to restore, regulate, and reconnect you with your deepest self.',
-  },
-  'altar-practices': {
-    title: 'Altar Practices',
-    description: 'Sacred rituals for creating and tending your personal altar as a space of devotion and healing.',
-  },
-  'somatic-rituals': {
-    title: 'Somatic Rituals',
-    description: 'Body-based practices for releasing held tension and integrating healing at the cellular level.',
-  },
-  'healing-templates': {
-    title: 'Healing Templates',
-    description: 'Pre-designed templates for common healing journeys to guide your practice.',
-  },
-  'energy-hygiene-practices': {
-    title: 'Energy Hygiene Practices',
-    description: 'Essential practices for clearing, protecting, and maintaining your energetic field.',
-  },
-};
+interface LocationInfo {
+  id: string;
+  name: string;
+  slug: string;
+}
 
 const DevotionSectionPage = () => {
   const { section } = useParams<{ section: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [locationInfo, setLocationInfo] = useState<LocationInfo | null>(null);
+  const [locationLoading, setLocationLoading] = useState(true);
   const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
 
   const canAccessDevotion = hasAccess('devotion');
   const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
 
-  const locationSlug = section ? SECTION_LOCATION_MAP[section] : '';
-  const sectionMeta = section ? SECTION_META[section] : null;
+  // Fetch the location info from database based on URL section
+  useEffect(() => {
+    const fetchLocationInfo = async () => {
+      if (!section) return;
+      
+      setLocationLoading(true);
+      
+      // Convert URL slug to database slug format (add 'loc-' prefix)
+      const possibleSlugs = [
+        `loc-${section}`,
+        section, // Also try without prefix in case slug doesn't have it
+      ];
 
+      const { data, error } = await supabase
+        .from('content_categories')
+        .select('id, name, slug')
+        .eq('type', 'location')
+        .eq('active', true)
+        .in('slug', possibleSlugs)
+        .single();
+
+      if (data) {
+        setLocationInfo(data);
+      } else {
+        setLocationInfo(null);
+      }
+      
+      setLocationLoading(false);
+    };
+
+    fetchLocationInfo();
+  }, [section]);
+
+  const locationSlug = locationInfo?.slug || '';
   const { resources, loading: contentLoading, error, locationName, isAdmin } = useContentByLocation(locationSlug);
 
   useEffect(() => {
@@ -79,7 +85,7 @@ const DevotionSectionPage = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  if (loading || tierLoading) {
+  if (loading || tierLoading || locationLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
@@ -89,11 +95,14 @@ const DevotionSectionPage = () => {
     );
   }
 
-  // Redirect if section doesn't exist
-  if (!sectionMeta || !locationSlug) {
+  // Redirect if location doesn't exist in database
+  if (!locationInfo) {
     navigate('/devotion');
     return null;
   }
+
+  const sectionTitle = locationInfo.name;
+  const sectionDescription = `Explore ${locationInfo.name.toLowerCase()} resources for your healing journey.`;
 
   // Show access denied if user doesn't have devotion access
   if (!canAccessDevotion) {
@@ -102,7 +111,7 @@ const DevotionSectionPage = () => {
         <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
           <PageBreadcrumb items={[
             { label: 'Door of Devotion', href: '/devotion' },
-            { label: sectionMeta.title }
+            { label: sectionTitle }
           ]} />
           <ProfileDropdown />
         </div>
@@ -117,7 +126,7 @@ const DevotionSectionPage = () => {
               <Lock className="w-8 h-8 text-muted-foreground" />
             </div>
             <h1 className="font-serif text-3xl text-foreground">
-              {sectionMeta.title}
+              {sectionTitle}
             </h1>
             <p className="text-muted-foreground">
               This content requires The Devotee membership tier or higher to access.
@@ -148,7 +157,7 @@ const DevotionSectionPage = () => {
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <PageBreadcrumb items={[
           { label: 'Door of Devotion', href: '/devotion' },
-          { label: sectionMeta.title }
+          { label: sectionTitle }
         ]} />
         <div className="flex items-center gap-3">
           {tierName && (
@@ -181,10 +190,10 @@ const DevotionSectionPage = () => {
           className="text-center mb-12"
         >
           <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
-            {sectionMeta.title}
+            {sectionTitle}
           </h1>
           <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
-            {sectionMeta.description}
+            {sectionDescription}
           </p>
         </motion.div>
 

@@ -6,20 +6,55 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Lock, ArrowUpRight } from 'lucide-react';
+import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Lock, ArrowUpRight, Folder } from 'lucide-react';
 import { useTierAccess } from '@/hooks/useTierAccess';
 
-interface Category {
+interface LocationCategory {
   id: string;
   name: string;
-  description: string;
-  icon: React.ReactNode;
-  route: string | null;
+  slug: string;
+  display_order: number;
 }
+
+// Map location slugs to route slugs (for URL formatting)
+const getRouteSlug = (locationSlug: string) => {
+  // Remove 'loc-' prefix and keep as-is for URL
+  return locationSlug.replace(/^loc-/, '');
+};
+
+// Static categories that aren't from the database
+const STATIC_CATEGORIES = [
+  {
+    id: 'areekeera',
+    name: 'AreekeerA® Protocol Guide',
+    description: 'AI-guided healing protocols personalized to your symptoms with trauma-informed safety',
+    icon: <MessageCircleHeart className="w-8 h-8" />,
+    route: '/devotion/areekeera',
+    isStatic: true,
+  },
+  {
+    id: 'energy-hygiene',
+    name: 'Energy Hygiene Kit',
+    description: 'Tools for clearing, cleansing, and protecting your energetic field from outside interference',
+    icon: <Zap className="w-8 h-8" />,
+    route: '/devotion/energy-hygiene',
+    isStatic: true,
+  },
+];
+
+// Icon mapping for dynamic categories (can be extended)
+const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+  'loc-guided-meditation': <Sparkles className="w-8 h-8" />,
+  'loc-altar-practices': <Flame className="w-8 h-8" />,
+  'loc-somatic-rituals': <Move className="w-8 h-8" />,
+  'loc-healing-templates': <FileHeart className="w-8 h-8" />,
+  'loc-energy-hygiene-practices': <Zap className="w-8 h-8" />,
+};
 
 const DoorOfDevotion = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [locationCategories, setLocationCategories] = useState<LocationCategory[]>([]);
   const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
 
   const canAccessDevotion = hasAccess('devotion');
@@ -46,52 +81,38 @@ const DoorOfDevotion = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const categories: Category[] = [
-    {
-      id: 'areekeera',
-      name: 'AreekeerA® Protocol Guide',
-      description: 'AI-guided healing protocols personalized to your symptoms with trauma-informed safety',
-      icon: <MessageCircleHeart className="w-8 h-8" />,
-      route: '/devotion/areekeera',
-    },
-    {
-      id: 'energy-hygiene',
-      name: 'Energy Hygiene Kit',
-      description: 'Tools for clearing, cleansing, and protecting your energetic field from outside interference',
-      icon: <Zap className="w-8 h-8" />,
-      route: '/devotion/energy-hygiene',
-    },
-    {
-      id: 'guided-meditations',
-      name: 'Guided Meditations',
-      description: 'Journey inward with guided meditation experiences',
-      icon: <Sparkles className="w-8 h-8" />,
-      route: '/devotion/section/guided-meditations',
-    },
-    {
-      id: 'altar-practices',
-      name: 'Altar Practices',
-      description: 'Sacred rituals for creating and tending your personal altar',
-      icon: <Flame className="w-8 h-8" />,
-      route: '/devotion/section/altar-practices',
-    },
-    {
-      id: 'somatic-rituals',
-      name: 'Somatic Rituals',
-      description: 'Body-based practices for releasing and integration',
-      icon: <Move className="w-8 h-8" />,
-      route: '/devotion/section/somatic-rituals',
-    },
-    {
-      id: 'healing-templates',
-      name: 'Healing Templates',
-      description: 'Pre-designed templates for common healing journeys',
-      icon: <FileHeart className="w-8 h-8" />,
-      route: '/devotion/section/healing-templates',
-    },
-  ];
+  // Fetch location categories from database
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const { data, error } = await supabase
+        .from('content_categories')
+        .select('id, name, slug, display_order')
+        .eq('type', 'location')
+        .eq('active', true)
+        .order('display_order');
 
-  const handleCategoryClick = (category: Category) => {
+      if (data) {
+        setLocationCategories(data);
+      }
+    };
+
+    fetchLocations();
+  }, []);
+
+  // Build dynamic categories from database locations
+  const dynamicCategories = locationCategories.map(loc => ({
+    id: loc.id,
+    name: loc.name,
+    description: `Explore ${loc.name.toLowerCase()} resources for your healing journey.`,
+    icon: CATEGORY_ICONS[loc.slug] || <Folder className="w-8 h-8" />,
+    route: `/devotion/section/${getRouteSlug(loc.slug)}`,
+    isStatic: false,
+  }));
+
+  // Combine static and dynamic categories
+  const categories = [...STATIC_CATEGORIES, ...dynamicCategories];
+
+  const handleCategoryClick = (category: typeof categories[0]) => {
     if (category.route && canAccessDevotion) {
       navigate(category.route);
     }
