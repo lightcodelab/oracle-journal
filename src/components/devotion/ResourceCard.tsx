@@ -9,9 +9,10 @@ interface ResourceCardProps {
   resource: ContentResource;
   index: number;
   showDraftBadge?: boolean;
+  basePath?: string; // e.g., '/devotion' or '/decks'
 }
 
-const ResourceCard = ({ resource, index, showDraftBadge = false }: ResourceCardProps) => {
+const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/devotion' }: ResourceCardProps) => {
   const navigate = useNavigate();
 
   const getMediaIcon = () => {
@@ -33,9 +34,9 @@ const ResourceCard = ({ resource, index, showDraftBadge = false }: ResourceCardP
 
   const handleClick = () => {
     if (resource.is_course) {
-      navigate(`/devotion/courses/${resource.slug}`);
+      navigate(`${basePath}/courses/${resource.slug}`);
     } else {
-      navigate(`/devotion/resources/${resource.slug}`);
+      navigate(`${basePath}/resources/${resource.slug}`);
     }
   };
 

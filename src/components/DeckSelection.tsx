@@ -7,6 +7,7 @@ import tsrBanner from "@/assets/tsr-banner.png";
 import mnlBanner from "@/assets/mnl-banner.png";
 import areekeeraBanner from "@/assets/areekeera-banner.png";
 import taoshBanner from "@/assets/taosh-banner.png";
+import RemembranceCourseSection from "@/components/RemembranceCourseSection";
 
 interface Deck {
   id: string;
@@ -43,133 +44,158 @@ export const DeckSelection = ({
       animate={{ opacity: 1 }}
       className="container mx-auto px-4 py-12"
     >
+      {/* Page Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="text-center mb-12"
+        className="text-center mb-16"
       >
         <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
           The Door of Remembrance
         </h1>
-        <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
-          Select a deck to receive divine guidance tailored to your spiritual journey.
-        </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {decks.map((deck, index) => {
-          const accessible = hasAccess(deck);
-          
-          return (
-            <motion.div
-              key={deck.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card className="h-full hover:shadow-glow transition-all">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-2xl font-serif">
-                        {deck.name}
-                      </CardTitle>
-                      <CardDescription className="mt-2">
-                        {deck.theme}
-                      </CardDescription>
-                    </div>
-                    {deck.is_free && (
-                      <Badge variant="secondary" className="ml-2">
-                        Free
-                      </Badge>
-                    )}
-                    {deck.is_starter && (
-                      <Badge variant="secondary" className="ml-2">
-                        Starter
-                      </Badge>
-                    )}
-                    {!accessible && !deck.is_free && !deck.is_starter && (
-                      <Badge variant="outline" className="ml-2">
-                        <Lock className="w-3 h-3 mr-1" />
-                        Locked
-                      </Badge>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {deck.description && (
-                    <p className="text-foreground/70 text-sm">{deck.description}</p>
-                  )}
-                  
-                  {deck.name === "The Sacred Rewrite" ? (
-                    <div className="overflow-hidden">
-                      <img 
-                        src={tsrBanner} 
-                        alt="The Sacred Rewrite" 
-                        className="w-full h-32 object-cover"
-                      />
-                    </div>
-                  ) : deck.name === "Magic not Logic" ? (
-                    <div className="overflow-hidden">
-                      <img 
-                        src={mnlBanner} 
-                        alt="Magic not Logic" 
-                        className="w-full h-32 object-cover"
-                      />
-                    </div>
-                  ) : deck.name === "AreekeerA" ? (
-                    <div className="overflow-hidden">
-                      <img 
-                        src={areekeeraBanner} 
-                        alt="AreekeerA Energy Medicine Codes" 
-                        className="w-full h-32 object-cover"
-                      />
-                    </div>
-                  ) : deck.name === "The Art of Self-Healing" ? (
-                    <div className="overflow-hidden">
-                      <img 
-                        src={taoshBanner} 
-                        alt="The Art of Self-Healing" 
-                        className="w-full h-32 object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div 
-                      className={`h-32 rounded-lg bg-gradient-to-br ${deck.image_color} flex items-center justify-center`}
-                    >
-                      <Sparkles className="w-12 h-12 text-white/80" />
-                    </div>
-                  )}
+      {/* Card Decks Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="mb-20"
+      >
+        <div className="text-center mb-8">
+          <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
+            Card Decks
+          </h2>
+          <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
+            Select a deck to receive divine guidance tailored to your spiritual journey.
+          </p>
+        </div>
 
-                  {accessible ? (
-                    <Button
-                      onClick={() => onSelectDeck(deck.id)}
-                      className="w-full"
-                    >
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Draw from this Deck
-                    </Button>
-                  ) : (
-                    <div className="space-y-2">
-                      <p className="text-sm text-foreground/60 text-center">
-                        Purchase required to unlock
-                      </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {decks.map((deck, index) => {
+            const accessible = hasAccess(deck);
+            
+            return (
+              <motion.div
+                key={deck.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="h-full hover:shadow-glow transition-all">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-2xl font-serif">
+                          {deck.name}
+                        </CardTitle>
+                        <CardDescription className="mt-2">
+                          {deck.theme}
+                        </CardDescription>
+                      </div>
+                      {deck.is_free && (
+                        <Badge variant="secondary" className="ml-2">
+                          Free
+                        </Badge>
+                      )}
+                      {deck.is_starter && (
+                        <Badge variant="secondary" className="ml-2">
+                          Starter
+                        </Badge>
+                      )}
+                      {!accessible && !deck.is_free && !deck.is_starter && (
+                        <Badge variant="outline" className="ml-2">
+                          <Lock className="w-3 h-3 mr-1" />
+                          Locked
+                        </Badge>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {deck.description && (
+                      <p className="text-foreground/70 text-sm">{deck.description}</p>
+                    )}
+                    
+                    {deck.name === "The Sacred Rewrite" ? (
+                      <div className="overflow-hidden">
+                        <img 
+                          src={tsrBanner} 
+                          alt="The Sacred Rewrite" 
+                          className="w-full h-32 object-cover"
+                        />
+                      </div>
+                    ) : deck.name === "Magic not Logic" ? (
+                      <div className="overflow-hidden">
+                        <img 
+                          src={mnlBanner} 
+                          alt="Magic not Logic" 
+                          className="w-full h-32 object-cover"
+                        />
+                      </div>
+                    ) : deck.name === "AreekeerA" ? (
+                      <div className="overflow-hidden">
+                        <img 
+                          src={areekeeraBanner} 
+                          alt="AreekeerA Energy Medicine Codes" 
+                          className="w-full h-32 object-cover"
+                        />
+                      </div>
+                    ) : deck.name === "The Art of Self-Healing" ? (
+                      <div className="overflow-hidden">
+                        <img 
+                          src={taoshBanner} 
+                          alt="The Art of Self-Healing" 
+                          className="w-full h-32 object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div 
+                        className={`h-32 rounded-lg bg-gradient-to-br ${deck.image_color} flex items-center justify-center`}
+                      >
+                        <Sparkles className="w-12 h-12 text-white/80" />
+                      </div>
+                    )}
+
+                    {accessible ? (
                       <Button
-                        onClick={() => onVerifyPurchase(deck.id)}
-                        variant="outline"
+                        onClick={() => onSelectDeck(deck.id)}
                         className="w-full"
                       >
-                        Verify Purchase
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Draw from this Deck
                       </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
-          );
-        })}
-      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="text-sm text-foreground/60 text-center">
+                          Purchase required to unlock
+                        </p>
+                        <Button
+                          onClick={() => onVerifyPurchase(deck.id)}
+                          variant="outline"
+                          className="w-full"
+                        >
+                          Verify Purchase
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
+      </motion.div>
+
+      {/* Courses Section - different background */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="bg-muted/30 -mx-4 px-4 py-16 md:-mx-8 md:px-8 lg:-mx-12 lg:px-12"
+      >
+        <RemembranceCourseSection />
+      </motion.div>
     </motion.div>
   );
 };

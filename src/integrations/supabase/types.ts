@@ -267,6 +267,7 @@ export type Database = {
           display_order: number | null
           id: string
           name: string
+          page: string | null
           slug: string
           type: Database["public"]["Enums"]["content_category_type"]
           updated_at: string | null
@@ -277,6 +278,7 @@ export type Database = {
           display_order?: number | null
           id?: string
           name: string
+          page?: string | null
           slug: string
           type: Database["public"]["Enums"]["content_category_type"]
           updated_at?: string | null
@@ -287,6 +289,7 @@ export type Database = {
           display_order?: number | null
           id?: string
           name?: string
+          page?: string | null
           slug?: string
           type?: Database["public"]["Enums"]["content_category_type"]
           updated_at?: string | null

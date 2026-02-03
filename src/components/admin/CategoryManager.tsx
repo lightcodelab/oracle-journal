@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Edit2, Check, X, Loader2, ArrowUp, ArrowDown, GripVertical } from 'lucide-react';
+import { Plus, Edit2, Check, X, Loader2, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -16,7 +16,13 @@ interface Category {
   slug: string;
   active: boolean;
   display_order: number;
+  page: 'devotion' | 'remembrance' | null;
 }
+
+const PAGE_LABELS: Record<string, string> = {
+  devotion: 'Door of Devotion',
+  remembrance: 'Door of Remembrance',
+};
 
 const CategoryManager = () => {
   const { toast } = useToast();
@@ -26,6 +32,7 @@ const CategoryManager = () => {
   const [editName, setEditName] = useState('');
   const [newResourceType, setNewResourceType] = useState('');
   const [newLocation, setNewLocation] = useState('');
+  const [newLocationPage, setNewLocationPage] = useState<'devotion' | 'remembrance'>('devotion');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -55,7 +62,7 @@ const CategoryManager = () => {
       .trim();
   };
 
-  const addCategory = async (type: 'resource_type' | 'location', name: string) => {
+  const addCategory = async (type: 'resource_type' | 'location', name: string, page?: 'devotion' | 'remembrance') => {
     if (!name.trim()) return;
     setSaving(true);
 
@@ -78,15 +85,22 @@ const CategoryManager = () => {
       .filter(c => c.type === type)
       .reduce((max, c) => Math.max(max, c.display_order || 0), 0);
 
+    const insertData: any = {
+      type,
+      name: name.trim(),
+      slug,
+      active: true,
+      display_order: maxOrder + 1,
+    };
+
+    // Only set page for locations
+    if (type === 'location' && page) {
+      insertData.page = page;
+    }
+
     const { data, error } = await supabase
       .from('content_categories')
-      .insert({
-        type,
-        name: name.trim(),
-        slug,
-        active: true,
-        display_order: maxOrder + 1,
-      })
+      .insert(insertData)
       .select()
       .single();
 
@@ -157,6 +171,10 @@ const CategoryManager = () => {
     updateCategory(category.id, { active: !category.active });
   };
 
+  const updatePage = (category: Category, page: 'devotion' | 'remembrance') => {
+    updateCategory(category.id, { page });
+  };
+
   const moveCategory = async (category: Category, direction: 'up' | 'down') => {
     const typeCategories = categories
       .filter(c => c.type === category.type)
@@ -201,8 +219,14 @@ const CategoryManager = () => {
   const resourceTypes = categories
     .filter(c => c.type === 'resource_type')
     .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
-  const locations = categories
-    .filter(c => c.type === 'location')
+  
+  // Group locations by page
+  const devotionLocations = categories
+    .filter(c => c.type === 'location' && c.page === 'devotion')
+    .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+  
+  const remembranceLocations = categories
+    .filter(c => c.type === 'location' && c.page === 'remembrance')
     .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
 
   if (loading) {
@@ -213,7 +237,7 @@ const CategoryManager = () => {
     );
   }
 
-  const renderCategoryList = (items: Category[], type: 'resource_type' | 'location') => (
+  const renderCategoryList = (items: Category[], type: 'resource_type' | 'location', showPageSelector = false) => (
     <div className="space-y-2">
       {items.map((category, index) => (
         <div
@@ -266,7 +290,21 @@ const CategoryManager = () => {
           ) : (
             <>
               <span className="flex-1">{category.name}</span>
-              <span className="text-xs text-muted-foreground">{category.slug}</span>
+              <span className="text-xs text-muted-foreground hidden md:block">{category.slug}</span>
+              {showPageSelector && (
+                <Select
+                  value={category.page || 'devotion'}
+                  onValueChange={(value: 'devotion' | 'remembrance') => updatePage(category, value)}
+                >
+                  <SelectTrigger className="w-[160px] h-8 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="devotion">Door of Devotion</SelectItem>
+                    <SelectItem value="remembrance">Door of Remembrance</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
               <Button
                 size="sm"
                 variant="ghost"
@@ -283,29 +321,61 @@ const CategoryManager = () => {
           )}
         </div>
       ))}
+    </div>
+  );
 
-      {/* Add new */}
-      <div className="flex gap-2 mt-4">
-        <Input
-          placeholder={`Add new ${type === 'resource_type' ? 'resource type' : 'location'}...`}
-          value={type === 'resource_type' ? newResourceType : newLocation}
-          onChange={(e) => type === 'resource_type' 
-            ? setNewResourceType(e.target.value) 
-            : setNewLocation(e.target.value)
+  const renderResourceTypeInput = () => (
+    <div className="flex gap-2 mt-4">
+      <Input
+        placeholder="Add new resource type..."
+        value={newResourceType}
+        onChange={(e) => setNewResourceType(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            addCategory('resource_type', newResourceType);
           }
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              addCategory(type, type === 'resource_type' ? newResourceType : newLocation);
-            }
-          }}
-        />
-        <Button
-          onClick={() => addCategory(type, type === 'resource_type' ? newResourceType : newLocation)}
-          disabled={saving || !(type === 'resource_type' ? newResourceType : newLocation).trim()}
-        >
-          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-        </Button>
-      </div>
+        }}
+      />
+      <Button
+        onClick={() => addCategory('resource_type', newResourceType)}
+        disabled={saving || !newResourceType.trim()}
+      >
+        {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+      </Button>
+    </div>
+  );
+
+  const renderLocationInput = () => (
+    <div className="flex gap-2 mt-4">
+      <Input
+        placeholder="Add new location..."
+        value={newLocation}
+        onChange={(e) => setNewLocation(e.target.value)}
+        className="flex-1"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            addCategory('location', newLocation, newLocationPage);
+          }
+        }}
+      />
+      <Select
+        value={newLocationPage}
+        onValueChange={(value: 'devotion' | 'remembrance') => setNewLocationPage(value)}
+      >
+        <SelectTrigger className="w-[160px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="devotion">Door of Devotion</SelectItem>
+          <SelectItem value="remembrance">Door of Remembrance</SelectItem>
+        </SelectContent>
+      </Select>
+      <Button
+        onClick={() => addCategory('location', newLocation, newLocationPage)}
+        disabled={saving || !newLocation.trim()}
+      >
+        {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+      </Button>
     </div>
   );
 
@@ -334,20 +404,53 @@ const CategoryManager = () => {
             </CardHeader>
             <CardContent>
               {renderCategoryList(resourceTypes, 'resource_type')}
+              {renderResourceTypeInput()}
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="locations" className="mt-4">
+        <TabsContent value="locations" className="mt-4 space-y-6">
+          {/* Door of Devotion Locations */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Locations</CardTitle>
+              <CardTitle className="text-base">Door of Devotion</CardTitle>
               <CardDescription>
-                Where content appears within The Door of Devotion
+                Locations where content appears within the Door of Devotion grid
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {renderCategoryList(locations, 'location')}
+              {devotionLocations.length > 0 ? (
+                renderCategoryList(devotionLocations, 'location', true)
+              ) : (
+                <p className="text-sm text-muted-foreground py-4">No locations yet.</p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Door of Remembrance Locations */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Door of Remembrance</CardTitle>
+              <CardDescription>
+                Locations where content appears within the Door of Remembrance grid
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {remembranceLocations.length > 0 ? (
+                renderCategoryList(remembranceLocations, 'location', true)
+              ) : (
+                <p className="text-sm text-muted-foreground py-4">No locations yet.</p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Add new location input */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Add New Location</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {renderLocationInput()}
             </CardContent>
           </Card>
         </TabsContent>
