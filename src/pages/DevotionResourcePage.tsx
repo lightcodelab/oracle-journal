@@ -27,6 +27,7 @@ interface ContentResource {
   main_media_kind: 'video' | 'audio' | 'none' | null;
   main_media_file_url: string | null;
   main_media_embed_url: string | null;
+  status: 'draft' | 'published';
   location: {
     id: string;
     name: string;
@@ -46,10 +47,19 @@ const DevotionResourcePage = () => {
   const [resource, setResource] = useState<ContentResource | null>(null);
   const [attachments, setAttachments] = useState<ResourceAttachment[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
 
   const canAccessDevotion = hasAccess('devotion');
   const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
+
+  // Helper to get public URL for storage files
+  const getPublicUrl = (bucket: string, path: string | null): string | null => {
+    if (!path) return null;
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+    return data.publicUrl;
+  };
 
   useEffect(() => {
     const checkAuthAndFetch = async () => {
@@ -64,8 +74,19 @@ const DevotionResourcePage = () => {
         return;
       }
 
-      // Fetch the resource
-      const { data: resourceData, error: resourceError } = await supabase
+      // Check if user is admin
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .eq('role', 'admin')
+        .single();
+
+      const userIsAdmin = !!roleData;
+      setIsAdmin(userIsAdmin);
+
+      // Build query - admins can see drafts too
+      let query = supabase
         .from('content_resources')
         .select(`
           id,
@@ -77,6 +98,7 @@ const DevotionResourcePage = () => {
           main_media_kind,
           main_media_file_url,
           main_media_embed_url,
+          status,
           location:content_categories!location_id (
             id,
             name,
@@ -88,9 +110,14 @@ const DevotionResourcePage = () => {
             slug
           )
         `)
-        .eq('slug', slug)
-        .eq('status', 'published')
-        .single();
+        .eq('slug', slug);
+
+      // Non-admins can only see published resources
+      if (!userIsAdmin) {
+        query = query.eq('status', 'published');
+      }
+
+      const { data: resourceData, error: resourceError } = await query.single();
 
       if (resourceError || !resourceData) {
         setError('Resource not found');
@@ -98,7 +125,13 @@ const DevotionResourcePage = () => {
         return;
       }
 
-      setResource(resourceData as unknown as ContentResource);
+      // Transform thumbnail URL
+      const transformedResource = {
+        ...resourceData,
+        thumbnail_url: getPublicUrl('content-thumbnails', resourceData.thumbnail_url),
+      };
+
+      setResource(transformedResource as unknown as ContentResource);
 
       // Fetch attachments
       const { data: attachmentData } = await supabase
@@ -288,6 +321,11 @@ const DevotionResourcePage = () => {
           className="mb-8"
         >
           <div className="flex items-center gap-2 mb-3">
+            {isAdmin && resource.status === 'draft' && (
+              <Badge className="bg-amber-500 hover:bg-amber-600 text-white">
+                Draft
+              </Badge>
+            )}
             {resource.resource_type && (
               <Badge variant="outline">{resource.resource_type.name}</Badge>
             )}
