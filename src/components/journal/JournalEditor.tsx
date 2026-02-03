@@ -63,6 +63,22 @@ const MenuButton = ({
 );
 
 const EditorToolbar = ({ editor }: { editor: Editor }) => {
+  // Keep toolbar active states in sync with the current selection/cursor.
+  const [, forceRerender] = useState(0);
+
+  useEffect(() => {
+    const bump = () => forceRerender((x) => x + 1);
+    editor.on('selectionUpdate', bump);
+    editor.on('transaction', bump);
+    editor.on('update', bump);
+
+    return () => {
+      editor.off('selectionUpdate', bump);
+      editor.off('transaction', bump);
+      editor.off('update', bump);
+    };
+  }, [editor]);
+
   const setLink = useCallback(() => {
     const previousUrl = editor.getAttributes('link').href;
     const url = window.prompt('URL', previousUrl);
