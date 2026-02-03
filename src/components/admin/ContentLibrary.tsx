@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useToast } from '@/hooks/use-toast';
 import { Search, Plus, Edit, Trash2, Loader2, BookOpen, FileText, ExternalLink } from 'lucide-react';
 import { format } from 'date-fns';
+import { SITE_CONFIG } from '@/lib/siteConfig';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -263,12 +264,18 @@ const ContentLibrary = ({ onEdit, onNew }: ContentLibraryProps) => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        title="View live content"
-                        onClick={() => window.location.href = resource.is_course 
-                          ? `/devotion/courses/${resource.slug}` 
-                          : `/devotion/resources/${resource.slug}`}
+                        title="View on live site"
+                        asChild
                       >
-                        <ExternalLink className="w-4 h-4" />
+                        <a
+                          href={`${SITE_CONFIG.productionDomain}${resource.is_course 
+                            ? `/devotion/courses/${resource.slug}` 
+                            : `/devotion/resources/${resource.slug}`}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
                       </Button>
                       <Button
                         variant="ghost"
