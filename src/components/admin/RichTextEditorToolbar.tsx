@@ -305,8 +305,10 @@ export default function RichTextEditorToolbar({ editor }: RichTextEditorToolbarP
             size="sm"
             onClick={openLinkPopover}
             className={cn(
-              'h-8 w-8 p-0',
-              editor.isActive('link') && 'bg-muted text-primary'
+              'h-8 w-8 p-0 transition-colors',
+              editor.isActive('link') 
+                ? 'bg-primary/20 text-primary ring-1 ring-primary/40' 
+                : 'hover:bg-muted hover:text-foreground'
             )}
             title="Insert Link"
           >

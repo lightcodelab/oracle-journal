@@ -50,8 +50,10 @@ const MenuButton = ({
     size="sm"
     onClick={onClick}
     className={cn(
-      'h-8 w-8 p-0',
-      isActive && 'bg-muted text-primary'
+      'h-8 w-8 p-0 transition-colors',
+      isActive 
+        ? 'bg-primary/20 text-primary ring-1 ring-primary/40' 
+        : 'hover:bg-muted hover:text-foreground'
     )}
     title={title}
   >
