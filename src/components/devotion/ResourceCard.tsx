@@ -14,14 +14,20 @@ const ResourceCard = ({ resource, index, showDraftBadge = false }: ResourceCardP
   const navigate = useNavigate();
 
   const getMediaIcon = () => {
-    switch (resource.main_media_kind) {
-      case 'video':
-        return <Play className="w-4 h-4" />;
-      case 'audio':
-        return <Headphones className="w-4 h-4" />;
-      default:
-        return <FileText className="w-4 h-4" />;
+    if (resource.main_media_kind === 'video_embed') {
+      return <Play className="w-4 h-4" />;
     }
+    if (resource.main_media_kind === 'file' && resource.main_media_file_url) {
+      // Check file extension for audio
+      if (resource.main_media_file_url.match(/\.(mp3|wav|ogg|m4a|aac|flac)$/i)) {
+        return <Headphones className="w-4 h-4" />;
+      }
+      // Video files
+      if (resource.main_media_file_url.match(/\.(mp4|webm|mov|avi|mkv)$/i)) {
+        return <Play className="w-4 h-4" />;
+      }
+    }
+    return <FileText className="w-4 h-4" />;
   };
 
   const handleClick = () => {

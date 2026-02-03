@@ -24,7 +24,7 @@ interface ContentResource {
   summary: string | null;
   body_richtext: any;
   thumbnail_url: string | null;
-  main_media_kind: 'video' | 'audio' | 'none' | null;
+  main_media_kind: 'file' | 'video_embed' | 'none' | null;
   main_media_file_url: string | null;
   main_media_embed_url: string | null;
   status: 'draft' | 'published';
@@ -125,10 +125,11 @@ const DevotionResourcePage = () => {
         return;
       }
 
-      // Transform thumbnail URL
+      // Transform URLs to public URLs
       const transformedResource = {
         ...resourceData,
         thumbnail_url: getPublicUrl('content-thumbnails', resourceData.thumbnail_url),
+        main_media_file_url: getPublicUrl('content-main-media', resourceData.main_media_file_url),
       };
 
       setResource(transformedResource as unknown as ContentResource);
@@ -340,8 +341,8 @@ const DevotionResourcePage = () => {
           )}
         </motion.div>
 
-        {/* Main Media */}
-        {resource.main_media_embed_url && (
+        {/* Main Media - Video Embed (Vimeo/YouTube) */}
+        {resource.main_media_kind === 'video_embed' && resource.main_media_embed_url && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -355,7 +356,24 @@ const DevotionResourcePage = () => {
               if (videoId) {
                 return <VimeoEmbed videoId={videoId} title={resource.title} />;
               }
-              // Fallback for other embed URLs
+              // Fallback for YouTube or other embed URLs
+              const youtubeMatch = resource.main_media_embed_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+              if (youtubeMatch) {
+                const ytId = youtubeMatch[1];
+                return (
+                  <div className="aspect-video w-full rounded-lg overflow-hidden bg-muted">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${ytId}`}
+                      className="w-full h-full"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title={resource.title}
+                    />
+                  </div>
+                );
+              }
+              // Generic iframe fallback
               return (
                 <div className="aspect-video w-full rounded-lg overflow-hidden bg-muted">
                   <iframe
@@ -372,23 +390,65 @@ const DevotionResourcePage = () => {
           </motion.div>
         )}
 
-        {resource.main_media_file_url && resource.main_media_kind === 'audio' && (
+        {/* Main Media - Uploaded File (Audio/Video) */}
+        {resource.main_media_kind === 'file' && resource.main_media_file_url && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mb-8"
           >
-            <div className="bg-card border border-border rounded-lg p-4">
-              <div className="flex items-center gap-3 mb-3">
-                <Headphones className="w-5 h-5 text-primary" />
-                <span className="font-medium">Audio</span>
-              </div>
-              <audio controls className="w-full">
-                <source src={resource.main_media_file_url} type="audio/mpeg" />
-                Your browser does not support the audio element.
-              </audio>
-            </div>
+            {(() => {
+              const fileUrl = resource.main_media_file_url;
+              const isAudio = fileUrl.match(/\.(mp3|wav|ogg|m4a|aac|flac)$/i);
+              const isVideo = fileUrl.match(/\.(mp4|webm|mov|avi|mkv)$/i);
+
+              if (isAudio) {
+                return (
+                  <div className="bg-card border border-border rounded-lg p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Headphones className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <span className="font-medium text-foreground">Audio</span>
+                        <p className="text-xs text-muted-foreground">Listen to this resource</p>
+                      </div>
+                    </div>
+                    <audio controls className="w-full">
+                      <source src={fileUrl} type="audio/mpeg" />
+                      Your browser does not support the audio element.
+                    </audio>
+                  </div>
+                );
+              }
+
+              if (isVideo) {
+                return (
+                  <div className="aspect-video w-full rounded-lg overflow-hidden bg-muted">
+                    <video controls className="w-full h-full">
+                      <source src={fileUrl} type="video/mp4" />
+                      Your browser does not support the video element.
+                    </video>
+                  </div>
+                );
+              }
+
+              // Unknown file type - provide download link
+              return (
+                <div className="bg-card border border-border rounded-lg p-4">
+                  <a 
+                    href={fileUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 text-primary hover:underline"
+                  >
+                    <Play className="w-5 h-5" />
+                    <span>View Media File</span>
+                  </a>
+                </div>
+              );
+            })()}
           </motion.div>
         )}
 

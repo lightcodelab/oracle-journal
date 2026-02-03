@@ -7,7 +7,7 @@ export interface ContentResource {
   slug: string;
   summary: string | null;
   thumbnail_url: string | null;
-  main_media_kind: 'video' | 'audio' | 'none' | null;
+  main_media_kind: 'file' | 'video_embed' | 'none' | null;
   main_media_file_url: string | null;
   main_media_embed_url: string | null;
   is_course: boolean | null;
@@ -119,10 +119,11 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
           return;
         }
 
-        // Transform thumbnail URLs to public URLs
+        // Transform URLs to public URLs
         const transformedResources = (resourceData || []).map(resource => ({
           ...resource,
           thumbnail_url: getPublicUrl('content-thumbnails', resource.thumbnail_url),
+          main_media_file_url: getPublicUrl('content-main-media', resource.main_media_file_url),
         })) as ContentResource[];
 
         setResources(transformedResources);
