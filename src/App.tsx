@@ -63,6 +63,7 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/content" element={<ContentAdmin />} />
             <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
+            <Route path="/devotion/section/energy-hygiene-practices" element={<DevotionCourses />} />
             <Route path="/devotion/section/:section" element={<DevotionSectionPage />} />
             <Route path="/devotion/resources/:slug" element={<DevotionResourcePage />} />
             <Route path="/devotion/courses/:slug" element={<DevotionCoursePage />} />
