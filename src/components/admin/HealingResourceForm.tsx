@@ -13,7 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus } from 'lucide-react';
+import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus, Music } from 'lucide-react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import LinkExtension from '@tiptap/extension-link';
@@ -60,6 +60,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingAudio, setUploadingAudio] = useState(false);
   
   // Form state
   const [title, setTitle] = useState('');
@@ -69,6 +70,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [status, setStatus] = useState<ResourceStatus>('draft');
   const [displayImageUrl, setDisplayImageUrl] = useState<string | null>(null);
   const [vimeoEmbedUrl, setVimeoEmbedUrl] = useState('');
+  const [audioFileUrl, setAudioFileUrl] = useState<string | null>(null);
   const [locationId, setLocationId] = useState<string | null>(null);
   
   // Location options state
@@ -202,6 +204,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       setStatus(resource.status as ResourceStatus);
       setDisplayImageUrl(resource.display_image_url);
       setVimeoEmbedUrl(resource.vimeo_embed_url || '');
+      setAudioFileUrl((resource as any).audio_file_url || null);
       setLocationId((resource as any).location_id || null);
       
       if (editor && resource.body_richtext && typeof resource.body_richtext === 'object') {
@@ -269,6 +272,54 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     }
   };
 
+  const handleAudioUpload = async (file: File) => {
+    if (!file) return;
+
+    const validAudioTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/m4a', 'audio/x-m4a'];
+    if (!validAudioTypes.includes(file.type) && !file.name.match(/\.(mp3|wav|ogg|m4a)$/i)) {
+      toast({
+        title: 'Invalid file type',
+        description: 'Please select an audio file (MP3, WAV, OGG, or M4A).',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+      toast({
+        title: 'File too large',
+        description: 'Audio files must be under 50MB.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setUploadingAudio(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `audio/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('healing-resource-images')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      setAudioFileUrl(fileName);
+      toast({ title: 'Audio uploaded' });
+    } catch (error: any) {
+      console.error('Error uploading audio:', error);
+      toast({
+        title: 'Upload failed',
+        description: error.message || 'Failed to upload audio.',
+        variant: 'destructive',
+      });
+    } finally {
+      setUploadingAudio(false);
+    }
+  };
+
   const extractVimeoId = (url: string): string | null => {
     const match = url.match(/vimeo\.com\/(\d+)/);
     return match ? match[1] : null;
@@ -295,6 +346,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
         status,
         display_image_url: displayImageUrl,
         vimeo_embed_url: vimeoEmbedUrl || null,
+        audio_file_url: audioFileUrl,
         body_richtext: editor?.getJSON() as any || null,
         locale: 'en',
         tier: 'paid' as const, // No free tier for the bot
@@ -681,6 +733,49 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
                 {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
               </div>
             )}
+          </div>
+
+          {/* Audio Upload */}
+          <div>
+            <Label className="flex items-center gap-2">
+              <Music className="w-4 h-4" />
+              Audio File
+            </Label>
+            {audioFileUrl ? (
+              <div className="mt-2 space-y-2">
+                <audio
+                  src={getImageUrl(audioFileUrl) || ''}
+                  controls
+                  className="w-full max-w-md"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setAudioFileUrl(null)}
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Remove Audio
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 mt-2">
+                <Input
+                  type="file"
+                  accept="audio/*,.mp3,.wav,.ogg,.m4a"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleAudioUpload(file);
+                  }}
+                  disabled={uploadingAudio}
+                  className="flex-1"
+                />
+                {uploadingAudio && <Loader2 className="w-4 h-4 animate-spin" />}
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground mt-1">
+              Supports MP3, WAV, OGG, M4A files up to 50MB
+            </p>
           </div>
 
           {/* Vimeo Embed */}
