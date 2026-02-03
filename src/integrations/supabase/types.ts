@@ -1021,6 +1021,7 @@ export type Database = {
       }
       healing_resources: {
         Row: {
+          audio_file_url: string | null
           body_richtext: Json | null
           created_at: string | null
           created_by: string | null
@@ -1040,6 +1041,7 @@ export type Database = {
           vimeo_embed_url: string | null
         }
         Insert: {
+          audio_file_url?: string | null
           body_richtext?: Json | null
           created_at?: string | null
           created_by?: string | null
@@ -1059,6 +1061,7 @@ export type Database = {
           vimeo_embed_url?: string | null
         }
         Update: {
+          audio_file_url?: string | null
           body_richtext?: Json | null
           created_at?: string | null
           created_by?: string | null
