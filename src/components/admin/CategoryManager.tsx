@@ -7,7 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Edit2, Check, X, Loader2 } from 'lucide-react';
+import { Plus, Edit2, Check, X, Loader2, ArrowUp, ArrowDown, GripVertical } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -15,6 +15,7 @@ interface Category {
   name: string;
   slug: string;
   active: boolean;
+  display_order: number;
 }
 
 const CategoryManager = () => {
@@ -36,7 +37,7 @@ const CategoryManager = () => {
     const { data, error } = await supabase
       .from('content_categories')
       .select('*')
-      .order('name');
+      .order('display_order');
 
     if (data) {
       setCategories(data as Category[]);
@@ -72,6 +73,11 @@ const CategoryManager = () => {
       return;
     }
 
+    // Get max display_order for this type
+    const maxOrder = categories
+      .filter(c => c.type === type)
+      .reduce((max, c) => Math.max(max, c.display_order || 0), 0);
+
     const { data, error } = await supabase
       .from('content_categories')
       .insert({
@@ -79,6 +85,7 @@ const CategoryManager = () => {
         name: name.trim(),
         slug,
         active: true,
+        display_order: maxOrder + 1,
       })
       .select()
       .single();
@@ -150,8 +157,53 @@ const CategoryManager = () => {
     updateCategory(category.id, { active: !category.active });
   };
 
-  const resourceTypes = categories.filter(c => c.type === 'resource_type');
-  const locations = categories.filter(c => c.type === 'location');
+  const moveCategory = async (category: Category, direction: 'up' | 'down') => {
+    const typeCategories = categories
+      .filter(c => c.type === category.type)
+      .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+    
+    const currentIndex = typeCategories.findIndex(c => c.id === category.id);
+    const swapIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    
+    if (swapIndex < 0 || swapIndex >= typeCategories.length) return;
+    
+    const swapCategory = typeCategories[swapIndex];
+    const currentOrder = category.display_order;
+    const swapOrder = swapCategory.display_order;
+    
+    // Update both categories
+    const { error: error1 } = await supabase
+      .from('content_categories')
+      .update({ display_order: swapOrder })
+      .eq('id', category.id);
+    
+    const { error: error2 } = await supabase
+      .from('content_categories')
+      .update({ display_order: currentOrder })
+      .eq('id', swapCategory.id);
+    
+    if (error1 || error2) {
+      toast({
+        title: 'Error',
+        description: 'Failed to reorder categories.',
+        variant: 'destructive',
+      });
+    } else {
+      // Update local state
+      setCategories(categories.map(c => {
+        if (c.id === category.id) return { ...c, display_order: swapOrder };
+        if (c.id === swapCategory.id) return { ...c, display_order: currentOrder };
+        return c;
+      }));
+    }
+  };
+
+  const resourceTypes = categories
+    .filter(c => c.type === 'resource_type')
+    .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+  const locations = categories
+    .filter(c => c.type === 'location')
+    .sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
 
   if (loading) {
     return (
@@ -163,13 +215,35 @@ const CategoryManager = () => {
 
   const renderCategoryList = (items: Category[], type: 'resource_type' | 'location') => (
     <div className="space-y-2">
-      {items.map((category) => (
+      {items.map((category, index) => (
         <div
           key={category.id}
-          className={`flex items-center gap-3 p-3 rounded-md border ${
+          className={`flex items-center gap-2 p-3 rounded-md border ${
             category.active ? 'bg-background' : 'bg-muted/50 opacity-60'
           }`}
         >
+          {/* Reorder buttons */}
+          <div className="flex flex-col gap-0.5">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-5 w-5 p-0"
+              onClick={() => moveCategory(category, 'up')}
+              disabled={index === 0}
+            >
+              <ArrowUp className="w-3 h-3" />
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-5 w-5 p-0"
+              onClick={() => moveCategory(category, 'down')}
+              disabled={index === items.length - 1}
+            >
+              <ArrowDown className="w-3 h-3" />
+            </Button>
+          </div>
+
           {editingId === category.id ? (
             <>
               <Input

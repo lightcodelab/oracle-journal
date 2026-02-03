@@ -119,7 +119,7 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
       .from('content_categories')
       .select('*')
       .eq('active', true)
-      .order('name');
+      .order('display_order');
 
     if (data) {
       setCategories(data as Category[]);
