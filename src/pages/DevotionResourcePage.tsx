@@ -172,7 +172,11 @@ const DevotionResourcePage = () => {
         const text = node.content?.map((c: any) => c.text).join('') || '';
         const level = node.attrs?.level || 2;
         const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
-        return <HeadingTag key={index} className="font-serif text-xl mb-3 mt-6 text-foreground">{text}</HeadingTag>;
+        // Apply brand gold color to h2 headings
+        const headingClass = level === 2 
+          ? "font-serif text-xl mb-3 mt-6 text-primary" 
+          : "font-serif text-xl mb-3 mt-6 text-foreground";
+        return <HeadingTag key={index} className={headingClass}>{text}</HeadingTag>;
       }
       if (node.type === 'bulletList') {
         return (
