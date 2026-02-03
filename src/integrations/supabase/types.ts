@@ -1015,6 +1015,7 @@ export type Database = {
       }
       healing_resources: {
         Row: {
+          body_richtext: Json | null
           created_at: string | null
           created_by: string | null
           display_image_url: string | null
@@ -1029,8 +1030,10 @@ export type Database = {
           tier: Database["public"]["Enums"]["resource_tier"] | null
           title: string
           updated_at: string | null
+          vimeo_embed_url: string | null
         }
         Insert: {
+          body_richtext?: Json | null
           created_at?: string | null
           created_by?: string | null
           display_image_url?: string | null
@@ -1045,8 +1048,10 @@ export type Database = {
           tier?: Database["public"]["Enums"]["resource_tier"] | null
           title: string
           updated_at?: string | null
+          vimeo_embed_url?: string | null
         }
         Update: {
+          body_richtext?: Json | null
           created_at?: string | null
           created_by?: string | null
           display_image_url?: string | null
@@ -1061,6 +1066,7 @@ export type Database = {
           tier?: Database["public"]["Enums"]["resource_tier"] | null
           title?: string
           updated_at?: string | null
+          vimeo_embed_url?: string | null
         }
         Relationships: []
       }
@@ -1957,6 +1963,45 @@ export type Database = {
             columns: ["resource_id"]
             isOneToOne: false
             referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      resource_symptom_mappings: {
+        Row: {
+          created_at: string | null
+          id: string
+          resource_id: string
+          severity_weight: number | null
+          symptom_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          resource_id: string
+          severity_weight?: number | null
+          symptom_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          resource_id?: string
+          severity_weight?: number | null
+          symptom_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resource_symptom_mappings_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "resource_symptom_mappings_symptom_id_fkey"
+            columns: ["symptom_id"]
+            isOneToOne: false
+            referencedRelation: "symptoms"
             referencedColumns: ["id"]
           },
         ]
