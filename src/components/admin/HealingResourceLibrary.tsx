@@ -15,7 +15,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, Search, MoreVertical, Edit2, Trash2, Eye, EyeOff,
-  Sparkles, BookOpen, Users, AlertTriangle
+  Sparkles, BookOpen, Users, AlertTriangle, Copy
 } from 'lucide-react';
 
 type Modality = 'meditation' | 'visualisation' | 'ritual' | 'somatic' | 'process';
@@ -123,6 +123,72 @@ const HealingResourceLibrary = ({ onEdit, onNew }: HealingResourceLibraryProps) 
     }
   };
 
+  const handleDuplicate = async (id: string) => {
+    try {
+      // Fetch the original resource
+      const { data: original, error: fetchError } = await supabase
+        .from('healing_resources')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (fetchError || !original) {
+        throw new Error('Failed to fetch resource');
+      }
+
+      // Create duplicate with modified title
+      const { data: newResource, error: insertError } = await supabase
+        .from('healing_resources')
+        .insert({
+          title: `${original.title} (Copy)`,
+          modality: original.modality,
+          intensity: original.intensity,
+          duration_sec: original.duration_sec,
+          teaching_description: original.teaching_description,
+          body_richtext: original.body_richtext,
+          display_image_url: original.display_image_url,
+          vimeo_embed_url: original.vimeo_embed_url,
+          tier: original.tier,
+          locale: original.locale,
+          status: 'draft',
+        })
+        .select()
+        .single();
+
+      if (insertError || !newResource) {
+        throw new Error('Failed to create duplicate');
+      }
+
+      // Copy symptom associations if any
+      const { data: symptomLinks } = await supabase
+        .from('contraindications')
+        .select('*')
+        .eq('resource_id', id);
+
+      if (symptomLinks && symptomLinks.length > 0) {
+        await supabase.from('contraindications').insert(
+          symptomLinks.map(link => ({
+            resource_id: newResource.id,
+            symptom_id: link.symptom_id,
+            rule: link.rule,
+            min_band: link.min_band,
+            message: link.message,
+          }))
+        );
+      }
+
+      toast({ title: 'Resource duplicated. Opening editor...' });
+      await loadResources();
+      onEdit(newResource.id);
+    } catch (error) {
+      console.error('Error duplicating resource:', error);
+      toast({
+        title: 'Error duplicating resource',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const filteredResources = resources.filter(r => {
     const matchesSearch = r.title.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter === 'all' || r.status === statusFilter;
@@ -224,6 +290,10 @@ const HealingResourceLibrary = ({ onEdit, onNew }: HealingResourceLibraryProps) 
                       <DropdownMenuItem onClick={() => onEdit(resource.id)}>
                         <Edit2 className="w-4 h-4 mr-2" />
                         Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDuplicate(resource.id)}>
+                        <Copy className="w-4 h-4 mr-2" />
+                        Duplicate
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleTogglePublish(resource.id, resource.status)}>
                         {resource.status === 'published' ? (
