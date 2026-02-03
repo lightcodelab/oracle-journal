@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
-import { Search, Plus, Edit, Trash2, Loader2, BookOpen, FileText, ExternalLink } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Loader2, BookOpen, FileText, ExternalLink, Copy } from 'lucide-react';
 import { format } from 'date-fns';
 import { SITE_CONFIG } from '@/lib/siteConfig';
 import {
@@ -120,6 +120,81 @@ const ContentLibrary = ({ onEdit, onNew }: ContentLibraryProps) => {
       });
       fetchResources();
     }
+  };
+
+  const handleDuplicate = async (id: string) => {
+    // Fetch the original resource
+    const { data: original, error: fetchError } = await supabase
+      .from('content_resources')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !original) {
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch resource for duplication.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Create duplicate with modified title and slug
+    const timestamp = Date.now();
+    const { data: newResource, error: insertError } = await supabase
+      .from('content_resources')
+      .insert({
+        title: `${original.title} (Copy)`,
+        slug: `${original.slug}-copy-${timestamp}`,
+        status: 'draft',
+        is_course: original.is_course,
+        summary: original.summary,
+        body_richtext: original.body_richtext,
+        main_media_kind: original.main_media_kind,
+        main_media_file_url: original.main_media_file_url,
+        main_media_embed_url: original.main_media_embed_url,
+        thumbnail_url: original.thumbnail_url,
+        resource_type_id: original.resource_type_id,
+        location_id: original.location_id,
+      })
+      .select()
+      .single();
+
+    if (insertError || !newResource) {
+      console.error('Error duplicating resource:', insertError);
+      toast({
+        title: 'Error',
+        description: 'Failed to duplicate resource.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Copy attachments if any
+    const { data: attachments } = await supabase
+      .from('content_resource_attachments')
+      .select('*')
+      .eq('resource_id', id);
+
+    if (attachments && attachments.length > 0) {
+      await supabase.from('content_resource_attachments').insert(
+        attachments.map(att => ({
+          resource_id: newResource.id,
+          file_url: att.file_url,
+          file_type: att.file_type,
+          name: att.name,
+          size_bytes: att.size_bytes,
+        }))
+      );
+    }
+
+    toast({
+      title: 'Duplicated',
+      description: 'Resource has been duplicated. Opening editor...',
+    });
+
+    fetchResources();
+    onEdit(newResource.id);
   };
 
   const filteredResources = resources.filter(resource => {
@@ -280,7 +355,16 @@ const ContentLibrary = ({ onEdit, onNew }: ContentLibraryProps) => {
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => handleDuplicate(resource.id)}
+                        title="Duplicate"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => onEdit(resource.id)}
+                        title="Edit"
                       >
                         <Edit className="w-4 h-4" />
                       </Button>
