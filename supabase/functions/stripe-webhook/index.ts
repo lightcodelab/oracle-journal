@@ -31,7 +31,9 @@ serve(async (req) => {
 
   try {
     const body = await req.text();
-    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    // In the Edge runtime, Stripe's webhook verification must use the async variant
+    // because WebCrypto providers (SubtleCrypto) cannot be used synchronously.
+    event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
     console.log("Webhook event received:", event.type);
   } catch (err: unknown) {
     const errMessage = err instanceof Error ? err.message : "Unknown error";
