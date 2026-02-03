@@ -778,19 +778,22 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
             </p>
           </div>
 
-          {/* Vimeo Embed */}
+          {/* Video Embed */}
           <div>
-            <Label htmlFor="vimeoUrl">Vimeo Video Embed URL</Label>
+            <Label htmlFor="vimeoUrl">Video Embed URL (Vimeo or YouTube)</Label>
             <div className="flex gap-2 mt-2">
               <Input
                 id="vimeoUrl"
                 value={vimeoEmbedUrl}
                 onChange={(e) => setVimeoEmbedUrl(e.target.value)}
-                placeholder="https://vimeo.com/123456789"
+                placeholder="https://vimeo.com/123456789 or https://youtube.com/watch?v=..."
                 className="flex-1"
               />
               <LinkIcon className="w-5 h-5 text-muted-foreground self-center" />
             </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Supports Vimeo and YouTube video URLs
+            </p>
             {vimeoEmbedUrl && extractVimeoId(vimeoEmbedUrl) && (
               <div className="mt-4">
                 <Label className="text-sm text-muted-foreground">Preview:</Label>
