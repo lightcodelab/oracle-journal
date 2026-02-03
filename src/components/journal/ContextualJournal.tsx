@@ -14,7 +14,7 @@ import {
 import type { Json } from '@/integrations/supabase/types';
 
 interface ContextualJournalProps {
-  contextType: 'card' | 'lesson' | 'course' | 'deck';
+  contextType: 'card' | 'lesson' | 'course' | 'deck' | 'protocol_step';
   contextId: string;
   contextTitle: string;
   placeholder?: string;

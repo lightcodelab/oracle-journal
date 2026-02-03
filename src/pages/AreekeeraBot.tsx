@@ -207,15 +207,26 @@ const AreekeeraBot = () => {
 
       if (userProtocolError) throw userProtocolError;
 
-      // Add protocol steps (if we have resource IDs)
-      // For MVP, we'll store the steps without resource links
+      // Add protocol steps - try to match by resource title to get resource_id
       if (protocol.steps.length > 0) {
-        const steps = protocol.steps.map((step, index) => ({
-          protocol_id: protocolData.id,
-          step_index: index + 1,
-          duration_sec: step.duration_sec,
-          notes: `${step.title}: ${step.reason}`,
-        }));
+        // Fetch resources to match by title
+        const { data: resources } = await supabase
+          .from('healing_resources')
+          .select('id, title')
+          .eq('status', 'published');
+
+        const resourceMap = new Map((resources || []).map(r => [r.title.toLowerCase(), r.id]));
+
+        const steps = protocol.steps.map((step, index) => {
+          const resourceId = resourceMap.get(step.title.toLowerCase()) || null;
+          return {
+            protocol_id: protocolData.id,
+            step_index: index + 1,
+            resource_id: resourceId,
+            duration_sec: step.duration_sec,
+            notes: `${step.description || ''} | Why: ${step.reason}`,
+          };
+        });
 
         await supabase.from('areekeera_protocol_steps').insert(steps);
       }
@@ -224,6 +235,9 @@ const AreekeeraBot = () => {
         title: "Protocol Saved",
         description: `"${protocol.title}" has been saved to your protocols.`,
       });
+
+      // Navigate to the protocol detail page
+      navigate(`/devotion/protocols/${protocolData.id}`);
     } catch (error) {
       console.error('Error saving protocol:', error);
       toast({
@@ -428,7 +442,7 @@ const AreekeeraBot = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
-          Connecting to AreekeerA®...
+          Connecting to AreekeerA Protocol Guide...
         </div>
       </div>
     );
@@ -496,7 +510,7 @@ const AreekeeraBot = () => {
                 <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                   <Shield className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="font-serif text-2xl">Welcome to AreekeerA</CardTitle>
+                <CardTitle className="font-serif text-2xl">Welcome to AreekeerA Protocol Guide</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground text-center">
@@ -819,13 +833,7 @@ const AreekeeraBot = () => {
                   className="flex-1"
                 >
                   <Save className="w-4 h-4 mr-2" />
-                  Save to My Protocols
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => navigate('/devotion/protocols')}
-                >
-                  View All Protocols
+                  Save & View Protocol
                 </Button>
               </div>
 

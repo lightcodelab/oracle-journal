@@ -39,6 +39,7 @@ import MembershipSuccess from "./pages/MembershipSuccess";
 import MyAccount from "./pages/MyAccount";
 import DevotionSectionPage from "./pages/DevotionSectionPage";
 import DevotionResourcePage from "./pages/DevotionResourcePage";
+import ProtocolDetailPage from "./pages/ProtocolDetailPage";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -58,6 +59,7 @@ const App = () => (
             <Route path="/devotion" element={<DoorOfDevotion />} />
             <Route path="/devotion/healing-bot" element={<HealingBot />} />
             <Route path="/devotion/protocols" element={<MyProtocols />} />
+            <Route path="/devotion/protocols/:protocolId" element={<ProtocolDetailPage />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/content" element={<ContentAdmin />} />
             <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
