@@ -43,6 +43,11 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   'loc-energy-hygiene-practices': <Zap className="w-8 h-8" />,
 };
 
+// Custom descriptions for specific categories (overrides auto-generated)
+const CATEGORY_DESCRIPTIONS: Record<string, string> = {
+  'loc-energy-hygiene-practices': 'Tools for clearing, cleansing, and protecting your energetic field from outside interference.',
+};
+
 const DoorOfDevotion = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -95,7 +100,7 @@ const DoorOfDevotion = () => {
   const dynamicCategories = locationCategories.map(loc => ({
     id: loc.id,
     name: loc.name,
-    description: `Explore ${loc.name.toLowerCase()} resources for your healing journey.`,
+    description: CATEGORY_DESCRIPTIONS[loc.slug] || `Explore ${loc.name.toLowerCase()} resources for your healing journey.`,
     icon: CATEGORY_ICONS[loc.slug] || <Folder className="w-8 h-8" />,
     route: `/devotion/section/${getRouteSlug(loc.slug)}`,
     isStatic: false,
