@@ -12,6 +12,7 @@ export interface ContentResource {
   main_media_embed_url: string | null;
   is_course: boolean | null;
   status: 'draft' | 'published';
+  source: 'content' | 'healing';
   resource_type: {
     id: string;
     name: string;
@@ -83,8 +84,8 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
 
         setLocationName(locationData.name);
 
-        // Build query - admins see all, others see only published
-        let query = supabase
+        // Fetch content_resources
+        let contentQuery = supabase
           .from('content_resources')
           .select(`
             id,
@@ -97,6 +98,7 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
             main_media_embed_url,
             is_course,
             status,
+            created_at,
             resource_type:content_categories!resource_type_id (
               id,
               name,
@@ -108,25 +110,63 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
 
         // Non-admins only see published content
         if (!userIsAdmin) {
-          query = query.eq('status', 'published');
+          contentQuery = contentQuery.eq('status', 'published');
         }
 
-        const { data: resourceData, error: resourceError } = await query;
+        // Fetch healing_resources with this location
+        let healingQuery = supabase
+          .from('healing_resources')
+          .select('id, title, display_image_url, teaching_description, status, created_at, modality, location_id')
+          .eq('location_id', locationData.id)
+          .order('created_at', { ascending: false });
 
-        if (resourceError) {
+        if (!userIsAdmin) {
+          healingQuery = healingQuery.eq('status', 'published');
+        }
+
+        const [contentResult, healingResult] = await Promise.all([
+          contentQuery,
+          healingQuery,
+        ]);
+
+        if (contentResult.error) {
           setError('Failed to load content');
           setLoading(false);
           return;
         }
 
-        // Transform URLs to public URLs
-        const transformedResources = (resourceData || []).map(resource => ({
+        // Transform content resources
+        const transformedContent = (contentResult.data || []).map(resource => ({
           ...resource,
           thumbnail_url: getPublicUrl('content-thumbnails', resource.thumbnail_url),
           main_media_file_url: getPublicUrl('content-main-media', resource.main_media_file_url),
+          source: 'content' as const,
         })) as ContentResource[];
 
-        setResources(transformedResources);
+        // Transform healing resources to match ContentResource shape
+        const transformedHealing = (healingResult.data || []).map(resource => ({
+          id: resource.id,
+          title: resource.title,
+          slug: `healing-${resource.id}`, // Use id-based slug for healing resources
+          summary: resource.teaching_description || null,
+          thumbnail_url: getPublicUrl('healing-resource-images', resource.display_image_url),
+          main_media_kind: null,
+          main_media_file_url: null,
+          main_media_embed_url: null,
+          is_course: false,
+          status: resource.status as 'draft' | 'published',
+          source: 'healing' as const,
+          resource_type: {
+            id: resource.modality,
+            name: resource.modality.charAt(0).toUpperCase() + resource.modality.slice(1),
+            slug: resource.modality,
+          },
+        })) as ContentResource[];
+
+        // Merge and sort by created_at (most recent first)
+        const allResources = [...transformedContent, ...transformedHealing];
+        
+        setResources(allResources);
       } catch (err) {
         setError('An error occurred');
       } finally {

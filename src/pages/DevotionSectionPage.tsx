@@ -17,6 +17,7 @@ const SECTION_LOCATION_MAP: Record<string, string> = {
   'altar-practices': 'loc-altar-practices',
   'somatic-rituals': 'loc-somatic-rituals',
   'healing-templates': 'loc-healing-templates',
+  'energy-hygiene-practices': 'loc-energy-hygiene-practices',
 };
 
 // Section metadata for display
@@ -36,6 +37,10 @@ const SECTION_META: Record<string, { title: string; description: string }> = {
   'healing-templates': {
     title: 'Healing Templates',
     description: 'Pre-designed templates for common healing journeys to guide your practice.',
+  },
+  'energy-hygiene-practices': {
+    title: 'Energy Hygiene Practices',
+    description: 'Essential practices for clearing, protecting, and maintaining your energetic field.',
   },
 };
 

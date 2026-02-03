@@ -1024,6 +1024,7 @@ export type Database = {
           id: string
           intensity: number | null
           locale: string | null
+          location_id: string | null
           modality: Database["public"]["Enums"]["resource_modality"]
           status: Database["public"]["Enums"]["resource_status"] | null
           teaching_description: string | null
@@ -1042,6 +1043,7 @@ export type Database = {
           id?: string
           intensity?: number | null
           locale?: string | null
+          location_id?: string | null
           modality: Database["public"]["Enums"]["resource_modality"]
           status?: Database["public"]["Enums"]["resource_status"] | null
           teaching_description?: string | null
@@ -1060,6 +1062,7 @@ export type Database = {
           id?: string
           intensity?: number | null
           locale?: string | null
+          location_id?: string | null
           modality?: Database["public"]["Enums"]["resource_modality"]
           status?: Database["public"]["Enums"]["resource_status"] | null
           teaching_description?: string | null
@@ -1068,7 +1071,15 @@ export type Database = {
           updated_at?: string | null
           vimeo_embed_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "healing_resources_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "content_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       intake_symptoms: {
         Row: {
