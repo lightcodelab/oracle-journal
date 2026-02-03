@@ -12,7 +12,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus } from 'lucide-react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import LinkExtension from '@tiptap/extension-link';
@@ -72,6 +73,11 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   // Symptoms state
   const [symptoms, setSymptoms] = useState<Symptom[]>([]);
   const [selectedSymptomIds, setSelectedSymptomIds] = useState<string[]>([]);
+  const [addSymptomOpen, setAddSymptomOpen] = useState(false);
+  const [newSymptomName, setNewSymptomName] = useState('');
+  const [newSymptomDomain, setNewSymptomDomain] = useState<'physical' | 'mental' | 'emotional' | 'spiritual'>('physical');
+  const [newSymptomDescription, setNewSymptomDescription] = useState('');
+  const [addingSymptom, setAddingSymptom] = useState(false);
   const [symptomSearch, setSymptomSearch] = useState('');
 
   const editor = useEditor({
@@ -107,6 +113,56 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     
     if (data) {
       setSymptoms(data);
+    }
+  };
+
+  const handleAddSymptom = async () => {
+    if (!newSymptomName.trim()) {
+      toast({
+        title: 'Name required',
+        description: 'Please enter a symptom name.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setAddingSymptom(true);
+
+    try {
+      const { data: newSymptom, error } = await supabase
+        .from('symptoms')
+        .insert({
+          name: newSymptomName.trim(),
+          domain: newSymptomDomain,
+          description: newSymptomDescription.trim() || null,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Add to local symptoms list
+      setSymptoms(prev => [...prev, newSymptom]);
+      
+      // Auto-select the new symptom for this resource
+      setSelectedSymptomIds(prev => [...prev, newSymptom.id]);
+
+      toast({ title: 'Symptom added and linked to resource' });
+
+      // Reset form and close dialog
+      setNewSymptomName('');
+      setNewSymptomDomain('physical');
+      setNewSymptomDescription('');
+      setAddSymptomOpen(false);
+    } catch (error: any) {
+      console.error('Error adding symptom:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to add symptom.',
+        variant: 'destructive',
+      });
+    } finally {
+      setAddingSymptom(false);
     }
   };
 
@@ -422,7 +478,65 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
         {/* Symptoms Tab */}
         <TabsContent value="symptoms" className="space-y-4 mt-4">
           <div>
-            <Label>Link Symptoms to Resource</Label>
+            <div className="flex items-center justify-between mb-2">
+              <Label>Link Symptoms to Resource</Label>
+              <Dialog open={addSymptomOpen} onOpenChange={setAddSymptomOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add a new Symptom
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add New Symptom</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 pt-4">
+                    <div>
+                      <Label htmlFor="symptomName">Symptom Name *</Label>
+                      <Input
+                        id="symptomName"
+                        value={newSymptomName}
+                        onChange={(e) => setNewSymptomName(e.target.value)}
+                        placeholder="e.g., Anxiety, Fatigue, Grief"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="symptomDomain">Domain *</Label>
+                      <Select value={newSymptomDomain} onValueChange={(v) => setNewSymptomDomain(v as any)}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="physical">Physical</SelectItem>
+                          <SelectItem value="mental">Mental</SelectItem>
+                          <SelectItem value="emotional">Emotional</SelectItem>
+                          <SelectItem value="spiritual">Spiritual</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="symptomDescription">Description (optional)</Label>
+                      <Input
+                        id="symptomDescription"
+                        value={newSymptomDescription}
+                        onChange={(e) => setNewSymptomDescription(e.target.value)}
+                        placeholder="Brief description of the symptom"
+                      />
+                    </div>
+                    <div className="flex justify-end gap-2 pt-2">
+                      <Button variant="outline" onClick={() => setAddSymptomOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleAddSymptom} disabled={addingSymptom}>
+                        {addingSymptom && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                        Add Symptom
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
             <p className="text-sm text-muted-foreground mb-4">
               Select the symptoms this resource helps address. This powers the recommendation engine.
             </p>
