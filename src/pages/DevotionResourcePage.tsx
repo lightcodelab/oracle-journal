@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Sparkles, Lock, ArrowUpRight, ArrowLeft, Play, Headphones, FileText, Download } from 'lucide-react';
 import { useTierAccess } from '@/hooks/useTierAccess';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
+import ContextualJournal from '@/components/journal/ContextualJournal';
 
 interface ResourceAttachment {
   id: string;
@@ -496,6 +497,20 @@ const DevotionResourcePage = () => {
             </div>
           </motion.div>
         )}
+
+        {/* Journal Reflections */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <ContextualJournal
+            contextType="resource"
+            contextId={resource.id}
+            contextTitle={resource.title}
+            placeholder="Capture your reflections on this resource..."
+          />
+        </motion.div>
       </div>
     </div>
   );
