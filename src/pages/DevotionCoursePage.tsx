@@ -144,7 +144,7 @@ const DevotionCoursePage = () => {
           <PageBreadcrumb 
             items={[
               { label: 'Door of Devotion', href: '/devotion' },
-              { label: 'Energy Hygiene', href: '/devotion/energy-hygiene' },
+              { label: 'Energy Hygiene Practices', href: '/devotion/section/energy-hygiene-practices' },
               { label: course.title }
             ]} 
           />

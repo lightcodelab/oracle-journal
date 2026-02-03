@@ -75,7 +75,7 @@ const DevotionCourses = () => {
         <PageBreadcrumb 
           items={[
             { label: 'Door of Devotion', href: '/devotion' },
-            { label: 'Energy Hygiene Kit' }
+            { label: 'Energy Hygiene Practices' }
           ]} 
         />
         <ProfileDropdown />
@@ -90,10 +90,10 @@ const DevotionCourses = () => {
           className="text-center mb-12"
         >
           <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
-            Energy Hygiene Kit
+            Energy Hygiene Practices
           </h1>
           <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
-            Tools for clearing and protecting your energetic field.
+            Tools for clearing, cleansing, and protecting your energetic field from outside interference.
           </p>
         </motion.div>
 

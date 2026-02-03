@@ -279,9 +279,9 @@ const DevotionLessonPage = () => {
           <PageBreadcrumb 
             items={[
               { label: 'Devotion', href: '/devotion' },
-              { label: 'Energy Hygiene', href: '/devotion/energy-hygiene' },
+              { label: 'Energy Hygiene Practices', href: '/devotion/section/energy-hygiene-practices' },
               { label: course?.title || 'Course', href: `/devotion/course/${courseId}` },
-            ]} 
+            ]}
           />
           <ProfileDropdown />
         </div>
