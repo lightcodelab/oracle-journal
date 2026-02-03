@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, ChevronRight, CheckCircle, AlertTriangle, Play, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, AlertTriangle, Play, Clock, Heart } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
@@ -60,6 +60,7 @@ interface Protocol {
   title: string;
   summary: string | null;
   safety_notes: string | null;
+  stated_feelings: string[] | null;
   created_at: string | null;
 }
 
@@ -354,6 +355,30 @@ const ProtocolDetailPage = () => {
               )}
             </div>
           </motion.div>
+
+          {/* Personalized Disclaimer (first step only) */}
+          {currentStepIndex === 1 && protocol.stated_feelings && protocol.stated_feelings.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.05 }}
+              className="mb-8"
+            >
+              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                <p className="text-sm flex items-center gap-2 font-medium mb-2">
+                  <Heart className="w-4 h-4 text-primary" />
+                  Complementary Resource
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  This protocol is being built as a complementary energy resource to support your bio-field 
+                  while you continue your professional medical care for{' '}
+                  <span className="font-medium text-foreground">
+                    {protocol.stated_feelings.join(', ')}
+                  </span>.
+                </p>
+              </div>
+            </motion.div>
+          )}
 
           {/* Safety Notes (first step only) */}
           {currentStepIndex === 1 && protocol.safety_notes && (
