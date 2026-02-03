@@ -30,7 +30,7 @@ import {
   Redo,
   Loader2,
 } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -77,6 +77,22 @@ export default function RichTextEditorToolbar({ editor }: RichTextEditorToolbarP
   const [linkUrl, setLinkUrl] = useState('');
   const [linkOpen, setLinkOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // TipTap's `editor.isActive()` won't cause React re-renders by itself.
+  // We force a re-render on selection/transaction so toolbar active states stay in sync.
+  const [, forceRerender] = useState(0);
+
+  useEffect(() => {
+    const bump = () => forceRerender((x) => x + 1);
+    editor.on('selectionUpdate', bump);
+    editor.on('transaction', bump);
+    editor.on('update', bump);
+
+    return () => {
+      editor.off('selectionUpdate', bump);
+      editor.off('transaction', bump);
+      editor.off('update', bump);
+    };
+  }, [editor]);
 
   const handleImageUpload = async (file: File) => {
     if (!file) return;
