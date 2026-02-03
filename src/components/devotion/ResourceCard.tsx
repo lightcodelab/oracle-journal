@@ -7,9 +7,10 @@ import type { ContentResource } from '@/hooks/useContentByLocation';
 interface ResourceCardProps {
   resource: ContentResource;
   index: number;
+  showDraftBadge?: boolean;
 }
 
-const ResourceCard = ({ resource, index }: ResourceCardProps) => {
+const ResourceCard = ({ resource, index, showDraftBadge = false }: ResourceCardProps) => {
   const navigate = useNavigate();
 
   const getMediaIcon = () => {
@@ -31,6 +32,8 @@ const ResourceCard = ({ resource, index }: ResourceCardProps) => {
     }
   };
 
+  const isDraft = resource.status === 'draft';
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -39,17 +42,34 @@ const ResourceCard = ({ resource, index }: ResourceCardProps) => {
       onClick={handleClick}
       className="group cursor-pointer"
     >
-      <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30">
+      <div className={`bg-card border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30 ${
+        isDraft ? 'border-amber-500/50' : 'border-border'
+      }`}>
         {/* Thumbnail */}
-        {resource.thumbnail_url && (
-          <div className="aspect-video w-full overflow-hidden bg-muted">
+        <div className="aspect-video w-full overflow-hidden bg-muted relative">
+          {resource.thumbnail_url ? (
             <img
               src={resource.thumbnail_url}
               alt={resource.title}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
-          </div>
-        )}
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-muted-foreground">
+                {resource.is_course ? <BookOpen className="w-12 h-12" /> : getMediaIcon()}
+              </div>
+            </div>
+          )}
+          
+          {/* Draft badge overlay */}
+          {showDraftBadge && isDraft && (
+            <div className="absolute top-2 right-2">
+              <Badge className="bg-amber-500 hover:bg-amber-600 text-white text-xs">
+                Draft
+              </Badge>
+            </div>
+          )}
+        </div>
 
         {/* Content */}
         <div className="p-5">

@@ -51,7 +51,7 @@ const DevotionSectionPage = () => {
   const locationSlug = section ? SECTION_LOCATION_MAP[section] : '';
   const sectionMeta = section ? SECTION_META[section] : null;
 
-  const { resources, loading: contentLoading, error, locationName } = useContentByLocation(locationSlug);
+  const { resources, loading: contentLoading, error, locationName, isAdmin } = useContentByLocation(locationSlug);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -210,7 +210,7 @@ const DevotionSectionPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {resources.map((resource, index) => (
-              <ResourceCard key={resource.id} resource={resource} index={index} />
+              <ResourceCard key={resource.id} resource={resource} index={index} showDraftBadge={isAdmin} />
             ))}
           </div>
         )}
