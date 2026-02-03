@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
-import { Search, Plus, Edit, Trash2, Loader2, BookOpen, FileText } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Loader2, BookOpen, FileText, ExternalLink } from 'lucide-react';
 import { format } from 'date-fns';
 import {
   AlertDialog,
@@ -260,6 +260,22 @@ const ContentLibrary = ({ onEdit, onNew }: ContentLibraryProps) => {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        asChild
+                        title="View live content"
+                      >
+                        <a
+                          href={resource.is_course 
+                            ? `/devotion/courses/${resource.slug}` 
+                            : `/devotion/resources/${resource.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </Button>
                       <Button
                         variant="ghost"
                         size="sm"

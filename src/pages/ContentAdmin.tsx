@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -13,9 +13,21 @@ type View = 'library' | 'form' | 'categories';
 
 const ContentAdmin = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [view, setView] = useState<View>('library');
   const [editingResourceId, setEditingResourceId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Handle ?edit=resourceId query parameter
+  useEffect(() => {
+    const editId = searchParams.get('edit');
+    if (editId && !loading) {
+      setEditingResourceId(editId);
+      setView('form');
+      // Clear the query param after processing
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, loading, setSearchParams]);
 
   useEffect(() => {
     const checkAuth = async () => {

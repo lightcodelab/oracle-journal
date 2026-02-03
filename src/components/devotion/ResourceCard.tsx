@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Play, Headphones, FileText, BookOpen } from 'lucide-react';
+import { Play, Headphones, FileText, BookOpen, Pencil } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import type { ContentResource } from '@/hooks/useContentByLocation';
 
 interface ResourceCardProps {
@@ -67,9 +68,21 @@ const ResourceCard = ({ resource, index, showDraftBadge = false }: ResourceCardP
             </div>
           )}
           
-          {/* Draft badge overlay */}
+          {/* Draft badge and edit button overlay */}
           {showDraftBadge && isDraft && (
-            <div className="absolute top-2 right-2">
+            <div className="absolute top-2 right-2 flex items-center gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                className="h-7 px-2 bg-white/90 hover:bg-white text-foreground shadow-sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/admin/content?edit=${resource.id}`);
+                }}
+              >
+                <Pencil className="w-3 h-3 mr-1" />
+                Edit
+              </Button>
               <Badge className="bg-amber-500 hover:bg-amber-600 text-white text-xs">
                 Draft
               </Badge>
