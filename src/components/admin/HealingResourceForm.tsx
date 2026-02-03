@@ -66,7 +66,9 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [title, setTitle] = useState('');
   const [modality, setModality] = useState<Modality>('meditation');
   const [intensity, setIntensity] = useState(3);
-  const [durationSec, setDurationSec] = useState(0);
+  const [durationHours, setDurationHours] = useState(0);
+  const [durationMinutes, setDurationMinutes] = useState(0);
+  const [durationSeconds, setDurationSeconds] = useState(0);
   const [status, setStatus] = useState<ResourceStatus>('draft');
   const [displayImageUrl, setDisplayImageUrl] = useState<string | null>(null);
   const [vimeoEmbedUrl, setVimeoEmbedUrl] = useState('');
@@ -200,7 +202,13 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       setTitle(resource.title);
       setModality(resource.modality as Modality);
       setIntensity(resource.intensity || 3);
-      setDurationSec(resource.duration_sec || 0);
+      
+      // Convert total seconds to hours, minutes, seconds
+      const totalSec = resource.duration_sec || 0;
+      setDurationHours(Math.floor(totalSec / 3600));
+      setDurationMinutes(Math.floor((totalSec % 3600) / 60));
+      setDurationSeconds(totalSec % 60);
+      
       setStatus(resource.status as ResourceStatus);
       setDisplayImageUrl(resource.display_image_url);
       setVimeoEmbedUrl(resource.vimeo_embed_url || '');
@@ -338,11 +346,14 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     setSaving(true);
 
     try {
+      // Calculate total duration in seconds
+      const totalDurationSec = (durationHours * 3600) + (durationMinutes * 60) + durationSeconds;
+      
       const payload = {
         title,
         modality,
         intensity,
-        duration_sec: durationSec || null,
+        duration_sec: totalDurationSec || null,
         status,
         display_image_url: displayImageUrl,
         vimeo_embed_url: vimeoEmbedUrl || null,
@@ -543,15 +554,45 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               </div>
             </div>
 
-            <div>
-              <Label htmlFor="duration">Duration (seconds)</Label>
-              <Input
-                id="duration"
-                type="number"
-                value={durationSec}
-                onChange={(e) => setDurationSec(parseInt(e.target.value) || 0)}
-                placeholder="e.g., 600 for 10 minutes"
-              />
+            <div className="col-span-2">
+              <Label>Duration</Label>
+              <div className="grid grid-cols-3 gap-3 mt-2">
+                <div>
+                  <Label htmlFor="durationHours" className="text-xs text-muted-foreground">Hours</Label>
+                  <Input
+                    id="durationHours"
+                    type="number"
+                    min={0}
+                    value={durationHours}
+                    onChange={(e) => setDurationHours(Math.max(0, parseInt(e.target.value) || 0))}
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="durationMinutes" className="text-xs text-muted-foreground">Minutes</Label>
+                  <Input
+                    id="durationMinutes"
+                    type="number"
+                    min={0}
+                    max={59}
+                    value={durationMinutes}
+                    onChange={(e) => setDurationMinutes(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))}
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="durationSeconds" className="text-xs text-muted-foreground">Seconds</Label>
+                  <Input
+                    id="durationSeconds"
+                    type="number"
+                    min={0}
+                    max={59}
+                    value={durationSeconds}
+                    onChange={(e) => setDurationSeconds(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))}
+                    placeholder="0"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </TabsContent>
