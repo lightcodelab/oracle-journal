@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, ChevronRight, CheckCircle, AlertTriangle, Play, Clock, Heart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, AlertTriangle, Play, Clock, Heart, Headphones } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
@@ -35,6 +35,33 @@ const extractVimeoId = (url: string): string => {
   return '';
 };
 
+// Extract YouTube video ID from URL
+const extractYouTubeId = (url: string): string => {
+  const patterns = [
+    /youtube\.com\/watch\?v=([^&]+)/,
+    /youtube\.com\/embed\/([^?]+)/,
+    /youtu\.be\/([^?]+)/,
+    /youtube\.com\/v\/([^?]+)/,
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  
+  return '';
+};
+
+// Check if URL is a Vimeo URL
+const isVimeoUrl = (url: string): boolean => {
+  return /vimeo\.com/.test(url) || /^\d+$/.test(url.trim());
+};
+
+// Check if URL is a YouTube URL
+const isYouTubeUrl = (url: string): boolean => {
+  return /youtube\.com|youtu\.be/.test(url);
+};
+
 interface ProtocolStep {
   id: string;
   step_index: number;
@@ -52,6 +79,7 @@ interface ProtocolStep {
     body_richtext: Json | null;
     vimeo_embed_url: string | null;
     display_image_url: string | null;
+    audio_file_url: string | null;
   } | null;
 }
 
@@ -135,7 +163,8 @@ const ProtocolDetailPage = () => {
             teaching_description,
             body_richtext,
             vimeo_embed_url,
-            display_image_url
+            display_image_url,
+            audio_file_url
           )
         `)
         .eq('protocol_id', protocolId)
@@ -416,7 +445,7 @@ const ProtocolDetailPage = () => {
             </motion.div>
           )}
 
-          {/* Vimeo Video */}
+          {/* Video Embed (Vimeo or YouTube) */}
           {resource?.vimeo_embed_url && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -425,7 +454,51 @@ const ProtocolDetailPage = () => {
               className="mb-8"
             >
               <div className="bg-card border border-border rounded-lg overflow-hidden">
-                <VimeoEmbed videoId={extractVimeoId(resource.vimeo_embed_url)} title={resource.title} />
+                {isVimeoUrl(resource.vimeo_embed_url) ? (
+                  <VimeoEmbed videoId={extractVimeoId(resource.vimeo_embed_url)} title={resource.title} />
+                ) : isYouTubeUrl(resource.vimeo_embed_url) ? (
+                  <div className="aspect-video">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${extractYouTubeId(resource.vimeo_embed_url)}`}
+                      title={resource.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  </div>
+                ) : (
+                  <VimeoEmbed videoId={extractVimeoId(resource.vimeo_embed_url)} title={resource.title} />
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Audio Player */}
+          {resource?.audio_file_url && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.22 }}
+              className="mb-8"
+            >
+              <div className="bg-card border border-border rounded-lg p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Headphones className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Audio Guide</p>
+                    <p className="text-xs text-muted-foreground">Listen to the guided practice</p>
+                  </div>
+                </div>
+                <audio
+                  src={resource.audio_file_url.startsWith('http') 
+                    ? resource.audio_file_url 
+                    : `https://gjaafbzhkdekgigmnafp.supabase.co/storage/v1/object/public/healing-resource-images/${resource.audio_file_url}`
+                  }
+                  controls
+                  className="w-full"
+                />
               </div>
             </motion.div>
           )}
