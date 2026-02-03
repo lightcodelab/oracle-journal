@@ -69,6 +69,10 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [status, setStatus] = useState<ResourceStatus>('draft');
   const [displayImageUrl, setDisplayImageUrl] = useState<string | null>(null);
   const [vimeoEmbedUrl, setVimeoEmbedUrl] = useState('');
+  const [locationId, setLocationId] = useState<string | null>(null);
+  
+  // Location options state
+  const [locations, setLocations] = useState<{ id: string; name: string }[]>([]);
   
   // Symptoms state
   const [symptoms, setSymptoms] = useState<Symptom[]>([]);
@@ -100,10 +104,24 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
 
   useEffect(() => {
     loadSymptoms();
+    loadLocations();
     if (resourceId) {
       loadResource();
     }
   }, [resourceId]);
+
+  const loadLocations = async () => {
+    const { data, error } = await supabase
+      .from('content_categories')
+      .select('id, name')
+      .eq('type', 'location')
+      .eq('active', true)
+      .order('name');
+    
+    if (data) {
+      setLocations(data);
+    }
+  };
 
   const loadSymptoms = async () => {
     const { data, error } = await supabase
@@ -184,6 +202,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       setStatus(resource.status as ResourceStatus);
       setDisplayImageUrl(resource.display_image_url);
       setVimeoEmbedUrl(resource.vimeo_embed_url || '');
+      setLocationId((resource as any).location_id || null);
       
       if (editor && resource.body_richtext && typeof resource.body_richtext === 'object') {
         editor.commands.setContent(resource.body_richtext as Record<string, unknown>);
@@ -279,6 +298,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
         body_richtext: editor?.getJSON() as any || null,
         locale: 'en',
         tier: 'paid' as const, // No free tier for the bot
+        location_id: locationId,
       };
 
       let savedResourceId = resourceId;
@@ -432,6 +452,26 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
                   <SelectItem value="published">Published</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="location">Display Location (Optional)</Label>
+              <Select value={locationId || 'none'} onValueChange={(v) => setLocationId(v === 'none' ? null : v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Protocol Only" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None – Protocol Only</SelectItem>
+                  {locations.map(loc => (
+                    <SelectItem key={loc.id} value={loc.id}>
+                      {loc.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground mt-1">
+                If set, this resource also appears in that section grid on the Door of Devotion.
+              </p>
             </div>
 
             <div className="col-span-2">
