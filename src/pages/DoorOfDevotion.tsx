@@ -26,8 +26,8 @@ const getRouteSlug = (locationSlug: string) => {
 const STATIC_CATEGORIES = [
   {
     id: 'areekeera',
-    name: 'AreekeerA® Protocol Guide',
-    description: 'AI-guided healing protocols personalized to your symptoms with trauma-informed safety',
+    name: 'AreekeerA® Protocol Builder',
+    description: 'Personalised Energy Healing Protocols built for you based on your symptoms (with trauma informed safety guardrails)',
     icon: <MessageCircleHeart className="w-8 h-8" />,
     route: '/devotion/areekeera',
     isStatic: true,
