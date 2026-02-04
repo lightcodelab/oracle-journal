@@ -3184,6 +3184,7 @@ export type Database = {
         | "ritual"
         | "somatic"
         | "process"
+        | "recipe"
       resource_status: "draft" | "review" | "published"
       resource_tier: "free" | "paid"
       severity_band: "mild" | "moderate" | "severe" | "critical"
@@ -3344,6 +3345,7 @@ export const Constants = {
         "ritual",
         "somatic",
         "process",
+        "recipe",
       ],
       resource_status: ["draft", "review", "published"],
       resource_tier: ["free", "paid"],
