@@ -236,6 +236,72 @@ export type Database = {
           },
         ]
       }
+      condition_resource_mappings: {
+        Row: {
+          condition_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          priority_boost: number | null
+          resource_id: string
+        }
+        Insert: {
+          condition_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          priority_boost?: number | null
+          resource_id: string
+        }
+        Update: {
+          condition_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          priority_boost?: number | null
+          resource_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "condition_resource_mappings_condition_id_fkey"
+            columns: ["condition_id"]
+            isOneToOne: false
+            referencedRelation: "conditions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "condition_resource_mappings_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conditions: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       content_buckets: {
         Row: {
           created_at: string | null

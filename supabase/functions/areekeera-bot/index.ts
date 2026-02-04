@@ -161,10 +161,48 @@ serve(async (req) => {
       console.error("Error fetching mappings:", mappingError);
     }
 
-    // Build resource context
-    const resourceList = (resources || []).map((r: HealingResource) => 
-      `- ${r.title} (${r.modality}, intensity ${r.intensity}/5, ${r.duration_sec ? Math.round(r.duration_sec / 60) + ' min' : 'variable duration'}, ${r.tier}): ${r.teaching_description || 'No description'}`
-    ).join('\n') || 'No healing resources available yet.';
+    // Fetch conditions and condition-resource mappings for priority matching
+    const { data: conditions, error: conditionsError } = await supabase
+      .from('conditions')
+      .select('id, name, description');
+    
+    if (conditionsError) {
+      console.error("Error fetching conditions:", conditionsError);
+    }
+
+    const { data: conditionMappings, error: conditionMappingsError } = await supabase
+      .from('condition_resource_mappings')
+      .select('condition_id, resource_id, priority_boost');
+    
+    if (conditionMappingsError) {
+      console.error("Error fetching condition mappings:", conditionMappingsError);
+    }
+
+    // Build condition context for the AI
+    const conditionList = (conditions || []).map(c => 
+      `- ${c.name}${c.description ? `: ${c.description}` : ''}`
+    ).join('\n') || 'No conditions defined yet.';
+
+    // Build a map of resource IDs to their condition associations
+    const resourceConditionMap = new Map<string, { conditionNames: string[], priorityBoost: number }>();
+    (conditionMappings || []).forEach(mapping => {
+      const condition = conditions?.find(c => c.id === mapping.condition_id);
+      if (condition) {
+        const existing = resourceConditionMap.get(mapping.resource_id) || { conditionNames: [], priorityBoost: 1 };
+        existing.conditionNames.push(condition.name);
+        existing.priorityBoost = Math.max(existing.priorityBoost, mapping.priority_boost || 1.5);
+        resourceConditionMap.set(mapping.resource_id, existing);
+      }
+    });
+
+    // Build resource context with condition information
+    const resourceList = (resources || []).map((r: HealingResource) => {
+      const conditionInfo = resourceConditionMap.get(r.id);
+      const conditionTag = conditionInfo 
+        ? ` [CONDITION-SPECIFIC: ${conditionInfo.conditionNames.join(', ')} - PRIORITY BOOST: ${conditionInfo.priorityBoost}x]`
+        : '';
+      return `- ${r.title} (${r.modality}, intensity ${r.intensity}/5, ${r.duration_sec ? Math.round(r.duration_sec / 60) + ' min' : 'variable duration'}, ${r.tier})${conditionTag}: ${r.teaching_description || 'No description'}`;
+    }).join('\n') || 'No healing resources available yet.';
 
     // Build symptom context
     const symptomContext = intake?.symptoms?.map(s => 
@@ -203,6 +241,9 @@ ${intake?.sessionTimeMinutes ? `Available time: ${intake.sessionTimeMinutes} min
 AVAILABLE HEALING RESOURCES:
 ${resourceList}
 
+AVAILABLE HEALTH CONDITIONS (for priority matching):
+${conditionList}
+
 PROTOCOL GUIDELINES:
 1. Be warm, empathetic, and trauma-informed in your responses
 2. Consider the severity bands when recommending: mild (1-3), moderate (4-5), severe (6-7), critical (8-10)
@@ -210,6 +251,11 @@ PROTOCOL GUIDELINES:
 4. Respect the user's available session time when building protocols
 5. Always acknowledge this is not medical advice and encourage professional support for serious concerns
 6. Create protocols with 3-5 steps that flow logically (grounding → processing → integration)
+
+CONDITION PRIORITIZATION:
+- When a user mentions a specific health condition (e.g., Lupus, Cancer, Eczema, etc.), PRIORITIZE resources marked with [CONDITION-SPECIFIC] tags that match their condition
+- Resources with condition mappings have been specifically curated for those conditions and should be preferred over general symptom-based matches
+- If a user mentions a condition, ask if they'd like a protocol specifically designed for that condition
 
 SAFETY RULES:
 - If severity is critical (8-10), prioritize grounding and stabilization practices
@@ -222,6 +268,7 @@ When ready to create a protocol, format it as a JSON block:
   "title": "Protocol Title",
   "summary": "Brief description of the protocol",
   "safety_notes": "Any safety considerations (required for severe/critical)",
+  "condition_matched": "Name of the matched condition if applicable, or null",
   "steps": [
     {
       "id": "resource-id",

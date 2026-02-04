@@ -17,7 +17,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus, Music, CalendarIcon } from 'lucide-react';
+import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus, Music, CalendarIcon, Heart } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -38,6 +39,12 @@ interface Symptom {
   id: string;
   name: string;
   domain: 'physical' | 'mental' | 'emotional' | 'spiritual';
+  description: string | null;
+}
+
+interface Condition {
+  id: string;
+  name: string;
   description: string | null;
 }
 
@@ -99,6 +106,11 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [addingSymptom, setAddingSymptom] = useState(false);
   const [symptomSearch, setSymptomSearch] = useState('');
 
+  // Conditions state
+  const [conditions, setConditions] = useState<Condition[]>([]);
+  const [selectedConditionIds, setSelectedConditionIds] = useState<string[]>([]);
+  const [conditionSearch, setConditionSearch] = useState('');
+
   // Resource edit lock - prevents simultaneous editing by multiple admins
   const { isLocked, lockedBy, isLoading: lockLoading, acquireLock } = useResourceEditLock({
     resourceType: 'healing',
@@ -133,6 +145,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
 
   useEffect(() => {
     loadSymptoms();
+    loadConditions();
     loadLocations();
     if (resourceId) {
       loadResource();
@@ -160,6 +173,17 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     
     if (data) {
       setSymptoms(data);
+    }
+  };
+
+  const loadConditions = async () => {
+    const { data, error } = await supabase
+      .from('conditions')
+      .select('*')
+      .order('name', { ascending: true });
+    
+    if (data) {
+      setConditions(data);
     }
   };
 
@@ -261,6 +285,16 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       
       if (mappings) {
         setSelectedSymptomIds(mappings.map(m => m.symptom_id));
+      }
+
+      // Load linked conditions
+      const { data: conditionMappings } = await supabase
+        .from('condition_resource_mappings')
+        .select('condition_id')
+        .eq('resource_id', resourceId);
+      
+      if (conditionMappings) {
+        setSelectedConditionIds(conditionMappings.map(m => m.condition_id));
       }
     }
 
@@ -453,6 +487,27 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
             console.error('Error saving symptom mappings:', mappingError);
           }
         }
+
+        // Update condition mappings
+        await supabase
+          .from('condition_resource_mappings')
+          .delete()
+          .eq('resource_id', savedResourceId);
+
+        if (selectedConditionIds.length > 0) {
+          const conditionMappings = selectedConditionIds.map(conditionId => ({
+            resource_id: savedResourceId,
+            condition_id: conditionId,
+          }));
+
+          const { error: conditionMappingError } = await supabase
+            .from('condition_resource_mappings')
+            .insert(conditionMappings);
+
+          if (conditionMappingError) {
+            console.error('Error saving condition mappings:', conditionMappingError);
+          }
+        }
       }
 
       toast({
@@ -481,8 +536,20 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     );
   };
 
+  const toggleCondition = (conditionId: string) => {
+    setSelectedConditionIds(prev => 
+      prev.includes(conditionId)
+        ? prev.filter(id => id !== conditionId)
+        : [...prev, conditionId]
+    );
+  };
+
   const filteredSymptoms = symptoms.filter(s =>
     s.name.toLowerCase().includes(symptomSearch.toLowerCase())
+  );
+
+  const filteredConditions = conditions.filter(c =>
+    c.name.toLowerCase().includes(conditionSearch.toLowerCase())
   );
 
   const groupedSymptoms = filteredSymptoms.reduce((acc, symptom) => {
@@ -882,6 +949,73 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               {filteredSymptoms.length === 0 && (
                 <p className="text-center text-muted-foreground py-8">
                   No symptoms found. Add symptoms in the Symptoms tab.
+                </p>
+              )}
+            </ScrollArea>
+          </div>
+
+          {/* Conditions Section */}
+          <Separator className="my-6" />
+          
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Heart className="w-5 h-5 text-pink-500" />
+              <Label className="text-base font-medium">Health Conditions</Label>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Link broader health conditions. Resources mapped to conditions are prioritized in protocol generation.
+            </p>
+            
+            <Input
+              placeholder="Search conditions..."
+              value={conditionSearch}
+              onChange={(e) => setConditionSearch(e.target.value)}
+              className="mb-4"
+            />
+
+            {selectedConditionIds.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4 p-3 bg-pink-500/10 rounded-md">
+                <span className="text-sm text-muted-foreground">Selected:</span>
+                {selectedConditionIds.map(id => {
+                  const condition = conditions.find(c => c.id === id);
+                  return condition ? (
+                    <Badge 
+                      key={id} 
+                      variant="secondary"
+                      className="cursor-pointer bg-pink-500/20 text-pink-700 dark:text-pink-400"
+                      onClick={() => toggleCondition(id)}
+                    >
+                      {condition.name}
+                      <X className="w-3 h-3 ml-1" />
+                    </Badge>
+                  ) : null;
+                })}
+              </div>
+            )}
+
+            <ScrollArea className="h-[200px] pr-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {filteredConditions.map(condition => (
+                  <div
+                    key={condition.id}
+                    className={`flex items-center space-x-3 p-2 rounded-md cursor-pointer transition-colors ${
+                      selectedConditionIds.includes(condition.id)
+                        ? 'bg-pink-500/10 border border-pink-500/30'
+                        : 'hover:bg-muted'
+                    }`}
+                    onClick={() => toggleCondition(condition.id)}
+                  >
+                    <Checkbox
+                      checked={selectedConditionIds.includes(condition.id)}
+                      onCheckedChange={() => toggleCondition(condition.id)}
+                    />
+                    <span className="text-sm">{condition.name}</span>
+                  </div>
+                ))}
+              </div>
+              {filteredConditions.length === 0 && (
+                <p className="text-center text-muted-foreground py-8">
+                  No conditions found. Add conditions in the Symptoms tab of AreekeerA Admin.
                 </p>
               )}
             </ScrollArea>
