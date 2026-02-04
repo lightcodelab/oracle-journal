@@ -110,6 +110,10 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [conditions, setConditions] = useState<Condition[]>([]);
   const [selectedConditionIds, setSelectedConditionIds] = useState<string[]>([]);
   const [conditionSearch, setConditionSearch] = useState('');
+  const [addConditionOpen, setAddConditionOpen] = useState(false);
+  const [newConditionName, setNewConditionName] = useState('');
+  const [newConditionDescription, setNewConditionDescription] = useState('');
+  const [addingCondition, setAddingCondition] = useState(false);
 
   // Resource edit lock - prevents simultaneous editing by multiple admins
   const { isLocked, lockedBy, isLoading: lockLoading, acquireLock } = useResourceEditLock({
@@ -234,6 +238,54 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       });
     } finally {
       setAddingSymptom(false);
+    }
+  };
+
+  const handleAddCondition = async () => {
+    if (!newConditionName.trim()) {
+      toast({
+        title: 'Name required',
+        description: 'Please enter a condition name.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setAddingCondition(true);
+
+    try {
+      const { data: newCondition, error } = await supabase
+        .from('conditions')
+        .insert({
+          name: newConditionName.trim(),
+          description: newConditionDescription.trim() || null,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Add to local conditions list
+      setConditions(prev => [...prev, newCondition]);
+      
+      // Auto-select the new condition for this resource
+      setSelectedConditionIds(prev => [...prev, newCondition.id]);
+
+      toast({ title: 'Condition added and linked to resource' });
+
+      // Reset form and close dialog
+      setNewConditionName('');
+      setNewConditionDescription('');
+      setAddConditionOpen(false);
+    } catch (error: any) {
+      console.error('Error adding condition:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to add condition.',
+        variant: 'destructive',
+      });
+    } finally {
+      setAddingCondition(false);
     }
   };
 
@@ -958,9 +1010,53 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
           <Separator className="my-4" />
           
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Heart className="w-5 h-5 text-pink-500" />
-              <Label className="text-base font-medium">Health Conditions</Label>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Heart className="w-5 h-5 text-pink-500" />
+                <Label className="text-base font-medium">Health Conditions</Label>
+              </div>
+              <Dialog open={addConditionOpen} onOpenChange={setAddConditionOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add a new Condition
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add New Condition</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 pt-4">
+                    <div>
+                      <Label htmlFor="conditionName">Condition Name *</Label>
+                      <Input
+                        id="conditionName"
+                        value={newConditionName}
+                        onChange={(e) => setNewConditionName(e.target.value)}
+                        placeholder="e.g., Lupus, Cancer, Eczema"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="conditionDescription">Description (optional)</Label>
+                      <Input
+                        id="conditionDescription"
+                        value={newConditionDescription}
+                        onChange={(e) => setNewConditionDescription(e.target.value)}
+                        placeholder="Brief description of the condition"
+                      />
+                    </div>
+                    <div className="flex justify-end gap-2 pt-2">
+                      <Button variant="outline" onClick={() => setAddConditionOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleAddCondition} disabled={addingCondition}>
+                        {addingCondition && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                        Add Condition
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
             <p className="text-sm text-muted-foreground mb-4">
               Link broader health conditions. Resources mapped to conditions are prioritized in protocol generation.
@@ -993,7 +1089,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               </div>
             )}
 
-            <ScrollArea className="h-[200px] pr-4">
+            <ScrollArea className="max-h-[200px] pr-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {filteredConditions.map(condition => (
                   <div
@@ -1015,7 +1111,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               </div>
               {filteredConditions.length === 0 && (
                 <p className="text-center text-muted-foreground py-8">
-                  No conditions found. Add conditions in the Symptoms tab of AreekeerA Admin.
+                  No conditions found. Click "Add a new Condition" to create one.
                 </p>
               )}
             </ScrollArea>
