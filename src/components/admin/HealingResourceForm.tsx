@@ -19,9 +19,9 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import LinkExtension from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
-import Image from '@tiptap/extension-image';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
+import { SelectableImageExtension } from '@/lib/selectableImageExtension';
 import RichTextEditorToolbar from './RichTextEditorToolbar';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import { useResourceEditLock } from '@/hooks/useResourceEditLock';
@@ -112,7 +112,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       StarterKit,
       LinkExtension.configure({ openOnClick: false }),
       Placeholder.configure({ placeholder: 'Describe the healing practice and its benefits...' }),
-      Image.configure({
+      SelectableImageExtension.configure({
         HTMLAttributes: { class: 'max-w-full h-auto rounded-md' },
       }),
       Underline,
