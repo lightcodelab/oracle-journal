@@ -16,7 +16,8 @@ import {
   Undo,
   Redo,
   Check,
-  Loader2
+  Loader2,
+  Save
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Json } from '@/integrations/supabase/types';
@@ -25,10 +26,12 @@ interface JournalEditorProps {
   initialContent?: Json;
   onSave?: (content: Json, contentText: string) => void;
   onAutoSave?: (content: Json, contentText: string) => void;
+  onManualSave?: (content: Json, contentText: string) => void;
   autoSaveDelay?: number;
   placeholder?: string;
   readOnly?: boolean;
   showToolbar?: boolean;
+  showManualSaveButton?: boolean;
   className?: string;
   isSaving?: boolean;
 }
@@ -173,10 +176,12 @@ export default function JournalEditor({
   initialContent,
   onSave,
   onAutoSave,
+  onManualSave,
   autoSaveDelay = 2000,
   placeholder = 'Begin your reflection...',
   readOnly = false,
   showToolbar = true,
+  showManualSaveButton = false,
   className,
   isSaving = false,
 }: JournalEditorProps) {
@@ -248,19 +253,28 @@ export default function JournalEditor({
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
-        if (editor && onSave) {
-          const json = editor.getJSON();
-          const text = editor.getText();
-          onSave(json as Json, text);
-          lastSavedContentRef.current = JSON.stringify(json);
-          setSaveStatus('saved');
-        }
+        handleManualSave();
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [editor, onSave]);
+  }, [editor, onSave, onManualSave]);
+
+  const handleManualSave = () => {
+    if (!editor) return;
+    const json = editor.getJSON();
+    const text = editor.getText();
+    
+    if (onManualSave) {
+      onManualSave(json as Json, text);
+    } else if (onSave) {
+      onSave(json as Json, text);
+    }
+    
+    lastSavedContentRef.current = JSON.stringify(json);
+    setSaveStatus('saved');
+  };
 
   // Cleanup
   useEffect(() => {
@@ -285,18 +299,36 @@ export default function JournalEditor({
       <div className="relative">
         <EditorContent editor={editor} />
         {!readOnly && (
-          <div className="absolute bottom-2 right-2 flex items-center gap-1 text-xs text-muted-foreground">
-            {saveStatus === 'saving' && (
-              <>
-                <Loader2 className="h-3 w-3 animate-spin" />
-                <span>Saving...</span>
-              </>
-            )}
-            {saveStatus === 'saved' && (
-              <>
-                <Check className="h-3 w-3 text-green-500" />
-                <span>Saved</span>
-              </>
+          <div className="absolute bottom-2 right-2 flex items-center gap-2">
+            {/* Save status indicator */}
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              {saveStatus === 'saving' && (
+                <>
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  <span>Saving...</span>
+                </>
+              )}
+              {saveStatus === 'saved' && (
+                <>
+                  <Check className="h-3 w-3 text-green-500" />
+                  <span>Saved</span>
+                </>
+              )}
+            </div>
+            
+            {/* Manual save button */}
+            {showManualSaveButton && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleManualSave}
+                disabled={isSaving || saveStatus === 'saving'}
+                className="h-7 px-2 text-xs"
+              >
+                <Save className="h-3 w-3 mr-1" />
+                Save
+              </Button>
             )}
           </div>
         )}
