@@ -9,7 +9,8 @@ import {
   BookOpen,
   Pin,
   Calendar,
-  Layers
+  Layers,
+  Trash2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
@@ -40,19 +51,27 @@ import {
   useAssignTagToEntry, 
   useRemoveTagFromEntry 
 } from '@/hooks/useJournalTags';
+import {
+  useEntryCategories,
+  useAssignCategoryToEntry,
+} from '@/hooks/useJournalCategories';
 import type { Json } from '@/integrations/supabase/types';
+import { useToast } from '@/hooks/use-toast';
 
 type ViewMode = 'list' | 'editor';
 type FilterType = 'all' | 'pinned' | 'card' | 'lesson' | 'course';
 
 const JournalContent = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<FilterType>('all');
   const [entryTitle, setEntryTitle] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [entryToDelete, setEntryToDelete] = useState<string | null>(null);
 
   // Queries and mutations
   const { data: entries = [], isLoading: entriesLoading } = useJournalEntries();
@@ -64,6 +83,9 @@ const JournalContent = () => {
   const { data: entryTags = [] } = useEntryTags(selectedEntry?.id);
   const assignTag = useAssignTagToEntry();
   const removeTag = useRemoveTagFromEntry();
+
+  const { data: entryCategories = [] } = useEntryCategories(selectedEntry?.id);
+  const assignCategory = useAssignCategoryToEntry();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -164,6 +186,41 @@ const JournalContent = () => {
     } else {
       await assignTag.mutateAsync({ entryId: selectedEntry.id, tagId });
     }
+  };
+
+  const handleAddCategory = async (entryId: string, categoryId: string) => {
+    await assignCategory.mutateAsync({ entryId, categoryId });
+  };
+
+  const handleDeleteRequest = (entryId: string) => {
+    setEntryToDelete(entryId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (entryToDelete) {
+      await deleteEntry.mutateAsync(entryToDelete);
+      // If we're in editor mode and deleting the current entry, go back to list
+      if (selectedEntry?.id === entryToDelete) {
+        handleBackToList();
+      }
+      setEntryToDelete(null);
+    }
+    setDeleteDialogOpen(false);
+  };
+
+  const handleManualSave = async (content: Json, contentText: string) => {
+    if (!selectedEntry) return;
+    await updateEntry.mutateAsync({
+      id: selectedEntry.id,
+      title: entryTitle || null,
+      content_json: content,
+      content_text: contentText,
+    });
+    toast({
+      title: 'Entry saved',
+      description: 'Your journal entry has been saved.',
+    });
   };
 
   const handleBackToList = () => {
@@ -288,7 +345,9 @@ const JournalContent = () => {
                       entry={entry}
                       onSelect={handleSelectEntry}
                       onPin={(id, isPinned) => togglePin.mutate({ id, isPinned })}
-                      onDelete={(id) => deleteEntry.mutate(id)}
+                      onDelete={handleDeleteRequest}
+                      onAddCategory={handleAddCategory}
+                      entryCategories={[]}
                       isSelected={selectedEntry?.id === entry.id}
                     />
                   ))}
@@ -350,13 +409,51 @@ const JournalContent = () => {
               <JournalEditor
                 initialContent={selectedEntry?.content_json}
                 onAutoSave={handleAutoSave}
+                onManualSave={handleManualSave}
+                showManualSaveButton={true}
                 placeholder="Begin your reflection..."
                 isSaving={updateEntry.isPending}
               />
+
+              {/* Delete button */}
+              {selectedEntry && (
+                <div className="mt-6 pt-4 border-t border-border">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDeleteRequest(selectedEntry.id)}
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Entry
+                  </Button>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Journal Entry</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this entry? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

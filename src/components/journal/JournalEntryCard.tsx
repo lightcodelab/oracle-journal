@@ -9,24 +9,32 @@ import {
   FileText,
   BookOpen,
   Layers,
-  Sparkles
+  Sparkles,
+  FolderPlus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { JournalEntry } from '@/hooks/useJournalEntries';
+import { useJournalCategories } from '@/hooks/useJournalCategories';
 
 interface JournalEntryCardProps {
   entry: JournalEntry;
   onSelect: (entry: JournalEntry) => void;
   onPin?: (id: string, isPinned: boolean) => void;
   onDelete?: (id: string) => void;
+  onAddCategory?: (entryId: string, categoryId: string) => void;
+  entryCategories?: string[];
   isSelected?: boolean;
 }
 
@@ -57,12 +65,17 @@ export default function JournalEntryCard({
   onSelect,
   onPin,
   onDelete,
+  onAddCategory,
+  entryCategories = [],
   isSelected = false,
 }: JournalEntryCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const { data: categories = [] } = useJournalCategories();
 
   const title = entry.title || entry.content_text?.slice(0, 50) || 'Untitled Entry';
   const preview = entry.content_text?.slice(0, 150) || '';
+
+  const hasActions = onPin || onDelete || onAddCategory;
 
   return (
     <motion.div
@@ -94,20 +107,23 @@ export default function JournalEntryCard({
           <h3 className="font-medium text-foreground truncate">{title}</h3>
         </div>
 
-        {/* Actions */}
-        {(isHovered || isSelected) && (onPin || onDelete) && (
+        {/* Actions - Always visible */}
+        {hasActions && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 w-7 p-0"
+                className={cn(
+                  "h-7 w-7 p-0 transition-opacity",
+                  isHovered || isSelected ? "opacity-100" : "opacity-50"
+                )}
                 onClick={(e) => e.stopPropagation()}
               >
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-48">
               {onPin && (
                 <DropdownMenuItem
                   onClick={(e) => {
@@ -119,17 +135,52 @@ export default function JournalEntryCard({
                   {entry.is_pinned ? 'Unpin' : 'Pin'} Entry
                 </DropdownMenuItem>
               )}
+              
+              {onAddCategory && categories.length > 0 && (
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger onClick={(e) => e.stopPropagation()}>
+                    <FolderPlus className="h-4 w-4 mr-2" />
+                    Add to Category
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent className="w-48">
+                    {categories.map((category) => {
+                      const isInCategory = entryCategories.includes(category.id);
+                      return (
+                        <DropdownMenuItem
+                          key={category.id}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!isInCategory) {
+                              onAddCategory(entry.id, category.id);
+                            }
+                          }}
+                          disabled={isInCategory}
+                          className={isInCategory ? 'opacity-50' : ''}
+                        >
+                          {category.emoji && <span className="mr-2">{category.emoji}</span>}
+                          {category.name}
+                          {isInCategory && <span className="ml-auto text-xs text-muted-foreground">Added</span>}
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+              )}
+              
               {onDelete && (
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(entry.id);
-                  }}
-                  className="text-destructive focus:text-destructive"
-                >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Delete Entry
-                </DropdownMenuItem>
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete(entry.id);
+                    }}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Entry
+                  </DropdownMenuItem>
+                </>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
