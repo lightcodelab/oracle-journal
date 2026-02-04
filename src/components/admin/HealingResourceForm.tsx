@@ -17,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus, Music, CalendarIcon, Heart } from 'lucide-react';
+import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus, Music, CalendarIcon, Heart, UtensilsCrossed } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -32,7 +32,7 @@ import { VimeoEmbed } from '@/components/VimeoEmbed';
 import { useResourceEditLock } from '@/hooks/useResourceEditLock';
 import ResourceEditLockWarning from './ResourceEditLockWarning';
 
-type Modality = 'meditation' | 'visualisation' | 'ritual' | 'somatic' | 'process';
+type Modality = 'meditation' | 'visualisation' | 'ritual' | 'somatic' | 'process' | 'recipe';
 type ResourceStatus = 'draft' | 'review' | 'published';
 
 interface Symptom {
@@ -60,6 +60,7 @@ const modalityOptions: { value: Modality; label: string; icon: React.ReactNode }
   { value: 'ritual', label: 'Ritual', icon: <BookOpen className="w-4 h-4" /> },
   { value: 'somatic', label: 'Somatic', icon: <Users className="w-4 h-4" /> },
   { value: 'process', label: 'Process', icon: <AlertTriangle className="w-4 h-4" /> },
+  { value: 'recipe', label: 'Recipe', icon: <UtensilsCrossed className="w-4 h-4" /> },
 ];
 
 const domainColors: Record<string, string> = {
