@@ -24,6 +24,8 @@ import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import RichTextEditorToolbar from './RichTextEditorToolbar';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
+import { useResourceEditLock } from '@/hooks/useResourceEditLock';
+import ResourceEditLockWarning from './ResourceEditLockWarning';
 
 type Modality = 'meditation' | 'visualisation' | 'ritual' | 'somatic' | 'process';
 type ResourceStatus = 'draft' | 'review' | 'published';
@@ -90,6 +92,20 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [newSymptomDescription, setNewSymptomDescription] = useState('');
   const [addingSymptom, setAddingSymptom] = useState(false);
   const [symptomSearch, setSymptomSearch] = useState('');
+
+  // Resource edit lock - prevents simultaneous editing by multiple admins
+  const { isLocked, lockedBy, isLoading: lockLoading, acquireLock } = useResourceEditLock({
+    resourceType: 'healing',
+    resourceId,
+    enabled: !!resourceId, // Only enable for existing resources
+  });
+
+  // Acquire lock when component mounts (for existing resources)
+  useEffect(() => {
+    if (resourceId && !lockLoading && !isLocked) {
+      acquireLock();
+    }
+  }, [resourceId, lockLoading, isLocked, acquireLock]);
 
   const editor = useEditor({
     extensions: [
@@ -460,12 +476,17 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     return supabase.storage.from('healing-resource-images').getPublicUrl(path).data.publicUrl;
   };
 
-  if (loading) {
+  if (loading || lockLoading) {
     return (
       <div className="flex items-center justify-center p-8">
         <Loader2 className="w-6 h-6 animate-spin" />
       </div>
     );
+  }
+
+  // Show lock warning if another admin is editing
+  if (isLocked && lockedBy && onCancel) {
+    return <ResourceEditLockWarning lockedBy={lockedBy} onGoBack={onCancel} />;
   }
 
   return (
