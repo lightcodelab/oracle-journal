@@ -86,7 +86,87 @@ const DevotionResourcePage = () => {
       const userIsAdmin = !!roleData;
       setIsAdmin(userIsAdmin);
 
-      // Build query - admins can see drafts too
+      // Check if this is a healing resource (slug starts with "healing-")
+      const isHealingResource = slug.startsWith('healing-');
+      
+      if (isHealingResource) {
+        // Extract the healing resource ID from the slug
+        const healingId = slug.replace('healing-', '');
+        
+        let healingQuery = supabase
+          .from('healing_resources')
+          .select(`
+            id,
+            title,
+            teaching_description,
+            body_richtext,
+            display_image_url,
+            audio_file_url,
+            vimeo_embed_url,
+            status,
+            modality,
+            location:content_categories!location_id (
+              id,
+              name,
+              slug
+            )
+          `)
+          .eq('id', healingId);
+
+        // Non-admins can only see published resources
+        if (!userIsAdmin) {
+          healingQuery = healingQuery.eq('status', 'published');
+        }
+
+        const { data: healingData, error: healingError } = await healingQuery.single();
+
+        if (healingError || !healingData) {
+          setError('Resource not found');
+          setLoading(false);
+          return;
+        }
+
+        // Determine media kind based on available fields
+        let mediaKind: 'file' | 'video_embed' | 'none' | null = null;
+        let mediaFileUrl: string | null = null;
+        let mediaEmbedUrl: string | null = null;
+
+        if (healingData.vimeo_embed_url) {
+          mediaKind = 'video_embed';
+          mediaEmbedUrl = healingData.vimeo_embed_url;
+        } else if (healingData.audio_file_url) {
+          mediaKind = 'file';
+          mediaFileUrl = getPublicUrl('healing-resource-audio', healingData.audio_file_url);
+        }
+
+        // Transform healing resource to match ContentResource shape
+        const transformedResource: ContentResource = {
+          id: healingData.id,
+          title: healingData.title,
+          slug: slug,
+          summary: healingData.teaching_description || null,
+          body_richtext: healingData.body_richtext,
+          thumbnail_url: getPublicUrl('healing-resource-images', healingData.display_image_url),
+          main_media_kind: mediaKind,
+          main_media_file_url: mediaFileUrl,
+          main_media_embed_url: mediaEmbedUrl,
+          status: healingData.status as 'draft' | 'published',
+          location: healingData.location as ContentResource['location'],
+          resource_type: {
+            id: healingData.modality,
+            name: healingData.modality.charAt(0).toUpperCase() + healingData.modality.slice(1),
+            slug: healingData.modality,
+          },
+        };
+
+        setResource(transformedResource);
+        // Healing resources don't have attachments in the same way
+        setAttachments([]);
+        setLoading(false);
+        return;
+      }
+
+      // Standard content_resources query
       let query = supabase
         .from('content_resources')
         .select(`
