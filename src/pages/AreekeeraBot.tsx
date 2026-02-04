@@ -14,6 +14,7 @@ import { Send, Loader2, RefreshCw, Save, Sparkles, AlertTriangle, Shield, CheckC
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
+import EncryptionGate from '@/components/EncryptionGate';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -489,6 +490,7 @@ const AreekeeraBot = () => {
   }
 
   return (
+    <EncryptionGate required>
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
@@ -924,6 +926,7 @@ const AreekeeraBot = () => {
         )}
       </div>
     </div>
+    </EncryptionGate>
   );
 };
 
