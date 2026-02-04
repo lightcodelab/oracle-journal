@@ -292,13 +292,14 @@ const DevotionResourcePage = () => {
       if (node.type === 'image') {
         const src = node.attrs?.src;
         const alt = node.attrs?.alt || 'Content image';
+        const width = node.attrs?.width || '100%';
         if (!src) return null;
         return (
-          <figure key={index} className="my-6">
+          <figure key={index} className="my-6" style={{ width, maxWidth: '100%' }}>
             <img 
               src={src} 
               alt={alt} 
-              className="w-full max-w-2xl rounded-lg mx-auto"
+              className="w-full rounded-lg"
             />
             {node.attrs?.title && (
               <figcaption className="text-center text-sm text-muted-foreground mt-2">
