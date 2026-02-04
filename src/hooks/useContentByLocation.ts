@@ -116,7 +116,7 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
         // Fetch healing_resources with this location
         let healingQuery = supabase
           .from('healing_resources')
-          .select('id, title, display_image_url, teaching_description, status, created_at, modality, location_id, vimeo_embed_url, audio_file_url')
+          .select('id, title, summary, display_image_url, teaching_description, status, created_at, modality, location_id, vimeo_embed_url, audio_file_url')
           .eq('location_id', locationData.id)
           .order('created_at', { ascending: false });
 
@@ -162,7 +162,7 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
             id: resource.id,
             title: resource.title,
             slug: `healing-${resource.id}`, // Use id-based slug for healing resources
-            summary: resource.teaching_description || null,
+            summary: (resource as any).summary || resource.teaching_description || null,
             thumbnail_url: getPublicUrl('healing-resource-images', resource.display_image_url),
             main_media_kind: mediaKind,
             main_media_file_url: mediaFileUrl,
