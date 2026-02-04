@@ -992,6 +992,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
                         <Checkbox
                           checked={selectedSymptomIds.includes(symptom.id)}
                           onCheckedChange={() => toggleSymptom(symptom.id)}
+                          onClick={(e) => e.stopPropagation()}
                         />
                         <span className="text-sm">{symptom.name}</span>
                       </div>
