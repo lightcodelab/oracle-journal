@@ -919,7 +919,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               </div>
             )}
 
-            <ScrollArea className="h-[400px] pr-4">
+            <ScrollArea className="max-h-[300px] pr-4">
               {Object.entries(groupedSymptoms).map(([domain, domainSymptoms]) => (
                 <div key={domain} className="mb-6">
                   <h4 className="font-medium capitalize mb-2 flex items-center gap-2">
@@ -955,7 +955,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
           </div>
 
           {/* Conditions Section */}
-          <Separator className="my-6" />
+          <Separator className="my-4" />
           
           <div>
             <div className="flex items-center gap-2 mb-2">
