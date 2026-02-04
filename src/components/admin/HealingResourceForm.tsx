@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
@@ -64,6 +65,8 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   
   // Form state
   const [title, setTitle] = useState('');
+  const [slug, setSlug] = useState('');
+  const [summary, setSummary] = useState('');
   const [modality, setModality] = useState<Modality>('meditation');
   const [intensity, setIntensity] = useState(3);
   const [durationHours, setDurationHours] = useState(0);
@@ -200,6 +203,8 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
 
     if (resource) {
       setTitle(resource.title);
+      setSlug((resource as any).slug || '');
+      setSummary((resource as any).summary || '');
       setModality(resource.modality as Modality);
       setIntensity(resource.intensity || 3);
       
@@ -351,6 +356,8 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       
       const payload = {
         title,
+        slug: slug.trim() || null,
+        summary: summary.trim() || null,
         modality,
         intensity,
         duration_sec: totalDurationSec || null,
@@ -482,6 +489,33 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter resource title"
               />
+            </div>
+
+            <div className="col-span-2">
+              <Label htmlFor="slug">Slug</Label>
+              <Input
+                id="slug"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
+                placeholder="e.g., infection-protection"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                URL-friendly identifier. Leave blank to use the resource ID.
+              </p>
+            </div>
+
+            <div className="col-span-2">
+              <Label htmlFor="summary">Summary</Label>
+              <Textarea
+                id="summary"
+                value={summary}
+                onChange={(e) => setSummary(e.target.value)}
+                placeholder="Brief description displayed on resource pages"
+                className="min-h-[80px]"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Displayed in gold above the main content on resource pages.
+              </p>
             </div>
 
             <div>

@@ -98,6 +98,7 @@ const DevotionResourcePage = () => {
           .select(`
             id,
             title,
+            summary,
             teaching_description,
             body_richtext,
             display_image_url,
@@ -144,7 +145,7 @@ const DevotionResourcePage = () => {
           id: healingData.id,
           title: healingData.title,
           slug: slug,
-          summary: healingData.teaching_description || null,
+          summary: (healingData as any).summary || healingData.teaching_description || null,
           body_richtext: healingData.body_richtext,
           thumbnail_url: getPublicUrl('healing-resource-images', healingData.display_image_url),
           main_media_kind: mediaKind,
@@ -419,12 +420,21 @@ const DevotionResourcePage = () => {
           <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
             {resource.title}
           </h1>
-          {resource.summary && (
-            <p className="text-muted-foreground text-lg">
+        </motion.div>
+
+        {/* Summary - displayed in gold above media */}
+        {resource.summary && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+            className="mb-8"
+          >
+            <p className="text-primary text-lg leading-relaxed">
               {resource.summary}
             </p>
-          )}
-        </motion.div>
+          </motion.div>
+        )}
 
         {/* Main Media - Video Embed (Vimeo/YouTube) */}
         {resource.main_media_kind === 'video_embed' && resource.main_media_embed_url && (
