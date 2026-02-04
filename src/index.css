@@ -112,6 +112,7 @@ All colors MUST be HSL.
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
   font-family: var(--font-serif, Georgia, serif);
+  color: hsl(var(--primary));
 }
 
 .ProseMirror h3 {
