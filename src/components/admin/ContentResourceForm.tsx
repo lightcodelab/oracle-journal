@@ -18,9 +18,9 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import LinkExtension from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
-import Image from '@tiptap/extension-image';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
+import { SelectableImageExtension } from '@/lib/selectableImageExtension';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import CourseBuilder from './CourseBuilder';
 import RichTextEditorToolbar from './RichTextEditorToolbar';
@@ -102,7 +102,7 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
       Placeholder.configure({
         placeholder: 'Start writing your content here...',
       }),
-      Image.configure({
+      SelectableImageExtension.configure({
         HTMLAttributes: {
           class: 'max-w-full h-auto rounded-md',
         },
