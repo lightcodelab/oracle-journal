@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,7 +14,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Upload, X, FileAudio, FileVideo, File, Image as ImageIcon, Link as LinkIcon } from 'lucide-react';
+import { Loader2, Upload, X, FileAudio, FileVideo, File, Image as ImageIcon, Link as LinkIcon, CalendarIcon } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import LinkExtension from '@tiptap/extension-link';
@@ -63,6 +67,8 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
   const [mainMediaUrl, setMainMediaUrl] = useState<string | null>(null);
   const [courseId, setCourseId] = useState<string | null>(null);
+  const [scheduledPublishAt, setScheduledPublishAt] = useState<Date | undefined>(undefined);
+  const [scheduledTime, setScheduledTime] = useState('12:00');
 
   // Resource edit lock - prevents simultaneous editing by multiple admins
   const { isLocked, lockedBy, isLoading: lockLoading, acquireLock } = useResourceEditLock({
@@ -168,6 +174,13 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
       setThumbnailUrl(resource.thumbnail_url);
       setMainMediaUrl(resource.main_media_file_url);
 
+      // Load scheduled publish date
+      if ((resource as any).scheduled_publish_at) {
+        const scheduledDate = new Date((resource as any).scheduled_publish_at);
+        setScheduledPublishAt(scheduledDate);
+        setScheduledTime(format(scheduledDate, 'HH:mm'));
+      }
+
       if (editor && resource.body_richtext && typeof resource.body_richtext === 'object') {
         editor.commands.setContent(resource.body_richtext as Record<string, unknown>);
       }
@@ -264,6 +277,15 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
         return;
       }
 
+      // Calculate scheduled publish timestamp
+      let scheduledTimestamp: string | null = null;
+      if (data.status === 'draft' && scheduledPublishAt) {
+        const [hours, minutes] = scheduledTime.split(':').map(Number);
+        const scheduled = new Date(scheduledPublishAt);
+        scheduled.setHours(hours, minutes, 0, 0);
+        scheduledTimestamp = scheduled.toISOString();
+      }
+
       const payload = {
         title: data.title,
         slug: data.slug || generateSlug(data.title),
@@ -278,6 +300,7 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
         status: data.status,
         is_course: data.is_course,
         created_by: session.session.user.id,
+        scheduled_publish_at: scheduledTimestamp,
       };
 
       let savedResourceId = resourceId;
@@ -673,7 +696,16 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select 
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      // Clear schedule when publishing immediately
+                      if (value === 'published') {
+                        setScheduledPublishAt(undefined);
+                      }
+                    }} 
+                    value={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue />
@@ -691,6 +723,70 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
                 </FormItem>
               )}
             />
+
+            {form.watch('status') === 'draft' && (
+              <div className="space-y-4 p-4 border border-dashed rounded-lg">
+                <div className="flex items-center gap-2">
+                  <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                  <Label>Schedule Publishing (Optional)</Label>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Set a future date and time to automatically publish this content.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-xs text-muted-foreground mb-1 block">Date</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !scheduledPublishAt && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {scheduledPublishAt ? format(scheduledPublishAt, "PPP") : "Pick a date"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={scheduledPublishAt}
+                          onSelect={setScheduledPublishAt}
+                          disabled={(date) => date < new Date()}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground mb-1 block">Time</Label>
+                    <Input
+                      type="time"
+                      value={scheduledTime}
+                      onChange={(e) => setScheduledTime(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+                {scheduledPublishAt && (
+                  <div className="flex items-center justify-between p-3 bg-primary/10 rounded-md">
+                    <p className="text-sm">
+                      Scheduled for: <strong>{format(scheduledPublishAt, "PPP")} at {scheduledTime}</strong>
+                    </p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setScheduledPublishAt(undefined)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
           </TabsContent>
         </Tabs>
 

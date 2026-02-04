@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,7 +15,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus, Music } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus, Music, CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import LinkExtension from '@tiptap/extension-link';
@@ -79,6 +83,8 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [vimeoEmbedUrl, setVimeoEmbedUrl] = useState('');
   const [audioFileUrl, setAudioFileUrl] = useState<string | null>(null);
   const [locationId, setLocationId] = useState<string | null>(null);
+  const [scheduledPublishAt, setScheduledPublishAt] = useState<Date | undefined>(undefined);
+  const [scheduledTime, setScheduledTime] = useState('12:00');
   
   // Location options state
   const [locations, setLocations] = useState<{ id: string; name: string }[]>([]);
@@ -235,6 +241,13 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       setVimeoEmbedUrl(resource.vimeo_embed_url || '');
       setAudioFileUrl((resource as any).audio_file_url || null);
       setLocationId((resource as any).location_id || null);
+
+      // Load scheduled publish date
+      if ((resource as any).scheduled_publish_at) {
+        const scheduledDate = new Date((resource as any).scheduled_publish_at);
+        setScheduledPublishAt(scheduledDate);
+        setScheduledTime(format(scheduledDate, 'HH:mm'));
+      }
       
       if (editor && resource.body_richtext && typeof resource.body_richtext === 'object') {
         editor.commands.setContent(resource.body_richtext as Record<string, unknown>);
@@ -370,6 +383,15 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       // Calculate total duration in seconds
       const totalDurationSec = (durationHours * 3600) + (durationMinutes * 60) + durationSeconds;
       
+      // Calculate scheduled publish timestamp
+      let scheduledTimestamp: string | null = null;
+      if (status === 'draft' && scheduledPublishAt) {
+        const [hours, minutes] = scheduledTime.split(':').map(Number);
+        const scheduled = new Date(scheduledPublishAt);
+        scheduled.setHours(hours, minutes, 0, 0);
+        scheduledTimestamp = scheduled.toISOString();
+      }
+      
       const payload = {
         title,
         slug: slug.trim() || null,
@@ -383,8 +405,9 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
         audio_file_url: audioFileUrl,
         body_richtext: editor?.getJSON() as any || null,
         locale: 'en',
-        tier: 'paid' as const, // No free tier for the bot
+        tier: 'paid' as const,
         location_id: locationId,
+        scheduled_publish_at: scheduledTimestamp,
       };
 
       let savedResourceId = resourceId;
@@ -560,7 +583,16 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
 
             <div>
               <Label htmlFor="status">Status</Label>
-              <Select value={status} onValueChange={(v) => setStatus(v as ResourceStatus)}>
+              <Select 
+                value={status} 
+                onValueChange={(v) => {
+                  setStatus(v as ResourceStatus);
+                  // Clear schedule when publishing immediately
+                  if (v === 'published') {
+                    setScheduledPublishAt(undefined);
+                  }
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -571,6 +603,70 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
                 </SelectContent>
               </Select>
             </div>
+
+            {status === 'draft' && (
+              <div className="col-span-2 space-y-4 p-4 border border-dashed rounded-lg">
+                <div className="flex items-center gap-2">
+                  <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                  <Label>Schedule Publishing (Optional)</Label>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Set a future date and time to automatically publish this content.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-xs text-muted-foreground mb-1 block">Date</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !scheduledPublishAt && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {scheduledPublishAt ? format(scheduledPublishAt, "PPP") : "Pick a date"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={scheduledPublishAt}
+                          onSelect={setScheduledPublishAt}
+                          disabled={(date) => date < new Date()}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground mb-1 block">Time</Label>
+                    <Input
+                      type="time"
+                      value={scheduledTime}
+                      onChange={(e) => setScheduledTime(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+                {scheduledPublishAt && (
+                  <div className="flex items-center justify-between p-3 bg-primary/10 rounded-md">
+                    <p className="text-sm">
+                      Scheduled for: <strong>{format(scheduledPublishAt, "PPP")} at {scheduledTime}</strong>
+                    </p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setScheduledPublishAt(undefined)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div>
               <Label htmlFor="location">Display Location (Optional)</Label>
