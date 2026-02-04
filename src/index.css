@@ -121,13 +121,13 @@ All colors MUST be HSL.
   font-weight: 600;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
-  font-family: var(--font-serif, Georgia, serif);
+  font-family: var(--font-sans, Inter, sans-serif);
   color: hsl(var(--foreground));
 }
 
 .ProseMirror p {
-  margin-bottom: 1rem;
-  color: hsl(var(--foreground) / 0.9);
+  margin-bottom: 0.75rem;
+  color: hsl(var(--foreground));
 }
 
 .ProseMirror ul,
