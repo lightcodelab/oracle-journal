@@ -240,7 +240,7 @@ const DevotionResourcePage = () => {
     return () => subscription.unsubscribe();
   }, [navigate, slug]);
 
-  // Render rich text content
+  // Render rich text content with brand typography
   const renderRichText = (content: any) => {
     if (!content || !content.content) return null;
 
@@ -248,27 +248,55 @@ const DevotionResourcePage = () => {
       if (node.type === 'paragraph') {
         const text = node.content?.map((c: any) => c.text).join('') || '';
         if (!text) return <br key={index} />;
-        return <p key={index} className="mb-4 text-foreground/90">{text}</p>;
+        // p: Inter (sans), foreground, 0.75rem bottom margin
+        return <p key={index} className="font-sans mb-3 text-foreground">{text}</p>;
       }
       if (node.type === 'heading') {
         const text = node.content?.map((c: any) => c.text).join('') || '';
         const level = node.attrs?.level || 2;
         const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
-        // Apply brand gold color to h2 headings
-        const headingClass = level === 2 
-          ? "font-serif text-xl mb-3 mt-6 text-primary" 
-          : "font-serif text-xl mb-3 mt-6 text-foreground";
+        // h1: Playfair (serif), 1.75rem, 700 weight, foreground, 1.5rem top, 0.5rem bottom
+        // h2: Playfair (serif), 1.375rem, 600 weight, PRIMARY (gold), 1.25rem top, 0.5rem bottom
+        // h3: Inter (sans), 1.125rem, 600 weight, foreground, 1rem top, 0.5rem bottom
+        let headingClass = "";
+        if (level === 1) {
+          headingClass = "font-serif text-[1.75rem] font-bold mt-6 mb-2 text-foreground";
+        } else if (level === 2) {
+          headingClass = "font-serif text-[1.375rem] font-semibold mt-5 mb-2 text-primary";
+        } else {
+          headingClass = "font-sans text-[1.125rem] font-semibold mt-4 mb-2 text-foreground";
+        }
         return <HeadingTag key={index} className={headingClass}>{text}</HeadingTag>;
       }
       if (node.type === 'bulletList') {
         return (
-          <ul key={index} className="list-disc pl-6 mb-4 space-y-1">
+          <ul key={index} className="list-disc pl-6 mb-3 space-y-1">
             {node.content?.map((li: any, liIndex: number) => (
-              <li key={liIndex} className="text-foreground/90">
+              <li key={liIndex} className="font-sans text-foreground">
                 {li.content?.[0]?.content?.map((c: any) => c.text).join('')}
               </li>
             ))}
           </ul>
+        );
+      }
+      if (node.type === 'orderedList') {
+        return (
+          <ol key={index} className="list-decimal pl-6 mb-3 space-y-1">
+            {node.content?.map((li: any, liIndex: number) => (
+              <li key={liIndex} className="font-sans text-foreground">
+                {li.content?.[0]?.content?.map((c: any) => c.text).join('')}
+              </li>
+            ))}
+          </ol>
+        );
+      }
+      if (node.type === 'blockquote') {
+        return (
+          <blockquote key={index} className="border-l-[3px] border-primary pl-4 my-3 italic text-muted-foreground">
+            {node.content?.map((p: any, pIndex: number) => (
+              <p key={pIndex}>{p.content?.map((c: any) => c.text).join('')}</p>
+            ))}
+          </blockquote>
         );
       }
       return null;
