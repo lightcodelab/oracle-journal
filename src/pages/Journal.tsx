@@ -26,7 +26,7 @@ import PageBreadcrumb from '@/components/PageBreadcrumb';
 import JournalEditor from '@/components/journal/JournalEditor';
 import JournalEntryCard from '@/components/journal/JournalEntryCard';
 import TagPicker from '@/components/journal/TagPicker';
-import EncryptionGate from '@/components/EncryptionGate';
+
 import { 
   useJournalEntries, 
   useCreateJournalEntry, 
@@ -361,13 +361,9 @@ const JournalContent = () => {
   );
 };
 
-// Wrap with EncryptionGate to ensure encryption is set up before accessing journal
+// No encryption gate needed - RLS protects user data
 const Journal = () => {
-  return (
-    <EncryptionGate required allowSkip>
-      <JournalContent />
-    </EncryptionGate>
-  );
+  return <JournalContent />;
 };
 
 export default Journal;
