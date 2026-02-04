@@ -1036,7 +1036,9 @@ export type Database = {
           locale: string | null
           location_id: string | null
           modality: Database["public"]["Enums"]["resource_modality"]
+          slug: string | null
           status: Database["public"]["Enums"]["resource_status"] | null
+          summary: string | null
           teaching_description: string | null
           tier: Database["public"]["Enums"]["resource_tier"] | null
           title: string
@@ -1056,7 +1058,9 @@ export type Database = {
           locale?: string | null
           location_id?: string | null
           modality: Database["public"]["Enums"]["resource_modality"]
+          slug?: string | null
           status?: Database["public"]["Enums"]["resource_status"] | null
+          summary?: string | null
           teaching_description?: string | null
           tier?: Database["public"]["Enums"]["resource_tier"] | null
           title: string
@@ -1076,7 +1080,9 @@ export type Database = {
           locale?: string | null
           location_id?: string | null
           modality?: Database["public"]["Enums"]["resource_modality"]
+          slug?: string | null
           status?: Database["public"]["Enums"]["resource_status"] | null
+          summary?: string | null
           teaching_description?: string | null
           tier?: Database["public"]["Enums"]["resource_tier"] | null
           title?: string
