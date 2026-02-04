@@ -116,7 +116,7 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
         // Fetch healing_resources with this location
         let healingQuery = supabase
           .from('healing_resources')
-          .select('id, title, display_image_url, teaching_description, status, created_at, modality, location_id')
+          .select('id, title, display_image_url, teaching_description, status, created_at, modality, location_id, vimeo_embed_url, audio_file_url')
           .eq('location_id', locationData.id)
           .order('created_at', { ascending: false });
 
@@ -144,24 +144,39 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
         })) as ContentResource[];
 
         // Transform healing resources to match ContentResource shape
-        const transformedHealing = (healingResult.data || []).map(resource => ({
-          id: resource.id,
-          title: resource.title,
-          slug: `healing-${resource.id}`, // Use id-based slug for healing resources
-          summary: resource.teaching_description || null,
-          thumbnail_url: getPublicUrl('healing-resource-images', resource.display_image_url),
-          main_media_kind: null,
-          main_media_file_url: null,
-          main_media_embed_url: null,
-          is_course: false,
-          status: resource.status as 'draft' | 'published',
-          source: 'healing' as const,
-          resource_type: {
-            id: resource.modality,
-            name: resource.modality.charAt(0).toUpperCase() + resource.modality.slice(1),
-            slug: resource.modality,
-          },
-        })) as ContentResource[];
+        const transformedHealing = (healingResult.data || []).map(resource => {
+          // Determine media kind based on available fields
+          let mediaKind: 'file' | 'video_embed' | 'none' | null = null;
+          let mediaFileUrl: string | null = null;
+          let mediaEmbedUrl: string | null = null;
+
+          if (resource.vimeo_embed_url) {
+            mediaKind = 'video_embed';
+            mediaEmbedUrl = resource.vimeo_embed_url;
+          } else if (resource.audio_file_url) {
+            mediaKind = 'file';
+            mediaFileUrl = getPublicUrl('healing-resource-audio', resource.audio_file_url);
+          }
+
+          return {
+            id: resource.id,
+            title: resource.title,
+            slug: `healing-${resource.id}`, // Use id-based slug for healing resources
+            summary: resource.teaching_description || null,
+            thumbnail_url: getPublicUrl('healing-resource-images', resource.display_image_url),
+            main_media_kind: mediaKind,
+            main_media_file_url: mediaFileUrl,
+            main_media_embed_url: mediaEmbedUrl,
+            is_course: false,
+            status: resource.status as 'draft' | 'published',
+            source: 'healing' as const,
+            resource_type: {
+              id: resource.modality,
+              name: resource.modality.charAt(0).toUpperCase() + resource.modality.slice(1),
+              slug: resource.modality,
+            },
+          };
+        }) as ContentResource[];
 
         // Merge and sort by created_at (most recent first)
         const allResources = [...transformedContent, ...transformedHealing];
