@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, Search, Edit, Trash2, Loader2, ExternalLink, Copy,
-  Sparkles, Eye, BookOpen, Users, AlertTriangle
+  Sparkles, Eye, BookOpen, Users, AlertTriangle, UtensilsCrossed
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { SITE_CONFIG } from '@/lib/siteConfig';
@@ -24,7 +24,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 
-type Modality = 'meditation' | 'visualisation' | 'ritual' | 'somatic' | 'process';
+type Modality = 'meditation' | 'visualisation' | 'ritual' | 'somatic' | 'process' | 'recipe';
 type ResourceStatus = 'draft' | 'review' | 'published';
 
 interface HealingResource {
@@ -51,6 +51,7 @@ const modalityOptions: { value: Modality; label: string; icon: React.ReactNode }
   { value: 'ritual', label: 'Ritual', icon: <BookOpen className="w-4 h-4" /> },
   { value: 'somatic', label: 'Somatic', icon: <Users className="w-4 h-4" /> },
   { value: 'process', label: 'Process', icon: <AlertTriangle className="w-4 h-4" /> },
+  { value: 'recipe', label: 'Recipe', icon: <UtensilsCrossed className="w-4 h-4" /> },
 ];
 
 interface HealingResourceLibraryProps {
