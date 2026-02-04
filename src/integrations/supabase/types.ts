@@ -540,6 +540,7 @@ export type Database = {
             | Database["public"]["Enums"]["content_media_kind"]
             | null
           resource_type_id: string | null
+          scheduled_publish_at: string | null
           slug: string
           status: Database["public"]["Enums"]["content_status"] | null
           summary: string | null
@@ -560,6 +561,7 @@ export type Database = {
             | Database["public"]["Enums"]["content_media_kind"]
             | null
           resource_type_id?: string | null
+          scheduled_publish_at?: string | null
           slug: string
           status?: Database["public"]["Enums"]["content_status"] | null
           summary?: string | null
@@ -580,6 +582,7 @@ export type Database = {
             | Database["public"]["Enums"]["content_media_kind"]
             | null
           resource_type_id?: string | null
+          scheduled_publish_at?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["content_status"] | null
           summary?: string | null
@@ -1036,6 +1039,7 @@ export type Database = {
           locale: string | null
           location_id: string | null
           modality: Database["public"]["Enums"]["resource_modality"]
+          scheduled_publish_at: string | null
           slug: string | null
           status: Database["public"]["Enums"]["resource_status"] | null
           summary: string | null
@@ -1058,6 +1062,7 @@ export type Database = {
           locale?: string | null
           location_id?: string | null
           modality: Database["public"]["Enums"]["resource_modality"]
+          scheduled_publish_at?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["resource_status"] | null
           summary?: string | null
@@ -1080,6 +1085,7 @@ export type Database = {
           locale?: string | null
           location_id?: string | null
           modality?: Database["public"]["Enums"]["resource_modality"]
+          scheduled_publish_at?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["resource_status"] | null
           summary?: string | null
