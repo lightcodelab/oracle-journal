@@ -240,19 +240,91 @@ const DevotionResourcePage = () => {
     return () => subscription.unsubscribe();
   }, [navigate, slug]);
 
+  // Render inline text with marks (bold, italic, links, underline, strike)
+  const renderTextWithMarks = (textNodes: any[]): React.ReactNode => {
+    if (!textNodes || textNodes.length === 0) return null;
+    
+    return textNodes.map((node: any, idx: number) => {
+      if (!node.text) return null;
+      
+      let content: React.ReactNode = node.text;
+      
+      if (node.marks && node.marks.length > 0) {
+        node.marks.forEach((mark: any) => {
+          if (mark.type === 'bold') {
+            content = <strong key={`bold-${idx}`}>{content}</strong>;
+          }
+          if (mark.type === 'italic') {
+            content = <em key={`italic-${idx}`}>{content}</em>;
+          }
+          if (mark.type === 'underline') {
+            content = <u key={`underline-${idx}`}>{content}</u>;
+          }
+          if (mark.type === 'strike') {
+            content = <s key={`strike-${idx}`}>{content}</s>;
+          }
+          if (mark.type === 'link') {
+            content = (
+              <a 
+                key={`link-${idx}`}
+                href={mark.attrs?.href || '#'} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary underline hover:text-primary/80 transition-colors"
+              >
+                {content}
+              </a>
+            );
+          }
+        });
+      }
+      
+      return <span key={idx}>{content}</span>;
+    });
+  };
+
   // Render rich text content with brand typography
   const renderRichText = (content: any) => {
     if (!content || !content.content) return null;
 
     return content.content.map((node: any, index: number) => {
-      if (node.type === 'paragraph') {
-        const text = node.content?.map((c: any) => c.text).join('') || '';
-        if (!text) return <br key={index} />;
-        // p: Inter (sans), foreground, 0.75rem bottom margin
-        return <p key={index} className="font-sans mb-3 text-foreground">{text}</p>;
+      // Image node
+      if (node.type === 'image') {
+        const src = node.attrs?.src;
+        const alt = node.attrs?.alt || 'Content image';
+        if (!src) return null;
+        return (
+          <figure key={index} className="my-6">
+            <img 
+              src={src} 
+              alt={alt} 
+              className="w-full max-w-2xl rounded-lg mx-auto"
+            />
+            {node.attrs?.title && (
+              <figcaption className="text-center text-sm text-muted-foreground mt-2">
+                {node.attrs.title}
+              </figcaption>
+            )}
+          </figure>
+        );
       }
+
+      // Horizontal rule
+      if (node.type === 'horizontalRule') {
+        return <hr key={index} className="my-6 border-t border-border" />;
+      }
+
+      if (node.type === 'paragraph') {
+        if (!node.content || node.content.length === 0) return <br key={index} />;
+        // p: Inter (sans), foreground, 0.75rem bottom margin
+        return (
+          <p key={index} className="font-sans mb-3 text-foreground">
+            {renderTextWithMarks(node.content)}
+          </p>
+        );
+      }
+
       if (node.type === 'heading') {
-        const text = node.content?.map((c: any) => c.text).join('') || '';
         const level = node.attrs?.level || 2;
         const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
         // h1: Playfair (serif), 1.75rem, 700 weight, foreground, 1.5rem top, 0.5rem bottom
@@ -266,39 +338,47 @@ const DevotionResourcePage = () => {
         } else {
           headingClass = "font-sans text-[1.125rem] font-semibold mt-4 mb-2 text-foreground";
         }
-        return <HeadingTag key={index} className={headingClass}>{text}</HeadingTag>;
+        return (
+          <HeadingTag key={index} className={headingClass}>
+            {renderTextWithMarks(node.content)}
+          </HeadingTag>
+        );
       }
+
       if (node.type === 'bulletList') {
         return (
           <ul key={index} className="list-disc pl-6 mb-3 space-y-1">
             {node.content?.map((li: any, liIndex: number) => (
               <li key={liIndex} className="font-sans text-foreground">
-                {li.content?.[0]?.content?.map((c: any) => c.text).join('')}
+                {renderTextWithMarks(li.content?.[0]?.content)}
               </li>
             ))}
           </ul>
         );
       }
+
       if (node.type === 'orderedList') {
         return (
           <ol key={index} className="list-decimal pl-6 mb-3 space-y-1">
             {node.content?.map((li: any, liIndex: number) => (
               <li key={liIndex} className="font-sans text-foreground">
-                {li.content?.[0]?.content?.map((c: any) => c.text).join('')}
+                {renderTextWithMarks(li.content?.[0]?.content)}
               </li>
             ))}
           </ol>
         );
       }
+
       if (node.type === 'blockquote') {
         return (
           <blockquote key={index} className="border-l-[3px] border-primary pl-4 my-3 italic text-muted-foreground">
             {node.content?.map((p: any, pIndex: number) => (
-              <p key={pIndex}>{p.content?.map((c: any) => c.text).join('')}</p>
+              <p key={pIndex}>{renderTextWithMarks(p.content)}</p>
             ))}
           </blockquote>
         );
       }
+
       return null;
     });
   };
