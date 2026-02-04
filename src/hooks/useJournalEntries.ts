@@ -1,9 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useEncryption } from '@/hooks/useEncryption';
 import type { Json } from '@/integrations/supabase/types';
-import type { EncryptedField } from '@/lib/encryption';
 
 export interface JournalEntry {
   id: string;
@@ -22,11 +20,6 @@ export interface JournalEntry {
   context_type: string | null;
   context_id: string | null;
   context_title: string | null;
-  // Encrypted fields
-  content_json_encrypted?: Json | null;
-  content_text_encrypted?: Json | null;
-  title_encrypted?: Json | null;
-  is_encrypted?: boolean;
 }
 
 export interface CreateEntryData {
@@ -51,10 +44,8 @@ export function useJournalEntries(options?: {
   contextId?: string;
   limit?: number;
 }) {
-  const { isUnlocked, decryptText, decryptObject } = useEncryption();
-
   return useQuery({
-    queryKey: ['journal-entries', options, isUnlocked],
+    queryKey: ['journal-entries', options],
     queryFn: async () => {
       let query = supabase
         .from('journal_entries')
@@ -75,72 +66,14 @@ export function useJournalEntries(options?: {
       const { data, error } = await query;
       if (error) throw error;
 
-      // Decrypt entries if encryption is unlocked
-      const entries = data as JournalEntry[];
-      
-      if (isUnlocked) {
-        const decryptedEntries = await Promise.all(
-          entries.map(async (entry) => {
-            if (!entry.is_encrypted) return entry;
-
-            try {
-              // Decrypt fields
-              const decryptedEntry = { ...entry };
-              
-              if (entry.content_json_encrypted) {
-                decryptedEntry.content_json = await decryptObject<Json>(
-                  entry.content_json_encrypted as unknown as EncryptedField
-                );
-              }
-              
-              if (entry.content_text_encrypted) {
-                decryptedEntry.content_text = await decryptText(
-                  entry.content_text_encrypted as unknown as EncryptedField
-                );
-              }
-              
-              if (entry.title_encrypted) {
-                decryptedEntry.title = await decryptText(
-                  entry.title_encrypted as unknown as EncryptedField
-                );
-              }
-              
-              return decryptedEntry;
-            } catch (error) {
-              console.error('Failed to decrypt entry:', entry.id, error);
-              // Return entry with placeholder for failed decryption
-              return {
-                ...entry,
-                content_text: '[Unable to decrypt - check your encryption key]',
-                title: '[Encrypted]',
-              };
-            }
-          })
-        );
-        return decryptedEntries;
-      }
-
-      // If encryption not unlocked, filter out encrypted entries or show placeholder
-      return entries.map(entry => {
-        if (entry.is_encrypted) {
-          return {
-            ...entry,
-            content_text: '[Encrypted - unlock to view]',
-            content_json: {},
-            title: '[Encrypted]',
-          };
-        }
-        return entry;
-      });
+      return data as JournalEntry[];
     },
   });
 }
 
 export function useJournalEntry(entryId: string | undefined) {
-  const { isUnlocked, decryptText, decryptObject } = useEncryption();
-
   return useQuery({
-    queryKey: ['journal-entry', entryId, isUnlocked],
+    queryKey: ['journal-entry', entryId],
     queryFn: async () => {
       if (!entryId) return null;
       const { data, error } = await supabase
@@ -149,39 +82,7 @@ export function useJournalEntry(entryId: string | undefined) {
         .eq('id', entryId)
         .single();
       if (error) throw error;
-      
-      const entry = data as JournalEntry;
-      
-      // Decrypt if encrypted and unlocked
-      if (entry.is_encrypted && isUnlocked) {
-        try {
-          if (entry.content_json_encrypted) {
-            entry.content_json = await decryptObject<Json>(
-              entry.content_json_encrypted as unknown as EncryptedField
-            );
-          }
-          if (entry.content_text_encrypted) {
-            entry.content_text = await decryptText(
-              entry.content_text_encrypted as unknown as EncryptedField
-            );
-          }
-          if (entry.title_encrypted) {
-            entry.title = await decryptText(
-              entry.title_encrypted as unknown as EncryptedField
-            );
-          }
-        } catch (error) {
-          console.error('Failed to decrypt entry:', entryId, error);
-          entry.content_text = '[Unable to decrypt]';
-          entry.title = '[Encrypted]';
-        }
-      } else if (entry.is_encrypted) {
-        entry.content_text = '[Encrypted - unlock to view]';
-        entry.title = '[Encrypted]';
-        entry.content_json = {};
-      }
-      
-      return entry;
+      return data as JournalEntry;
     },
     enabled: !!entryId,
   });
@@ -190,49 +91,26 @@ export function useJournalEntry(entryId: string | undefined) {
 export function useCreateJournalEntry() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { isUnlocked, encryptText, encryptObject } = useEncryption();
 
   return useMutation({
     mutationFn: async (data: CreateEntryData) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      // Base insert data (unencrypted)
-      const insertData: Record<string, unknown> = {
+      const insertData = {
         user_id: user.id,
+        title: data.title || null,
+        content_json: data.content_json || {},
+        content_text: data.content_text || '',
         is_quick_capture: data.is_quick_capture ?? true,
         context_type: data.context_type || null,
         context_id: data.context_id || null,
         context_title: data.context_title || null,
       };
 
-      // Encrypt if available
-      if (isUnlocked) {
-        if (data.title) {
-          insertData.title_encrypted = await encryptText(data.title);
-          insertData.title = null;
-        }
-        if (data.content_json) {
-          insertData.content_json_encrypted = await encryptObject(data.content_json);
-          insertData.content_json = {};
-        }
-        if (data.content_text) {
-          insertData.content_text_encrypted = await encryptText(data.content_text);
-          insertData.content_text = '';
-        }
-        insertData.is_encrypted = true;
-      } else {
-        // Store unencrypted
-        insertData.title = data.title || null;
-        insertData.content_json = data.content_json || {};
-        insertData.content_text = data.content_text || '';
-        insertData.is_encrypted = false;
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data: entry, error } = await supabase
         .from('journal_entries')
-        .insert(insertData as any)
+        .insert(insertData)
         .select()
         .single();
 
@@ -259,43 +137,15 @@ export function useCreateJournalEntry() {
 export function useUpdateJournalEntry() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { isUnlocked, encryptText, encryptObject } = useEncryption();
 
   return useMutation({
     mutationFn: async ({ id, ...data }: UpdateEntryData & { id: string }) => {
       const updateData: Record<string, unknown> = {};
       
-      // Handle non-content fields
       if (data.is_pinned !== undefined) updateData.is_pinned = data.is_pinned;
-
-      // If encryption is unlocked, encrypt content fields
-      if (isUnlocked) {
-        if (data.title !== undefined) {
-          if (data.title) {
-            updateData.title_encrypted = await encryptText(data.title);
-            updateData.title = null;
-          } else {
-            updateData.title_encrypted = null;
-            updateData.title = null;
-          }
-        }
-        if (data.content_json !== undefined) {
-          updateData.content_json_encrypted = await encryptObject(data.content_json);
-          updateData.content_json = {};
-        }
-        if (data.content_text !== undefined) {
-          updateData.content_text_encrypted = await encryptText(data.content_text);
-          updateData.content_text = '';
-        }
-        if (data.title !== undefined || data.content_json !== undefined || data.content_text !== undefined) {
-          updateData.is_encrypted = true;
-        }
-      } else {
-        // Store unencrypted
-        if (data.title !== undefined) updateData.title = data.title;
-        if (data.content_json !== undefined) updateData.content_json = data.content_json;
-        if (data.content_text !== undefined) updateData.content_text = data.content_text;
-      }
+      if (data.title !== undefined) updateData.title = data.title;
+      if (data.content_json !== undefined) updateData.content_json = data.content_json;
+      if (data.content_text !== undefined) updateData.content_text = data.content_text;
 
       const { data: entry, error } = await supabase
         .from('journal_entries')
