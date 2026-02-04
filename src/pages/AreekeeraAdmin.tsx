@@ -16,8 +16,9 @@ import HealingResourceLibrary from '@/components/admin/HealingResourceLibrary';
 import HealingResourceForm from '@/components/admin/HealingResourceForm';
 import { 
   Plus, Search, Save, Trash2, Edit2, 
-  BookOpen, Users, Tag, AlertTriangle, ArrowLeft 
+  BookOpen, Users, Tag, AlertTriangle, ArrowLeft, Heart
 } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,6 +40,12 @@ interface Symptom {
   id: string;
   name: string;
   domain: 'physical' | 'mental' | 'emotional' | 'spiritual';
+  description: string | null;
+}
+
+interface Condition {
+  id: string;
+  name: string;
   description: string | null;
 }
 
@@ -83,6 +90,16 @@ const AreekeeraAdmin = () => {
   const [symptomForm, setSymptomForm] = useState({
     name: '',
     domain: 'physical' as 'physical' | 'mental' | 'emotional' | 'spiritual',
+    description: '',
+  });
+
+  // Conditions state
+  const [conditions, setConditions] = useState<Condition[]>([]);
+  const [conditionSearch, setConditionSearch] = useState('');
+  const [isConditionDialogOpen, setIsConditionDialogOpen] = useState(false);
+  const [editingCondition, setEditingCondition] = useState<Condition | null>(null);
+  const [conditionForm, setConditionForm] = useState({
+    name: '',
     description: '',
   });
   
@@ -151,6 +168,7 @@ const AreekeeraAdmin = () => {
   const loadAllData = async () => {
     await Promise.all([
       loadSymptoms(),
+      loadConditions(),
       loadTeachers(),
       loadTags(),
     ]);
@@ -167,6 +185,19 @@ const AreekeeraAdmin = () => {
       return;
     }
     setSymptoms(data || []);
+  };
+
+  const loadConditions = async () => {
+    const { data, error } = await supabase
+      .from('conditions')
+      .select('*')
+      .order('name', { ascending: true });
+    
+    if (error) {
+      console.error('Error loading conditions:', error);
+      return;
+    }
+    setConditions(data || []);
   };
 
   const loadTeachers = async () => {
@@ -272,6 +303,65 @@ const AreekeeraAdmin = () => {
       console.error('Error deleting symptom:', error);
       toast({
         title: "Error deleting symptom",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Condition CRUD
+  const handleSaveCondition = async () => {
+    try {
+      if (editingCondition) {
+        const { error } = await supabase
+          .from('conditions')
+          .update({
+            name: conditionForm.name,
+            description: conditionForm.description || null,
+          })
+          .eq('id', editingCondition.id);
+        
+        if (error) throw error;
+        toast({ title: "Condition updated successfully" });
+      } else {
+        const { error } = await supabase
+          .from('conditions')
+          .insert({
+            name: conditionForm.name,
+            description: conditionForm.description || null,
+          });
+        
+        if (error) throw error;
+        toast({ title: "Condition created successfully" });
+      }
+      
+      setIsConditionDialogOpen(false);
+      setEditingCondition(null);
+      resetConditionForm();
+      await loadConditions();
+    } catch (error) {
+      console.error('Error saving condition:', error);
+      toast({
+        title: "Error saving condition",
+        description: error instanceof Error ? error.message : "Unknown error",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteCondition = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('conditions')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+      toast({ title: "Condition deleted" });
+      await loadConditions();
+    } catch (error) {
+      console.error('Error deleting condition:', error);
+      toast({
+        title: "Error deleting condition",
         variant: "destructive",
       });
     }
@@ -406,6 +496,13 @@ const AreekeeraAdmin = () => {
     });
   };
 
+  const resetConditionForm = () => {
+    setConditionForm({
+      name: '',
+      description: '',
+    });
+  };
+
   const resetTeacherForm = () => {
     setTeacherForm({
       name: '',
@@ -451,9 +548,22 @@ const AreekeeraAdmin = () => {
     setIsTagDialogOpen(true);
   };
 
+  const openEditCondition = (condition: Condition) => {
+    setEditingCondition(condition);
+    setConditionForm({
+      name: condition.name,
+      description: condition.description || '',
+    });
+    setIsConditionDialogOpen(true);
+  };
+
   // Filtered data
   const filteredSymptoms = symptoms.filter(s => 
     s.name.toLowerCase().includes(symptomSearch.toLowerCase())
+  );
+
+  const filteredConditions = conditions.filter(c => 
+    c.name.toLowerCase().includes(conditionSearch.toLowerCase())
   );
 
   if (loading) {
@@ -651,6 +761,136 @@ const AreekeeraAdmin = () => {
                     </Card>
                   ))
                 )}
+              </div>
+
+              {/* Conditions Section */}
+              <Separator className="my-8" />
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Heart className="w-5 h-5 text-primary" />
+                  <h2 className="text-lg font-serif">Health Conditions</h2>
+                </div>
+                <p className="text-sm text-muted-foreground -mt-2 mb-4">
+                  Broader health conditions (e.g., Lupus, Cancer, Eczema). Resources mapped to conditions are prioritized in protocol generation.
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <div className="relative flex-1 sm:max-w-xs">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search conditions..."
+                      value={conditionSearch}
+                      onChange={(e) => setConditionSearch(e.target.value)}
+                      className="pl-9"
+                    />
+                  </div>
+                  <Dialog open={isConditionDialogOpen} onOpenChange={(open) => {
+                    setIsConditionDialogOpen(open);
+                    if (!open) {
+                      setEditingCondition(null);
+                      resetConditionForm();
+                    }
+                  }}>
+                    <DialogTrigger asChild>
+                      <Button>
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add Condition
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>{editingCondition ? 'Edit Condition' : 'Add New Condition'}</DialogTitle>
+                        <DialogDescription>
+                          Define broader health conditions for priority resource matching.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div>
+                          <Label htmlFor="condition-name">Name *</Label>
+                          <Input
+                            id="condition-name"
+                            value={conditionForm.name}
+                            onChange={(e) => setConditionForm({ ...conditionForm, name: e.target.value })}
+                            placeholder="e.g., Lupus, Cancer, Eczema"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="condition-description">Description</Label>
+                          <Textarea
+                            id="condition-description"
+                            value={conditionForm.description}
+                            onChange={(e) => setConditionForm({ ...conditionForm, description: e.target.value })}
+                            placeholder="Optional description of this condition..."
+                            rows={3}
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsConditionDialogOpen(false)}>
+                          Cancel
+                        </Button>
+                        <Button onClick={handleSaveCondition} disabled={!conditionForm.name}>
+                          <Save className="w-4 h-4 mr-2" />
+                          {editingCondition ? 'Update' : 'Create'}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <div className="grid gap-2">
+                  {filteredConditions.length === 0 ? (
+                    <Card>
+                      <CardContent className="py-12 text-center text-muted-foreground">
+                        <Heart className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                        <p>No conditions found. Add conditions for priority-based protocol generation.</p>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    filteredConditions.map((condition) => (
+                      <Card key={condition.id} className="hover:border-primary/50 transition-colors">
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h3 className="font-medium">{condition.name}</h3>
+                                <Badge variant="secondary" className="bg-pink-500/20 text-pink-700 dark:text-pink-400">
+                                  Condition
+                                </Badge>
+                              </div>
+                              {condition.description && (
+                                <p className="text-sm text-muted-foreground line-clamp-2">
+                                  {condition.description}
+                                </p>
+                              )}
+                            </div>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                  <MoreVertical className="w-4 h-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => openEditCondition(condition)}>
+                                  <Edit2 className="w-4 h-4 mr-2" />
+                                  Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  onClick={() => handleDeleteCondition(condition.id)}
+                                  className="text-destructive"
+                                >
+                                  <Trash2 className="w-4 h-4 mr-2" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </div>
               </div>
             </TabsContent>
 
