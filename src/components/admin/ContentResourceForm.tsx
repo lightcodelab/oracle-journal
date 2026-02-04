@@ -24,6 +24,8 @@ import TextAlign from '@tiptap/extension-text-align';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import CourseBuilder from './CourseBuilder';
 import RichTextEditorToolbar from './RichTextEditorToolbar';
+import { useResourceEditLock } from '@/hooks/useResourceEditLock';
+import ResourceEditLockWarning from './ResourceEditLockWarning';
 
 const resourceSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
@@ -61,6 +63,20 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
   const [mainMediaUrl, setMainMediaUrl] = useState<string | null>(null);
   const [courseId, setCourseId] = useState<string | null>(null);
+
+  // Resource edit lock - prevents simultaneous editing by multiple admins
+  const { isLocked, lockedBy, isLoading: lockLoading, acquireLock } = useResourceEditLock({
+    resourceType: 'content',
+    resourceId,
+    enabled: !!resourceId, // Only enable for existing resources
+  });
+
+  // Acquire lock when component mounts (for existing resources)
+  useEffect(() => {
+    if (resourceId && !lockLoading && !isLocked) {
+      acquireLock();
+    }
+  }, [resourceId, lockLoading, isLocked, acquireLock]);
 
   const form = useForm<ResourceFormData>({
     resolver: zodResolver(resourceSchema),
@@ -337,12 +353,17 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
     return File;
   };
 
-  if (loading) {
+  if (loading || lockLoading) {
     return (
       <div className="flex items-center justify-center p-8">
         <Loader2 className="w-6 h-6 animate-spin" />
       </div>
     );
+  }
+
+  // Show lock warning if another admin is editing
+  if (isLocked && lockedBy && onCancel) {
+    return <ResourceEditLockWarning lockedBy={lockedBy} onGoBack={onCancel} />;
   }
 
   const resourceTypes = categories.filter(c => c.type === 'resource_type');
