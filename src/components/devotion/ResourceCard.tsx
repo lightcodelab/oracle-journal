@@ -118,7 +118,7 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
                 Course
               </Badge>
             )}
-            {resource.resource_type && (
+            {resource.resource_type && !(resource.is_course && resource.resource_type.slug === 'course') && (
               <Badge variant="outline" className="text-xs">
                 {resource.resource_type.name}
               </Badge>
