@@ -195,7 +195,7 @@ export const usePlaylists = () => {
         title = resource.title || title;
         audioUrl = resource.audio_file_url || null;
         if (audioUrl && !audioUrl.startsWith('http')) {
-          const { data: urlData } = supabase.storage.from('healing-resource-audio').getPublicUrl(audioUrl);
+          const { data: urlData } = supabase.storage.from('healing-resource-images').getPublicUrl(audioUrl);
           audioUrl = urlData.publicUrl;
         }
         imageUrl = resource.display_image_url || null;

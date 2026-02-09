@@ -155,7 +155,7 @@ const DevotionResourcePage = () => {
         let mediaEmbedUrl: string | null = null;
         let secondaryAudioUrl: string | null = null;
 
-        const audioUrl = healingData.audio_file_url ? getPublicUrl('healing-resource-audio', healingData.audio_file_url) : null;
+        const audioUrl = healingData.audio_file_url ? getPublicUrl('healing-resource-images', healingData.audio_file_url) : null;
 
         if (healingData.vimeo_embed_url) {
           mediaKind = 'video_embed';
@@ -667,7 +667,7 @@ const DevotionResourcePage = () => {
           >
             {(() => {
               const fileUrl = resource.main_media_file_url;
-              const isAudio = fileUrl.match(/\.(mp3|wav|ogg|m4a|aac|flac)/i) || fileUrl.includes('healing-resource-audio') || fileUrl.includes('content-main-media');
+              const isAudio = fileUrl.match(/\.(mp3|wav|ogg|m4a|aac|flac)/i) || fileUrl.includes('healing-resource-images') || fileUrl.includes('content-main-media');
               const isVideo = fileUrl.match(/\.(mp4|webm|mov|avi|mkv)/i);
 
               if (isAudio) {

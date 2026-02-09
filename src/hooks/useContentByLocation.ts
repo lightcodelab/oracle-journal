@@ -153,7 +153,7 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
           let mediaEmbedUrl: string | null = null;
           let secondaryAudioUrl: string | null = null;
 
-          const audioUrl = resource.audio_file_url ? getPublicUrl('healing-resource-audio', resource.audio_file_url) : null;
+          const audioUrl = resource.audio_file_url ? getPublicUrl('healing-resource-images', resource.audio_file_url) : null;
 
           if (resource.vimeo_embed_url) {
             mediaKind = 'video_embed';
