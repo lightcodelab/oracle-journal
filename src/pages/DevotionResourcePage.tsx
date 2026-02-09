@@ -91,14 +91,13 @@ const DevotionResourcePage = () => {
       const isHealingResource = slug.startsWith('healing-');
       
       if (isHealingResource) {
-        // Extract the healing resource ID from the slug
-        const healingId = slug.replace('healing-', '');
+        // Extract the identifier (could be a slug or an ID)
+        const healingIdentifier = slug.replace('healing-', '');
         
-        let healingQuery = supabase
-          .from('healing_resources')
-          .select(`
+        const healingSelect = `
             id,
             title,
+            slug,
             summary,
             teaching_description,
             body_richtext,
@@ -112,15 +111,35 @@ const DevotionResourcePage = () => {
               name,
               slug
             )
-          `)
-          .eq('id', healingId);
+        `;
 
-        // Non-admins can only see published resources
+        // Try slug first, then fall back to ID
+        let healingQuery = supabase
+          .from('healing_resources')
+          .select(healingSelect)
+          .eq('slug', healingIdentifier);
+
         if (!userIsAdmin) {
           healingQuery = healingQuery.eq('status', 'published');
         }
 
-        const { data: healingData, error: healingError } = await healingQuery.single();
+        let { data: healingData, error: healingError } = await healingQuery.maybeSingle();
+
+        // If not found by slug, try by ID
+        if (!healingData) {
+          let idQuery = supabase
+            .from('healing_resources')
+            .select(healingSelect)
+            .eq('id', healingIdentifier);
+
+          if (!userIsAdmin) {
+            idQuery = idQuery.eq('status', 'published');
+          }
+
+          const idResult = await idQuery.maybeSingle();
+          healingData = idResult.data;
+          healingError = idResult.error;
+        }
 
         if (healingError || !healingData) {
           setError('Resource not found');
