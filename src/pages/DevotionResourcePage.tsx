@@ -579,6 +579,21 @@ const DevotionResourcePage = () => {
           </h1>
         </motion.div>
 
+        {/* Thin Banner Thumbnail */}
+        {resource.thumbnail_url && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.03 }}
+            className="mb-8 w-full h-32 md:h-40 rounded-lg overflow-hidden"
+          >
+            <img
+              src={resource.thumbnail_url}
+              alt={resource.title}
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        )}
         {/* Summary - displayed in gold above media */}
         {resource.summary && (
           <motion.div
