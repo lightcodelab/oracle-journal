@@ -230,12 +230,43 @@ const LessonEditorPanel = ({
             {/* Audio */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Audio URL</Label>
-                <Input
-                  value={audioUrl}
-                  onChange={(e) => setAudioUrl(e.target.value)}
-                  placeholder="/audio/lesson-file.mp3"
-                />
+                <Label>Audio File</Label>
+                {audioUrl ? (
+                  <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
+                    <FileAudio className="w-5 h-5 text-primary" />
+                    <span className="flex-1 text-sm truncate">{audioUrl}</span>
+                    <Button variant="ghost" size="sm" onClick={() => setAudioUrl('')}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="file"
+                      accept="audio/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploading(true);
+                        try {
+                          const fileExt = file.name.split('.').pop();
+                          const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+                          const { error } = await supabase.storage.from('content-main-media').upload(fileName, file);
+                          if (error) throw error;
+                          setAudioUrl(fileName);
+                          toast({ title: 'Uploaded', description: 'Audio file uploaded.' });
+                        } catch {
+                          toast({ title: 'Error', description: 'Audio upload failed.', variant: 'destructive' });
+                        } finally {
+                          setUploading(false);
+                        }
+                      }}
+                      disabled={uploading}
+                      className="flex-1"
+                    />
+                    {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
                 <Label>Audio Duration</Label>
