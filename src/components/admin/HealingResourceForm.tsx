@@ -1010,16 +1010,10 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               </div>
             )}
 
+            <h4 className="font-medium mb-2">All Symptoms</h4>
             <ScrollArea className="max-h-[500px] pr-4">
-              {['physical', 'mental', 'emotional', 'spiritual'].filter(d => groupedSymptoms[d]?.length > 0).map((domain) => {
-                const domainSymptoms = groupedSymptoms[domain];
-                return (
-                <div key={domain} className="mb-6">
-                  <h4 className="font-medium capitalize mb-2 flex items-center gap-2">
-                    <Badge className={domainColors[domain]}>{domain}</Badge>
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {domainSymptoms.map(symptom => (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {filteredSymptoms.map(symptom => (
                       <div
                         key={symptom.id}
                         className={`flex items-center space-x-3 p-2 rounded-md cursor-pointer transition-colors ${
@@ -1036,11 +1030,8 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
                         />
                         <span className="text-sm">{symptom.name}</span>
                       </div>
-                    ))}
-                  </div>
-                </div>
-                );
-              })}
+                ))}
+              </div>
               {filteredSymptoms.length === 0 && (
                 <p className="text-center text-muted-foreground py-8">
                   No symptoms found. Add symptoms in the Symptoms tab.
