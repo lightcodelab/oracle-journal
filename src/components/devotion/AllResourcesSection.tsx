@@ -190,7 +190,7 @@ const AllResourcesSection = () => {
           </TabsList>
 
           {/* Single content area that reacts to tab changes */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((resource, index) => (
               <ResourceCard
                 key={resource.id}
