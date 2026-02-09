@@ -33,7 +33,11 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
   };
 
   const handleClick = () => {
-    if (resource.is_course) {
+    // Legacy courses from the courses table use a different route
+    if (resource.slug.startsWith('legacy-course-')) {
+      const courseId = resource.slug.replace('legacy-course-', '');
+      navigate(`${basePath}/course/${courseId}`);
+    } else if (resource.is_course) {
       navigate(`${basePath}/courses/${resource.slug}`);
     } else {
       navigate(`${basePath}/resources/${resource.slug}`);
