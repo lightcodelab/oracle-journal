@@ -176,8 +176,12 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     const { data, error } = await supabase
       .from('symptoms')
       .select('*')
-      .order('domain', { ascending: true });
+      .order('domain', { ascending: true })
+      .order('name', { ascending: true });
     
+    if (error) {
+      console.error('Error loading symptoms:', error);
+    }
     if (data) {
       setSymptoms(data);
     }
@@ -1006,8 +1010,10 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               </div>
             )}
 
-            <ScrollArea className="max-h-[300px] pr-4">
-              {Object.entries(groupedSymptoms).map(([domain, domainSymptoms]) => (
+            <ScrollArea className="max-h-[500px] pr-4">
+              {['physical', 'mental', 'emotional', 'spiritual'].filter(d => groupedSymptoms[d]?.length > 0).map((domain) => {
+                const domainSymptoms = groupedSymptoms[domain];
+                return (
                 <div key={domain} className="mb-6">
                   <h4 className="font-medium capitalize mb-2 flex items-center gap-2">
                     <Badge className={domainColors[domain]}>{domain}</Badge>
@@ -1033,7 +1039,8 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
                     ))}
                   </div>
                 </div>
-              ))}
+                );
+              })}
               {filteredSymptoms.length === 0 && (
                 <p className="text-center text-muted-foreground py-8">
                   No symptoms found. Add symptoms in the Symptoms tab.
