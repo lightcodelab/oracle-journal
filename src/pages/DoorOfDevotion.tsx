@@ -6,7 +6,7 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Lock, ArrowUpRight, Folder } from 'lucide-react';
+import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Lock, ArrowUpRight, Folder, LayoutGrid, Grid3X3 } from 'lucide-react';
 import AllResourcesSection from '@/components/devotion/AllResourcesSection';
 import { useTierAccess } from '@/hooks/useTierAccess';
 
@@ -53,6 +53,7 @@ const DoorOfDevotion = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [locationCategories, setLocationCategories] = useState<LocationCategory[]>([]);
+  const [view, setView] = useState<'categories' | 'all'>('categories');
   const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
 
   const canAccessDevotion = hasAccess('devotion');
@@ -198,39 +199,62 @@ const DoorOfDevotion = () => {
           <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
             The Door of Devotion
           </h1>
-          <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
-            Resources for nervous system regulation, physical wellbeing restoration, and embodied repair through Energetic Healing.
-          </p>
-        </motion.div>
+           <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto mb-6">
+             Resources for nervous system regulation, physical wellbeing restoration, and embodied repair through Energetic Healing.
+           </p>
 
-        {/* Category Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* All Resources section spans full width as first item */}
-          <AllResourcesSection />
+           {/* View Toggle */}
+           <div className="inline-flex items-center gap-1 bg-muted/50 rounded-lg p-1">
+             <Button
+               variant={view === 'categories' ? 'default' : 'ghost'}
+               size="sm"
+               onClick={() => setView('categories')}
+               className="gap-2"
+             >
+               <Grid3X3 className="w-4 h-4" />
+               Categories
+             </Button>
+             <Button
+               variant={view === 'all' ? 'default' : 'ghost'}
+               size="sm"
+               onClick={() => setView('all')}
+               className="gap-2"
+             >
+               <LayoutGrid className="w-4 h-4" />
+               All Resources
+             </Button>
+           </div>
+         </motion.div>
 
-          {categories.map((category, index) => (
-            <motion.div
-              key={category.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              onClick={() => handleCategoryClick(category)}
-              className="relative group cursor-pointer"
-            >
-              <div className="bg-card border border-border rounded-lg p-8 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30">
-                <div className="mb-4 text-primary transition-colors group-hover:text-primary">
-                  {category.icon}
-                </div>
-                <h3 className="font-serif text-2xl mb-2 text-foreground group-hover:text-primary transition-colors">
-                  {category.name}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {category.description}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+         {/* View Content */}
+         {view === 'categories' ? (
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             {categories.map((category, index) => (
+               <motion.div
+                 key={category.id}
+                 initial={{ opacity: 0, y: 30 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ duration: 0.6, delay: index * 0.1 }}
+                 onClick={() => handleCategoryClick(category)}
+                 className="relative group cursor-pointer"
+               >
+                 <div className="bg-card border border-border rounded-lg p-8 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30">
+                   <div className="mb-4 text-primary transition-colors group-hover:text-primary">
+                     {category.icon}
+                   </div>
+                   <h3 className="font-serif text-2xl mb-2 text-foreground group-hover:text-primary transition-colors">
+                     {category.name}
+                   </h3>
+                   <p className="text-muted-foreground text-sm">
+                     {category.description}
+                   </p>
+                 </div>
+               </motion.div>
+             ))}
+           </div>
+         ) : (
+           <AllResourcesSection />
+         )}
       </div>
     </div>
   );
