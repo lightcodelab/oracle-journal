@@ -109,7 +109,7 @@ export const usePlaylists = () => {
     await fetchPlaylists();
   };
 
-  const addTrackToPlaylist = async (playlistId: string, resourceId: string) => {
+  const addTrackToPlaylist = async (playlistId: string, resourceId?: string, lessonId?: string) => {
     // Get current max order
     const { data: existing } = await supabase
       .from('playlist_tracks')
@@ -120,9 +120,13 @@ export const usePlaylists = () => {
 
     const nextOrder = existing && existing.length > 0 ? existing[0].track_order + 1 : 0;
 
+    const insertData: any = { playlist_id: playlistId, track_order: nextOrder };
+    if (resourceId) insertData.resource_id = resourceId;
+    if (lessonId) insertData.lesson_id = lessonId;
+
     const { error } = await supabase
       .from('playlist_tracks')
-      .insert({ playlist_id: playlistId, resource_id: resourceId, track_order: nextOrder });
+      .insert(insertData);
 
     if (error) {
       if (error.code === '23505') {
@@ -158,12 +162,17 @@ export const usePlaylists = () => {
         id,
         playlist_id,
         resource_id,
+        lesson_id,
         track_order,
         added_at,
         healing_resources (
           title,
           audio_file_url,
           display_image_url
+        ),
+        lessons (
+          title,
+          audio_url
         )
       `)
       .eq('playlist_id', playlistId)
@@ -176,15 +185,27 @@ export const usePlaylists = () => {
 
     return (data || []).map((t: any) => {
       const resource = t.healing_resources;
-      let audioUrl = resource?.audio_file_url || null;
-      if (audioUrl && !audioUrl.startsWith('http')) {
-        const { data: urlData } = supabase.storage.from('healing-resource-audio').getPublicUrl(audioUrl);
-        audioUrl = urlData.publicUrl;
-      }
-      let imageUrl = resource?.display_image_url || null;
-      if (imageUrl && !imageUrl.startsWith('http')) {
-        const { data: urlData } = supabase.storage.from('healing-resource-images').getPublicUrl(imageUrl);
-        imageUrl = urlData.publicUrl;
+      const lesson = t.lessons;
+
+      let audioUrl: string | null = null;
+      let title = 'Unknown Track';
+      let imageUrl: string | null = null;
+
+      if (resource) {
+        title = resource.title || title;
+        audioUrl = resource.audio_file_url || null;
+        if (audioUrl && !audioUrl.startsWith('http')) {
+          const { data: urlData } = supabase.storage.from('healing-resource-audio').getPublicUrl(audioUrl);
+          audioUrl = urlData.publicUrl;
+        }
+        imageUrl = resource.display_image_url || null;
+        if (imageUrl && !imageUrl.startsWith('http')) {
+          const { data: urlData } = supabase.storage.from('healing-resource-images').getPublicUrl(imageUrl);
+          imageUrl = urlData.publicUrl;
+        }
+      } else if (lesson) {
+        title = lesson.title || title;
+        audioUrl = lesson.audio_url || null;
       }
 
       return {
@@ -193,7 +214,7 @@ export const usePlaylists = () => {
         resource_id: t.resource_id,
         track_order: t.track_order,
         added_at: t.added_at,
-        title: resource?.title || 'Unknown Track',
+        title,
         audio_url: audioUrl,
         display_image_url: imageUrl,
       };
