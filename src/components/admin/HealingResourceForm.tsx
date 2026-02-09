@@ -378,12 +378,16 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     setUploading(true);
 
     try {
-      const fileExt = file.name.split('.').pop();
+      // Compress images before upload
+      const { compressImage, isCompressibleImage } = await import('@/lib/imageCompression');
+      const processedFile = isCompressibleImage(file) ? await compressImage(file) : file;
+
+      const fileExt = processedFile.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('healing-resource-images')
-        .upload(fileName, file);
+        .upload(fileName, processedFile);
 
       if (uploadError) throw uploadError;
 
