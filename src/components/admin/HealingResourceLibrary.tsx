@@ -347,7 +347,7 @@ const HealingResourceLibrary = ({ onEdit, onNew }: HealingResourceLibraryProps) 
                         asChild
                       >
                         <a
-                          href={`${SITE_CONFIG.productionDomain}/devotion/resources/healing-${resource.id}`}
+                          href={`${SITE_CONFIG.productionDomain}/devotion/resources/healing-${resource.slug || resource.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
