@@ -27,6 +27,7 @@ interface HealingResource {
   duration_sec: number | null;
   teaching_description: string | null;
   tier: string;
+  applies_to_all_symptoms: boolean;
 }
 
 // Safety keywords that trigger escalation
@@ -144,7 +145,7 @@ serve(async (req) => {
     // Fetch published healing resources
     const { data: resources, error: resourceError } = await supabase
       .from('healing_resources')
-      .select('id, title, modality, intensity, duration_sec, teaching_description, tier')
+      .select('id, title, modality, intensity, duration_sec, teaching_description, tier, applies_to_all_symptoms')
       .eq('status', 'published')
       .order('intensity', { ascending: true });
 
@@ -195,13 +196,14 @@ serve(async (req) => {
       }
     });
 
-    // Build resource context with condition information
+    // Build resource context with condition and "applies to all" information
     const resourceList = (resources || []).map((r: HealingResource) => {
       const conditionInfo = resourceConditionMap.get(r.id);
       const conditionTag = conditionInfo 
         ? ` [CONDITION-SPECIFIC: ${conditionInfo.conditionNames.join(', ')} - PRIORITY BOOST: ${conditionInfo.priorityBoost}x]`
         : '';
-      return `- ${r.title} (${r.modality}, intensity ${r.intensity}/5, ${r.duration_sec ? Math.round(r.duration_sec / 60) + ' min' : 'variable duration'}, ${r.tier})${conditionTag}: ${r.teaching_description || 'No description'}`;
+      const allSymptomsTag = r.applies_to_all_symptoms ? ' [MUST-INCLUDE-IN-ALL-PROTOCOLS]' : '';
+      return `- ${r.title} (${r.modality}, intensity ${r.intensity}/5, ${r.duration_sec ? Math.round(r.duration_sec / 60) + ' min' : 'variable duration'}, ${r.tier})${conditionTag}${allSymptomsTag}: ${r.teaching_description || 'No description'}`;
     }).join('\n') || 'No healing resources available yet.';
 
     // Build symptom context
@@ -251,6 +253,10 @@ PROTOCOL GUIDELINES:
 4. Respect the user's available session time when building protocols
 5. Always acknowledge this is not medical advice and encourage professional support for serious concerns
 6. Create protocols with 3-5 steps that flow logically (grounding → processing → integration)
+
+MUST-INCLUDE RESOURCES:
+- Resources tagged with [MUST-INCLUDE-IN-ALL-PROTOCOLS] MUST be included as a step in EVERY protocol you generate, regardless of the user's symptoms
+- Place them where they fit best in the protocol flow (grounding → processing → integration)
 
 CONDITION PRIORITIZATION:
 - When a user mentions a specific health condition (e.g., Lupus, Cancer, Eczema, etc.), PRIORITIZE resources marked with [CONDITION-SPECIFIC] tags that match their condition
