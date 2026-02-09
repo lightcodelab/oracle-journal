@@ -19,6 +19,13 @@ interface ResourceAttachment {
   file_type: string;
 }
 
+interface ResourceAudioFile {
+  id: string;
+  file_url: string;
+  file_name: string;
+  display_order: number;
+}
+
 interface ContentResource {
   id: string;
   title: string;
@@ -49,6 +56,7 @@ const DevotionResourcePage = () => {
   const [loading, setLoading] = useState(true);
   const [resource, setResource] = useState<ContentResource | null>(null);
   const [attachments, setAttachments] = useState<ResourceAttachment[]>([]);
+  const [audioFiles, setAudioFiles] = useState<ResourceAudioFile[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
@@ -189,8 +197,18 @@ const DevotionResourcePage = () => {
         };
 
         setResource(transformedResource);
-        // Healing resources don't have attachments in the same way
         setAttachments([]);
+
+        // Fetch multiple audio files
+        const { data: audioData } = await supabase
+          .from('healing_resource_audio_files')
+          .select('*')
+          .eq('resource_id', healingData.id)
+          .order('display_order');
+        if (audioData) {
+          setAudioFiles(audioData);
+        }
+
         setLoading(false);
         return;
       }
@@ -623,8 +641,46 @@ const DevotionResourcePage = () => {
           </motion.div>
         )}
 
-        {/* Secondary Audio Player (when resource has both video and audio) */}
-        {resource.secondary_audio_url && (
+        {/* Multiple Audio Players (from new table) */}
+        {audioFiles.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="mb-8 space-y-4"
+          >
+            {audioFiles.map((af, idx) => (
+              <div key={af.id} className="bg-card border border-border rounded-lg p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Headphones className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <span className="font-medium text-foreground">{af.file_name}</span>
+                      <p className="text-xs text-muted-foreground">Audio {idx + 1} of {audioFiles.length}</p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPlaylistDialogOpen(true)}
+                  >
+                    <ListMusic className="w-4 h-4 mr-2" />
+                    Add to Playlist
+                  </Button>
+                </div>
+                <audio controls className="w-full">
+                  <source src={getPublicUrl('healing-resource-images', af.file_url) || ''} type="audio/mpeg" />
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            ))}
+          </motion.div>
+        )}
+
+        {/* Legacy Secondary Audio Player (fallback when no multi-audio) */}
+        {audioFiles.length === 0 && resource.secondary_audio_url && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -658,7 +714,9 @@ const DevotionResourcePage = () => {
             </div>
           </motion.div>
         )}
-        {resource.main_media_kind === 'file' && resource.main_media_file_url && (
+
+        {/* Main media file (non-audio or legacy single audio fallback) */}
+        {audioFiles.length === 0 && resource.main_media_kind === 'file' && resource.main_media_file_url && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

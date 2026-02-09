@@ -1102,6 +1102,41 @@ export type Database = {
         }
         Relationships: []
       }
+      healing_resource_audio_files: {
+        Row: {
+          created_at: string
+          display_order: number
+          file_name: string
+          file_url: string
+          id: string
+          resource_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          file_name: string
+          file_url: string
+          id?: string
+          resource_id: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          file_name?: string
+          file_url?: string
+          id?: string
+          resource_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "healing_resource_audio_files_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       healing_resources: {
         Row: {
           audio_file_url: string | null

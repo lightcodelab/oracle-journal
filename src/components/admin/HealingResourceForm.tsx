@@ -76,6 +76,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadingAudio, setUploadingAudio] = useState(false);
+  const [audioFiles, setAudioFiles] = useState<{ id?: string; file_url: string; file_name: string; display_order: number }[]>([]);
   
   // Form state
   const [title, setTitle] = useState('');
@@ -89,6 +90,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [status, setStatus] = useState<ResourceStatus>('draft');
   const [displayImageUrl, setDisplayImageUrl] = useState<string | null>(null);
   const [vimeoEmbedUrl, setVimeoEmbedUrl] = useState('');
+  // Keep legacy single audio state for backward compat in save
   const [audioFileUrl, setAudioFileUrl] = useState<string | null>(null);
   const [locationId, setLocationId] = useState<string | null>(null);
   const [scheduledPublishAt, setScheduledPublishAt] = useState<Date | undefined>(undefined);
@@ -317,6 +319,16 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       setDisplayImageUrl(resource.display_image_url);
       setVimeoEmbedUrl(resource.vimeo_embed_url || '');
       setAudioFileUrl((resource as any).audio_file_url || null);
+
+      // Load audio files from new table
+      const { data: audioData } = await supabase
+        .from('healing_resource_audio_files')
+        .select('*')
+        .eq('resource_id', resourceId)
+        .order('display_order');
+      if (audioData && audioData.length > 0) {
+        setAudioFiles(audioData.map(a => ({ id: a.id, file_url: a.file_url, file_name: a.file_name, display_order: a.display_order })));
+      }
       setLocationId((resource as any).location_id || null);
 
       // Load scheduled publish date
@@ -439,7 +451,9 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
 
       if (uploadError) throw uploadError;
 
-      setAudioFileUrl(fileName);
+      // Use original file name (without extension path prefix) as display name
+      const displayName = file.name.replace(/\.[^.]+$/, '');
+      setAudioFiles(prev => [...prev, { file_url: fileName, file_name: displayName, display_order: prev.length }]);
       toast({ title: 'Audio uploaded' });
     } catch (error: any) {
       console.error('Error uploading audio:', error);
@@ -493,7 +507,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
         status,
         display_image_url: displayImageUrl,
         vimeo_embed_url: vimeoEmbedUrl || null,
-        audio_file_url: audioFileUrl,
+        audio_file_url: audioFiles.length > 0 ? audioFiles[0].file_url : null,
         body_richtext: editor?.getJSON() as any || null,
         locale: 'en',
         tier: 'paid' as const,
@@ -523,6 +537,22 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
 
       // Update symptom mappings
       if (savedResourceId) {
+        // Save audio files
+        await supabase
+          .from('healing_resource_audio_files')
+          .delete()
+          .eq('resource_id', savedResourceId);
+        
+        if (audioFiles.length > 0) {
+          const audioInserts = audioFiles.map((af, idx) => ({
+            resource_id: savedResourceId!,
+            file_url: af.file_url,
+            file_name: af.file_name,
+            display_order: idx,
+          }));
+          await supabase.from('healing_resource_audio_files').insert(audioInserts);
+        }
+
         // Delete existing mappings
         await supabase
           .from('resource_symptom_mappings')
@@ -1163,46 +1193,63 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
             )}
           </div>
 
-          {/* Audio Upload */}
+          {/* Audio Files (Multiple) */}
           <div>
-            <Label className="flex items-center gap-2">
+            <Label className="flex items-center gap-2 mb-2">
               <Music className="w-4 h-4" />
-              Audio File
+              Audio Files
             </Label>
-            {audioFileUrl ? (
-              <div className="mt-2 space-y-2">
-                <audio
-                  src={getImageUrl(audioFileUrl) || ''}
-                  controls
-                  className="w-full max-w-md"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setAudioFileUrl(null)}
-                >
-                  <X className="w-4 h-4 mr-2" />
-                  Remove Audio
-                </Button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 mt-2">
-                <Input
-                  type="file"
-                  accept="audio/*,.mp3,.wav,.ogg,.m4a"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleAudioUpload(file);
-                  }}
-                  disabled={uploadingAudio}
-                  className="flex-1"
-                />
-                {uploadingAudio && <Loader2 className="w-4 h-4 animate-spin" />}
+            
+            {audioFiles.length > 0 && (
+              <div className="space-y-3 mb-4">
+                {audioFiles.map((af, idx) => (
+                  <div key={idx} className="flex items-center gap-3 p-3 bg-muted rounded-md">
+                    <Music className="w-4 h-4 text-primary shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <Input
+                        value={af.file_name}
+                        onChange={(e) => {
+                          const updated = [...audioFiles];
+                          updated[idx] = { ...updated[idx], file_name: e.target.value };
+                          setAudioFiles(updated);
+                        }}
+                        className="mb-1 text-sm h-8"
+                        placeholder="Display name for this audio"
+                      />
+                      <audio
+                        src={getImageUrl(af.file_url) || ''}
+                        controls
+                        className="w-full"
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setAudioFiles(audioFiles.filter((_, i) => i !== idx))}
+                    >
+                      <X className="w-4 h-4 text-destructive" />
+                    </Button>
+                  </div>
+                ))}
               </div>
             )}
+
+            <div className="flex items-center gap-2">
+              <Input
+                type="file"
+                accept="audio/*,.mp3,.wav,.ogg,.m4a"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleAudioUpload(file);
+                }}
+                disabled={uploadingAudio}
+                className="flex-1"
+              />
+              {uploadingAudio && <Loader2 className="w-4 h-4 animate-spin" />}
+            </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Supports MP3, WAV, OGG, M4A files up to 50MB
+              Upload multiple audio files. Each will display as a separate player with its name as heading.
             </p>
           </div>
 
