@@ -667,8 +667,8 @@ const DevotionResourcePage = () => {
           >
             {(() => {
               const fileUrl = resource.main_media_file_url;
-              const isAudio = fileUrl.match(/\.(mp3|wav|ogg|m4a|aac|flac)$/i);
-              const isVideo = fileUrl.match(/\.(mp4|webm|mov|avi|mkv)$/i);
+              const isAudio = fileUrl.match(/\.(mp3|wav|ogg|m4a|aac|flac)/i) || fileUrl.includes('healing-resource-audio') || fileUrl.includes('content-main-media');
+              const isVideo = fileUrl.match(/\.(mp4|webm|mov|avi|mkv)/i);
 
               if (isAudio) {
                 return (
