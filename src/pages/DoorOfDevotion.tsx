@@ -7,6 +7,7 @@ import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Lock, ArrowUpRight, Folder } from 'lucide-react';
+import AllResourcesSection from '@/components/devotion/AllResourcesSection';
 import { useTierAccess } from '@/hooks/useTierAccess';
 
 interface LocationCategory {
@@ -204,6 +205,9 @@ const DoorOfDevotion = () => {
 
         {/* Category Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* All Resources section spans full width as first item */}
+          <AllResourcesSection />
+
           {categories.map((category, index) => (
             <motion.div
               key={category.id}
