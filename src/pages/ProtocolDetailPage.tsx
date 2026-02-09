@@ -12,6 +12,7 @@ import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ContextualJournal from '@/components/journal/ContextualJournal';
 import ProtocolSessionNav from '@/components/ProtocolSessionNav';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
+import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
 import DOMPurify from 'dompurify';
 import type { Json } from '@/integrations/supabase/types';
 
@@ -473,34 +474,16 @@ const ProtocolDetailPage = () => {
             </motion.div>
           )}
 
-          {/* Audio Player */}
-          {resource?.audio_file_url && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.22 }}
-              className="mb-8"
-            >
-              <div className="bg-card border border-border rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Headphones className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm">Audio Guide</p>
-                    <p className="text-xs text-muted-foreground">Listen to the guided practice</p>
-                  </div>
-                </div>
-                <audio
-                  src={resource.audio_file_url.startsWith('http') 
-                    ? resource.audio_file_url 
-                    : `https://gjaafbzhkdekgigmnafp.supabase.co/storage/v1/object/public/healing-resource-images/${resource.audio_file_url}`
-                  }
-                  controls
-                  className="w-full"
-                />
-              </div>
-            </motion.div>
+          {/* Audio Players */}
+          {resource && (
+            <ResourceAudioPlayers
+              resourceId={resource.id}
+              bucket="healing-resource-images"
+              table="healing_resource_audio_files"
+              foreignKey="resource_id"
+              legacyAudioUrl={resource.audio_file_url}
+              delayOffset={0.22}
+            />
           )}
 
           {/* Teaching Description */}

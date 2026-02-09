@@ -11,6 +11,7 @@ import { useTierAccess } from '@/hooks/useTierAccess';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import ContextualJournal from '@/components/journal/ContextualJournal';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
+import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
 
 interface ResourceAttachment {
   id: string;

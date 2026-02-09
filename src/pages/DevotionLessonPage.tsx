@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic } from 'lucide-react';
+import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -306,52 +307,27 @@ const DevotionLessonPage = () => {
             </h1>
           </motion.div>
 
-          {/* Audio Player */}
-          {lesson.audio_url && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mb-8"
-            >
-              <div className="bg-card border border-border rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-serif text-lg text-foreground">Audio Lesson</h3>
-                  <Button
-                    onClick={() => setPlaylistDialogOpen(true)}
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <ListMusic className="w-4 h-4 mr-2" />
-                    Add to Playlist
-                  </Button>
-                </div>
-                <audio
-                  ref={audioRef}
-                  src={lesson.audio_url}
-                  controls
-                  className="w-full"
-                  onTimeUpdate={handleAudioTimeUpdate}
-                />
-                <div className="flex items-center justify-between mt-2">
-                  {lesson.audio_timestamp && (
-                    <p className="text-muted-foreground text-sm">
-                      Duration: {lesson.audio_timestamp}
-                    </p>
-                  )}
-                  <Button
-                    onClick={handleRestartAudio}
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground hover:text-foreground ml-auto"
-                  >
-                    <RotateCcw className="w-4 h-4 mr-2" />
-                    Restart
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
+          {/* Audio Players (Multi-audio) */}
+          {lesson.id && (
+            <ResourceAudioPlayers
+              resourceId={lesson.id}
+              bucket="content-main-media"
+              table="lesson_audio_files"
+              foreignKey="lesson_id"
+              legacyAudioUrl={lesson.audio_url}
+              delayOffset={0.2}
+              renderActions={() => (
+                <Button
+                  onClick={() => setPlaylistDialogOpen(true)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <ListMusic className="w-4 h-4 mr-2" />
+                  Add to Playlist
+                </Button>
+              )}
+            />
           )}
 
           {/* Lesson Content */}
