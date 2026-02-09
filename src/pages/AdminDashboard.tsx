@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, Upload, Settings, Video } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Calendar, Upload, Settings, Video, ImageDown, Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
-
 const adminTasks = [
   {
     title: 'Manage Live Sessions',
@@ -36,7 +37,29 @@ const adminTasks = [
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
+  const [compressing, setCompressing] = useState(false);
+  const [compressionResult, setCompressionResult] = useState<string | null>(null);
+
+  const handleCompressImages = async () => {
+    setCompressing(true);
+    setCompressionResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('compress-existing-images', {
+        body: { dryRun: false },
+      });
+      if (error) throw error;
+      const s = data?.summary;
+      const msg = `Compressed ${s?.filesProcessed ?? 0} images (${s?.overallReduction ?? '0%'} reduction). Skipped ${s?.filesSkipped ?? 0}, errors: ${s?.errors ?? 0}.`;
+      setCompressionResult(msg);
+      toast({ title: 'Compression complete', description: msg });
+    } catch (err: any) {
+      toast({ title: 'Compression failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setCompressing(false);
+    }
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -46,10 +69,6 @@ const AdminDashboard = () => {
         return;
       }
 
-      // UX-only admin check: This prevents non-admins from seeing the admin UI.
-      // SECURITY NOTE: Actual authorization is enforced by RLS policies on all tables.
-      // The has_role() SECURITY DEFINER function and RLS policies prevent unauthorized
-      // data access even if this client-side check is bypassed.
       const { data: roles } = await supabase
         .from('user_roles')
         .select('role')
@@ -133,6 +152,41 @@ const AdminDashboard = () => {
               );
             })}
           </div>
+
+          {/* Utilities */}
+          <Card className="border-dashed">
+            <CardHeader className="flex flex-row items-center gap-4 pb-2">
+              <div className="p-3 rounded-lg bg-primary/10">
+                <ImageDown className="w-6 h-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <CardTitle className="text-lg font-serif">Compress Existing Images</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <CardDescription className="text-sm">
+                Retroactively compress all previously uploaded images across storage buckets to reduce file sizes and improve load times.
+              </CardDescription>
+              <Button
+                onClick={handleCompressImages}
+                disabled={compressing}
+                variant="outline"
+                size="sm"
+              >
+                {compressing ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Compressing…
+                  </>
+                ) : (
+                  'Run Compression'
+                )}
+              </Button>
+              {compressionResult && (
+                <p className="text-xs text-muted-foreground">{compressionResult}</p>
+              )}
+            </CardContent>
+          </Card>
         </motion.div>
       </div>
     </div>
