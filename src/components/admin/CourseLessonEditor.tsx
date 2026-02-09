@@ -25,6 +25,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import AudioFileList from './AudioFileList';
 
 interface Lesson {
   id: string;
@@ -281,39 +282,11 @@ const LessonEditorPanel = ({
             <div className="space-y-2">
               <Label>Audio Files</Label>
               
-              {audioFiles.length > 0 && (
-                <div className="space-y-3">
-                  {audioFiles.map((af, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 bg-muted rounded-md">
-                      <FileAudio className="w-4 h-4 text-primary shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <Input
-                          value={af.file_name}
-                          onChange={(e) => {
-                            const updated = [...audioFiles];
-                            updated[idx] = { ...updated[idx], file_name: e.target.value };
-                            setAudioFiles(updated);
-                          }}
-                          className="mb-1 text-sm h-8"
-                          placeholder="Display name"
-                        />
-                        <audio
-                          src={getAudioPublicUrl(af.file_url)}
-                          controls
-                          className="w-full"
-                        />
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setAudioFiles(audioFiles.filter((_, i) => i !== idx))}
-                      >
-                        <X className="w-4 h-4 text-destructive" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <AudioFileList
+                audioFiles={audioFiles}
+                onChange={setAudioFiles}
+                getPublicUrl={getAudioPublicUrl}
+              />
 
               <div className="flex items-center gap-2">
                 <Input

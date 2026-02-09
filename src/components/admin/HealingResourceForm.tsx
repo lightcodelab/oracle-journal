@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus, Music, CalendarIcon, Heart, UtensilsCrossed } from 'lucide-react';
+import AudioFileList from './AudioFileList';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -1198,40 +1199,11 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               Audio Files
             </Label>
             
-            {audioFiles.length > 0 && (
-              <div className="space-y-3 mb-4">
-                {audioFiles.map((af, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3 bg-muted rounded-md">
-                    <Music className="w-4 h-4 text-primary shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <Input
-                        value={af.file_name}
-                        onChange={(e) => {
-                          const updated = [...audioFiles];
-                          updated[idx] = { ...updated[idx], file_name: e.target.value };
-                          setAudioFiles(updated);
-                        }}
-                        className="mb-1 text-sm h-8"
-                        placeholder="Display name for this audio"
-                      />
-                      <audio
-                        src={getImageUrl(af.file_url) || ''}
-                        controls
-                        className="w-full"
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setAudioFiles(audioFiles.filter((_, i) => i !== idx))}
-                    >
-                      <X className="w-4 h-4 text-destructive" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
+            <AudioFileList
+              audioFiles={audioFiles}
+              onChange={setAudioFiles}
+              getPublicUrl={(path) => getImageUrl(path) || ''}
+            />
 
             <div className="flex items-center gap-2">
               <Input
