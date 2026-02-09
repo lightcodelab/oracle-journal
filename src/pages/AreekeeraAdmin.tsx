@@ -34,6 +34,16 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { MoreVertical } from 'lucide-react';
 
 interface Symptom {
@@ -121,6 +131,9 @@ const AreekeeraAdmin = () => {
     name: '',
     category: '',
   });
+
+  // Delete confirmation state
+  const [deleteConfirm, setDeleteConfirm] = useState<{ type: string; id: string; name: string } | null>(null);
 
   // Handle ?edit=resourceId query parameter
   useEffect(() => {
@@ -748,7 +761,7 @@ const AreekeeraAdmin = () => {
                                 Edit
                               </DropdownMenuItem>
                               <DropdownMenuItem 
-                                onClick={() => handleDeleteSymptom(symptom.id)}
+                                onClick={() => setDeleteConfirm({ type: 'symptom', id: symptom.id, name: symptom.name })}
                                 className="text-destructive"
                               >
                                 <Trash2 className="w-4 h-4 mr-2" />
@@ -877,7 +890,7 @@ const AreekeeraAdmin = () => {
                                   Edit
                                 </DropdownMenuItem>
                                 <DropdownMenuItem 
-                                  onClick={() => handleDeleteCondition(condition.id)}
+                                  onClick={() => setDeleteConfirm({ type: 'condition', id: condition.id, name: condition.name })}
                                   className="text-destructive"
                                 >
                                   <Trash2 className="w-4 h-4 mr-2" />
@@ -1002,7 +1015,7 @@ const AreekeeraAdmin = () => {
                                 Edit
                               </DropdownMenuItem>
                               <DropdownMenuItem 
-                                onClick={() => handleDeleteTeacher(teacher.id)}
+                                onClick={() => setDeleteConfirm({ type: 'teacher', id: teacher.id, name: teacher.name })}
                                 className="text-destructive"
                               >
                                 <Trash2 className="w-4 h-4 mr-2" />
@@ -1107,7 +1120,7 @@ const AreekeeraAdmin = () => {
                                 Edit
                               </DropdownMenuItem>
                               <DropdownMenuItem 
-                                onClick={() => handleDeleteTag(tag.id)}
+                                onClick={() => setDeleteConfirm({ type: 'tag', id: tag.id, name: tag.name })}
                                 className="text-destructive"
                               >
                                 <Trash2 className="w-4 h-4 mr-2" />
@@ -1144,6 +1157,34 @@ const AreekeeraAdmin = () => {
           </div>
         )}
       </div>
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete {deleteConfirm?.type}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete "{deleteConfirm?.name}". This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => {
+                if (!deleteConfirm) return;
+                const { type, id } = deleteConfirm;
+                if (type === 'symptom') handleDeleteSymptom(id);
+                else if (type === 'condition') handleDeleteCondition(id);
+                else if (type === 'teacher') handleDeleteTeacher(id);
+                else if (type === 'tag') handleDeleteTag(id);
+                setDeleteConfirm(null);
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
