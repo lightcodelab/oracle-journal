@@ -10,6 +10,7 @@ export interface ContentResource {
   main_media_kind: 'file' | 'video_embed' | 'none' | null;
   main_media_file_url: string | null;
   main_media_embed_url: string | null;
+  secondary_audio_url: string | null;
   is_course: boolean | null;
   status: 'draft' | 'published';
   source: 'content' | 'healing';
@@ -140,33 +141,40 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
           ...resource,
           thumbnail_url: getPublicUrl('content-thumbnails', resource.thumbnail_url),
           main_media_file_url: getPublicUrl('content-main-media', resource.main_media_file_url),
+          secondary_audio_url: null as string | null,
           source: 'content' as const,
         })) as ContentResource[];
 
         // Transform healing resources to match ContentResource shape
         const transformedHealing = (healingResult.data || []).map(resource => {
-          // Determine media kind based on available fields
+          // Determine primary media kind and check for secondary audio
           let mediaKind: 'file' | 'video_embed' | 'none' | null = null;
           let mediaFileUrl: string | null = null;
           let mediaEmbedUrl: string | null = null;
+          let secondaryAudioUrl: string | null = null;
+
+          const audioUrl = resource.audio_file_url ? getPublicUrl('healing-resource-audio', resource.audio_file_url) : null;
 
           if (resource.vimeo_embed_url) {
             mediaKind = 'video_embed';
             mediaEmbedUrl = resource.vimeo_embed_url;
-          } else if (resource.audio_file_url) {
+            // If both video and audio exist, audio becomes secondary
+            secondaryAudioUrl = audioUrl;
+          } else if (audioUrl) {
             mediaKind = 'file';
-            mediaFileUrl = getPublicUrl('healing-resource-audio', resource.audio_file_url);
+            mediaFileUrl = audioUrl;
           }
 
           return {
             id: resource.id,
             title: resource.title,
-            slug: `healing-${resource.id}`, // Use id-based slug for healing resources
+            slug: `healing-${resource.id}`,
             summary: (resource as any).summary || resource.teaching_description || null,
             thumbnail_url: getPublicUrl('healing-resource-images', resource.display_image_url),
             main_media_kind: mediaKind,
             main_media_file_url: mediaFileUrl,
             main_media_embed_url: mediaEmbedUrl,
+            secondary_audio_url: secondaryAudioUrl,
             is_course: false,
             status: resource.status as 'draft' | 'published',
             source: 'healing' as const,

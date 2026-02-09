@@ -10,6 +10,7 @@ export interface RemembranceCourse {
   main_media_kind: 'file' | 'video_embed' | 'none' | null;
   main_media_file_url: string | null;
   main_media_embed_url: string | null;
+  secondary_audio_url: string | null;
   is_course: boolean | null;
   status: 'draft' | 'published';
   source: 'content';
@@ -121,6 +122,7 @@ export const useRemembranceCourses = (): UseRemembranceCoursesResult => {
           ...resource,
           thumbnail_url: getPublicUrl('content-thumbnails', resource.thumbnail_url),
           main_media_file_url: getPublicUrl('content-main-media', resource.main_media_file_url),
+          secondary_audio_url: null as string | null,
           source: 'content' as const,
         })) as RemembranceCourse[];
 

@@ -28,6 +28,7 @@ interface ContentResource {
   main_media_kind: 'file' | 'video_embed' | 'none' | null;
   main_media_file_url: string | null;
   main_media_embed_url: string | null;
+  secondary_audio_url: string | null;
   status: 'draft' | 'published';
   location: {
     id: string;
@@ -131,13 +132,18 @@ const DevotionResourcePage = () => {
         let mediaKind: 'file' | 'video_embed' | 'none' | null = null;
         let mediaFileUrl: string | null = null;
         let mediaEmbedUrl: string | null = null;
+        let secondaryAudioUrl: string | null = null;
+
+        const audioUrl = healingData.audio_file_url ? getPublicUrl('healing-resource-audio', healingData.audio_file_url) : null;
 
         if (healingData.vimeo_embed_url) {
           mediaKind = 'video_embed';
           mediaEmbedUrl = healingData.vimeo_embed_url;
-        } else if (healingData.audio_file_url) {
+          // If both video and audio exist, audio becomes secondary
+          secondaryAudioUrl = audioUrl;
+        } else if (audioUrl) {
           mediaKind = 'file';
-          mediaFileUrl = getPublicUrl('healing-resource-audio', healingData.audio_file_url);
+          mediaFileUrl = audioUrl;
         }
 
         // Transform healing resource to match ContentResource shape
@@ -151,6 +157,7 @@ const DevotionResourcePage = () => {
           main_media_kind: mediaKind,
           main_media_file_url: mediaFileUrl,
           main_media_embed_url: mediaEmbedUrl,
+          secondary_audio_url: secondaryAudioUrl,
           status: healingData.status as 'draft' | 'published',
           location: healingData.location as ContentResource['location'],
           resource_type: {
@@ -212,6 +219,7 @@ const DevotionResourcePage = () => {
         ...resourceData,
         thumbnail_url: getPublicUrl('content-thumbnails', resourceData.thumbnail_url),
         main_media_file_url: getPublicUrl('content-main-media', resourceData.main_media_file_url),
+        secondary_audio_url: null as string | null,
       };
 
       setResource(transformedResource as unknown as ContentResource);
@@ -594,7 +602,31 @@ const DevotionResourcePage = () => {
           </motion.div>
         )}
 
-        {/* Main Media - Uploaded File (Audio/Video) */}
+        {/* Secondary Audio Player (when resource has both video and audio) */}
+        {resource.secondary_audio_url && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="mb-8"
+          >
+            <div className="bg-card border border-border rounded-lg p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Headphones className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <span className="font-medium text-foreground">Audio</span>
+                  <p className="text-xs text-muted-foreground">Listen to this resource</p>
+                </div>
+              </div>
+              <audio controls className="w-full">
+                <source src={resource.secondary_audio_url} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </motion.div>
+        )}
         {resource.main_media_kind === 'file' && resource.main_media_file_url && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
