@@ -1760,25 +1760,35 @@ export type Database = {
         Row: {
           added_at: string
           id: string
+          lesson_id: string | null
           playlist_id: string
-          resource_id: string
+          resource_id: string | null
           track_order: number
         }
         Insert: {
           added_at?: string
           id?: string
+          lesson_id?: string | null
           playlist_id: string
-          resource_id: string
+          resource_id?: string | null
           track_order?: number
         }
         Update: {
           added_at?: string
           id?: string
+          lesson_id?: string | null
           playlist_id?: string
-          resource_id?: string
+          resource_id?: string | null
           track_order?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "playlist_tracks_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "playlist_tracks_playlist_id_fkey"
             columns: ["playlist_id"]

@@ -15,7 +15,8 @@ import { usePlaylists } from '@/hooks/usePlaylists';
 interface AddToPlaylistDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  resourceId: string;
+  resourceId?: string;
+  lessonId?: string;
   resourceTitle: string;
 }
 
@@ -23,6 +24,7 @@ const AddToPlaylistDialog = ({
   open,
   onOpenChange,
   resourceId,
+  lessonId,
   resourceTitle,
 }: AddToPlaylistDialogProps) => {
   const { playlists, loading, createPlaylist, addTrackToPlaylist } = usePlaylists();
@@ -33,7 +35,7 @@ const AddToPlaylistDialog = ({
 
   const handleAdd = async (playlistId: string) => {
     setAdding(playlistId);
-    await addTrackToPlaylist(playlistId, resourceId);
+    await addTrackToPlaylist(playlistId, resourceId, lessonId);
     setAdded(prev => new Set(prev).add(playlistId));
     setAdding(null);
   };
@@ -42,7 +44,7 @@ const AddToPlaylistDialog = ({
     if (!newName.trim()) return;
     const playlist = await createPlaylist(newName.trim());
     if (playlist) {
-      await addTrackToPlaylist(playlist.id, resourceId);
+      await addTrackToPlaylist(playlist.id, resourceId, lessonId);
       setAdded(prev => new Set(prev).add(playlist.id));
       setNewName('');
       setShowCreate(false);

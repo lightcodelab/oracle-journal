@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -12,6 +12,7 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ContextualJournal from '@/components/journal/ContextualJournal';
 import CourseSessionNav from '@/components/CourseSessionNav';
+import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import DOMPurify from 'dompurify';
 
 interface Lesson {
@@ -46,6 +47,7 @@ const DevotionLessonPage = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -315,13 +317,13 @@ const DevotionLessonPage = () => {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-serif text-lg text-foreground">Audio Lesson</h3>
                   <Button
-                    onClick={handleRestartAudio}
+                    onClick={() => setPlaylistDialogOpen(true)}
                     variant="ghost"
                     size="sm"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    <RotateCcw className="w-4 h-4 mr-2" />
-                    Restart
+                    <ListMusic className="w-4 h-4 mr-2" />
+                    Add to Playlist
                   </Button>
                 </div>
                 <audio
@@ -331,11 +333,22 @@ const DevotionLessonPage = () => {
                   className="w-full"
                   onTimeUpdate={handleAudioTimeUpdate}
                 />
-                {lesson.audio_timestamp && (
-                  <p className="text-muted-foreground text-sm mt-2">
-                    Duration: {lesson.audio_timestamp}
-                  </p>
-                )}
+                <div className="flex items-center justify-between mt-2">
+                  {lesson.audio_timestamp && (
+                    <p className="text-muted-foreground text-sm">
+                      Duration: {lesson.audio_timestamp}
+                    </p>
+                  )}
+                  <Button
+                    onClick={handleRestartAudio}
+                    variant="ghost"
+                    size="sm"
+                    className="text-muted-foreground hover:text-foreground ml-auto"
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Restart
+                  </Button>
+                </div>
               </div>
             </motion.div>
           )}
@@ -446,6 +459,16 @@ const DevotionLessonPage = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Playlist Dialog */}
+      {lesson && lesson.audio_url && (
+        <AddToPlaylistDialog
+          open={playlistDialogOpen}
+          onOpenChange={setPlaylistDialogOpen}
+          lessonId={lesson.id}
+          resourceTitle={lesson.title}
+        />
+      )}
     </div>
   );
 };
