@@ -54,6 +54,13 @@ interface CourseLessonEditorProps {
   courseId: string;
 }
 
+interface AudioFile {
+  id?: string;
+  file_url: string;
+  file_name: string;
+  display_order: number;
+}
+
 const LessonEditorPanel = ({
   lesson,
   modules,
@@ -62,17 +69,18 @@ const LessonEditorPanel = ({
 }: {
   lesson: Lesson;
   modules: Module[];
-  onSave: (id: string, data: Partial<Lesson>) => Promise<void>;
+  onSave: (id: string, data: Partial<Lesson>, audioFiles: AudioFile[]) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 }) => {
   const { toast } = useToast();
   const [expanded, setExpanded] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingAudio, setUploadingAudio] = useState(false);
   const [title, setTitle] = useState(lesson.title);
   const [moduleTitle, setModuleTitle] = useState(lesson.module_title || '');
   const [description, setDescription] = useState(lesson.description || '');
-  const [audioUrl, setAudioUrl] = useState(lesson.audio_url || '');
+  const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
   const [audioTimestamp, setAudioTimestamp] = useState(lesson.audio_timestamp || '');
   const [surveyQuestion, setSurveyQuestion] = useState(lesson.survey_question || '');
   const [surveyOptions, setSurveyOptions] = useState<string[]>(
@@ -81,6 +89,31 @@ const LessonEditorPanel = ({
   const [mediaKind, setMediaKind] = useState(lesson.main_media_kind || 'none');
   const [mediaEmbedUrl, setMediaEmbedUrl] = useState(lesson.main_media_embed_url || '');
   const [mediaFileUrl, setMediaFileUrl] = useState(lesson.main_media_file_url || '');
+
+  // Load audio files when expanded
+  useEffect(() => {
+    if (expanded && lesson.id) {
+      supabase
+        .from('lesson_audio_files')
+        .select('*')
+        .eq('lesson_id', lesson.id)
+        .order('display_order')
+        .then(({ data }) => {
+          if (data && data.length > 0) {
+            setAudioFiles(data.map(a => ({ id: a.id, file_url: a.file_url, file_name: a.file_name, display_order: a.display_order })));
+          } else if (lesson.audio_url) {
+            // Legacy fallback
+            setAudioFiles([{ file_url: lesson.audio_url, file_name: lesson.audio_url.split('/').pop() || 'Audio', display_order: 0 }]);
+          }
+        });
+    }
+  }, [expanded, lesson.id]);
+
+  const getAudioPublicUrl = (path: string) => {
+    if (path.startsWith('http')) return path;
+    if (path.startsWith('/')) return path;
+    return supabase.storage.from('content-main-media').getPublicUrl(path).data.publicUrl;
+  };
 
   const editor = useEditor({
     extensions: [
@@ -108,7 +141,7 @@ const LessonEditorPanel = ({
       description: description || null,
       content: editor?.getText() || '',
       body_richtext: editor?.getJSON() || null,
-      audio_url: audioUrl || null,
+      audio_url: audioFiles.length > 0 ? audioFiles[0].file_url : null,
       audio_timestamp: audioTimestamp || null,
       survey_question: surveyQuestion || null,
       survey_options: surveyOptions.length > 0 ? surveyOptions : null,
@@ -116,8 +149,25 @@ const LessonEditorPanel = ({
       main_media_embed_url: mediaKind === 'video_embed' ? mediaEmbedUrl : null,
       main_media_file_url: mediaKind === 'file' ? mediaFileUrl : null,
       module_title: moduleTitle || null,
-    });
+    }, audioFiles);
     setSaving(false);
+  };
+
+  const handleAudioUpload = async (file: File) => {
+    setUploadingAudio(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const { error } = await supabase.storage.from('content-main-media').upload(fileName, file);
+      if (error) throw error;
+      const displayName = file.name.replace(/\.[^.]+$/, '');
+      setAudioFiles(prev => [...prev, { file_url: fileName, file_name: displayName, display_order: prev.length }]);
+      toast({ title: 'Uploaded', description: 'Audio file uploaded.' });
+    } catch {
+      toast({ title: 'Error', description: 'Audio upload failed.', variant: 'destructive' });
+    } finally {
+      setUploadingAudio(false);
+    }
   };
 
   const handleFileUpload = async (file: File) => {
@@ -227,55 +277,60 @@ const LessonEditorPanel = ({
               </div>
             </div>
 
-            {/* Audio */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Audio File</Label>
-                {audioUrl ? (
-                  <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
-                    <FileAudio className="w-5 h-5 text-primary" />
-                    <span className="flex-1 text-sm truncate">{audioUrl}</span>
-                    <Button variant="ghost" size="sm" onClick={() => setAudioUrl('')}>
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="file"
-                      accept="audio/*"
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        setUploading(true);
-                        try {
-                          const fileExt = file.name.split('.').pop();
-                          const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-                          const { error } = await supabase.storage.from('content-main-media').upload(fileName, file);
-                          if (error) throw error;
-                          setAudioUrl(fileName);
-                          toast({ title: 'Uploaded', description: 'Audio file uploaded.' });
-                        } catch {
-                          toast({ title: 'Error', description: 'Audio upload failed.', variant: 'destructive' });
-                        } finally {
-                          setUploading(false);
-                        }
-                      }}
-                      disabled={uploading}
-                      className="flex-1"
-                    />
-                    {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
-                  </div>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label>Audio Duration</Label>
+            {/* Audio Files (Multiple) */}
+            <div className="space-y-2">
+              <Label>Audio Files</Label>
+              
+              {audioFiles.length > 0 && (
+                <div className="space-y-3">
+                  {audioFiles.map((af, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 bg-muted rounded-md">
+                      <FileAudio className="w-4 h-4 text-primary shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <Input
+                          value={af.file_name}
+                          onChange={(e) => {
+                            const updated = [...audioFiles];
+                            updated[idx] = { ...updated[idx], file_name: e.target.value };
+                            setAudioFiles(updated);
+                          }}
+                          className="mb-1 text-sm h-8"
+                          placeholder="Display name"
+                        />
+                        <audio
+                          src={getAudioPublicUrl(af.file_url)}
+                          controls
+                          className="w-full"
+                        />
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setAudioFiles(audioFiles.filter((_, i) => i !== idx))}
+                      >
+                        <X className="w-4 h-4 text-destructive" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center gap-2">
                 <Input
-                  value={audioTimestamp}
-                  onChange={(e) => setAudioTimestamp(e.target.value)}
-                  placeholder="e.g. 12:34"
+                  type="file"
+                  accept="audio/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleAudioUpload(file);
+                  }}
+                  disabled={uploadingAudio}
+                  className="flex-1"
                 />
+                {uploadingAudio && <Loader2 className="w-4 h-4 animate-spin" />}
               </div>
+              <p className="text-xs text-muted-foreground">
+                Upload multiple audio files. Each displays as a separate player.
+              </p>
             </div>
 
             {/* Media */}
@@ -483,12 +538,28 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
     toast({ title: 'Added', description: 'Lesson added. Expand it to add content.' });
   };
 
-  const saveLesson = async (id: string, data: Partial<Lesson>) => {
+  const saveLesson = async (id: string, data: Partial<Lesson>, lessonAudioFiles?: AudioFile[]) => {
     const { error } = await supabase.from('lessons').update(data).eq('id', id);
     if (error) {
       toast({ title: 'Error', description: 'Failed to save lesson.', variant: 'destructive' });
       return;
     }
+
+    // Save audio files
+    if (lessonAudioFiles) {
+      await supabase.from('lesson_audio_files').delete().eq('lesson_id', id);
+      if (lessonAudioFiles.length > 0) {
+        await supabase.from('lesson_audio_files').insert(
+          lessonAudioFiles.map((af, idx) => ({
+            lesson_id: id,
+            file_url: af.file_url,
+            file_name: af.file_name,
+            display_order: idx,
+          }))
+        );
+      }
+    }
+
     setLessons(lessons.map(l => l.id === id ? { ...l, ...data } : l));
     toast({ title: 'Saved', description: 'Lesson saved successfully.' });
   };
