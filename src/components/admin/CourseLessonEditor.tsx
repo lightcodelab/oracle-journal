@@ -19,7 +19,7 @@ import RichTextEditorToolbar from './RichTextEditorToolbar';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import {
   Plus, Trash2, ChevronDown, ChevronRight, Loader2, FileText, Save, X,
-  Link as LinkIcon, FileAudio,
+  Link as LinkIcon, FileAudio, BookOpen, FolderPlus,
 } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -41,6 +41,13 @@ interface Lesson {
   main_media_embed_url: string | null;
   main_media_kind: string | null;
   main_media_file_url: string | null;
+  module_title: string | null;
+  module_order: number | null;
+}
+
+interface Module {
+  title: string;
+  order: number;
 }
 
 interface CourseLessonEditorProps {
@@ -49,10 +56,12 @@ interface CourseLessonEditorProps {
 
 const LessonEditorPanel = ({
   lesson,
+  modules,
   onSave,
   onDelete,
 }: {
   lesson: Lesson;
+  modules: Module[];
   onSave: (id: string, data: Partial<Lesson>) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 }) => {
@@ -61,6 +70,7 @@ const LessonEditorPanel = ({
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [title, setTitle] = useState(lesson.title);
+  const [moduleTitle, setModuleTitle] = useState(lesson.module_title || '');
   const [description, setDescription] = useState(lesson.description || '');
   const [audioUrl, setAudioUrl] = useState(lesson.audio_url || '');
   const [audioTimestamp, setAudioTimestamp] = useState(lesson.audio_timestamp || '');
@@ -105,6 +115,7 @@ const LessonEditorPanel = ({
       main_media_kind: mediaKind,
       main_media_embed_url: mediaKind === 'video_embed' ? mediaEmbedUrl : null,
       main_media_file_url: mediaKind === 'file' ? mediaFileUrl : null,
+      module_title: moduleTitle || null,
     });
     setSaving(false);
   };
@@ -172,7 +183,7 @@ const LessonEditorPanel = ({
         <CollapsibleContent>
           <CardContent className="space-y-6 pt-0">
             {/* Basic Info */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label>Lesson Title *</Label>
                 <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Lesson title" />
@@ -180,6 +191,20 @@ const LessonEditorPanel = ({
               <div className="space-y-2">
                 <Label>Lesson Number</Label>
                 <Input type="number" value={lesson.lesson_number} disabled className="bg-muted" />
+              </div>
+              <div className="space-y-2">
+                <Label>Module (Optional)</Label>
+                <Select value={moduleTitle || '__none__'} onValueChange={(v) => setModuleTitle(v === '__none__' ? '' : v)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="No module" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">No module</SelectItem>
+                    {modules.map((m) => (
+                      <SelectItem key={m.title} value={m.title}>{m.title}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
@@ -347,6 +372,16 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
   const [loading, setLoading] = useState(true);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [newLessonTitle, setNewLessonTitle] = useState('');
+  const [newModuleTitle, setNewModuleTitle] = useState('');
+  const [showModuleInput, setShowModuleInput] = useState(false);
+
+  // Derive modules from lesson data
+  const modules: Module[] = Array.from(
+    new Set(lessons.filter(l => l.module_title).map(l => l.module_title!))
+  ).map((title, i) => ({
+    title,
+    order: lessons.find(l => l.module_title === title)?.module_order ?? i,
+  })).sort((a, b) => a.order - b.order);
 
   useEffect(() => {
     fetchLessons();
@@ -358,11 +393,38 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
       .from('lessons')
       .select('*')
       .eq('course_id', courseId)
-      .order('lesson_number');
+      .order('module_order', { ascending: true })
+      .order('lesson_number', { ascending: true });
 
     if (data) setLessons(data as Lesson[]);
     setLoading(false);
   };
+
+  const addModule = () => {
+    if (!newModuleTitle.trim()) return;
+    // Module is just a label — it's created when a lesson is assigned to it.
+    // We add a placeholder so it shows in the selector immediately.
+    const exists = modules.some(m => m.title === newModuleTitle.trim());
+    if (exists) {
+      toast({ title: 'Exists', description: 'A module with that name already exists.' });
+      return;
+    }
+    // We'll store the module by creating a new lesson in it, or just track it locally
+    // For now, just show it in the UI and it persists once a lesson uses it
+    toast({ title: 'Module created', description: `"${newModuleTitle.trim()}" is now available. Assign lessons to it.` });
+    // Add a temp module entry by updating modules derived state
+    // We need to force it into the list — easiest: create a hidden "marker"
+    // Actually let's just keep it simple and add it to the modules list via state
+    setTempModules(prev => [...prev, { title: newModuleTitle.trim(), order: modules.length + prev.length }]);
+    setNewModuleTitle('');
+    setShowModuleInput(false);
+  };
+
+  const [tempModules, setTempModules] = useState<Module[]>([]);
+  const allModules = [
+    ...modules,
+    ...tempModules.filter(tm => !modules.some(m => m.title === tm.title)),
+  ];
 
   const addLesson = async () => {
     if (!newLessonTitle.trim()) return;
@@ -418,33 +480,100 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
     );
   }
 
+  // Group lessons: unassigned first, then by module
+  const unassignedLessons = lessons.filter(l => !l.module_title);
+  const groupedByModule = allModules.map(m => ({
+    module: m,
+    lessons: lessons.filter(l => l.module_title === m.title),
+  }));
+
   return (
-    <div className="space-y-4">
-      {/* Add Lesson */}
-      <div className="flex gap-2">
-        <Input
-          placeholder="New lesson title"
-          value={newLessonTitle}
-          onChange={(e) => setNewLessonTitle(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && addLesson()}
-        />
-        <Button onClick={addLesson} disabled={!newLessonTitle.trim()}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Lesson
-        </Button>
+    <div className="space-y-6">
+      {/* Actions bar */}
+      <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2 flex-1 min-w-[200px]">
+          <Input
+            placeholder="New lesson title"
+            value={newLessonTitle}
+            onChange={(e) => setNewLessonTitle(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addLesson()}
+          />
+          <Button onClick={addLesson} disabled={!newLessonTitle.trim()}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Lesson
+          </Button>
+        </div>
+        {showModuleInput ? (
+          <div className="flex gap-2">
+            <Input
+              placeholder="Module name"
+              value={newModuleTitle}
+              onChange={(e) => setNewModuleTitle(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') addModule();
+                if (e.key === 'Escape') { setShowModuleInput(false); setNewModuleTitle(''); }
+              }}
+              autoFocus
+              className="w-48"
+            />
+            <Button onClick={addModule} disabled={!newModuleTitle.trim()} size="sm">Add</Button>
+            <Button variant="ghost" size="sm" onClick={() => { setShowModuleInput(false); setNewModuleTitle(''); }}>
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+        ) : (
+          <Button variant="outline" onClick={() => setShowModuleInput(true)}>
+            <FolderPlus className="w-4 h-4 mr-2" />
+            Add Module
+          </Button>
+        )}
       </div>
 
-      {/* Lessons List */}
-      <div className="space-y-3">
-        {lessons.map((lesson) => (
-          <LessonEditorPanel
-            key={lesson.id}
-            lesson={lesson}
-            onSave={saveLesson}
-            onDelete={deleteLesson}
-          />
-        ))}
-      </div>
+      {/* Unassigned lessons */}
+      {unassignedLessons.length > 0 && (
+        <div className="space-y-3">
+          {groupedByModule.length > 0 && (
+            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+              Unassigned Lessons
+            </h3>
+          )}
+          {unassignedLessons.map((lesson) => (
+            <LessonEditorPanel
+              key={lesson.id}
+              lesson={lesson}
+              modules={allModules}
+              onSave={saveLesson}
+              onDelete={deleteLesson}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Module groups */}
+      {groupedByModule.map(({ module, lessons: moduleLessons }) => (
+        <div key={module.title} className="space-y-3">
+          <div className="flex items-center gap-2 pb-1 border-b border-border">
+            <BookOpen className="w-4 h-4 text-primary" />
+            <h3 className="text-sm font-semibold text-foreground">{module.title}</h3>
+            <span className="text-xs text-muted-foreground">({moduleLessons.length} lessons)</span>
+          </div>
+          {moduleLessons.length === 0 ? (
+            <p className="text-sm text-muted-foreground pl-6 py-2">
+              No lessons assigned to this module yet.
+            </p>
+          ) : (
+            moduleLessons.map((lesson) => (
+              <LessonEditorPanel
+                key={lesson.id}
+                lesson={lesson}
+                modules={allModules}
+                onSave={saveLesson}
+                onDelete={deleteLesson}
+              />
+            ))
+          )}
+        </div>
+      ))}
 
       {lessons.length === 0 && (
         <p className="text-center text-muted-foreground py-8">

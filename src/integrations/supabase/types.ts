@@ -1527,6 +1527,8 @@ export type Database = {
           main_media_embed_url: string | null
           main_media_file_url: string | null
           main_media_kind: string | null
+          module_order: number | null
+          module_title: string | null
           survey_options: Json | null
           survey_question: string | null
           title: string
@@ -1545,6 +1547,8 @@ export type Database = {
           main_media_embed_url?: string | null
           main_media_file_url?: string | null
           main_media_kind?: string | null
+          module_order?: number | null
+          module_title?: string | null
           survey_options?: Json | null
           survey_question?: string | null
           title: string
@@ -1563,6 +1567,8 @@ export type Database = {
           main_media_embed_url?: string | null
           main_media_file_url?: string | null
           main_media_kind?: string | null
+          module_order?: number | null
+          module_title?: string | null
           survey_options?: Json | null
           survey_question?: string | null
           title?: string
