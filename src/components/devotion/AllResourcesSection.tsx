@@ -57,6 +57,9 @@ const AllResourcesSection = () => {
       setLocations(locs);
       const locationIds = locs.map(l => l.id);
 
+      // Find the Energy Hygiene Practices location for mapping courses
+      const energyHygieneLoc = locs.find(l => l.slug === 'loc-energy-hygiene-practices');
+
       if (locationIds.length === 0) {
         setLoading(false);
         return;
@@ -89,7 +92,14 @@ const AllResourcesSection = () => {
         healingQuery = healingQuery.eq('status', 'published');
       }
 
-      const [contentResult, healingResult] = await Promise.all([contentQuery, healingQuery]);
+      // Fetch legacy courses (from courses table, e.g. Energy Hygiene Kit)
+      const coursesQuery = supabase
+        .from('courses')
+        .select('id, title, description, image_url, door_type, is_published')
+        .eq('door_type', 'devotion')
+        .eq('is_published', true);
+
+      const [contentResult, healingResult, coursesResult] = await Promise.all([contentQuery, healingQuery, coursesQuery]);
 
       const transformedContent: (ContentResource & { location_id: string | null })[] = (contentResult.data || []).map(r => ({
         ...r,
@@ -138,7 +148,29 @@ const AllResourcesSection = () => {
         };
       });
 
-      setResources([...transformedContent, ...transformedHealing]);
+      // Transform legacy courses into ContentResource shape
+      const transformedCourses: (ContentResource & { location_id: string | null })[] = (coursesResult.data || []).map(c => ({
+        id: c.id,
+        title: c.title,
+        slug: `legacy-course-${c.id}`,
+        summary: c.description || null,
+        thumbnail_url: c.image_url || null,
+        main_media_kind: null,
+        main_media_file_url: null,
+        main_media_embed_url: null,
+        secondary_audio_url: null,
+        is_course: true,
+        status: 'published' as const,
+        source: 'content' as const,
+        resource_type: {
+          id: 'course',
+          name: 'Course',
+          slug: 'course',
+        },
+        location_id: energyHygieneLoc?.id || null,
+      }));
+
+      setResources([...transformedContent, ...transformedHealing, ...transformedCourses]);
       setLoading(false);
     };
 
