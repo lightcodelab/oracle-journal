@@ -1139,6 +1139,7 @@ export type Database = {
       }
       healing_resources: {
         Row: {
+          applies_to_all_symptoms: boolean
           audio_file_url: string | null
           body_richtext: Json | null
           created_at: string | null
@@ -1162,6 +1163,7 @@ export type Database = {
           vimeo_embed_url: string | null
         }
         Insert: {
+          applies_to_all_symptoms?: boolean
           audio_file_url?: string | null
           body_richtext?: Json | null
           created_at?: string | null
@@ -1185,6 +1187,7 @@ export type Database = {
           vimeo_embed_url?: string | null
         }
         Update: {
+          applies_to_all_symptoms?: boolean
           audio_file_url?: string | null
           body_richtext?: Json | null
           created_at?: string | null

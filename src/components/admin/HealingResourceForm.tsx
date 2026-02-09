@@ -109,6 +109,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [newSymptomDescription, setNewSymptomDescription] = useState('');
   const [addingSymptom, setAddingSymptom] = useState(false);
   const [symptomSearch, setSymptomSearch] = useState('');
+  const [appliesToAllSymptoms, setAppliesToAllSymptoms] = useState(false);
 
   // Conditions state
   const [conditions, setConditions] = useState<Condition[]>([]);
@@ -335,6 +336,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
         setAudioFiles(audioData.map(a => ({ id: a.id, file_url: a.file_url, file_name: a.file_name, display_order: a.display_order })));
       }
       setLocationId((resource as any).location_id || null);
+      setAppliesToAllSymptoms((resource as any).applies_to_all_symptoms || false);
 
       // Load scheduled publish date
       if ((resource as any).scheduled_publish_at) {
@@ -518,6 +520,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
         tier: 'paid' as const,
         location_id: locationId,
         scheduled_publish_at: scheduledTimestamp,
+        applies_to_all_symptoms: appliesToAllSymptoms,
       };
 
       let savedResourceId = resourceId;
@@ -1012,6 +1015,27 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
             )}
 
             <h4 className="font-medium mb-2">All Symptoms</h4>
+            
+            {/* Select All Symptoms checkbox */}
+            <div
+              className={`flex items-center space-x-3 p-3 rounded-md cursor-pointer transition-colors mb-3 border ${
+                appliesToAllSymptoms
+                  ? 'bg-primary/10 border-primary/30'
+                  : 'hover:bg-muted border-border'
+              }`}
+              onClick={() => setAppliesToAllSymptoms(!appliesToAllSymptoms)}
+            >
+              <Checkbox
+                checked={appliesToAllSymptoms}
+                onCheckedChange={(checked) => setAppliesToAllSymptoms(!!checked)}
+                onClick={(e) => e.stopPropagation()}
+              />
+              <div>
+                <span className="text-sm font-medium">Select All Symptoms</span>
+                <p className="text-xs text-muted-foreground">This resource will be included in every protocol regardless of symptom matching</p>
+              </div>
+            </div>
+
             <ScrollArea className="h-[60vh] pr-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {filteredSymptoms.map(symptom => (
