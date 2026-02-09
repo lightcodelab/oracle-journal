@@ -215,9 +215,25 @@ Deno.serve(async (req) => {
             continue;
           }
 
-          // If the new filename differs from the old, remove the old file
+          // If the new filename differs from the old, update DB references and remove old file
           if (newName !== file.name) {
-            await supabaseAdmin.storage.from(bucket).remove([file.name]);
+            // Update all known columns that may reference this file
+            if (bucket === "healing-resource-images") {
+              await supabaseAdmin.from("healing_resources").update({ display_image_url: newName }).eq("display_image_url", file.name);
+              await supabaseAdmin.from("healing_resources").update({ audio_file_url: newName }).eq("audio_file_url", file.name);
+            }
+            if (bucket === "content-thumbnails") {
+              await supabaseAdmin.from("content_resources").update({ thumbnail_url: newName }).eq("thumbnail_url", file.name);
+            }
+            if (bucket === "content-main-media") {
+              await supabaseAdmin.from("content_resources").update({ main_media_file_url: newName }).eq("main_media_file_url", file.name);
+            }
+            if (bucket === "content-images") {
+              // Rich text inline images — can't easily update JSON references, skip deletion
+              console.log(`Skipping deletion of ${file.name} in content-images (may be in rich text)`);
+            } else {
+              await supabaseAdmin.storage.from(bucket).remove([file.name]);
+            }
           }
 
           const reduction = Math.round((1 - compressedSize / originalSize) * 100);
