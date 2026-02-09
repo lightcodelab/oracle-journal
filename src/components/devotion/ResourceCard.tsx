@@ -113,9 +113,13 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
           )}
 
           <div className="flex items-center gap-2 flex-wrap">
-            {resource.is_course && (
+            {resource.is_course ? (
               <Badge variant="secondary" className="text-xs">
                 Course
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="text-xs border-primary/30 text-primary">
+                Resource
               </Badge>
             )}
             {resource.resource_type && (
