@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.publish-scheduled-content]
 verify_jwt = false
+
+[functions.compress-existing-images]
+verify_jwt = false
