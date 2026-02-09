@@ -1756,6 +1756,72 @@ export type Database = {
         }
         Relationships: []
       }
+      playlist_tracks: {
+        Row: {
+          added_at: string
+          id: string
+          playlist_id: string
+          resource_id: string
+          track_order: number
+        }
+        Insert: {
+          added_at?: string
+          id?: string
+          playlist_id: string
+          resource_id: string
+          track_order?: number
+        }
+        Update: {
+          added_at?: string
+          id?: string
+          playlist_id?: string
+          resource_id?: string
+          track_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "playlist_tracks_playlist_id_fkey"
+            columns: ["playlist_id"]
+            isOneToOne: false
+            referencedRelation: "playlists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "playlist_tracks_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      playlists: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       prices: {
         Row: {
           active: boolean | null

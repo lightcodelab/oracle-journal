@@ -18,7 +18,8 @@ import {
   CalendarDays,
   LogOut,
   ChevronDown,
-  CreditCard
+  CreditCard,
+  ListMusic
 } from 'lucide-react';
 
 interface ProfileDropdownProps {
@@ -86,6 +87,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       label: 'My Readings',
       icon: <Sparkles className="w-4 h-4 mr-2" />,
       route: '/readings',
+    },
+    {
+      label: 'My Playlists',
+      icon: <ListMusic className="w-4 h-4 mr-2" />,
+      route: '/playlists',
     },
   ];
 

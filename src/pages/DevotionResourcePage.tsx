@@ -6,10 +6,11 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Lock, ArrowUpRight, ArrowLeft, Play, Headphones, FileText, Download } from 'lucide-react';
+import { Sparkles, Lock, ArrowUpRight, ArrowLeft, Play, Headphones, FileText, Download, ListMusic } from 'lucide-react';
 import { useTierAccess } from '@/hooks/useTierAccess';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import ContextualJournal from '@/components/journal/ContextualJournal';
+import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 
 interface ResourceAttachment {
   id: string;
@@ -50,6 +51,7 @@ const DevotionResourcePage = () => {
   const [attachments, setAttachments] = useState<ResourceAttachment[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
   const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
 
   const canAccessDevotion = hasAccess('devotion');
@@ -630,14 +632,24 @@ const DevotionResourcePage = () => {
             className="mb-8"
           >
             <div className="bg-card border border-border rounded-lg p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Headphones className="w-5 h-5 text-primary" />
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Headphones className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <span className="font-medium text-foreground">Audio</span>
+                    <p className="text-xs text-muted-foreground">Listen to this resource</p>
+                  </div>
                 </div>
-                <div>
-                  <span className="font-medium text-foreground">Audio</span>
-                  <p className="text-xs text-muted-foreground">Listen to this resource</p>
-                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPlaylistDialogOpen(true)}
+                >
+                  <ListMusic className="w-4 h-4 mr-2" />
+                  Add to Playlist
+                </Button>
               </div>
               <audio controls className="w-full">
                 <source src={resource.secondary_audio_url} type="audio/mpeg" />
@@ -661,14 +673,24 @@ const DevotionResourcePage = () => {
               if (isAudio) {
                 return (
                   <div className="bg-card border border-border rounded-lg p-6">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Headphones className="w-5 h-5 text-primary" />
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Headphones className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                          <span className="font-medium text-foreground">Audio</span>
+                          <p className="text-xs text-muted-foreground">Listen to this resource</p>
+                        </div>
                       </div>
-                      <div>
-                        <span className="font-medium text-foreground">Audio</span>
-                        <p className="text-xs text-muted-foreground">Listen to this resource</p>
-                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setPlaylistDialogOpen(true)}
+                      >
+                        <ListMusic className="w-4 h-4 mr-2" />
+                        Add to Playlist
+                      </Button>
                     </div>
                     <audio controls className="w-full">
                       <source src={fileUrl} type="audio/mpeg" />
@@ -761,6 +783,16 @@ const DevotionResourcePage = () => {
             placeholder="Capture your reflections on this resource..."
           />
         </motion.div>
+
+        {/* Playlist Dialog */}
+        {resource && (resource.secondary_audio_url || (resource.main_media_kind === 'file' && resource.main_media_file_url)) && (
+          <AddToPlaylistDialog
+            open={playlistDialogOpen}
+            onOpenChange={setPlaylistDialogOpen}
+            resourceId={resource.id}
+            resourceTitle={resource.title}
+          />
+        )}
       </div>
     </div>
   );

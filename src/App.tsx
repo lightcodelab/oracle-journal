@@ -41,6 +41,7 @@ import DevotionSectionPage from "./pages/DevotionSectionPage";
 import DevotionResourcePage from "./pages/DevotionResourcePage";
 import ProtocolDetailPage from "./pages/ProtocolDetailPage";
 import RemembranceSectionPage from "./pages/RemembranceSectionPage";
+import MyPlaylists from "./pages/MyPlaylists";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -79,6 +80,7 @@ const App = () => (
             <Route path="/account" element={<MyAccount />} />
             <Route path="/journal" element={<Journal />} />
             <Route path="/readings" element={<MyReadings />} />
+            <Route path="/playlists" element={<MyPlaylists />} />
             <Route path="/my-calendar" element={<MyCalendar />} />
             <Route path="/all-live-sessions" element={<LiveSessions />} />
             <Route path="/all-live-sessions/:sessionId/join" element={<LiveSessionJoin />} />
