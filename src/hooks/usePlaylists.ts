@@ -151,7 +151,7 @@ export const usePlaylists = () => {
     await fetchPlaylists();
   };
 
-  const fetchPlaylistTracks = async (playlistId: string): Promise<PlaylistTrack[]> => {
+  const fetchPlaylistTracks = useCallback(async (playlistId: string): Promise<PlaylistTrack[]> => {
     const { data, error } = await supabase
       .from('playlist_tracks')
       .select(`
@@ -198,7 +198,7 @@ export const usePlaylists = () => {
         display_image_url: imageUrl,
       };
     });
-  };
+  }, []);
 
   return {
     playlists,
