@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, Upload, Settings, Video, ImageDown, Loader2 } from 'lucide-react';
+import { Calendar, Upload, Settings, Video, ImageDown, Loader2, BookOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
@@ -26,6 +26,12 @@ const adminTasks = [
     description: 'Upload and manage courses, resources, and media content',
     icon: Upload,
     href: '/admin/content',
+  },
+  {
+    title: 'Course Uploader',
+    description: 'Create and manage courses with modules and lessons',
+    icon: BookOpen,
+    href: '/admin/courses',
   },
   {
     title: 'AreekeerA® Admin',

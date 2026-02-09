@@ -727,6 +727,7 @@ export type Database = {
           id: string
           image_url: string | null
           is_published: boolean | null
+          location_id: string | null
           title: string
           updated_at: string | null
         }
@@ -738,6 +739,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_published?: boolean | null
+          location_id?: string | null
           title: string
           updated_at?: string | null
         }
@@ -749,10 +751,19 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_published?: boolean | null
+          location_id?: string | null
           title?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "courses_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "content_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       deck_purchases: {
         Row: {
@@ -1506,12 +1517,16 @@ export type Database = {
         Row: {
           audio_timestamp: string | null
           audio_url: string | null
+          body_richtext: Json | null
           content: string
           course_id: string
           created_at: string | null
           description: string | null
           id: string
           lesson_number: number
+          main_media_embed_url: string | null
+          main_media_file_url: string | null
+          main_media_kind: string | null
           survey_options: Json | null
           survey_question: string | null
           title: string
@@ -1520,12 +1535,16 @@ export type Database = {
         Insert: {
           audio_timestamp?: string | null
           audio_url?: string | null
+          body_richtext?: Json | null
           content: string
           course_id: string
           created_at?: string | null
           description?: string | null
           id?: string
           lesson_number: number
+          main_media_embed_url?: string | null
+          main_media_file_url?: string | null
+          main_media_kind?: string | null
           survey_options?: Json | null
           survey_question?: string | null
           title: string
@@ -1534,12 +1553,16 @@ export type Database = {
         Update: {
           audio_timestamp?: string | null
           audio_url?: string | null
+          body_richtext?: Json | null
           content?: string
           course_id?: string
           created_at?: string | null
           description?: string | null
           id?: string
           lesson_number?: number
+          main_media_embed_url?: string | null
+          main_media_file_url?: string | null
+          main_media_kind?: string | null
           survey_options?: Json | null
           survey_question?: string | null
           title?: string

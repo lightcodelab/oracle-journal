@@ -23,6 +23,7 @@ import MyReadings from "./pages/MyReadings";
 import AreekeeraBot from "./pages/AreekeeraBot";
 import AreekeeraAdmin from "./pages/AreekeeraAdmin";
 import ContentAdmin from "./pages/ContentAdmin";
+import CourseAdmin from "./pages/CourseAdmin";
 import LiveSessions from "./pages/LiveSessions";
 import LiveSessionJoin from "./pages/LiveSessionJoin";
 import AdminLiveSessions from "./pages/AdminLiveSessions";
@@ -67,6 +68,7 @@ const App = () => (
             <Route path="/devotion/protocols/:protocolId" element={<ProtocolDetailPage />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/content" element={<ContentAdmin />} />
+            <Route path="/admin/courses" element={<CourseAdmin />} />
             <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
             <Route path="/devotion/section/energy-hygiene-practices" element={<DevotionCourses />} />
             <Route path="/devotion/section/:section" element={<DevotionSectionPage />} />

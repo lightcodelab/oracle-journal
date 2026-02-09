@@ -26,6 +26,7 @@ interface Lesson {
   course_id: string;
   survey_question: string | null;
   survey_options: string[] | null;
+  body_richtext: any;
 }
 
 interface JournalEntry {
@@ -360,10 +361,53 @@ const DevotionLessonPage = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="prose prose-invert max-w-none mb-8"
           >
-            <div 
-              className="text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.content) }}
-            />
+            {lesson.body_richtext ? (
+              <div 
+                className="text-foreground/90 font-sans leading-relaxed ProseMirror"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(
+                  (() => {
+                    // Render TipTap JSON to HTML (simplified)
+                    try {
+                      const renderNode = (node: any): string => {
+                        if (!node) return '';
+                        if (node.type === 'text') {
+                          let text = node.text || '';
+                          if (node.marks) {
+                            for (const mark of node.marks) {
+                              if (mark.type === 'bold') text = `<strong>${text}</strong>`;
+                              if (mark.type === 'italic') text = `<em>${text}</em>`;
+                              if (mark.type === 'underline') text = `<u>${text}</u>`;
+                              if (mark.type === 'link') text = `<a href="${mark.attrs?.href || ''}" target="_blank" rel="noopener">${text}</a>`;
+                            }
+                          }
+                          return text;
+                        }
+                        const children = (node.content || []).map(renderNode).join('');
+                        const style = node.attrs?.textAlign ? ` style="text-align: ${node.attrs.textAlign}"` : '';
+                        switch (node.type) {
+                          case 'doc': return children;
+                          case 'paragraph': return `<p${style}>${children || '<br>'}</p>`;
+                          case 'heading': return `<h${node.attrs?.level || 2}${style}>${children}</h${node.attrs?.level || 2}>`;
+                          case 'bulletList': return `<ul>${children}</ul>`;
+                          case 'orderedList': return `<ol>${children}</ol>`;
+                          case 'listItem': return `<li>${children}</li>`;
+                          case 'blockquote': return `<blockquote>${children}</blockquote>`;
+                          case 'horizontalRule': return '<hr>';
+                          case 'image': return `<img src="${node.attrs?.src || ''}" alt="${node.attrs?.alt || ''}" />`;
+                          default: return children;
+                        }
+                      };
+                      return renderNode(lesson.body_richtext);
+                    } catch { return lesson.content || ''; }
+                  })()
+                ) }}
+              />
+            ) : (
+              <div 
+                className="text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.content) }}
+              />
+            )}
           </motion.div>
 
           {/* Survey Question */}
