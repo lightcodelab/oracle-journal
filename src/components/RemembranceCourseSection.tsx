@@ -27,11 +27,22 @@ const RemembranceCourseSection = () => {
         className="text-center mb-8"
       >
         <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-          The Alchemy of Becoming
+          🜃 The Alchemy of Becoming
         </h2>
-        <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
-          Dive deeper into remembering who you really are—behind the lifetime of expectations, triggers, and protective patterns.
+        <p className="font-bold text-primary font-sans text-base mb-3">
+          Mini-Courses for Integration &amp; Identity
         </p>
+        <div className="text-muted-foreground font-sans text-base max-w-2xl mx-auto space-y-3">
+          <p>
+            These journeys help you integrate what the Mirrors reveal — stabilising triggers, excavating belief, and reshaping identity.
+          </p>
+          <p>Enter these when something has already been seen.</p>
+          <p>
+            This is not about fixing yourself.
+            <br />
+            It is about becoming capable of holding what you know.
+          </p>
+        </div>
       </motion.div>
 
       {/* Content Grid */}
