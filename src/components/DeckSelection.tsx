@@ -55,7 +55,7 @@ export const DeckSelection = ({
         </h1>
       </motion.div>
 
-      {/* Card Decks Section */}
+      {/* The Rites of Remembrance Section */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -64,7 +64,27 @@ export const DeckSelection = ({
       >
         <div className="text-center mb-8">
           <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-            Card Decks
+            The Rites of Remembrance
+          </h2>
+        </div>
+
+        <div className="text-center py-12">
+          <p className="text-muted-foreground font-sans">
+            Coming soon.
+          </p>
+        </div>
+      </motion.div>
+
+      {/* The Mirrors of Sacred Undoing Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="mb-20"
+      >
+        <div className="text-center mb-8">
+          <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
+            The Mirrors of Sacred Undoing
           </h2>
           <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
             Select a deck to receive divine guidance tailored to your spiritual journey.

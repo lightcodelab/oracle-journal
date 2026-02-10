@@ -27,7 +27,7 @@ const RemembranceCourseSection = () => {
         className="text-center mb-8"
       >
         <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-          Courses
+          The Alchemy of Becoming
         </h2>
         <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
           Dive deeper into remembering who you really are—behind the lifetime of expectations, triggers, and protective patterns.
