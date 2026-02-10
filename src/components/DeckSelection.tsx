@@ -43,7 +43,7 @@ export const DeckSelection = ({
       animate={{ opacity: 1 }}
       className="container mx-auto px-4 py-12"
     >
-      {/* Page Header */}
+      {/* Page header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
