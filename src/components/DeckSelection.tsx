@@ -53,6 +53,11 @@ export const DeckSelection = ({
           <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
             The Door of Remembrance
           </h1>
+          <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
+            <span className="font-bold text-primary">A space to remember who you are beneath distortion, protection, and pattern.</span>
+            <br />
+            Begin at the foundation. Return as often as needed.
+          </p>
         </motion.div>
       </div>
 
@@ -66,8 +71,19 @@ export const DeckSelection = ({
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-              The Rites of Remembrance
+              🜂 The Rites of Remembrance
             </h2>
+            <p className="font-bold text-primary font-sans text-base mb-3">
+              The Foundation of All Temple Work
+            </p>
+            <div className="text-muted-foreground font-sans text-base max-w-2xl mx-auto space-y-3">
+              <p>
+                These five foundational rites prepare your inner field for all work within the Temple.
+                They stabilise the nervous system, clear inherited distortion, and establish energetic sovereignty.
+              </p>
+              <p>Walk these rites in order. There is no rush.</p>
+              <p>You may return to any Rite whenever your system asks.</p>
+            </div>
           </div>
 
           <div className="text-center py-12">
@@ -88,11 +104,24 @@ export const DeckSelection = ({
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-              The Mirrors of Sacred Undoing
+              🜁 The Mirrors of Sacred Undoing
             </h2>
-            <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
-              Select a deck to receive divine guidance tailored to your spiritual journey.
+            <p className="font-bold text-primary font-sans text-base mb-3">
+              Card Decks &amp; Companion Journeys
             </p>
+            <div className="text-muted-foreground font-sans text-base max-w-2xl mx-auto space-y-3">
+              <p>
+                Each deck is a mirror — revealing the distortion shaping your life and the higher truth waiting beneath it.
+              </p>
+              <p>Choose a deck. Draw a card. Let it walk with you.</p>
+              <p>
+                Many work with one card for a week or more.
+                <br />
+                Others return daily.
+                <br />
+                Let the mirror tell you when it has finished speaking.
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
@@ -189,6 +218,29 @@ export const DeckSelection = ({
       >
         <div className="container mx-auto px-4">
           <RemembranceCourseSection />
+        </div>
+      </motion.div>
+
+      {/* Footer: How to move through this Door */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+        className="bg-muted/30 py-16"
+      >
+        <div className="container mx-auto px-4 text-center max-w-2xl">
+          <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-6">
+            How to Move Through This Door
+          </h2>
+          <div className="text-muted-foreground font-sans text-base space-y-2">
+            <p>Begin with the Rites.</p>
+            <p>Work with the Mirrors.</p>
+            <p>Integrate through Alchemy.</p>
+            <p>Return as often as needed.</p>
+          </div>
+          <p className="text-muted-foreground/70 font-sans text-sm italic mt-6">
+            There is no finish line here — only deepening truth.
+          </p>
         </div>
       </motion.div>
     </motion.div>
