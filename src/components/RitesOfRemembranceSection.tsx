@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useRitesCourses } from "@/hooks/useRitesCourses";
 import ResourceCard from "@/components/devotion/ResourceCard";
+import type { ContentResource } from "@/hooks/useContentByLocation";
 
 const RitesOfRemembranceSection = () => {
   const { courses, loading, error, isAdmin } = useRitesCourses();
@@ -49,7 +50,10 @@ const RitesOfRemembranceSection = () => {
           {courses.map((course, index) => (
             <ResourceCard 
               key={course.id} 
-              resource={course} 
+              resource={{
+                ...course,
+                source: (course.source === 'legacy' ? 'content' : course.source) as ContentResource['source'],
+              }} 
               index={index} 
               showDraftBadge={isAdmin}
               basePath="/decks"
