@@ -62,6 +62,8 @@ export const DeckSelection = ({
         </motion.div>
       </div>
 
+      <div className="container mx-auto px-4"><hr className="border-t border-primary/30" /></div>
+
       {/* Section 1: The Rites of Remembrance — default bg */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
