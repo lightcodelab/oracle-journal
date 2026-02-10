@@ -27,7 +27,9 @@ const RemembranceCourseSection = () => {
         className="text-center mb-8"
       >
         <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-          🜃 The Alchemy of Becoming
+          🜃
+          <br />
+          The Alchemy of Becoming
         </h2>
         <p className="font-bold text-primary font-sans text-base mb-3">
           Mini-Courses for Integration &amp; Identity
