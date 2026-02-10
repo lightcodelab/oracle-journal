@@ -124,6 +124,7 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
         const { error } = await supabase.from('courses').update(payload).eq('id', savedCourseId);
         if (error) throw error;
         toast({ title: 'Updated', description: 'Course updated successfully.' });
+        onSuccess?.();
       } else {
         const { data, error } = await supabase.from('courses').insert(payload).select().single();
         if (error) throw error;
