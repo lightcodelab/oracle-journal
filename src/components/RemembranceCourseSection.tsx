@@ -26,9 +26,8 @@ const RemembranceCourseSection = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-8"
       >
+        <div className="text-3xl mb-2">🜃</div>
         <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-          🜃
-          <br />
           The Alchemy of Becoming
         </h2>
         <p className="font-bold text-primary font-sans text-base mb-3">

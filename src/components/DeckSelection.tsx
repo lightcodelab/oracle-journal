@@ -70,9 +70,8 @@ export const DeckSelection = ({
       >
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
+            <div className="text-3xl mb-2">🜂</div>
             <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-              🜂
-              <br />
               The Rites of Remembrance
             </h2>
             <p className="font-bold text-primary font-sans text-base mb-3">
@@ -105,9 +104,8 @@ export const DeckSelection = ({
       >
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
+            <div className="text-3xl mb-2">🜁</div>
             <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-              🜁
-              <br />
               The Mirrors of Sacred Undoing
             </h2>
             <p className="font-bold text-primary font-sans text-base mb-3">
