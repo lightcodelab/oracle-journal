@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { Home, ChevronRight } from 'lucide-react';
+import { Home, ChevronRight, LucideIcon } from 'lucide-react';
 
 export interface BreadcrumbItem {
   label: string;
   href?: string;
   onClick?: () => void;
+  icon?: LucideIcon;
 }
 
 interface PageBreadcrumbProps {
@@ -48,16 +49,18 @@ const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
             {isClickable ? (
               <button
                 onClick={() => handleClick(item)}
-                className="text-muted-foreground hover:text-foreground transition-colors truncate max-w-[120px] sm:max-w-[200px]"
+                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors truncate max-w-[120px] sm:max-w-[200px]"
                 title={item.label}
               >
+                {item.icon && <item.icon className="w-3.5 h-3.5 shrink-0" />}
                 {item.label}
               </button>
             ) : (
               <span 
-                className={`${isLast ? 'text-foreground font-medium' : 'text-muted-foreground'} truncate max-w-[120px] sm:max-w-[200px]`}
+                className={`${isLast ? 'text-foreground font-medium' : 'text-muted-foreground'} flex items-center gap-1 truncate max-w-[120px] sm:max-w-[200px]`}
                 title={item.label}
               >
+                {item.icon && <item.icon className="w-3.5 h-3.5 shrink-0" />}
                 {item.label}
               </span>
             )}

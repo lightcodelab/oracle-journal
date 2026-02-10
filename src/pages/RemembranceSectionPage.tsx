@@ -6,7 +6,7 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Lock, ArrowUpRight, ArrowLeft } from 'lucide-react';
+import { Sparkles, Lock, ArrowUpRight, ArrowLeft, DoorOpen } from 'lucide-react';
 import { useTierAccess } from '@/hooks/useTierAccess';
 import { useContentByLocation } from '@/hooks/useContentByLocation';
 import ResourceCard from '@/components/devotion/ResourceCard';
@@ -111,7 +111,7 @@ const RemembranceSectionPage = () => {
       <div className="min-h-screen bg-background py-12 px-4 relative">
         <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
           <PageBreadcrumb items={[
-            { label: 'Door of Remembrance', href: '/decks' },
+            { label: 'Door of Remembrance', href: '/decks', icon: DoorOpen },
             { label: sectionTitle }
           ]} />
           <ProfileDropdown />
@@ -157,7 +157,7 @@ const RemembranceSectionPage = () => {
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <PageBreadcrumb items={[
-          { label: 'Door of Remembrance', href: '/decks' },
+          { label: 'Door of Remembrance', href: '/decks', icon: DoorOpen },
           { label: sectionTitle }
         ]} />
         <div className="flex items-center gap-3">

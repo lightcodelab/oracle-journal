@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Send, Loader2, RefreshCw, Save, Sparkles, AlertTriangle, Shield, CheckCircle, ChevronRight, ChevronLeft, Play, Clock, Heart } from 'lucide-react';
+import { Send, Loader2, RefreshCw, Save, Sparkles, AlertTriangle, Shield, CheckCircle, ChevronRight, ChevronLeft, Play, Clock, Heart, DoorOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
@@ -496,7 +496,7 @@ const AreekeeraBot = () => {
       <div className="flex items-center justify-between p-4 border-b border-border">
         <PageBreadcrumb 
           items={[
-            { label: 'Door of Devotion', href: '/devotion' },
+            { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen },
             { label: 'AreekeerA Guide' }
           ]} 
         />

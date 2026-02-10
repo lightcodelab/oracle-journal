@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
-import { Play, CheckCircle } from 'lucide-react';
+import { Play, CheckCircle, DoorOpen } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
@@ -143,7 +143,7 @@ const DevotionCoursePage = () => {
         <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3 flex items-center justify-between">
           <PageBreadcrumb 
             items={[
-              { label: 'Door of Devotion', href: '/devotion' },
+              { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen },
               { label: 'Energy Hygiene Practices', href: '/devotion/section/energy-hygiene-practices' },
               { label: course.title }
             ]} 
