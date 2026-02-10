@@ -96,6 +96,8 @@ export const DeckSelection = ({
         </div>
       </motion.div>
 
+      <div className="container mx-auto px-4"><hr className="border-t border-primary/30" /></div>
+
       {/* Section 2: The Mirrors of Sacred Undoing — muted bg */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -212,6 +214,8 @@ export const DeckSelection = ({
         </div>
       </motion.div>
 
+      <div className="container mx-auto px-4"><hr className="border-t border-primary/30" /></div>
+
       {/* Section 3: The Alchemy of Becoming — default bg */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -223,6 +227,8 @@ export const DeckSelection = ({
           <RemembranceCourseSection />
         </div>
       </motion.div>
+
+      <div className="container mx-auto px-4"><hr className="border-t border-primary/30" /></div>
 
       {/* Footer: How to move through this Door */}
       <motion.div
