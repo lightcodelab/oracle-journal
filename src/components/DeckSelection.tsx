@@ -7,6 +7,7 @@ import mnlBanner from "@/assets/mnl-banner.png";
 import areekeeraBanner from "@/assets/areekeera-banner.png";
 import taoshBanner from "@/assets/taosh-banner.png";
 import RemembranceCourseSection from "@/components/RemembranceCourseSection";
+import RitesOfRemembranceSection from "@/components/RitesOfRemembranceSection";
 
 interface Deck {
   id: string;
@@ -90,11 +91,7 @@ export const DeckSelection = ({
             </div>
           </div>
 
-          <div className="text-center py-12">
-            <p className="text-muted-foreground font-sans">
-              Coming soon.
-            </p>
-          </div>
+          <RitesOfRemembranceSection />
         </div>
       </motion.div>
 
