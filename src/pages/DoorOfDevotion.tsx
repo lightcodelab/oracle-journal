@@ -6,7 +6,7 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Lock, ArrowUpRight, Folder, LayoutGrid, Grid3X3 } from 'lucide-react';
+import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Lock, ArrowUpRight, Folder, LayoutGrid, Grid3X3, DoorOpen } from 'lucide-react';
 import AllResourcesSection from '@/components/devotion/AllResourcesSection';
 import { useTierAccess } from '@/hooks/useTierAccess';
 
@@ -133,7 +133,7 @@ const DoorOfDevotion = () => {
     return (
       <div className="min-h-screen bg-background py-12 px-4 relative">
         <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-          <PageBreadcrumb items={[{ label: 'Door of Devotion' }]} />
+          <PageBreadcrumb items={[{ label: 'Door of Devotion', icon: DoorOpen }]} />
           <ProfileDropdown />
         </div>
 
@@ -176,7 +176,7 @@ const DoorOfDevotion = () => {
     <div className="min-h-screen bg-background py-12 px-4 relative">
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-        <PageBreadcrumb items={[{ label: 'Door of Devotion' }]} />
+        <PageBreadcrumb items={[{ label: 'Door of Devotion', icon: DoorOpen }]} />
         <div className="flex items-center gap-3">
           {tierName && (
             <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 hidden sm:flex">
@@ -196,6 +196,7 @@ const DoorOfDevotion = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
+          <DoorOpen className="w-10 h-10 text-primary mx-auto mb-4" />
           <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
             The Door of Devotion
           </h1>

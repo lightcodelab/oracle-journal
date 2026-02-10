@@ -7,7 +7,7 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Lock, ArrowUpRight, ArrowLeft } from 'lucide-react';
+import { Sparkles, Lock, ArrowUpRight, ArrowLeft, DoorOpen } from 'lucide-react';
 import { useTierAccess } from '@/hooks/useTierAccess';
 import { useContentByLocation } from '@/hooks/useContentByLocation';
 import ResourceCard from '@/components/devotion/ResourceCard';
@@ -90,7 +90,7 @@ const DevotionCourses = () => {
       <div className="min-h-screen bg-background py-12 px-4 relative">
         <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
           <PageBreadcrumb items={[
-            { label: 'Door of Devotion', href: '/devotion' },
+            { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen },
             { label: 'Energy Hygiene Practices' }
           ]} />
           <ProfileDropdown />
@@ -141,7 +141,7 @@ const DevotionCourses = () => {
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <PageBreadcrumb 
           items={[
-            { label: 'Door of Devotion', href: '/devotion' },
+            { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen },
             { label: 'Energy Hygiene Practices' }
           ]} 
         />

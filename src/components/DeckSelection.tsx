@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Lock, Sparkles } from "lucide-react";
+import { Lock, Sparkles, DoorOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import tsrBanner from "@/assets/tsr-banner.png";
 import mnlBanner from "@/assets/mnl-banner.png";
@@ -50,6 +50,7 @@ export const DeckSelection = ({
           transition={{ duration: 0.8 }}
           className="text-center"
         >
+          <DoorOpen className="w-10 h-10 text-primary mx-auto mb-4" />
           <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
             The Door of Remembrance
           </h1>

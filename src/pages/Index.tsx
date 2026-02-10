@@ -11,7 +11,7 @@ import { PurchaseVerification } from "@/components/PurchaseVerification";
 import { CardNumberSelector } from "@/components/CardNumberSelector";
 import { CardDropdownSelector } from "@/components/CardDropdownSelector";
 import { supabase } from "@/integrations/supabase/client";
-import { Shuffle, Sparkles } from "lucide-react";
+import { Shuffle, Sparkles, DoorOpen } from "lucide-react";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { motion } from "framer-motion";
@@ -568,16 +568,16 @@ const Index = () => {
           items={
             selectedDeck?.is_starter && (showStarterSpread || isRevealed)
               ? [
-                  { label: 'Door of Remembrance', onClick: handleBackToDecks },
+                  { label: 'Door of Remembrance', onClick: handleBackToDecks, icon: DoorOpen },
                   { label: 'Your Reading' }
                 ]
               : selectedDeck
                 ? [
-                    { label: 'Door of Remembrance', onClick: handleBackToDecks },
+                    { label: 'Door of Remembrance', onClick: handleBackToDecks, icon: DoorOpen },
                     { label: selectedDeck.name }
                   ]
                 : [
-                    { label: 'Door of Remembrance' }
+                    { label: 'Door of Remembrance', icon: DoorOpen }
                   ]
           } 
         />
