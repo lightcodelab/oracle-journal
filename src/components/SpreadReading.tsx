@@ -3,13 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, Sparkles } from "lucide-react";
-import { CardBack } from "./CardBack";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
-import sacredRewriteCardBack from "@/assets/card-back-v2.png";
-import mnlCardBack from "@/assets/mnl-card-back.png";
-import areekeeraCardBack from "@/assets/areekeera-card-back.png";
-import taoshCardBack from "@/assets/taosh-card-back.png";
 
 interface SpreadReadingProps {
   spread: SpreadType;
@@ -18,14 +13,6 @@ interface SpreadReadingProps {
   onBackToDecks: () => void;
   revealedPositions: number[];
 }
-
-const getCardBackForDeck = (deckName: string | null | undefined) => {
-  if (!deckName) return sacredRewriteCardBack;
-  if (deckName.toLowerCase().includes('magic not logic')) return mnlCardBack;
-  if (deckName.toLowerCase().includes('areekeera')) return areekeeraCardBack;
-  if (deckName.toLowerCase().includes('art of self-healing')) return taoshCardBack;
-  return sacredRewriteCardBack;
-};
 
 const getDeckBadgeClass = (deckName: string | null | undefined) => {
   if (!deckName) return "bg-primary/80 text-primary-foreground";
@@ -121,9 +108,11 @@ export const SpreadReading = ({
                   ) : (
                     <motion.div
                       key="back"
-                      className="w-full h-full rounded-xl overflow-hidden shadow-lg border-2 border-accent/30"
+                      className="w-full h-full rounded-xl overflow-hidden shadow-lg border-2 border-accent/30 bg-gradient-to-br from-muted via-muted/80 to-muted"
                     >
-                      <CardBack imageSrc={getCardBackForDeck(card.deck_name)} />
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Sparkles className="w-8 h-8 text-primary/30" />
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
