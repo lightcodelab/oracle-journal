@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, Upload, Settings, Video, ImageDown, Loader2, BookOpen } from 'lucide-react';
+import { Calendar, Upload, Settings, Video, ImageDown, Loader2, BookOpen, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
@@ -38,6 +38,12 @@ const adminTasks = [
     description: 'Manage the AreekeerA® healing protocol system',
     icon: Settings,
     href: '/admin/areekeera',
+  },
+  {
+    title: 'User Management',
+    description: 'Manually add 1:1 clients and grant temporary content access',
+    icon: Users,
+    href: '/admin/users',
   },
 ];
 

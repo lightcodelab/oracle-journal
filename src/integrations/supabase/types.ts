@@ -1714,6 +1714,42 @@ export type Database = {
         }
         Relationships: []
       }
+      manual_access_grants: {
+        Row: {
+          bucket_key: string
+          created_at: string
+          ends_at: string
+          granted_by: string | null
+          id: string
+          notes: string | null
+          starts_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bucket_key: string
+          created_at?: string
+          ends_at: string
+          granted_by?: string | null
+          id?: string
+          notes?: string | null
+          starts_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bucket_key?: string
+          created_at?: string
+          ends_at?: string
+          granted_by?: string | null
+          id?: string
+          notes?: string | null
+          starts_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       membership_audit: {
         Row: {
           id: string
@@ -3320,8 +3356,13 @@ export type Database = {
         }[]
       }
       has_active_membership: { Args: { _user_id: string }; Returns: boolean }
+      has_any_manual_access: { Args: { _user_id: string }; Returns: boolean }
       has_bucket_access: {
         Args: { bucket_key_param: string }
+        Returns: boolean
+      }
+      has_manual_access: {
+        Args: { _bucket_key: string; _user_id: string }
         Returns: boolean
       }
       has_role: {

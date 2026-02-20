@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.compress-existing-images]
 verify_jwt = false
+
+[functions.create-manual-user]
+verify_jwt = false
