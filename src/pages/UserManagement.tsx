@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Plus, Trash2, Eye, EyeOff, UserPlus, RefreshCw } from "lucide-react";
+import { Loader2, Plus, Trash2, Eye, EyeOff, UserPlus, RefreshCw, Copy, Check } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -58,6 +58,8 @@ const UserManagement = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+  const [createdUserDetails, setCreatedUserDetails] = useState<{ email: string; password: string; name: string; endsAt: string; buckets: string[] } | null>(null);
+  const [copied, setCopied] = useState(false);
 
   // Form state
   const [email, setEmail] = useState("");
@@ -142,6 +144,8 @@ const UserManagement = () => {
     setEndsAt(undefined);
     setSelectedBuckets([]);
     setNotes("");
+    setCreatedUserDetails(null);
+    setCopied(false);
   };
 
   const handleSubmit = async () => {
@@ -172,9 +176,16 @@ const UserManagement = () => {
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
 
-      toast({ title: "User created", description: `${email} has been granted temporary access.` });
-      setDialogOpen(false);
-      resetForm();
+      // Store details for the copy button before resetting
+      setCreatedUserDetails({
+        email,
+        password: tempPassword,
+        name: fullName,
+        endsAt: endsAt!.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+        buckets: selectedBuckets,
+      });
+
+      toast({ title: "User created", description: `${email} has been granted temporary access. Copy their login details below.` });
       fetchManualUsers();
     } catch (err: any) {
       toast({ title: "Failed to create user", description: err.message, variant: "destructive" });
@@ -229,6 +240,33 @@ const UserManagement = () => {
     const password = pwd.join("");
     setTempPassword(password);
     setShowPassword(true);
+  };
+
+  const handleCopyDetails = async () => {
+    if (!createdUserDetails) return;
+    const areas = createdUserDetails.buckets
+      .map((b) => CONTENT_AREAS.find((a) => a.key === b)?.label || b)
+      .join(", ");
+    const loginUrl = window.location.origin + "/auth";
+    const text = `Hi${createdUserDetails.name ? ` ${createdUserDetails.name}` : ""},
+
+Here are your login details for the Temple of Sustainment:
+
+Login page: ${loginUrl}
+Email: ${createdUserDetails.email}
+Temporary password: ${createdUserDetails.password}
+
+You will be prompted to change your password when you first sign in.
+
+Your access includes: ${areas}
+Access expires: ${createdUserDetails.endsAt}
+
+If you'd like to continue your access after this date, you can become a member at ${window.location.origin}`;
+
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    toast({ title: "Copied!", description: "Login details copied to clipboard." });
+    setTimeout(() => setCopied(false), 3000);
   };
 
   if (authLoading || loadingUsers) {
@@ -357,9 +395,24 @@ const UserManagement = () => {
                   <Input id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="e.g. 1:1 client, 3-month program" />
                 </div>
 
-                <Button onClick={handleSubmit} disabled={submitting} className="w-full">
-                  {submitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating…</> : "Create User & Grant Access"}
-                </Button>
+                {createdUserDetails ? (
+                  <div className="space-y-3">
+                    <div className="p-4 rounded-lg border border-primary/30 bg-primary/5 space-y-2">
+                      <p className="text-sm font-medium text-foreground">✓ User created successfully</p>
+                      <p className="text-xs text-muted-foreground">Copy their login details to share via email or message.</p>
+                    </div>
+                    <Button onClick={handleCopyDetails} variant="default" className="w-full">
+                      {copied ? <><Check className="w-4 h-4 mr-2" />Copied!</> : <><Copy className="w-4 h-4 mr-2" />Copy Login Details</>}
+                    </Button>
+                    <Button onClick={() => { setDialogOpen(false); resetForm(); }} variant="outline" className="w-full">
+                      Done
+                    </Button>
+                  </div>
+                ) : (
+                  <Button onClick={handleSubmit} disabled={submitting} className="w-full">
+                    {submitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating…</> : "Create User & Grant Access"}
+                  </Button>
+                )}
               </div>
             </DialogContent>
           </Dialog>
