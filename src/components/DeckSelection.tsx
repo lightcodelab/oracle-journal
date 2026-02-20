@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Lock, Sparkles, DoorOpen, Layers } from "lucide-react";
+import { Lock, Sparkles, DoorOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import tsrBanner from "@/assets/tsr-banner.png";
 import mnlBanner from "@/assets/mnl-banner.png";
@@ -8,6 +8,7 @@ import areekeeraBanner from "@/assets/areekeera-banner.png";
 import taoshBanner from "@/assets/taosh-banner.png";
 import RemembranceCourseSection from "@/components/RemembranceCourseSection";
 import RitesOfRemembranceSection from "@/components/RitesOfRemembranceSection";
+import sacredSpreadsBanner from "@/assets/sacred-spreads-banner.png";
 
 interface Deck {
   id: string;
@@ -140,9 +141,11 @@ export const DeckSelection = ({
             >
               <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30">
                 <div className="aspect-video w-full overflow-hidden bg-muted relative">
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 via-accent/10 to-primary/30">
-                    <Layers className="w-16 h-16 text-primary/70" />
-                  </div>
+                  <img
+                    src={sacredSpreadsBanner}
+                    alt="Sacred Spreads"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
                 </div>
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-2 mb-2">
