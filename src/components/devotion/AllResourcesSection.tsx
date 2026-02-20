@@ -92,12 +92,13 @@ const AllResourcesSection = () => {
         healingQuery = healingQuery.eq('status', 'published');
       }
 
-      // Fetch legacy courses (from courses table, e.g. Energy Hygiene Kit)
+      // Fetch legacy courses (from courses table, e.g. Energy Hygiene Kit) - only devotion door type
       const coursesQuery = supabase
         .from('courses')
         .select('id, title, description, image_url, door_type, is_published')
         .eq('door_type', 'devotion')
-        .eq('is_published', true);
+        .eq('is_published', true)
+        .in('location_id', locationIds);
 
       const [contentResult, healingResult, coursesResult] = await Promise.all([contentQuery, healingQuery, coursesQuery]);
 
