@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Plus, Trash2, Eye, EyeOff, UserPlus } from "lucide-react";
+import { Loader2, Plus, Trash2, Eye, EyeOff, UserPlus, RefreshCw } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -208,6 +208,29 @@ const UserManagement = () => {
     );
   };
 
+  const generatePassword = () => {
+    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lower = "abcdefghijklmnopqrstuvwxyz";
+    const digits = "0123456789";
+    const special = "!@#$%^&*";
+    const all = upper + lower + digits + special;
+    // Guarantee at least one of each category
+    let pwd = [
+      upper[Math.floor(Math.random() * upper.length)],
+      lower[Math.floor(Math.random() * lower.length)],
+      digits[Math.floor(Math.random() * digits.length)],
+      special[Math.floor(Math.random() * special.length)],
+    ];
+    for (let i = pwd.length; i < 14; i++) {
+      pwd.push(all[Math.floor(Math.random() * all.length)]);
+    }
+    // Shuffle
+    pwd.sort(() => Math.random() - 0.5);
+    const password = pwd.join("");
+    setTempPassword(password);
+    setShowPassword(true);
+  };
+
   if (authLoading || loadingUsers) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -252,7 +275,12 @@ const UserManagement = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="tempPassword">Temporary Password *</Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="tempPassword">Temporary Password *</Label>
+                    <Button type="button" variant="ghost" size="sm" onClick={generatePassword} className="h-auto py-1 px-2 text-xs">
+                      <RefreshCw className="w-3 h-3 mr-1" />Generate
+                    </Button>
+                  </div>
                   <div className="relative">
                     <Input
                       id="tempPassword"
@@ -265,7 +293,7 @@ const UserManagement = () => {
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
-                  <p className="text-xs text-muted-foreground">Must include uppercase, lowercase, number, and special character.</p>
+                  <p className="text-xs text-muted-foreground">Must include uppercase, lowercase, number, and special character. User will be forced to change on first login.</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
