@@ -9,8 +9,6 @@ import { DeckSelection } from "@/components/DeckSelection";
 import { PurchaseVerification } from "@/components/PurchaseVerification";
 import { CardNumberSelector } from "@/components/CardNumberSelector";
 import { CardDropdownSelector } from "@/components/CardDropdownSelector";
-import { SpreadReading } from "@/components/SpreadReading";
-import type { SpreadType } from "@/components/SpreadSelection";
 import { supabase } from "@/integrations/supabase/client";
 import { Shuffle, Sparkles, DoorOpen } from "lucide-react";
 import ProfileDropdown from "@/components/ProfileDropdown";
@@ -57,11 +55,6 @@ const Index = () => {
   const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   
-  // Spread reading state
-  const [activeSpread, setActiveSpread] = useState<SpreadType | null>(null);
-  const [spreadCards, setSpreadCards] = useState<OracleCard[]>([]);
-  const [spreadRevealedPositions, setSpreadRevealedPositions] = useState<number[]>([]);
-  const [showSpreadReading, setShowSpreadReading] = useState(false);
   
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -145,74 +138,7 @@ const Index = () => {
     }
   };
 
-  // Initialize a spread reading - draw random cards from available decks
-  const initializeSpreadReading = async (spread: SpreadType) => {
-    if (!user) return;
-    
-    // Get all non-starter decks user has access to
-    const { data: allDecks } = await supabase
-      .from('decks')
-      .select('id')
-      .eq('is_starter', false);
 
-    if (!allDecks || allDecks.length === 0) return;
-
-    // Get all available cards across accessible decks
-    const deckIds = allDecks.map(d => d.id);
-    const { data: allCards } = await supabase
-      .from('cards')
-      .select('*, decks(name)')
-      .in('deck_id', deckIds);
-
-    if (!allCards || allCards.length < spread.cardCount) {
-      toast({
-        title: "Not enough cards",
-        description: "There aren't enough cards available for this spread.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Shuffle and pick random cards
-    const shuffled = [...allCards].sort(() => Math.random() - 0.5);
-    const selected = shuffled.slice(0, spread.cardCount);
-    
-    const mappedCards = selected.map(card => ({
-      ...card,
-      deck_name: card.deck_name || card.decks?.name || null
-    })) as OracleCard[];
-
-    setActiveSpread(spread);
-    setSpreadCards(mappedCards);
-    setSpreadRevealedPositions([]);
-    setShowSpreadReading(true);
-  };
-
-  const handleSelectSpread = async (spread: SpreadType) => {
-    await initializeSpreadReading(spread);
-  };
-
-  // Handler for selecting a card from the spread
-  const handleSelectSpreadCard = (card: OracleCard, positionIndex: number) => {
-    // First reveal the card position
-    if (!spreadRevealedPositions.includes(positionIndex)) {
-      setSpreadRevealedPositions(prev => [...prev, positionIndex]);
-      return;
-    }
-    // If already revealed, navigate to card detail
-    setSelectedCard(card);
-    setShowSpreadReading(false);
-    setShowCard(true);
-    setIsRevealed(true);
-  };
-
-  // Handler to go back to spread from card detail
-  const handleBackToSpreadReading = () => {
-    setSelectedCard(null);
-    setShowCard(false);
-    setIsRevealed(false);
-    setShowSpreadReading(true);
-  };
 
   const handleSelectDeck = async (deckId: string) => {
     const deck = decks.find(d => d.id === deckId);
@@ -351,11 +277,6 @@ const Index = () => {
   };
 
   const handleDrawAnother = () => {
-    // For spread reading, go back to spread
-    if (activeSpread) {
-      handleBackToSpreadReading();
-      return;
-    }
     setShowCard(false);
     setIsRevealed(false);
     setSelectedCard(null);
@@ -366,10 +287,6 @@ const Index = () => {
     setShowCard(false);
     setIsRevealed(false);
     setSelectedCard(null);
-    setActiveSpread(null);
-    setSpreadCards([]);
-    setSpreadRevealedPositions([]);
-    setShowSpreadReading(false);
   };
 
   const handleVerifyPurchase = (deckId: string) => {
@@ -395,13 +312,7 @@ const Index = () => {
 
   // Get the appropriate card back image for the selected deck or card
   const getCardBackImage = () => {
-    // For spread reading, use the card's deck_name
-    if (activeSpread && selectedCard?.deck_name) {
-      return getCardBackForDeck(selectedCard.deck_name);
-    }
-    
     if (!selectedDeck) return sacredRewriteCardBack;
-    
     return getCardBackForDeck(selectedDeck.name);
   };
 
@@ -428,19 +339,14 @@ const Index = () => {
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <PageBreadcrumb 
           items={
-            activeSpread && (showSpreadReading || isRevealed)
+            selectedDeck
               ? [
                   { label: 'Door of Remembrance', onClick: handleBackToDecks, icon: DoorOpen },
-                  { label: activeSpread.name }
+                  { label: selectedDeck.name }
                 ]
-              : selectedDeck
-                ? [
-                    { label: 'Door of Remembrance', onClick: handleBackToDecks, icon: DoorOpen },
-                    { label: selectedDeck.name }
-                  ]
-                : [
-                    { label: 'Door of Remembrance', icon: DoorOpen }
-                  ]
+              : [
+                  { label: 'Door of Remembrance', icon: DoorOpen }
+                ]
           } 
         />
         <ProfileDropdown />
@@ -448,24 +354,12 @@ const Index = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-12">
-        {!selectedDeck && !activeSpread && (
+        {!selectedDeck && (
           <DeckSelection
             decks={decks}
             userPurchases={userPurchases}
             onSelectDeck={handleSelectDeck}
             onVerifyPurchase={handleVerifyPurchase}
-            onSelectSpread={handleSelectSpread}
-          />
-        )}
-
-        {/* Spread Reading */}
-        {activeSpread && showSpreadReading && !showCard && (
-          <SpreadReading
-            spread={activeSpread}
-            cards={spreadCards}
-            onSelectCard={handleSelectSpreadCard}
-            onBackToDecks={handleBackToDecks}
-            revealedPositions={spreadRevealedPositions}
           />
         )}
 

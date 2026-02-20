@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Lock, Sparkles, DoorOpen } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Lock, Sparkles, DoorOpen, Layers } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import tsrBanner from "@/assets/tsr-banner.png";
 import mnlBanner from "@/assets/mnl-banner.png";
@@ -8,7 +8,6 @@ import areekeeraBanner from "@/assets/areekeera-banner.png";
 import taoshBanner from "@/assets/taosh-banner.png";
 import RemembranceCourseSection from "@/components/RemembranceCourseSection";
 import RitesOfRemembranceSection from "@/components/RitesOfRemembranceSection";
-import { SpreadSelection, type SpreadType } from "@/components/SpreadSelection";
 
 interface Deck {
   id: string;
@@ -27,7 +26,6 @@ interface DeckSelectionProps {
   userPurchases: string[];
   onSelectDeck: (deckId: string) => void;
   onVerifyPurchase: (deckId: string) => void;
-  onSelectSpread: (spread: SpreadType) => void;
 }
 
 export const DeckSelection = ({ 
@@ -35,8 +33,8 @@ export const DeckSelection = ({
   userPurchases, 
   onSelectDeck,
   onVerifyPurchase,
-  onSelectSpread
 }: DeckSelectionProps) => {
+  const navigate = useNavigate();
   const hasAccess = (deck: Deck) => {
     return deck.is_free || deck.is_starter || userPurchases.includes(deck.id);
   };
@@ -132,6 +130,39 @@ export const DeckSelection = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+            {/* Sacred Spreads link card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              onClick={() => navigate('/decks/spreads')}
+              className="group cursor-pointer"
+            >
+              <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30">
+                <div className="aspect-video w-full overflow-hidden bg-muted relative">
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 via-accent/10 to-primary/30">
+                    <Layers className="w-16 h-16 text-primary/70" />
+                  </div>
+                </div>
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <h3 className="font-serif text-lg text-foreground group-hover:text-primary transition-colors">
+                      Sacred Spreads
+                    </h3>
+                    <div className="text-muted-foreground group-hover:text-primary transition-colors shrink-0">
+                      <Sparkles className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                    Multi-card readings for deeper guidance across all your decks
+                  </p>
+                  <Badge variant="secondary" className="text-xs">
+                    Choose a Spread
+                  </Badge>
+                </div>
+              </div>
+            </motion.div>
+
             {decks.filter(d => !d.is_starter).map((deck, index) => {
               const accessible = hasAccess(deck);
               const bannerSrc = deck.name === "The Sacred Rewrite" ? tsrBanner
@@ -145,12 +176,11 @@ export const DeckSelection = ({
                   key={deck.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  transition={{ duration: 0.4, delay: (index + 1) * 0.1 }}
                   onClick={() => accessible ? onSelectDeck(deck.id) : onVerifyPurchase(deck.id)}
                   className="group cursor-pointer"
                 >
                   <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30">
-                    {/* Thumbnail */}
                     <div className="aspect-video w-full overflow-hidden bg-muted relative">
                       {bannerSrc ? (
                         <img
@@ -163,14 +193,9 @@ export const DeckSelection = ({
                           <Sparkles className="w-12 h-12 text-white/80" />
                         </div>
                       )}
-
-                      {/* Badges overlay */}
                       <div className="absolute top-2 right-2 flex items-center gap-2">
                         {deck.is_free && (
                           <Badge className="bg-primary/90 hover:bg-primary text-primary-foreground text-xs">Free</Badge>
-                        )}
-                        {deck.is_starter && (
-                          <Badge className="bg-primary/90 hover:bg-primary text-primary-foreground text-xs">Starter</Badge>
                         )}
                         {!accessible && !deck.is_free && !deck.is_starter && (
                           <Badge variant="outline" className="bg-background/80 text-xs">
@@ -180,8 +205,6 @@ export const DeckSelection = ({
                         )}
                       </div>
                     </div>
-
-                    {/* Content */}
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <h3 className="font-serif text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2">
@@ -191,13 +214,11 @@ export const DeckSelection = ({
                           <Sparkles className="w-4 h-4" />
                         </div>
                       </div>
-
                       {deck.theme && (
                         <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
                           {deck.theme}
                         </p>
                       )}
-
                       {accessible ? (
                         <Badge variant="secondary" className="text-xs">
                           Draw from Deck
@@ -213,37 +234,6 @@ export const DeckSelection = ({
               );
             })}
           </div>
-        </div>
-      </motion.div>
-
-      <div className="container mx-auto px-4"><hr className="border-t border-primary/30" /></div>
-
-      {/* Section 2.5: Spreads */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.25 }}
-        className="py-16"
-      >
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <div className="text-3xl mb-2">✦</div>
-            <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-              Sacred Spreads
-            </h2>
-            <p className="font-bold text-primary font-sans text-base mb-3">
-              Multi-Card Readings for Deeper Guidance
-            </p>
-            <div className="text-muted-foreground font-sans text-base max-w-2xl mx-auto space-y-3">
-              <p>
-                Choose a spread to draw cards from across your available decks.
-                Each position in the spread holds a mirror to a different aspect of your inquiry.
-              </p>
-              <p>Let your intuition guide which spread is calling you today.</p>
-            </div>
-          </div>
-
-          <SpreadSelection onSelectSpread={onSelectSpread} />
         </div>
       </motion.div>
 
