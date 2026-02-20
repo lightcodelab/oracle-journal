@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Plus, Trash2, Eye, EyeOff, UserPlus, RefreshCw, Copy, Check } from "lucide-react";
+import { Loader2, Trash2, Eye, EyeOff, UserPlus, RefreshCw, Copy, Check, KeyRound, CalendarPlus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -60,6 +60,24 @@ const UserManagement = () => {
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
   const [createdUserDetails, setCreatedUserDetails] = useState<{ email: string; password: string; name: string; endsAt: string; buckets: string[] } | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Reset password state
+  const [resetPasswordDialogOpen, setResetPasswordDialogOpen] = useState(false);
+  const [resetPasswordUser, setResetPasswordUser] = useState<ManualUser | null>(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [resettingPassword, setResettingPassword] = useState(false);
+  const [resetPasswordDetails, setResetPasswordDetails] = useState<{ email: string; password: string; name: string } | null>(null);
+  const [resetCopied, setResetCopied] = useState(false);
+
+  // Extend access state
+  const [extendDialogOpen, setExtendDialogOpen] = useState(false);
+  const [extendUser, setExtendUser] = useState<ManualUser | null>(null);
+  const [extendStartsAt, setExtendStartsAt] = useState<Date | undefined>(new Date());
+  const [extendEndsAt, setExtendEndsAt] = useState<Date | undefined>(undefined);
+  const [extendBuckets, setExtendBuckets] = useState<string[]>([]);
+  const [extendNotes, setExtendNotes] = useState("");
+  const [extendingAccess, setExtendingAccess] = useState(false);
 
   // Form state
   const [email, setEmail] = useState("");
@@ -176,7 +194,6 @@ const UserManagement = () => {
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
 
-      // Store details for the copy button before resetting
       setCreatedUserDetails({
         email,
         password: tempPassword,
@@ -225,7 +242,6 @@ const UserManagement = () => {
     const digits = "0123456789";
     const special = "!@#$%^&*";
     const all = upper + lower + digits + special;
-    // Guarantee at least one of each category
     let pwd = [
       upper[Math.floor(Math.random() * upper.length)],
       lower[Math.floor(Math.random() * lower.length)],
@@ -235,11 +251,20 @@ const UserManagement = () => {
     for (let i = pwd.length; i < 14; i++) {
       pwd.push(all[Math.floor(Math.random() * all.length)]);
     }
-    // Shuffle
     pwd.sort(() => Math.random() - 0.5);
-    const password = pwd.join("");
+    return pwd.join("");
+  };
+
+  const handleGeneratePassword = () => {
+    const password = generatePassword();
     setTempPassword(password);
     setShowPassword(true);
+  };
+
+  const handleGenerateNewPassword = () => {
+    const password = generatePassword();
+    setNewPassword(password);
+    setShowNewPassword(true);
   };
 
   const handleCopyDetails = async () => {
@@ -267,6 +292,130 @@ If you'd like to continue your access after this date, you can become a member a
     setCopied(true);
     toast({ title: "Copied!", description: "Login details copied to clipboard." });
     setTimeout(() => setCopied(false), 3000);
+  };
+
+  // Reset password handlers
+  const openResetPasswordDialog = (u: ManualUser) => {
+    setResetPasswordUser(u);
+    setNewPassword("");
+    setShowNewPassword(false);
+    setResetPasswordDetails(null);
+    setResetCopied(false);
+    setResetPasswordDialogOpen(true);
+  };
+
+  const handleResetPassword = async () => {
+    if (!resetPasswordUser || !newPassword) {
+      toast({ title: "Missing password", description: "Please enter or generate a new password.", variant: "destructive" });
+      return;
+    }
+
+    setResettingPassword(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("reset-manual-user-password", {
+        body: {
+          userId: resetPasswordUser.user_id,
+          newPassword,
+        },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      setResetPasswordDetails({
+        email: resetPasswordUser.email,
+        password: newPassword,
+        name: resetPasswordUser.full_name || "",
+      });
+
+      toast({ title: "Password reset", description: `Password has been reset for ${resetPasswordUser.email}. Copy the new details below.` });
+    } catch (err: any) {
+      toast({ title: "Failed to reset password", description: err.message, variant: "destructive" });
+    } finally {
+      setResettingPassword(false);
+    }
+  };
+
+  const handleCopyResetDetails = async () => {
+    if (!resetPasswordDetails) return;
+    const loginUrl = window.location.origin + "/auth";
+    const text = `Hi${resetPasswordDetails.name ? ` ${resetPasswordDetails.name}` : ""},
+
+Your password for the Temple of Sustainment has been reset.
+
+Login page: ${loginUrl}
+Email: ${resetPasswordDetails.email}
+New temporary password: ${resetPasswordDetails.password}
+
+You will be prompted to change your password when you next sign in.`;
+
+    await navigator.clipboard.writeText(text);
+    setResetCopied(true);
+    toast({ title: "Copied!", description: "Reset details copied to clipboard." });
+    setTimeout(() => setResetCopied(false), 3000);
+  };
+
+  // Extend access handlers
+  const openExtendDialog = (u: ManualUser) => {
+    setExtendUser(u);
+    setExtendStartsAt(new Date());
+    setExtendEndsAt(undefined);
+    setExtendBuckets([...u.buckets]);
+    setExtendNotes("");
+    setExtendDialogOpen(true);
+  };
+
+  const toggleExtendBucket = (key: string) => {
+    setExtendBuckets((prev) =>
+      prev.includes(key) ? prev.filter((b) => b !== key) : [...prev, key]
+    );
+  };
+
+  const handleExtendAccess = async () => {
+    if (!extendUser || !extendStartsAt || !extendEndsAt || !extendBuckets.length) {
+      toast({ title: "Missing fields", description: "Please fill in all required fields and select at least one content area.", variant: "destructive" });
+      return;
+    }
+
+    if (extendEndsAt <= extendStartsAt) {
+      toast({ title: "Invalid dates", description: "End date must be after start date.", variant: "destructive" });
+      return;
+    }
+
+    setExtendingAccess(true);
+    try {
+      // First remove existing grants for this user
+      const { error: deleteError } = await supabase
+        .from("manual_access_grants")
+        .delete()
+        .eq("user_id", extendUser.user_id);
+
+      if (deleteError) throw deleteError;
+
+      // Insert new grants
+      const grants = extendBuckets.map((bucket_key) => ({
+        user_id: extendUser.user_id,
+        bucket_key,
+        granted_by: user?.id,
+        starts_at: extendStartsAt.toISOString(),
+        ends_at: extendEndsAt.toISOString(),
+        notes: extendNotes || null,
+      }));
+
+      const { error: insertError } = await supabase
+        .from("manual_access_grants")
+        .insert(grants);
+
+      if (insertError) throw insertError;
+
+      toast({ title: "Access updated", description: `Access for ${extendUser.email} has been extended.` });
+      setExtendDialogOpen(false);
+      fetchManualUsers();
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    } finally {
+      setExtendingAccess(false);
+    }
   };
 
   if (authLoading || loadingUsers) {
@@ -315,7 +464,7 @@ If you'd like to continue your access after this date, you can become a member a
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="tempPassword">Temporary Password *</Label>
-                    <Button type="button" variant="ghost" size="sm" onClick={generatePassword} className="h-auto py-1 px-2 text-xs">
+                    <Button type="button" variant="ghost" size="sm" onClick={handleGeneratePassword} className="h-auto py-1 px-2 text-xs">
                       <RefreshCw className="w-3 h-3 mr-1" />Generate
                     </Button>
                   </div>
@@ -437,13 +586,30 @@ If you'd like to continue your access after this date, you can become a member a
                         <CardTitle className="text-base font-serif">{u.full_name || u.email}</CardTitle>
                         {u.full_name && <CardDescription className="text-sm">{u.email}</CardDescription>}
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
                         <Badge variant={u.is_active ? "default" : "secondary"}>
                           {u.is_active ? "Active" : "Expired"}
                         </Badge>
                         <Button
                           variant="ghost"
                           size="icon"
+                          title="Reset password"
+                          onClick={() => openResetPasswordDialog(u)}
+                        >
+                          <KeyRound className="w-4 h-4 text-muted-foreground" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="Extend / renew access"
+                          onClick={() => openExtendDialog(u)}
+                        >
+                          <CalendarPlus className="w-4 h-4 text-muted-foreground" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="Remove all access"
                           onClick={() => handleRemoveAccess(u.user_id)}
                           disabled={deletingUserId === u.user_id}
                         >
@@ -470,6 +636,140 @@ If you'd like to continue your access after this date, you can become a member a
           </div>
         )}
       </div>
+
+      {/* Reset Password Dialog */}
+      <Dialog open={resetPasswordDialogOpen} onOpenChange={(open) => { setResetPasswordDialogOpen(open); if (!open) { setResetPasswordUser(null); setResetPasswordDetails(null); } }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif">Reset Password</DialogTitle>
+            <DialogDescription>
+              Reset the password for {resetPasswordUser?.full_name || resetPasswordUser?.email}. They will be required to change it on next login.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 pt-2">
+            {resetPasswordDetails ? (
+              <div className="space-y-3">
+                <div className="p-4 rounded-lg border border-primary/30 bg-primary/5 space-y-2">
+                  <p className="text-sm font-medium text-foreground">✓ Password reset successfully</p>
+                  <p className="text-xs text-muted-foreground">Copy the new login details to share with the user.</p>
+                </div>
+                <Button onClick={handleCopyResetDetails} variant="default" className="w-full">
+                  {resetCopied ? <><Check className="w-4 h-4 mr-2" />Copied!</> : <><Copy className="w-4 h-4 mr-2" />Copy New Login Details</>}
+                </Button>
+                <Button onClick={() => { setResetPasswordDialogOpen(false); setResetPasswordUser(null); setResetPasswordDetails(null); }} variant="outline" className="w-full">
+                  Done
+                </Button>
+              </div>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="newPassword">New Password *</Label>
+                    <Button type="button" variant="ghost" size="sm" onClick={handleGenerateNewPassword} className="h-auto py-1 px-2 text-xs">
+                      <RefreshCw className="w-3 h-3 mr-1" />Generate
+                    </Button>
+                  </div>
+                  <div className="relative">
+                    <Input
+                      id="newPassword"
+                      type={showNewPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Min 8 chars, upper, lower, number, special"
+                    />
+                    <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" onClick={() => setShowNewPassword(!showNewPassword)}>
+                      {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+                <Button onClick={handleResetPassword} disabled={resettingPassword || !newPassword} className="w-full">
+                  {resettingPassword ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Resetting…</> : "Reset Password"}
+                </Button>
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Extend Access Dialog */}
+      <Dialog open={extendDialogOpen} onOpenChange={setExtendDialogOpen}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-serif">Extend / Renew Access</DialogTitle>
+            <DialogDescription>
+              Set a new access period for {extendUser?.full_name || extendUser?.email}. This will replace their current access dates.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 pt-2">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Start Date *</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !extendStartsAt && "text-muted-foreground")}>
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {extendStartsAt ? format(extendStartsAt, "PPP") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar mode="single" selected={extendStartsAt} onSelect={setExtendStartsAt} initialFocus className={cn("p-3 pointer-events-auto")} />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="space-y-2">
+                <Label>End Date *</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !extendEndsAt && "text-muted-foreground")}>
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {extendEndsAt ? format(extendEndsAt, "PPP") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={extendEndsAt}
+                      onSelect={setExtendEndsAt}
+                      disabled={(date) => (extendStartsAt ? date <= extendStartsAt : false)}
+                      initialFocus
+                      className={cn("p-3 pointer-events-auto")}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label>Content Access *</Label>
+              {CONTENT_AREAS.map((area) => (
+                <div key={area.key} className="flex items-start gap-3 p-3 rounded-lg border border-border">
+                  <Checkbox
+                    id={`extend-bucket-${area.key}`}
+                    checked={extendBuckets.includes(area.key)}
+                    onCheckedChange={() => toggleExtendBucket(area.key)}
+                  />
+                  <div className="flex-1">
+                    <label htmlFor={`extend-bucket-${area.key}`} className="text-sm font-medium cursor-pointer">{area.label}</label>
+                    <p className="text-xs text-muted-foreground">{area.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="extendNotes">Notes (optional)</Label>
+              <Input id="extendNotes" value={extendNotes} onChange={(e) => setExtendNotes(e.target.value)} placeholder="e.g. Renewed for 3 more months" />
+            </div>
+
+            <Button onClick={handleExtendAccess} disabled={extendingAccess} className="w-full">
+              {extendingAccess ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Updating…</> : "Update Access"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
