@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Trash2, Eye, EyeOff, UserPlus, RefreshCw, Copy, Check, KeyRound, CalendarPlus } from "lucide-react";
+import { Loader2, Trash2, Eye, EyeOff, UserPlus, RefreshCw, Copy, Check, KeyRound, CalendarPlus, Pencil, Send } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -78,6 +78,19 @@ const UserManagement = () => {
   const [extendBuckets, setExtendBuckets] = useState<string[]>([]);
   const [extendNotes, setExtendNotes] = useState("");
   const [extendingAccess, setExtendingAccess] = useState(false);
+
+  // Edit user state
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editUser, setEditUser] = useState<ManualUser | null>(null);
+  const [editFullName, setEditFullName] = useState("");
+  const [editNotes, setEditNotes] = useState("");
+  const [editStartsAt, setEditStartsAt] = useState<Date | undefined>(undefined);
+  const [editEndsAt, setEditEndsAt] = useState<Date | undefined>(undefined);
+  const [editBuckets, setEditBuckets] = useState<string[]>([]);
+  const [editingUser, setEditingUser] = useState(false);
+
+  // Copy user details state
+  const [copiedUserId, setCopiedUserId] = useState<string | null>(null);
 
   // Form state
   const [email, setEmail] = useState("");
@@ -418,6 +431,104 @@ You will be prompted to change your password when you next sign in.`;
     }
   };
 
+  // Copy user details (without password)
+  const handleCopyUserDetails = async (u: ManualUser) => {
+    const areas = u.buckets
+      .map((b) => CONTENT_AREAS.find((a) => a.key === b)?.label || b)
+      .join(", ");
+    const loginUrl = window.location.origin + "/auth";
+    const expiryDate = new Date(u.ends_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    const text = `Hi${u.full_name ? ` ${u.full_name}` : ""},
+
+Here are your login details for the Temple of Sustainment:
+
+Login page: ${loginUrl}
+Email: ${u.email}
+
+Your access includes: ${areas}
+Access expires: ${expiryDate}
+
+If you need your password reset, please let us know.
+
+If you'd like to continue your access after this date, you can become a member at https://thetemple.lightcodelab.com`;
+
+    await navigator.clipboard.writeText(text);
+    setCopiedUserId(u.user_id);
+    toast({ title: "Copied!", description: "User details copied to clipboard." });
+    setTimeout(() => setCopiedUserId(null), 3000);
+  };
+
+  // Edit user handlers
+  const openEditDialog = (u: ManualUser) => {
+    setEditUser(u);
+    setEditFullName(u.full_name || "");
+    setEditNotes(u.notes || "");
+    setEditStartsAt(new Date(u.starts_at));
+    setEditEndsAt(new Date(u.ends_at));
+    setEditBuckets([...u.buckets]);
+    setEditDialogOpen(true);
+  };
+
+  const toggleEditBucket = (key: string) => {
+    setEditBuckets((prev) =>
+      prev.includes(key) ? prev.filter((b) => b !== key) : [...prev, key]
+    );
+  };
+
+  const handleEditUser = async () => {
+    if (!editUser || !editStartsAt || !editEndsAt || !editBuckets.length) {
+      toast({ title: "Missing fields", description: "Please fill in all required fields.", variant: "destructive" });
+      return;
+    }
+
+    if (editEndsAt <= editStartsAt) {
+      toast({ title: "Invalid dates", description: "End date must be after start date.", variant: "destructive" });
+      return;
+    }
+
+    setEditingUser(true);
+    try {
+      // Update profile name
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({ full_name: editFullName || null })
+        .eq("id", editUser.user_id);
+
+      if (profileError) throw profileError;
+
+      // Replace access grants
+      const { error: deleteError } = await supabase
+        .from("manual_access_grants")
+        .delete()
+        .eq("user_id", editUser.user_id);
+
+      if (deleteError) throw deleteError;
+
+      const grants = editBuckets.map((bucket_key) => ({
+        user_id: editUser.user_id,
+        bucket_key,
+        granted_by: user?.id,
+        starts_at: editStartsAt.toISOString(),
+        ends_at: editEndsAt.toISOString(),
+        notes: editNotes || null,
+      }));
+
+      const { error: insertError } = await supabase
+        .from("manual_access_grants")
+        .insert(grants);
+
+      if (insertError) throw insertError;
+
+      toast({ title: "User updated", description: `Details for ${editUser.email} have been saved.` });
+      setEditDialogOpen(false);
+      fetchManualUsers();
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    } finally {
+      setEditingUser(false);
+    }
+  };
+
   if (authLoading || loadingUsers) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -593,10 +704,26 @@ You will be prompted to change your password when you next sign in.`;
                         <Button
                           variant="ghost"
                           size="icon"
+                          title="Copy login details"
+                          onClick={() => handleCopyUserDetails(u)}
+                        >
+                          {copiedUserId === u.user_id ? <Check className="w-4 h-4 text-primary" /> : <Send className="w-4 h-4 text-muted-foreground" />}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           title="Reset password"
                           onClick={() => openResetPasswordDialog(u)}
                         >
                           <KeyRound className="w-4 h-4 text-muted-foreground" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="Edit user"
+                          onClick={() => openEditDialog(u)}
+                        >
+                          <Pencil className="w-4 h-4 text-muted-foreground" />
                         </Button>
                         <Button
                           variant="ghost"
@@ -766,6 +893,95 @@ You will be prompted to change your password when you next sign in.`;
 
             <Button onClick={handleExtendAccess} disabled={extendingAccess} className="w-full">
               {extendingAccess ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Updating…</> : "Update Access"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit User Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-serif">Edit User</DialogTitle>
+            <DialogDescription>
+              Update details for {editUser?.email}.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 pt-2">
+            <div className="space-y-2">
+              <Label htmlFor="editFullName">Full Name</Label>
+              <Input id="editFullName" value={editFullName} onChange={(e) => setEditFullName(e.target.value)} placeholder="Jane Smith" />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input value={editUser?.email || ""} disabled className="opacity-60" />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Start Date *</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !editStartsAt && "text-muted-foreground")}>
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {editStartsAt ? format(editStartsAt, "PPP") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar mode="single" selected={editStartsAt} onSelect={setEditStartsAt} initialFocus className={cn("p-3 pointer-events-auto")} />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="space-y-2">
+                <Label>End Date *</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !editEndsAt && "text-muted-foreground")}>
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {editEndsAt ? format(editEndsAt, "PPP") : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={editEndsAt}
+                      onSelect={setEditEndsAt}
+                      disabled={(date) => (editStartsAt ? date <= editStartsAt : false)}
+                      initialFocus
+                      className={cn("p-3 pointer-events-auto")}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label>Content Access *</Label>
+              {CONTENT_AREAS.map((area) => (
+                <div key={area.key} className="flex items-start gap-3 p-3 rounded-lg border border-border">
+                  <Checkbox
+                    id={`edit-bucket-${area.key}`}
+                    checked={editBuckets.includes(area.key)}
+                    onCheckedChange={() => toggleEditBucket(area.key)}
+                  />
+                  <div className="flex-1">
+                    <label htmlFor={`edit-bucket-${area.key}`} className="text-sm font-medium cursor-pointer">{area.label}</label>
+                    <p className="text-xs text-muted-foreground">{area.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="editNotes">Notes (optional)</Label>
+              <Input id="editNotes" value={editNotes} onChange={(e) => setEditNotes(e.target.value)} placeholder="e.g. 1:1 client, 3-month program" />
+            </div>
+
+            <Button onClick={handleEditUser} disabled={editingUser} className="w-full">
+              {editingUser ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Saving…</> : "Save Changes"}
             </Button>
           </div>
         </DialogContent>
