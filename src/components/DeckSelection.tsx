@@ -8,6 +8,7 @@ import areekeeraBanner from "@/assets/areekeera-banner.png";
 import taoshBanner from "@/assets/taosh-banner.png";
 import RemembranceCourseSection from "@/components/RemembranceCourseSection";
 import RitesOfRemembranceSection from "@/components/RitesOfRemembranceSection";
+import { SpreadSelection, type SpreadType } from "@/components/SpreadSelection";
 
 interface Deck {
   id: string;
@@ -26,13 +27,15 @@ interface DeckSelectionProps {
   userPurchases: string[];
   onSelectDeck: (deckId: string) => void;
   onVerifyPurchase: (deckId: string) => void;
+  onSelectSpread: (spread: SpreadType) => void;
 }
 
 export const DeckSelection = ({ 
   decks, 
   userPurchases, 
   onSelectDeck,
-  onVerifyPurchase 
+  onVerifyPurchase,
+  onSelectSpread
 }: DeckSelectionProps) => {
   const hasAccess = (deck: Deck) => {
     return deck.is_free || deck.is_starter || userPurchases.includes(deck.id);
@@ -129,7 +132,7 @@ export const DeckSelection = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
-            {decks.map((deck, index) => {
+            {decks.filter(d => !d.is_starter).map((deck, index) => {
               const accessible = hasAccess(deck);
               const bannerSrc = deck.name === "The Sacred Rewrite" ? tsrBanner
                 : deck.name === "Magic not Logic" ? mnlBanner
@@ -214,6 +217,36 @@ export const DeckSelection = ({
       </motion.div>
 
       <div className="container mx-auto px-4"><hr className="border-t border-primary/30" /></div>
+
+      {/* Section 2.5: Spreads */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.25 }}
+        className="py-16"
+      >
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <div className="text-3xl mb-2">✦</div>
+            <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
+              Sacred Spreads
+            </h2>
+            <p className="font-bold text-primary font-sans text-base mb-3">
+              Multi-Card Readings for Deeper Guidance
+            </p>
+            <div className="text-muted-foreground font-sans text-base max-w-2xl mx-auto space-y-3">
+              <p>
+                Choose a spread to draw cards from across your available decks.
+                Each position in the spread holds a mirror to a different aspect of your inquiry.
+              </p>
+              <p>Let your intuition guide which spread is calling you today.</p>
+            </div>
+          </div>
+
+          <SpreadSelection onSelectSpread={onSelectSpread} />
+        </div>
+      </motion.div>
+
 
       {/* Section 3: The Alchemy of Becoming — default bg */}
       <motion.div

@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { OracleCardComponent } from "@/components/OracleCardComponent";
 import { CardDetail } from "@/components/CardDetail";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
-import { MultiDeckShuffleAnimation } from "@/components/MultiDeckShuffleAnimation";
-import { StarterCardSpread } from "@/components/StarterCardSpread";
+
 import { DeckSelection } from "@/components/DeckSelection";
 import { PurchaseVerification } from "@/components/PurchaseVerification";
 import { CardNumberSelector } from "@/components/CardNumberSelector";
 import { CardDropdownSelector } from "@/components/CardDropdownSelector";
+import { SpreadReading } from "@/components/SpreadReading";
+import type { SpreadType } from "@/components/SpreadSelection";
 import { supabase } from "@/integrations/supabase/client";
 import { Shuffle, Sparkles, DoorOpen } from "lucide-react";
 import ProfileDropdown from "@/components/ProfileDropdown";
@@ -40,7 +41,7 @@ interface Deck {
   woocommerce_product_id_premium: string | null;
 }
 
-const DAILY_READING_KEY = 'starter_reading_date';
+
 
 const Index = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -56,11 +57,11 @@ const Index = () => {
   const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   
-  // Starter deck specific state
-  const [starterCards, setStarterCards] = useState<OracleCard[]>([]);
-  const [viewedStarterCardIds, setViewedStarterCardIds] = useState<string[]>([]);
-  const [showStarterSpread, setShowStarterSpread] = useState(false);
-  const [canReadToday, setCanReadToday] = useState(true);
+  // Spread reading state
+  const [activeSpread, setActiveSpread] = useState<SpreadType | null>(null);
+  const [spreadCards, setSpreadCards] = useState<OracleCard[]>([]);
+  const [spreadRevealedPositions, setSpreadRevealedPositions] = useState<number[]>([]);
+  const [showSpreadReading, setShowSpreadReading] = useState(false);
   
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -144,134 +145,73 @@ const Index = () => {
     }
   };
 
-  // Check if user has already used their one-time free reading
-  // TODO: Re-enable limit after testing by uncommenting the check below
-  const checkFreeReadingUsed = () => {
-    // TEMPORARILY DISABLED FOR TESTING
-    // const hasUsedFreeReading = localStorage.getItem(DAILY_READING_KEY);
-    // if (hasUsedFreeReading === 'true') {
-    //   setCanReadToday(false);
-    //   return false;
-    // }
-    return true;
-  };
-
-  // Mark free reading as permanently used
-  // TODO: Re-enable after testing by uncommenting the localStorage line
-  const markReadingUsed = () => {
-    // TEMPORARILY DISABLED FOR TESTING
-    // localStorage.setItem(DAILY_READING_KEY, 'true');
-    // setCanReadToday(false);
-  };
-
-  // Reset starter deck data for admin testing
-  const resetStarterDeckData = async () => {
-    if (!user || !isAdmin) return;
+  // Initialize a spread reading - draw random cards from available decks
+  const initializeSpreadReading = async (spread: SpreadType) => {
+    if (!user) return;
     
-    // Clear database records
-    await supabase
-      .from('user_starter_deck_cards')
-      .delete()
-      .eq('user_id', user.id);
-    
-    // Clear localStorage
-    localStorage.removeItem(DAILY_READING_KEY);
-    
-    // Reset state
-    setStarterCards([]);
-    setViewedStarterCardIds([]);
-    setCanReadToday(true);
-    setShowStarterSpread(false);
-    setSelectedDeck(null);
-    
-    toast({
-      title: "Reset Complete",
-      description: "Starter deck data has been cleared. You can now access the free reading again.",
-    });
-  };
-
-  const initializeStarterDeck = async (userId: string, starterDeckId: string): Promise<OracleCard[]> => {
-    // Check if free reading has been used
-    const canRead = checkFreeReadingUsed();
-    
-    // Check if user already has starter cards assigned (permanent, not daily)
-    const { data: existingCards } = await supabase
-      .from('user_starter_deck_cards')
-      .select('card_id, assigned_at')
-      .eq('user_id', userId);
-
-    // Re-check for existing cards after potential cleanup
-    const { data: todaysCards } = await supabase
-      .from('user_starter_deck_cards')
-      .select('card_id')
-      .eq('user_id', userId);
-
-    // If they have cards for today, fetch them
-    if (todaysCards && todaysCards.length > 0) {
-      const cardIds = todaysCards.map(c => c.card_id);
-      const { data: cards } = await supabase
-        .from('cards')
-        .select('*, decks(name)')
-        .in('id', cardIds);
-      
-      const mappedCards = (cards || []).map(card => ({
-        ...card,
-        deck_name: card.deck_name || card.decks?.name || null
-      })) as OracleCard[];
-      
-      setStarterCards(mappedCards);
-      return mappedCards;
-    }
-
-    // No existing cards for today - create new ones if they can read today
-    if (!canRead) {
-      return [];
-    }
-
-    // Get all non-starter decks
+    // Get all non-starter decks user has access to
     const { data: allDecks } = await supabase
       .from('decks')
       .select('id')
-      .neq('id', starterDeckId);
+      .eq('is_starter', false);
 
-    if (!allDecks || allDecks.length === 0) return [];
+    if (!allDecks || allDecks.length === 0) return;
 
-    // Get one random card from each deck
-    const selectedCardIds: { id: string; deck_id: string }[] = [];
-    
-    for (const deck of allDecks) {
-      const { data: deckCards } = await supabase
-        .from('cards')
-        .select('id, deck_id')
-        .eq('deck_id', deck.id);
-      
-      if (deckCards && deckCards.length > 0) {
-        const randomCard = deckCards[Math.floor(Math.random() * deckCards.length)];
-        selectedCardIds.push(randomCard);
-      }
-    }
-    await supabase
-      .from('user_starter_deck_cards')
-      .insert(
-        selectedCardIds.map(card => ({
-          user_id: userId,
-          card_id: card.id,
-        }))
-      );
-
-    // Fetch the full card data
-    const { data: newCards } = await supabase
+    // Get all available cards across accessible decks
+    const deckIds = allDecks.map(d => d.id);
+    const { data: allCards } = await supabase
       .from('cards')
       .select('*, decks(name)')
-      .in('id', selectedCardIds.map(c => c.id));
+      .in('deck_id', deckIds);
+
+    if (!allCards || allCards.length < spread.cardCount) {
+      toast({
+        title: "Not enough cards",
+        description: "There aren't enough cards available for this spread.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Shuffle and pick random cards
+    const shuffled = [...allCards].sort(() => Math.random() - 0.5);
+    const selected = shuffled.slice(0, spread.cardCount);
     
-    const mappedCards = (newCards || []).map(card => ({
+    const mappedCards = selected.map(card => ({
       ...card,
       deck_name: card.deck_name || card.decks?.name || null
     })) as OracleCard[];
-    
-    setStarterCards(mappedCards);
-    return mappedCards;
+
+    setActiveSpread(spread);
+    setSpreadCards(mappedCards);
+    setSpreadRevealedPositions([]);
+    setShowSpreadReading(true);
+  };
+
+  const handleSelectSpread = async (spread: SpreadType) => {
+    await initializeSpreadReading(spread);
+  };
+
+  // Handler for selecting a card from the spread
+  const handleSelectSpreadCard = (card: OracleCard, positionIndex: number) => {
+    // First reveal the card position
+    if (!spreadRevealedPositions.includes(positionIndex)) {
+      setSpreadRevealedPositions(prev => [...prev, positionIndex]);
+      return;
+    }
+    // If already revealed, navigate to card detail
+    setSelectedCard(card);
+    setShowSpreadReading(false);
+    setShowCard(true);
+    setIsRevealed(true);
+  };
+
+  // Handler to go back to spread from card detail
+  const handleBackToSpreadReading = () => {
+    setSelectedCard(null);
+    setShowCard(false);
+    setIsRevealed(false);
+    setShowSpreadReading(true);
   };
 
   const handleSelectDeck = async (deckId: string) => {
@@ -280,23 +220,8 @@ const Index = () => {
 
     setSelectedDeck(deck);
 
-    // For starter deck, initialize and show spread
-    if (deck.is_starter) {
-      checkFreeReadingUsed();
-      const cards = await initializeStarterDeck(user.id, deckId);
-      if (cards.length > 0) {
-        setShowStarterSpread(true);
-        // Mark reading as used when they first access the spread
-        markReadingUsed();
-      }
-      return;
-    }
-
     // Check if user has premium access
-    if (!deck.is_free && !deck.is_starter) {
-      // UX-only admin check: Controls UI display for premium content.
-      // SECURITY NOTE: Actual premium access is enforced by user_has_premium_deck_access()
-      // SECURITY DEFINER function and RLS policies at the database level.
+    if (!deck.is_free) {
       const { data: roleData } = await supabase
         .from('user_roles')
         .select('role')
@@ -305,12 +230,10 @@ const Index = () => {
         .maybeSingle();
 
       if (roleData) {
-        // Admin has full premium access
         setHasPremiumAccess(true);
         return;
       }
 
-      // Not admin, check actual purchase
       const { data } = await supabase
         .from('deck_purchases')
         .select('is_premium')
@@ -325,36 +248,6 @@ const Index = () => {
     }
   };
 
-  // Handler for selecting a card from the starter spread
-  const handleSelectStarterCard = (card: OracleCard) => {
-    setSelectedCard(card);
-    setShowStarterSpread(false);
-    setShowCard(true);
-    setIsRevealed(true); // Go straight to revealed for starter cards
-    
-    // Add to viewed cards
-    if (!viewedStarterCardIds.includes(card.id)) {
-      setViewedStarterCardIds(prev => [...prev, card.id]);
-    }
-  };
-
-  // Handler to go back to starter spread
-  const handleBackToStarterSpread = () => {
-    setSelectedCard(null);
-    setShowCard(false);
-    setIsRevealed(false);
-    setShowStarterSpread(true);
-  };
-
-  // Handler for buy decks button
-  const handleBuyDecks = () => {
-    // For now, just show a toast - in future this will link to the shop
-    toast({
-      title: "Coming Soon",
-      description: "The shop link will be available soon!",
-    });
-  };
-
   const handleShuffle = async () => {
     if (!selectedDeck || !user) return;
 
@@ -363,45 +256,13 @@ const Index = () => {
     setIsRevealed(false);
 
     try {
-      let cards;
+      const { data: deckCards, error } = await supabase
+        .from('cards')
+        .select('*')
+        .eq('deck_id', selectedDeck.id);
 
-      if (selectedDeck.is_starter) {
-        // For starter deck, fetch user's assigned starter card IDs first
-        const { data: starterCardLinks, error: linksError } = await supabase
-          .from('user_starter_deck_cards')
-          .select('card_id')
-          .eq('user_id', user.id);
-
-        if (linksError) throw linksError;
-
-        if (starterCardLinks && starterCardLinks.length > 0) {
-          // Fetch the actual card data with deck info
-          const cardIds = starterCardLinks.map(sc => sc.card_id);
-          const { data: starterCards, error: cardsError } = await supabase
-            .from('cards')
-            .select('*, decks(name)')
-            .in('id', cardIds);
-
-          if (cardsError) throw cardsError;
-          
-          // Map deck name from joined data if deck_name is not set
-          cards = (starterCards || []).map(card => ({
-            ...card,
-            deck_name: card.deck_name || card.decks?.name || null
-          }));
-        } else {
-          cards = [];
-        }
-      } else {
-        // For regular decks, fetch all cards
-        const { data: deckCards, error } = await supabase
-          .from('cards')
-          .select('*')
-          .eq('deck_id', selectedDeck.id);
-
-        if (error) throw error;
-        cards = deckCards || [];
-      }
+      if (error) throw error;
+      const cards = deckCards || [];
 
       if (!cards || cards.length === 0) {
         toast({
@@ -490,9 +351,9 @@ const Index = () => {
   };
 
   const handleDrawAnother = () => {
-    // For starter deck, go back to spread
-    if (selectedDeck?.is_starter) {
-      handleBackToStarterSpread();
+    // For spread reading, go back to spread
+    if (activeSpread) {
+      handleBackToSpreadReading();
       return;
     }
     setShowCard(false);
@@ -505,9 +366,10 @@ const Index = () => {
     setShowCard(false);
     setIsRevealed(false);
     setSelectedCard(null);
-    setShowStarterSpread(false);
-    setStarterCards([]);
-    setViewedStarterCardIds([]);
+    setActiveSpread(null);
+    setSpreadCards([]);
+    setSpreadRevealedPositions([]);
+    setShowSpreadReading(false);
   };
 
   const handleVerifyPurchase = (deckId: string) => {
@@ -533,8 +395,8 @@ const Index = () => {
 
   // Get the appropriate card back image for the selected deck or card
   const getCardBackImage = () => {
-    // For starter deck, use the card's deck_name
-    if (selectedDeck?.is_starter && selectedCard?.deck_name) {
+    // For spread reading, use the card's deck_name
+    if (activeSpread && selectedCard?.deck_name) {
       return getCardBackForDeck(selectedCard.deck_name);
     }
     
@@ -566,10 +428,10 @@ const Index = () => {
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <PageBreadcrumb 
           items={
-            selectedDeck?.is_starter && (showStarterSpread || isRevealed)
+            activeSpread && (showSpreadReading || isRevealed)
               ? [
                   { label: 'Door of Remembrance', onClick: handleBackToDecks, icon: DoorOpen },
-                  { label: 'Your Reading' }
+                  { label: activeSpread.name }
                 ]
               : selectedDeck
                 ? [
@@ -586,31 +448,29 @@ const Index = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-12">
-        {!selectedDeck && (
+        {!selectedDeck && !activeSpread && (
           <DeckSelection
             decks={decks}
             userPurchases={userPurchases}
             onSelectDeck={handleSelectDeck}
             onVerifyPurchase={handleVerifyPurchase}
+            onSelectSpread={handleSelectSpread}
           />
         )}
 
-        {/* Starter Collection Card Spread */}
-        {selectedDeck?.is_starter && showStarterSpread && !showCard && (
-          <StarterCardSpread
-            cards={starterCards}
-            onSelectCard={handleSelectStarterCard}
+        {/* Spread Reading */}
+        {activeSpread && showSpreadReading && !showCard && (
+          <SpreadReading
+            spread={activeSpread}
+            cards={spreadCards}
+            onSelectCard={handleSelectSpreadCard}
             onBackToDecks={handleBackToDecks}
-            viewedCardIds={viewedStarterCardIds}
-            canReadToday={canReadToday}
-            onBuyDecks={handleBuyDecks}
-            isAdmin={isAdmin}
-            onAdminReset={resetStarterDeckData}
+            revealedPositions={spreadRevealedPositions}
           />
         )}
 
-        {/* Regular deck UI - exclude starter decks */}
-        {selectedDeck && !selectedDeck.is_starter && !showCard && !isShuffling && (
+        {/* Regular deck UI */}
+        {selectedDeck && !showCard && !isShuffling && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -700,7 +560,7 @@ const Index = () => {
                 Shuffle the Deck
               </Button>
               
-              {!selectedDeck.is_starter && (
+              {(
                 selectedDeck.name.toLowerCase().includes('magic not logic') ? (
                   <CardDropdownSelector 
                     deckId={selectedDeck.id}
@@ -724,11 +584,7 @@ const Index = () => {
             animate={{ opacity: 1 }}
             className="min-h-[80vh] flex justify-center items-center"
           >
-            {selectedDeck?.is_starter ? (
-              <MultiDeckShuffleAnimation />
-            ) : (
-              <ShuffleAnimation cardBackImage={getCardBackImage()} />
-            )}
+            <ShuffleAnimation cardBackImage={getCardBackImage()} />
           </motion.div>
         )}
 
@@ -760,7 +616,7 @@ const Index = () => {
               card={selectedCard}
               onDrawAnother={handleDrawAnother}
               hasPremiumAccess={hasPremiumAccess}
-              isStarterDeck={selectedDeck?.is_starter}
+              isStarterDeck={false}
               deckId={selectedDeck?.id || ''}
             />
           </div>
