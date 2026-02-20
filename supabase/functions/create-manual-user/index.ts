@@ -56,10 +56,7 @@ serve(async (req) => {
       throw new Error("Email, password, dates, and at least one content area are required");
     }
 
-    // Try to create the user; if they already exist, look them up
-    let userId: string;
-    let isExisting = false;
-
+    // Create the user — reject if email already exists
     const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password: tempPassword,
@@ -68,35 +65,19 @@ serve(async (req) => {
     });
 
     if (createError) {
-      // If user already exists, find them and update password
       if (createError.message?.includes("already been registered")) {
-        const { data: listData, error: listError } = await supabaseAdmin.auth.admin.listUsers();
-        if (listError) throw listError;
-        const existingUser = listData.users.find((u: any) => u.email === email);
-        if (!existingUser) throw new Error("User exists but could not be found");
-        userId = existingUser.id;
-        isExisting = true;
-
-        // Update their password to the new temp password
-        await supabaseAdmin.auth.admin.updateUserById(userId, { password: tempPassword });
-      } else {
-        throw createError;
+        throw new Error("A user with this email already exists. Please use a different email address.");
       }
-    } else {
-      if (!newUser.user) throw new Error("Failed to create user");
-      userId = newUser.user.id;
+      throw createError;
     }
+    if (!newUser.user) throw new Error("Failed to create user");
+    const userId = newUser.user.id;
 
     // Mark as must change password and update name
     await supabaseAdmin
       .from("profiles")
       .update({ must_change_password: true, full_name: fullName })
       .eq("id", userId);
-
-    // Remove any existing grants for this user before inserting new ones
-    if (isExisting) {
-      await supabaseAdmin.from("manual_access_grants").delete().eq("user_id", userId);
-    }
 
     // Insert access grants for each bucket
     const grants = buckets.map((bucket_key) => ({
@@ -113,21 +94,17 @@ serve(async (req) => {
       .insert(grants);
 
     if (grantsError) {
-      if (!isExisting) {
-        await supabaseAdmin.auth.admin.deleteUser(userId);
-      }
+      await supabaseAdmin.auth.admin.deleteUser(userId);
       throw grantsError;
     }
 
-    const action = isExisting ? "re-activated" : "created";
-    console.log(`Manual user ${action}: ${email} (${userId}) with access to [${buckets.join(", ")}] until ${endsAt}`);
+    console.log(`Manual user created: ${email} (${userId}) with access to [${buckets.join(", ")}] until ${endsAt}`);
 
     return new Response(
       JSON.stringify({
         success: true,
         userId,
-        isExisting,
-        message: `User ${action} for ${email} with temporary access.`,
+        message: `User created for ${email} with temporary access.`,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
