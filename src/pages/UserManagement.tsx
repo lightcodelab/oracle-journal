@@ -261,7 +261,7 @@ You will be prompted to change your password when you first sign in.
 Your access includes: ${areas}
 Access expires: ${createdUserDetails.endsAt}
 
-If you'd like to continue your access after this date, you can become a member at ${window.location.origin}`;
+If you'd like to continue your access after this date, you can become a member at https://thetemple.lightcodelab.com`;
 
     await navigator.clipboard.writeText(text);
     setCopied(true);
