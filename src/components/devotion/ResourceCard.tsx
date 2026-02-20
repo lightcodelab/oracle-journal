@@ -10,9 +10,10 @@ interface ResourceCardProps {
   index: number;
   showDraftBadge?: boolean;
   basePath?: string; // e.g., '/devotion' or '/decks'
+  comingSoon?: boolean;
 }
 
-const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/devotion' }: ResourceCardProps) => {
+const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/devotion', comingSoon = false }: ResourceCardProps) => {
   const navigate = useNavigate();
 
   const getMediaIcon = () => {
@@ -51,8 +52,8 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
-      onClick={handleClick}
-      className="group cursor-pointer"
+      onClick={comingSoon ? undefined : handleClick}
+      className={`group ${comingSoon ? 'cursor-default' : 'cursor-pointer'}`}
     >
       <div className={`bg-card border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30 ${
         isDraft ? 'border-amber-500/50' : 'border-border'
@@ -63,13 +64,22 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
             <img
               src={resource.thumbnail_url}
               alt={resource.title}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className={`w-full h-full object-cover transition-transform duration-300 ${comingSoon ? 'grayscale opacity-60' : 'group-hover:scale-105'}`}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className={`w-full h-full flex items-center justify-center ${comingSoon ? 'opacity-60' : ''}`}>
               <div className="text-muted-foreground">
                 {resource.is_course ? <BookOpen className="w-12 h-12" /> : getMediaIcon()}
               </div>
+            </div>
+          )}
+
+          {/* Coming Soon overlay */}
+          {comingSoon && (
+            <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-[2px]">
+              <Badge className="bg-muted text-muted-foreground border border-border text-sm px-4 py-1.5 font-serif">
+                Coming Soon
+              </Badge>
             </div>
           )}
           
