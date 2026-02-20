@@ -58,7 +58,9 @@ export function useTierAccess(): TierAccess {
       setSubscriptionStatus(profile?.subscription_status || null);
       setTierName(profile?.member_tier_code ? TIER_NAMES[profile.member_tier_code] || null : null);
 
-      // Get bucket access for user's tier
+      const access: Record<string, boolean> = {};
+
+      // Get bucket access for user's tier (paid subscription)
       if (profile?.member_tier_code && 
           (profile?.subscription_status === 'active' || profile?.subscription_status === 'trialing')) {
         const { data: accessData, error: accessError } = await supabase
@@ -67,15 +69,28 @@ export function useTierAccess(): TierAccess {
           .eq("tier_code", profile.member_tier_code);
 
         if (!accessError && accessData) {
-          const access: Record<string, boolean> = {};
           accessData.forEach((item) => {
             access[item.bucket_key] = item.is_granted;
           });
-          setBucketAccess(access);
         }
-      } else {
-        setBucketAccess({});
       }
+
+      // Also check manual access grants (admin-granted temporary access)
+      const { data: manualGrants } = await supabase
+        .from("manual_access_grants")
+        .select("bucket_key, starts_at, ends_at")
+        .eq("user_id", session.user.id);
+
+      if (manualGrants) {
+        const now = new Date();
+        manualGrants.forEach((grant) => {
+          if (new Date(grant.starts_at) <= now && new Date(grant.ends_at) > now) {
+            access[grant.bucket_key] = true;
+          }
+        });
+      }
+
+      setBucketAccess(access);
     } catch (error) {
       console.error("Error in useTierAccess:", error);
     } finally {
@@ -98,11 +113,15 @@ export function useTierAccess(): TierAccess {
     if (isAdmin) {
       return true;
     }
-    // Check if user has active/trialing subscription
+    // Check bucket access (includes both paid subscription AND manual grants)
+    if (bucketAccess[bucket] === true) {
+      return true;
+    }
+    // Check if user has active/trialing subscription for tier-based access
     if (subscriptionStatus !== 'active' && subscriptionStatus !== 'trialing') {
       return false;
     }
-    return bucketAccess[bucket] === true;
+    return false;
   }, [bucketAccess, subscriptionStatus, isAdmin]);
 
   return {
