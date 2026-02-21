@@ -9,11 +9,13 @@ import {
   Edit3, 
   Save, 
   X,
-  Layers
+  Layers,
+  LayoutGrid
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,6 +29,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
+import SpreadViewDialog from '@/components/SpreadViewDialog';
 import { useSavedReadings, useDeleteSavedReading, useUpdateReadingNotes, SavedReading } from '@/hooks/useSavedReadings';
 import { useToast } from '@/hooks/use-toast';
 
@@ -39,6 +42,7 @@ const MyReadings = () => {
   const [readingToDelete, setReadingToDelete] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editNotes, setEditNotes] = useState('');
+  const [spreadViewReading, setSpreadViewReading] = useState<SavedReading | null>(null);
 
   const { data: readings = [], isLoading: readingsLoading } = useSavedReadings();
   const deleteReading = useDeleteSavedReading();
@@ -72,9 +76,14 @@ const MyReadings = () => {
     return (
       reading.card_title.toLowerCase().includes(query) ||
       reading.deck_name?.toLowerCase().includes(query) ||
-      reading.notes?.toLowerCase().includes(query)
+      reading.notes?.toLowerCase().includes(query) ||
+      (reading as any).spread_name?.toLowerCase().includes(query)
     );
   });
+
+  // Separate spread readings from single card readings
+  const spreadReadings = filteredReadings.filter((r: any) => r.spread_type);
+  const singleReadings = filteredReadings.filter((r: any) => !r.spread_type);
 
   const handleDeleteClick = (id: string) => {
     setReadingToDelete(id);
@@ -128,6 +137,14 @@ const MyReadings = () => {
     setEditNotes('');
   };
 
+  const handleReadingClick = (reading: SavedReading) => {
+    const r = reading as any;
+    if (r.spread_type && r.spread_cards) {
+      setSpreadViewReading(reading);
+    }
+    // Single card readings don't navigate - they can use existing detail flow
+  };
+
   if (loading || readingsLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -166,10 +183,16 @@ const MyReadings = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           <div className="p-4 rounded-lg border bg-card">
             <div className="text-2xl font-bold text-foreground">{readings.length}</div>
             <div className="text-sm text-muted-foreground">Total Readings</div>
+          </div>
+          <div className="p-4 rounded-lg border bg-card">
+            <div className="text-2xl font-bold text-foreground">
+              {readings.filter((r: any) => r.spread_type).length}
+            </div>
+            <div className="text-sm text-muted-foreground">Spreads</div>
           </div>
           <div className="p-4 rounded-lg border bg-card">
             <div className="text-2xl font-bold text-foreground">
@@ -185,44 +208,56 @@ const MyReadings = () => {
           </div>
         </div>
 
-        {/* Readings Grid */}
-        <AnimatePresence mode="popLayout">
-          {filteredReadings.length > 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
-            >
-              {filteredReadings.map((reading, index) => (
-                <motion.div
-                  key={reading.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="group relative bg-card border border-border rounded-lg overflow-hidden hover:border-primary/50 transition-colors"
-                >
-                  {/* Card Image */}
-                  <div className="aspect-[3/4] relative">
-                    {reading.image_file_name ? (
-                      <img
-                        src={`/cards/${reading.image_file_name}`}
-                        alt={reading.card_title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center">
-                        <span className="text-white text-xl font-bold">{reading.card_title}</span>
-                      </div>
-                    )}
-                    
+        {/* Spread Readings Section */}
+        {spreadReadings.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <LayoutGrid className="h-5 w-5 text-primary" />
+              <h2 className="font-serif text-xl text-foreground">Spread Readings</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {spreadReadings.map((reading, index) => {
+                const r = reading as any;
+                const spreadCards = (r.spread_cards || []) as any[];
+                return (
+                  <motion.div
+                    key={reading.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="group relative bg-card border border-border rounded-lg overflow-hidden hover:border-primary/50 transition-colors cursor-pointer"
+                    onClick={() => handleReadingClick(reading)}
+                  >
+                    {/* Multi-card preview */}
+                    <div className="aspect-[3/2] relative bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 flex items-center justify-center gap-1 p-4">
+                      {spreadCards.slice(0, 4).map((sc: any, i: number) => (
+                        <div key={i} className="flex-shrink-0" style={{ transform: `rotate(${-6 + i * 4}deg)` }}>
+                          {sc.image_file_name ? (
+                            <img
+                              src={`/cards/${sc.image_file_name}`}
+                              alt={sc.card_title}
+                              className="w-14 h-20 sm:w-16 sm:h-22 object-cover rounded-md border border-border shadow-sm"
+                            />
+                          ) : (
+                            <div className="w-14 h-20 sm:w-16 sm:h-22 rounded-md bg-primary/20 border border-primary/30 flex items-center justify-center">
+                              <Sparkles className="w-4 h-4 text-primary/40" />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      {spreadCards.length > 4 && (
+                        <span className="text-xs text-muted-foreground ml-1">+{spreadCards.length - 4}</span>
+                      )}
+                    </div>
+
                     {/* Action Buttons Overlay */}
-                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                       <Button
                         variant="secondary"
                         size="icon"
                         className="h-8 w-8 bg-background/90 backdrop-blur"
-                        onClick={() => handleEditClick(reading)}
+                        onClick={(e) => { e.stopPropagation(); handleEditClick(reading); }}
                       >
                         <Edit3 className="h-4 w-4" />
                       </Button>
@@ -230,85 +265,189 @@ const MyReadings = () => {
                         variant="secondary"
                         size="icon"
                         className="h-8 w-8 bg-background/90 backdrop-blur text-destructive hover:text-destructive"
-                        onClick={() => handleDeleteClick(reading.id)}
+                        onClick={(e) => { e.stopPropagation(); handleDeleteClick(reading.id); }}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
-                  </div>
 
-                  {/* Card Info */}
-                  <div className="p-4 space-y-2">
-                    <h3 className="font-serif text-lg font-medium text-foreground truncate">
-                      {reading.card_title}
-                    </h3>
-                    {reading.deck_name && (
-                      <p className="text-sm text-muted-foreground truncate">
-                        {reading.deck_name}
-                      </p>
-                    )}
-                    <p className="text-xs text-muted-foreground">
-                      {format(new Date(reading.saved_at), 'MMM d, yyyy • h:mm a')}
-                    </p>
-
-                    {/* Notes Section */}
-                    {editingId === reading.id ? (
-                      <div className="space-y-2 pt-2">
-                        <Textarea
-                          value={editNotes}
-                          onChange={(e) => setEditNotes(e.target.value)}
-                          placeholder="Add notes..."
-                          rows={3}
-                          className="resize-none text-sm"
-                        />
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            onClick={() => handleSaveNotes(reading.id)}
-                            disabled={updateNotes.isPending}
-                          >
-                            <Save className="h-3 w-3 mr-1" />
-                            Save
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={handleCancelEdit}
-                          >
-                            <X className="h-3 w-3 mr-1" />
-                            Cancel
-                          </Button>
-                        </div>
+                    <div className="p-4 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="secondary" className="text-xs font-serif">
+                          <LayoutGrid className="h-3 w-3 mr-1" />
+                          {r.spread_name || 'Spread'}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {spreadCards.length} Cards
+                        </Badge>
                       </div>
-                    ) : reading.notes ? (
-                      <p className="text-sm text-foreground/80 line-clamp-3 pt-2 border-t border-border">
-                        {reading.notes}
+                      <p className="text-xs text-muted-foreground">
+                        {format(new Date(reading.saved_at), 'MMM d, yyyy • h:mm a')}
                       </p>
-                    ) : null}
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          ) : (
-            <div className="text-center py-16">
-              <Layers className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2">
-                {searchQuery ? 'No readings found' : 'No Saved Readings Yet'}
-              </h3>
-              <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                {searchQuery
-                  ? 'Try adjusting your search'
-                  : 'Draw cards from the Oracle decks and save your meaningful readings here.'}
-              </p>
-              {!searchQuery && (
-                <Button onClick={() => navigate('/decks')}>
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Explore Decks
-                </Button>
-              )}
+
+                      {editingId === reading.id ? (
+                        <div className="space-y-2 pt-2" onClick={(e) => e.stopPropagation()}>
+                          <Textarea
+                            value={editNotes}
+                            onChange={(e) => setEditNotes(e.target.value)}
+                            placeholder="Add notes..."
+                            rows={3}
+                            className="resize-none text-sm"
+                          />
+                          <div className="flex gap-2">
+                            <Button size="sm" onClick={() => handleSaveNotes(reading.id)} disabled={updateNotes.isPending}>
+                              <Save className="h-3 w-3 mr-1" />Save
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={handleCancelEdit}>
+                              <X className="h-3 w-3 mr-1" />Cancel
+                            </Button>
+                          </div>
+                        </div>
+                      ) : reading.notes ? (
+                        <p className="text-sm text-foreground/80 line-clamp-2 pt-2 border-t border-border">
+                          {reading.notes}
+                        </p>
+                      ) : null}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Single Card Readings */}
+        <div>
+          {spreadReadings.length > 0 && singleReadings.length > 0 && (
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <h2 className="font-serif text-xl text-foreground">Single Card Readings</h2>
             </div>
           )}
-        </AnimatePresence>
+          <AnimatePresence mode="popLayout">
+            {singleReadings.length > 0 ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+              >
+                {singleReadings.map((reading, index) => (
+                  <motion.div
+                    key={reading.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="group relative bg-card border border-border rounded-lg overflow-hidden hover:border-primary/50 transition-colors"
+                  >
+                    {/* Card Image */}
+                    <div className="aspect-[3/4] relative">
+                      {reading.image_file_name ? (
+                        <img
+                          src={`/cards/${reading.image_file_name}`}
+                          alt={reading.card_title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary/30 to-accent/20 flex items-center justify-center">
+                          <span className="text-foreground text-xl font-bold">{reading.card_title}</span>
+                        </div>
+                      )}
+                      
+                      {/* Action Buttons Overlay */}
+                      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          className="h-8 w-8 bg-background/90 backdrop-blur"
+                          onClick={() => handleEditClick(reading)}
+                        >
+                          <Edit3 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          className="h-8 w-8 bg-background/90 backdrop-blur text-destructive hover:text-destructive"
+                          onClick={() => handleDeleteClick(reading.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Card Info */}
+                    <div className="p-4 space-y-2">
+                      <h3 className="font-serif text-lg font-medium text-foreground truncate">
+                        {reading.card_title}
+                      </h3>
+                      {reading.deck_name && (
+                        <p className="text-sm text-muted-foreground truncate">
+                          {reading.deck_name}
+                        </p>
+                      )}
+                      <p className="text-xs text-muted-foreground">
+                        {format(new Date(reading.saved_at), 'MMM d, yyyy • h:mm a')}
+                      </p>
+
+                      {/* Notes Section */}
+                      {editingId === reading.id ? (
+                        <div className="space-y-2 pt-2">
+                          <Textarea
+                            value={editNotes}
+                            onChange={(e) => setEditNotes(e.target.value)}
+                            placeholder="Add notes..."
+                            rows={3}
+                            className="resize-none text-sm"
+                          />
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => handleSaveNotes(reading.id)}
+                              disabled={updateNotes.isPending}
+                            >
+                              <Save className="h-3 w-3 mr-1" />
+                              Save
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={handleCancelEdit}
+                            >
+                              <X className="h-3 w-3 mr-1" />
+                              Cancel
+                            </Button>
+                          </div>
+                        </div>
+                      ) : reading.notes ? (
+                        <p className="text-sm text-foreground/80 line-clamp-3 pt-2 border-t border-border">
+                          {reading.notes}
+                        </p>
+                      ) : null}
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            ) : filteredReadings.length === 0 ? (
+              <div className="text-center py-16">
+                <Layers className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-foreground mb-2">
+                  {searchQuery ? 'No readings found' : 'No Saved Readings Yet'}
+                </h3>
+                <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                  {searchQuery
+                    ? 'Try adjusting your search'
+                    : 'Draw cards from the Oracle decks and save your meaningful readings here.'}
+                </p>
+                {!searchQuery && (
+                  <Button onClick={() => navigate('/decks')}>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Explore Decks
+                  </Button>
+                )}
+              </div>
+            ) : null}
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* Delete Confirmation Dialog */}
@@ -331,6 +470,18 @@ const MyReadings = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Spread View Dialog */}
+      {spreadViewReading && (
+        <SpreadViewDialog
+          open={!!spreadViewReading}
+          onOpenChange={(open) => !open && setSpreadViewReading(null)}
+          spreadType={(spreadViewReading as any).spread_type || ''}
+          spreadName={(spreadViewReading as any).spread_name || 'Spread'}
+          spreadCards={((spreadViewReading as any).spread_cards || []) as any[]}
+          savedAt={spreadViewReading.saved_at}
+        />
+      )}
     </div>
   );
 };

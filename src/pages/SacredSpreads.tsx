@@ -3,18 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SpreadSelection, type SpreadType } from "@/components/SpreadSelection";
 import { SpreadReading } from "@/components/SpreadReading";
-import { CardDetail } from "@/components/CardDetail";
-import { OracleCardComponent } from "@/components/OracleCardComponent";
-import { ShuffleAnimation } from "@/components/ShuffleAnimation";
+import CardDetailDialog from "@/components/CardDetailDialog";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { DoorOpen, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
-import sacredRewriteCardBack from "@/assets/card-back-v2.png";
-import mnlCardBack from "@/assets/mnl-card-back.png";
-import areekeeraCardBack from "@/assets/areekeera-card-back.png";
-import taoshCardBack from "@/assets/taosh-card-back.png";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
 import type { OracleCard } from "@/data/oracleCards";
@@ -27,8 +21,8 @@ const SacredSpreads = () => {
   const [spreadRevealedPositions, setSpreadRevealedPositions] = useState<number[]>([]);
   const [showSpreadReading, setShowSpreadReading] = useState(false);
   const [selectedCard, setSelectedCard] = useState<OracleCard | null>(null);
-  const [showCard, setShowCard] = useState(false);
-  const [isRevealed, setIsRevealed] = useState(false);
+  const [cardDialogOpen, setCardDialogOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -53,21 +47,6 @@ const SacredSpreads = () => {
 
     return () => subscription.unsubscribe();
   }, [navigate]);
-
-  const getCardBackForDeck = (deckName: string | null | undefined) => {
-    if (!deckName) return sacredRewriteCardBack;
-    if (deckName.toLowerCase().includes('magic not logic')) return mnlCardBack;
-    if (deckName.toLowerCase().includes('areekeera')) return areekeeraCardBack;
-    if (deckName.toLowerCase().includes('art of self-healing')) return taoshCardBack;
-    return sacredRewriteCardBack;
-  };
-
-  const getCardBackImage = () => {
-    if (selectedCard?.deck_name) {
-      return getCardBackForDeck(selectedCard.deck_name);
-    }
-    return sacredRewriteCardBack;
-  };
 
   const initializeSpreadReading = async (spread: SpreadType) => {
     if (!user) return;
@@ -99,7 +78,8 @@ const SacredSpreads = () => {
 
     const mappedCards = selected.map(card => ({
       ...card,
-      deck_name: card.deck_name || card.decks?.name || null
+      deck_name: card.deck_name || card.decks?.name || null,
+      content_sections: (card.content_sections as Record<string, any>) || null,
     })) as OracleCard[];
 
     setActiveSpread(spread);
@@ -117,24 +97,53 @@ const SacredSpreads = () => {
       setSpreadRevealedPositions(prev => [...prev, positionIndex]);
       return;
     }
+    // Open card detail as popup dialog
     setSelectedCard(card);
-    setShowSpreadReading(false);
-    setShowCard(true);
-    setIsRevealed(true);
+    setCardDialogOpen(true);
   };
 
-  const handleBackToSpreadReading = () => {
-    setSelectedCard(null);
-    setShowCard(false);
-    setIsRevealed(false);
-    setShowSpreadReading(true);
-  };
+  const handleSaveSpread = async () => {
+    if (!user || !activeSpread || spreadCards.length === 0) return;
+    setSaving(true);
 
-  const handleDrawAnother = () => {
-    if (activeSpread) {
-      handleBackToSpreadReading();
-      return;
+    try {
+      const spreadCardsData = spreadCards.map((card, index) => ({
+        position: activeSpread.positions[index] || `Card ${index + 1}`,
+        card_id: card.id,
+        card_title: card.card_title,
+        deck_name: card.deck_name || null,
+        image_file_name: card.image_file_name || null,
+        card_number: card.card_number,
+      }));
+
+      const { error } = await supabase
+        .from('saved_readings')
+        .insert({
+          user_id: user.id,
+          card_title: activeSpread.name,
+          spread_type: activeSpread.id,
+          spread_name: activeSpread.name,
+          spread_cards: spreadCardsData,
+          image_file_name: spreadCards[0]?.image_file_name || null,
+          deck_name: 'Spread',
+          saved_at: new Date().toISOString(),
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: 'Spread Saved',
+        description: `Your "${activeSpread.name}" reading has been saved to My Readings.`,
+      });
+    } catch (err) {
+      console.error('Error saving spread:', err);
+      toast({
+        title: 'Error',
+        description: 'Failed to save your spread reading.',
+        variant: 'destructive',
+      });
     }
+    setSaving(false);
   };
 
   const handleBackToSpreads = () => {
@@ -142,13 +151,8 @@ const SacredSpreads = () => {
     setSpreadCards([]);
     setSpreadRevealedPositions([]);
     setShowSpreadReading(false);
-    setShowCard(false);
-    setIsRevealed(false);
+    setCardDialogOpen(false);
     setSelectedCard(null);
-  };
-
-  const handleReveal = () => {
-    setIsRevealed(true);
   };
 
   if (loading) {
@@ -213,48 +217,26 @@ const SacredSpreads = () => {
         )}
 
         {/* Spread reading */}
-        {activeSpread && showSpreadReading && !showCard && (
+        {activeSpread && showSpreadReading && (
           <SpreadReading
             spread={activeSpread}
             cards={spreadCards}
             onSelectCard={handleSelectSpreadCard}
             onBackToDecks={handleBackToSpreads}
             revealedPositions={spreadRevealedPositions}
+            onSaveSpread={handleSaveSpread}
+            saving={saving}
           />
         )}
-
-        {/* Card reveal (face-down) */}
-        {showCard && selectedCard && !isRevealed && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="min-h-[80vh] flex flex-col justify-center items-center space-y-8"
-          >
-            <h2 className="font-serif text-4xl text-foreground mb-8">Your Card Awaits</h2>
-            <OracleCardComponent
-              card={selectedCard}
-              isRevealed={isRevealed}
-              onClick={handleReveal}
-              cardBackImage={getCardBackImage()}
-            />
-            <p className="text-foreground/70 text-lg">Click the card to reveal</p>
-          </motion.div>
-        )}
-
-        {/* Card detail */}
-        {isRevealed && selectedCard && (
-          <div className="pt-8">
-            <CardDetail
-              card={selectedCard}
-              onDrawAnother={handleDrawAnother}
-              hasPremiumAccess={false}
-              isStarterDeck={false}
-              deckId=""
-            />
-          </div>
-        )}
       </div>
+
+      {/* Card detail popup */}
+      <CardDetailDialog
+        open={cardDialogOpen}
+        onOpenChange={setCardDialogOpen}
+        card={selectedCard}
+        hideActions
+      />
     </div>
   );
 };

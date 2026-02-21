@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, Sparkles } from "lucide-react";
+import { ChevronLeft, Sparkles, Bookmark, Loader2 } from "lucide-react";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
 
@@ -12,6 +12,8 @@ interface SpreadReadingProps {
   onSelectCard: (card: OracleCard, positionIndex: number) => void;
   onBackToDecks: () => void;
   revealedPositions: number[];
+  onSaveSpread?: () => void;
+  saving?: boolean;
 }
 
 const getDeckBadgeClass = (deckName: string | null | undefined) => {
@@ -29,6 +31,8 @@ export const SpreadReading = ({
   onSelectCard,
   onBackToDecks,
   revealedPositions,
+  onSaveSpread,
+  saving = false,
 }: SpreadReadingProps) => {
   const allRevealed = revealedPositions.length === spread.cardCount;
 
@@ -129,16 +133,35 @@ export const SpreadReading = ({
         })}
       </div>
 
-      {/* All revealed message */}
+      {/* All revealed message + save button */}
       {allRevealed && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="space-y-2"
+          className="space-y-4"
         >
           <p className="text-foreground/70 text-sm italic">
             All cards revealed. Select any card to explore its full wisdom.
           </p>
+          {onSaveSpread && (
+            <Button
+              onClick={onSaveSpread}
+              disabled={saving}
+              className="font-sans"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Bookmark className="w-4 h-4 mr-2" />
+                  Save This Reading
+                </>
+              )}
+            </Button>
+          )}
         </motion.div>
       )}
     </motion.div>

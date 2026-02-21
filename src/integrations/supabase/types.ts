@@ -2488,6 +2488,9 @@ export type Database = {
           notes: string | null
           notes_encrypted: Json | null
           saved_at: string
+          spread_cards: Json | null
+          spread_name: string | null
+          spread_type: string | null
           updated_at: string
           user_id: string
         }
@@ -2503,6 +2506,9 @@ export type Database = {
           notes?: string | null
           notes_encrypted?: Json | null
           saved_at?: string
+          spread_cards?: Json | null
+          spread_name?: string | null
+          spread_type?: string | null
           updated_at?: string
           user_id: string
         }
@@ -2518,6 +2524,9 @@ export type Database = {
           notes?: string | null
           notes_encrypted?: Json | null
           saved_at?: string
+          spread_cards?: Json | null
+          spread_name?: string | null
+          spread_type?: string | null
           updated_at?: string
           user_id?: string
         }

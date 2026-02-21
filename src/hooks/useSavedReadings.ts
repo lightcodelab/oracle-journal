@@ -13,6 +13,9 @@ export interface SavedReading {
   saved_at: string;
   created_at: string;
   updated_at: string;
+  spread_type: string | null;
+  spread_name: string | null;
+  spread_cards: any[] | null;
 }
 
 export const useSavedReadings = () => {
