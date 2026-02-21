@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Sparkles, GraduationCap, Users, CalendarDays, Video, Flower2, Lock, ArrowUpRight } from 'lucide-react';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
-import ProfileDropdown from '@/components/ProfileDropdown';
+import NavActions from '@/components/NavActions';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -122,7 +122,7 @@ export default function DoorOfCommunion() {
       <div className="min-h-screen bg-background py-12 px-4 relative">
         <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
           <PageBreadcrumb items={[{ label: 'Door of Communion' }]} />
-          <ProfileDropdown />
+          <NavActions />
         </div>
 
         <div className="max-w-lg mx-auto pt-24 text-center">
@@ -172,7 +172,7 @@ export default function DoorOfCommunion() {
               {tierName}
             </Badge>
           )}
-          <ProfileDropdown />
+          <NavActions />
         </div>
       </div>
 

@@ -11,7 +11,7 @@ import { CardNumberSelector } from "@/components/CardNumberSelector";
 import { CardDropdownSelector } from "@/components/CardDropdownSelector";
 import { supabase } from "@/integrations/supabase/client";
 import { Shuffle, Sparkles, DoorOpen } from "lucide-react";
-import ProfileDropdown from "@/components/ProfileDropdown";
+import NavActions from "@/components/NavActions";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
@@ -349,7 +349,7 @@ const Index = () => {
                 ]
           } 
         />
-        <ProfileDropdown />
+        <NavActions />
       </div>
 
       {/* Content */}
