@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -36,6 +36,65 @@ const STATUS_COLORS: Record<string, string> = {
   completed: 'bg-green-900/40 text-green-300',
   declined: 'bg-destructive/20 text-destructive-foreground',
 };
+
+const SuggestionCard = ({ s, isAdmin, onVote, onStatusChange, onDelete }: {
+  s: Suggestion;
+  isAdmin: boolean;
+  onVote: (id: string, voted: boolean) => void;
+  onStatusChange: (id: string, status: string) => void;
+  onDelete: (id: string) => void;
+}) => (
+  <Card className="border-border">
+    <CardContent className="flex gap-4 py-4 px-4">
+      <button
+        onClick={() => onVote(s.id, s.user_voted)}
+        className={`flex flex-col items-center justify-center min-w-[48px] rounded-md py-2 transition-colors ${
+          s.user_voted
+            ? 'bg-primary/20 text-primary'
+            : 'bg-secondary text-muted-foreground hover:text-foreground'
+        }`}
+      >
+        <ChevronUp className="w-5 h-5" />
+        <span className="text-sm font-medium">{s.vote_count}</span>
+      </button>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start gap-2">
+          <h3 className="font-medium text-foreground leading-snug">{s.title}</h3>
+          <Badge className={`shrink-0 text-[10px] ${STATUS_COLORS[s.status] || STATUS_COLORS.open}`}>
+            {s.status}
+          </Badge>
+        </div>
+        {s.description && (
+          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{s.description}</p>
+        )}
+        <p className="text-xs text-muted-foreground/60 mt-2">
+          {new Date(s.created_at).toLocaleDateString()}
+        </p>
+      </div>
+      {isAdmin && (
+        <div className="flex flex-col gap-1 shrink-0">
+          <select
+            value={s.status}
+            onChange={(e) => onStatusChange(s.id, e.target.value)}
+            className="text-xs bg-secondary border border-border rounded px-1.5 py-1 text-foreground"
+          >
+            <option value="open">Open</option>
+            <option value="under review">Under Review</option>
+            <option value="planned">Planned</option>
+            <option value="completed">Completed</option>
+            <option value="declined">Declined</option>
+          </select>
+          <button
+            onClick={() => onDelete(s.id)}
+            className="text-destructive-foreground hover:text-destructive text-xs flex items-center gap-1 mt-1"
+          >
+            <Trash2 className="w-3 h-3" />
+          </button>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+);
 
 const FeatureSuggestions = () => {
   const { user, isAdmin } = useAuth();
@@ -217,67 +276,29 @@ const FeatureSuggestions = () => {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-3">
-            {suggestions.map((s) => (
-              <Card key={s.id} className="border-border">
-                <CardContent className="flex gap-4 py-4 px-4">
-                  {/* Vote button */}
-                  <button
-                    onClick={() => handleVote(s.id, s.user_voted)}
-                    className={`flex flex-col items-center justify-center min-w-[48px] rounded-md py-2 transition-colors ${
-                      s.user_voted
-                        ? 'bg-primary/20 text-primary'
-                        : 'bg-secondary text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    <ChevronUp className="w-5 h-5" />
-                    <span className="text-sm font-medium">{s.vote_count}</span>
-                  </button>
+          <>
+            {/* Main suggestions (non-planned) */}
+            <div className="space-y-3">
+              {suggestions.filter(s => s.status !== 'planned').map((s) => (
+                <SuggestionCard key={s.id} s={s} isAdmin={isAdmin} onVote={handleVote} onStatusChange={handleStatusChange} onDelete={handleDelete} />
+              ))}
+            </div>
 
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start gap-2">
-                      <h3 className="font-medium text-foreground leading-snug">{s.title}</h3>
-                      <Badge className={`shrink-0 text-[10px] ${STATUS_COLORS[s.status] || STATUS_COLORS.open}`}>
-                        {s.status}
-                      </Badge>
-                    </div>
-                    {s.description && (
-                      <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                        {s.description}
-                      </p>
-                    )}
-                    <p className="text-xs text-muted-foreground/60 mt-2">
-                      {new Date(s.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-
-                  {/* Admin controls */}
-                  {isAdmin && (
-                    <div className="flex flex-col gap-1 shrink-0">
-                      <select
-                        value={s.status}
-                        onChange={(e) => handleStatusChange(s.id, e.target.value)}
-                        className="text-xs bg-secondary border border-border rounded px-1.5 py-1 text-foreground"
-                      >
-                        <option value="open">Open</option>
-                        <option value="under review">Under Review</option>
-                        <option value="planned">Planned</option>
-                        <option value="completed">Completed</option>
-                        <option value="declined">Declined</option>
-                      </select>
-                      <button
-                        onClick={() => handleDelete(s.id)}
-                        className="text-destructive-foreground hover:text-destructive text-xs flex items-center gap-1 mt-1"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+            {/* Backlog section for planned items */}
+            {suggestions.some(s => s.status === 'planned') && (
+              <div className="mt-12">
+                <div className="flex items-center gap-3 mb-4">
+                  <h3 className="text-lg font-serif text-foreground">Backlog</h3>
+                  <Badge className="bg-accent/20 text-accent text-[10px]">Planned</Badge>
+                </div>
+                <div className="space-y-3">
+                  {suggestions.filter(s => s.status === 'planned').map((s) => (
+                    <SuggestionCard key={s.id} s={s} isAdmin={isAdmin} onVote={handleVote} onStatusChange={handleStatusChange} onDelete={handleDelete} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </main>
     </div>
