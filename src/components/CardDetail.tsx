@@ -15,9 +15,10 @@ interface CardDetailProps {
   hasPremiumAccess?: boolean;
   isStarterDeck?: boolean;
   deckId: string;
+  hideActions?: boolean;
 }
 
-export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isStarterDeck = false, deckId }: CardDetailProps) => {
+export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isStarterDeck = false, deckId, hideActions = false }: CardDetailProps) => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
 
   // Helper to get content from either JSON structure or legacy fields
@@ -292,24 +293,26 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
       />
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-border mt-8">
-        <Button
-          onClick={() => setSaveDialogOpen(true)}
-          variant="outline"
-          className="font-sans"
-        >
-          <Bookmark className="w-4 h-4 mr-2" />
-          Save This Reading
-        </Button>
-        <Button
-          onClick={onDrawAnother}
-          variant="ghost"
-          className="text-foreground/70 hover:text-foreground font-sans"
-        >
-          <RefreshCw className="w-4 h-4 mr-2" />
-          {isStarterDeck ? 'Back to Reading' : 'Draw Another Card'}
-        </Button>
-      </div>
+      {!hideActions && (
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-border mt-8">
+          <Button
+            onClick={() => setSaveDialogOpen(true)}
+            variant="outline"
+            className="font-sans"
+          >
+            <Bookmark className="w-4 h-4 mr-2" />
+            Save This Reading
+          </Button>
+          <Button
+            onClick={onDrawAnother}
+            variant="ghost"
+            className="text-foreground/70 hover:text-foreground font-sans"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            {isStarterDeck ? 'Back to Reading' : 'Draw Another Card'}
+          </Button>
+        </div>
+      )}
 
       {/* Save Reading Dialog */}
       <SaveReadingDialog
