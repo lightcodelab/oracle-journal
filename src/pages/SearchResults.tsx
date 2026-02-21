@@ -2,13 +2,17 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
-import { Search } from 'lucide-react';
+import { Search, Lock } from 'lucide-react';
 import NavActions from '@/components/NavActions';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ResourceCard from '@/components/devotion/ResourceCard';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { useTierAccess, getRequiredTierForBucket } from '@/hooks/useTierAccess';
 import type { ContentResource } from '@/hooks/useContentByLocation';
+
+type SearchResult = ContentResource & { doorBucket?: string | null };
 
 const getPublicUrl = (bucket: string, path: string | null): string | null => {
   if (!path) return null;
@@ -21,8 +25,9 @@ const SearchResults = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
   const [localQuery, setLocalQuery] = useState(query);
-  const [results, setResults] = useState<ContentResource[]>([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const { hasAccess, loading: tierLoading } = useTierAccess();
 
   useEffect(() => {
     setLocalQuery(query);
@@ -39,26 +44,28 @@ const SearchResults = () => {
 
       const searchPattern = `%${query}%`;
 
-      // Search content_resources by title/summary
+      // Search content_resources by title/summary (include location for door mapping)
       const { data: contentData } = await supabase
         .from('content_resources')
         .select(`
           id, title, slug, summary, thumbnail_url,
           main_media_kind, main_media_file_url, main_media_embed_url,
           is_course, status,
-          resource_type:content_categories!content_resources_resource_type_id_fkey(id, name, slug)
+          resource_type:content_categories!content_resources_resource_type_id_fkey(id, name, slug),
+          location:content_categories!content_resources_location_id_fkey(id, page)
         `)
         .eq('status', 'published')
         .or(`title.ilike.${searchPattern},summary.ilike.${searchPattern}`)
         .limit(50);
 
-      // Search healing_resources by title/summary
+      // Search healing_resources by title/summary (include location for door mapping)
       const { data: healingData } = await supabase
         .from('healing_resources')
         .select(`
           id, title, slug, summary, 
           display_image_url, vimeo_embed_url, audio_file_url,
-          status, modality
+          status, modality, location_id,
+          location:content_categories!healing_resources_location_id_fkey(id, page)
         `)
         .eq('status', 'published')
         .or(`title.ilike.${searchPattern},summary.ilike.${searchPattern}`)
@@ -113,7 +120,8 @@ const SearchResults = () => {
           .select(`
             id, title, slug, summary, 
             display_image_url, vimeo_embed_url, audio_file_url,
-            status, modality
+            status, modality, location_id,
+            location:content_categories!healing_resources_location_id_fkey(id, page)
           `)
           .eq('status', 'published')
           .in('id', tagResourceIds)
@@ -123,7 +131,7 @@ const SearchResults = () => {
 
       const allHealingData = [...(healingData || []), ...tagHealingData];
 
-      const contentResults: ContentResource[] = (contentData || []).map((r: any) => ({
+      const contentResults: SearchResult[] = (contentData || []).map((r: any) => ({
         id: r.id,
         title: r.title,
         slug: r.slug,
@@ -137,9 +145,10 @@ const SearchResults = () => {
         status: r.status,
         source: 'content' as const,
         resource_type: r.resource_type || null,
+        doorBucket: r.location?.page || null,
       }));
 
-      const healingResults: ContentResource[] = allHealingData.map((r: any) => ({
+      const healingResults: SearchResult[] = allHealingData.map((r: any) => ({
         id: r.id,
         title: r.title,
         slug: r.slug || r.id,
@@ -153,6 +162,7 @@ const SearchResults = () => {
         status: r.status,
         source: 'healing' as const,
         resource_type: r.modality ? { id: '', name: r.modality, slug: r.modality } : null,
+        doorBucket: r.location?.page || null,
       }));
 
       setResults([...contentResults, ...healingResults]);
@@ -169,11 +179,16 @@ const SearchResults = () => {
     }
   };
 
-  // Determine base path for a result based on its source/location
-  const getBasePath = (resource: ContentResource) => {
-    // Content resources could be in devotion or remembrance
-    // Default to devotion for healing, and devotion for content
-    return resource.source === 'healing' ? '/devotion' : '/devotion';
+  // Determine base path for a result based on its door
+  const getBasePath = (resource: SearchResult) => {
+    if (resource.doorBucket === 'remembrance') return '/remembrance';
+    if (resource.doorBucket === 'communion') return '/communion';
+    return '/devotion';
+  };
+
+  const isLocked = (resource: SearchResult): boolean => {
+    if (!resource.doorBucket) return false;
+    return !hasAccess(resource.doorBucket);
   };
 
   return (
@@ -223,14 +238,28 @@ const SearchResults = () => {
               {results.length} result{results.length !== 1 ? 's' : ''} for "{query}"
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {results.map((resource, index) => (
-                <ResourceCard
-                  key={resource.id}
-                  resource={resource}
-                  index={index}
-                  basePath={getBasePath(resource)}
-                />
-              ))}
+              {results.map((resource, index) => {
+                const locked = isLocked(resource);
+                const tierInfo = resource.doorBucket ? getRequiredTierForBucket(resource.doorBucket) : null;
+                return (
+                  <div key={resource.id} className="relative">
+                    <ResourceCard
+                      resource={resource}
+                      index={index}
+                      basePath={getBasePath(resource)}
+                      comingSoon={locked}
+                    />
+                    {locked && (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/70 backdrop-blur-[2px] rounded-lg pointer-events-none">
+                        <Lock className="w-8 h-8 text-muted-foreground mb-2" />
+                        <Badge variant="secondary" className="text-xs font-serif">
+                          {tierInfo ? `${tierInfo.tierName} Access` : 'Membership Required'}
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </>
         )}
