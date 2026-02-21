@@ -45,6 +45,7 @@ import ProtocolDetailPage from "./pages/ProtocolDetailPage";
 import RemembranceSectionPage from "./pages/RemembranceSectionPage";
 import MyPlaylists from "./pages/MyPlaylists";
 import SacredSpreads from "./pages/SacredSpreads";
+import SearchResults from "./pages/SearchResults";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -100,6 +101,7 @@ const App = () => (
             <Route path="/communion/live-meditations" element={<CommunionLiveMeditations />} />
             <Route path="/communion/live-replays" element={<LiveReplays />} />
             <Route path="/membership/success" element={<MembershipSuccess />} />
+            <Route path="/search" element={<SearchResults />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

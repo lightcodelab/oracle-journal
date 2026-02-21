@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
-import ProfileDropdown from '@/components/ProfileDropdown';
+import NavActions from '@/components/NavActions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -120,9 +120,9 @@ const Temple = () => {
 
   return (
     <div className="min-h-screen bg-background py-12 px-4 relative">
-      {/* Profile Dropdown */}
+      {/* Nav Actions */}
       <div className="absolute top-4 right-4 z-20">
-        <ProfileDropdown />
+        <NavActions />
       </div>
 
       <div className="max-w-6xl mx-auto pt-6">
