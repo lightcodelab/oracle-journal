@@ -10,6 +10,13 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import type { ContentResource } from '@/hooks/useContentByLocation';
 
+const getPublicUrl = (bucket: string, path: string | null): string | null => {
+  if (!path) return null;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+  return data.publicUrl;
+};
+
 const SearchResults = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
@@ -62,7 +69,7 @@ const SearchResults = () => {
         title: r.title,
         slug: r.slug,
         summary: r.summary,
-        thumbnail_url: r.thumbnail_url,
+        thumbnail_url: getPublicUrl('content-thumbnails', r.thumbnail_url),
         main_media_kind: r.main_media_kind,
         main_media_file_url: r.main_media_file_url,
         main_media_embed_url: r.main_media_embed_url,
@@ -78,7 +85,7 @@ const SearchResults = () => {
         title: r.title,
         slug: r.slug || r.id,
         summary: r.summary,
-        thumbnail_url: r.display_image_url,
+        thumbnail_url: getPublicUrl('healing-resource-images', r.display_image_url),
         main_media_kind: r.vimeo_embed_url ? 'video_embed' : r.audio_file_url ? 'file' : 'none',
         main_media_file_url: r.audio_file_url,
         main_media_embed_url: r.vimeo_embed_url,
