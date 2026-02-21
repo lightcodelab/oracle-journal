@@ -43,14 +43,6 @@ export const SpreadReading = ({
       transition={{ duration: 0.8 }}
       className="text-center space-y-8 max-w-5xl mx-auto min-h-[80vh] flex flex-col justify-center py-8"
     >
-      <Button
-        onClick={onBackToDecks}
-        variant="ghost"
-        className="absolute top-4 left-4"
-      >
-        <ChevronLeft className="w-4 h-4 mr-1" />
-        Back
-      </Button>
 
       <div className="space-y-4">
         <div className="flex items-center justify-center gap-2 text-primary/60">
