@@ -39,7 +39,7 @@ const SearchResults = () => {
 
       const searchPattern = `%${query}%`;
 
-      // Search content_resources
+      // Search content_resources by title/summary
       const { data: contentData } = await supabase
         .from('content_resources')
         .select(`
@@ -52,7 +52,7 @@ const SearchResults = () => {
         .or(`title.ilike.${searchPattern},summary.ilike.${searchPattern}`)
         .limit(50);
 
-      // Search healing_resources
+      // Search healing_resources by title/summary
       const { data: healingData } = await supabase
         .from('healing_resources')
         .select(`
@@ -63,6 +63,65 @@ const SearchResults = () => {
         .eq('status', 'published')
         .or(`title.ilike.${searchPattern},summary.ilike.${searchPattern}`)
         .limit(50);
+
+      // Find matching symptom IDs
+      const { data: matchingSymptoms } = await supabase
+        .from('symptoms')
+        .select('id')
+        .ilike('name', searchPattern);
+
+      // Find matching condition IDs
+      const { data: matchingConditions } = await supabase
+        .from('conditions')
+        .select('id')
+        .ilike('name', searchPattern);
+
+      // Collect resource IDs from title/summary matches
+      const directHealingIds = new Set((healingData || []).map((r: any) => r.id));
+
+      // Find resources linked to matching symptoms
+      let symptomResourceIds: string[] = [];
+      if (matchingSymptoms && matchingSymptoms.length > 0) {
+        const symptomIds = matchingSymptoms.map(s => s.id);
+        const { data: symptomMappings } = await supabase
+          .from('resource_symptom_mappings')
+          .select('resource_id')
+          .in('symptom_id', symptomIds);
+        symptomResourceIds = (symptomMappings || []).map(m => m.resource_id);
+      }
+
+      // Find resources linked to matching conditions
+      let conditionResourceIds: string[] = [];
+      if (matchingConditions && matchingConditions.length > 0) {
+        const conditionIds = matchingConditions.map(c => c.id);
+        const { data: conditionMappings } = await supabase
+          .from('condition_resource_mappings')
+          .select('resource_id')
+          .in('condition_id', conditionIds);
+        conditionResourceIds = (conditionMappings || []).map(m => m.resource_id);
+      }
+
+      // Combine tag-matched IDs that aren't already in direct results
+      const tagResourceIds = [...new Set([...symptomResourceIds, ...conditionResourceIds])]
+        .filter(id => !directHealingIds.has(id));
+
+      // Fetch additional healing resources by tag matches
+      let tagHealingData: any[] = [];
+      if (tagResourceIds.length > 0) {
+        const { data } = await supabase
+          .from('healing_resources')
+          .select(`
+            id, title, slug, summary, 
+            display_image_url, vimeo_embed_url, audio_file_url,
+            status, modality
+          `)
+          .eq('status', 'published')
+          .in('id', tagResourceIds)
+          .limit(50);
+        tagHealingData = data || [];
+      }
+
+      const allHealingData = [...(healingData || []), ...tagHealingData];
 
       const contentResults: ContentResource[] = (contentData || []).map((r: any) => ({
         id: r.id,
@@ -80,7 +139,7 @@ const SearchResults = () => {
         resource_type: r.resource_type || null,
       }));
 
-      const healingResults: ContentResource[] = (healingData || []).map((r: any) => ({
+      const healingResults: ContentResource[] = allHealingData.map((r: any) => ({
         id: r.id,
         title: r.title,
         slug: r.slug || r.id,
