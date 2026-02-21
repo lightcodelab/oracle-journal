@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import NavActions from '@/components/NavActions';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -211,12 +212,7 @@ const FeatureSuggestions = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border px-4 py-3 flex items-center justify-between">
-        <h1
-          className="font-serif text-lg tracking-wide cursor-pointer text-primary"
-          onClick={() => navigate('/temple')}
-        >
-          Temple of Sustainment
-        </h1>
+        <PageBreadcrumb items={[{ label: 'Feature Suggestions' }]} />
         <NavActions />
       </header>
 
