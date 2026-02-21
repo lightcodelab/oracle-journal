@@ -19,7 +19,8 @@ import {
   LogOut,
   ChevronDown,
   CreditCard,
-  ListMusic
+  ListMusic,
+  MessageSquarePlus
 } from 'lucide-react';
 
 interface ProfileDropdownProps {
@@ -92,6 +93,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       label: 'My Playlists',
       icon: <ListMusic className="w-4 h-4 mr-2" />,
       route: '/playlists',
+    },
+    {
+      label: 'Feature Suggestions',
+      icon: <MessageSquarePlus className="w-4 h-4 mr-2" />,
+      route: '/suggestions',
     },
   ];
 
