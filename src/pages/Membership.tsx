@@ -174,7 +174,102 @@ const Membership = () => {
         </div>
       </section>
 
-      {/* Benefits Section */}
+
+      {/* Social Proof / Trust Section */}
+      <section className="py-16 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            <p className="text-xl md:text-2xl font-serif italic text-foreground/80 mb-6">
+              "This is not just an app — it's a living temple. A place to return to again and again 
+              for guidance, healing, and remembrance of who you truly are."
+            </p>
+            <p className="text-muted-foreground">— Tash Lewin, Creator</p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* AreekeerA Method Section */}
+      <section className="py-20 px-4 bg-muted/30">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center mb-12"
+          >
+            <p className="text-sm uppercase tracking-widest text-destructive-foreground mb-4">
+              Introducing
+            </p>
+            <h2 className="text-4xl md:text-5xl font-serif mb-6 text-foreground italic">
+              The AreekeerA® Method
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              A revolutionary approach to understanding the energetic language of your body — developed over 40 years of clinical practice by Medical Intuitive Julie Lewin.
+            </p>
+          </motion.div>
+
+          {/* Feature Cards */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="bg-card rounded-2xl p-8 md:p-12"
+          >
+            <div className="grid md:grid-cols-3 gap-8 text-center">
+              {/* 40+ Years Proven */}
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+                  <Shield className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif mb-2 text-foreground">40+ Years Proven</h3>
+                <p className="text-muted-foreground text-sm">
+                  Trusted by thousands of clients worldwide
+                </p>
+              </div>
+
+              {/* Root Cause Focus */}
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 rounded-full bg-destructive/20 flex items-center justify-center mb-4">
+                  <Heart className="w-8 h-8 text-destructive-foreground" />
+                </div>
+                <h3 className="text-xl font-serif mb-2 text-foreground">Guided Creative Visualisations</h3>
+                <p className="text-muted-foreground text-sm">
+                  A body-based healing modality that works with the energy blueprint beneath physical symptoms
+                </p>
+              </div>
+
+              {/* Immediate Tools */}
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+                  <Zap className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif mb-2 text-foreground">Immediate Tools</h3>
+                <p className="text-muted-foreground text-sm">
+                  Start shifting energy today
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Julie Bio Paragraph */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="mt-12 text-center max-w-4xl mx-auto"
+          >
+            <p className="text-muted-foreground leading-relaxed">
+              For over 40 years, Julie Lewin has been a pioneer in Medical Intuition. Her AreekeerA® Modality was channelled through after appearing on the TV Show The Extraordinary twice to international acclaim. With over 1.1 million listens on Insight Timer and a lifetime of clinical practice, she has helped thousands move from chronic pain to extraordinary health. She is excited to finally make her whole body of work available to everyone. It is a paid app because reciprocation is required for true lasting healing to occur.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Benefits Section - Three Doors */}
       <section className="py-20 px-4 bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <motion.div
@@ -307,100 +402,6 @@ const Membership = () => {
               </ul>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* Social Proof / Trust Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            <p className="text-xl md:text-2xl font-serif italic text-foreground/80 mb-6">
-              "This is not just an app — it's a living temple. A place to return to again and again 
-              for guidance, healing, and remembrance of who you truly are."
-            </p>
-            <p className="text-muted-foreground">— Tash Lewin, Creator</p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* AreekeerA Method Section */}
-      <section className="py-20 px-4 bg-muted/30">
-        <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-center mb-12"
-          >
-            <p className="text-sm uppercase tracking-widest text-destructive-foreground mb-4">
-              Introducing
-            </p>
-            <h2 className="text-4xl md:text-5xl font-serif mb-6 text-foreground italic">
-              The AreekeerA® Method
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              A revolutionary approach to understanding the energetic language of your body — developed over 40 years of clinical practice by Medical Intuitive Julie Lewin.
-            </p>
-          </motion.div>
-
-          {/* Feature Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-card rounded-2xl p-8 md:p-12"
-          >
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              {/* 40+ Years Proven */}
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
-                  <Shield className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-serif mb-2 text-foreground">40+ Years Proven</h3>
-                <p className="text-muted-foreground text-sm">
-                  Trusted by thousands of clients worldwide
-                </p>
-              </div>
-
-              {/* Root Cause Focus */}
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-destructive/20 flex items-center justify-center mb-4">
-                  <Heart className="w-8 h-8 text-destructive-foreground" />
-                </div>
-                <h3 className="text-xl font-serif mb-2 text-foreground">Guided Creative Visualisations</h3>
-                <p className="text-muted-foreground text-sm">
-                  A body-based healing modality that works with the energy blueprint beneath physical symptoms
-                </p>
-              </div>
-
-              {/* Immediate Tools */}
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
-                  <Zap className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-serif mb-2 text-foreground">Immediate Tools</h3>
-                <p className="text-muted-foreground text-sm">
-                  Start shifting energy today
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Julie Bio Paragraph */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="mt-12 text-center max-w-4xl mx-auto"
-          >
-            <p className="text-muted-foreground leading-relaxed">
-              For over 40 years, Julie Lewin has been a pioneer in Medical Intuition. Her AreekeerA® Modality was channelled through after appearing on the TV Show The Extraordinary twice to international acclaim. With over 1.1 million listens on Insight Timer and a lifetime of clinical practice, she has helped thousands move from chronic pain to extraordinary health. She is excited to finally make her whole body of work available to everyone. It is a paid app because reciprocation is required for true lasting healing to occur.
-            </p>
-          </motion.div>
         </div>
       </section>
 
