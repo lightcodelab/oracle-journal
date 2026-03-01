@@ -160,9 +160,6 @@ const Membership = () => {
               supportive community — all in one sacred space.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <Badge variant="secondary" className="px-4 py-2 text-sm bg-primary/10 text-primary border-primary/20">
-                ✨ 7-Day Free Trial
-              </Badge>
               <Badge variant="secondary" className="px-4 py-2 text-sm bg-muted text-muted-foreground">
                 Cancel Anytime
               </Badge>
@@ -210,19 +207,31 @@ const Membership = () => {
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">4 Complete Oracle Card Decks with shuffle animations (7 more decks to come)</span>
+                  <span className="text-foreground/80">All Digital Card Decks with Shuffle feature</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Unlimited card readings with deep interpretations</span>
+                  <span className="text-foreground/80">Unlimited Card Readings</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Save & revisit meaningful readings</span>
+                  <span className="text-foreground/80">Unlimited Spreads</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Private digital journal for reflections</span>
+                  <span className="text-foreground/80">Save Card Readings & Spreads</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Digital Journal for notes about readings</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Mini courses to deepen the Remembrance experience</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Rituals to prepare your spirit and body for healing</span>
                 </li>
               </ul>
             </motion.div>
@@ -241,26 +250,23 @@ const Membership = () => {
               <p className="text-muted-foreground text-sm mb-4">
                 Deepen your practice with personalized healing protocols and sacred rituals.
               </p>
+              <p className="text-foreground/80 text-sm font-semibold mb-2">Everything in The Seeker Level PLUS:</p>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Your symptoms automatically mapped to personalised protocols</span>
+                  <span className="text-foreground/80">Guided meditations</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Library of guided meditations</span>
+                  <span className="text-foreground/80">Personalised AreekeerA® Protocols based on symptoms</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Sacred altar rituals & ceremonies</span>
+                  <span className="text-foreground/80">Energy hygiene practices</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Energy hygiene & protection practices</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Healing templates & somatic tools</span>
+                  <span className="text-foreground/80">Healing templates</span>
                 </li>
               </ul>
             </motion.div>
@@ -279,26 +285,27 @@ const Membership = () => {
               <p className="text-muted-foreground text-sm mb-4">
                 Join live ceremonies and connect with a global community of seekers.
               </p>
+              <p className="text-foreground/80 text-sm font-semibold mb-2">Everything in The Seeker & The Devotee Levels PLUS:</p>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Live oracle readings with Julie</span>
+                  <span className="text-foreground/80">Live Readings</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Weekly healing classes & teachings</span>
+                  <span className="text-foreground/80">Live Classes</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Interactive workshops & intensives</span>
+                  <span className="text-foreground/80">Live Workshops</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Group meditation ceremonies</span>
+                  <span className="text-foreground/80">Live Meditation Classes</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Full replay library access</span>
+                  <span className="text-foreground/80">All Replays</span>
                 </li>
               </ul>
             </motion.div>
@@ -406,7 +413,7 @@ const Membership = () => {
           Choose Your Path
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-          Begin your journey of healing and transformation with a 7-day free trial.
+          Begin your journey of healing and transformation.
           Cancel anytime.
         </p>
 
@@ -499,10 +506,6 @@ const Membership = () => {
                     ))}
                     <div className="flex items-center gap-2">
                       <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                      <span className="text-sm text-foreground">7-day free trial</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-primary flex-shrink-0" />
                       <span className="text-sm text-foreground">Cancel anytime</span>
                     </div>
                   </div>
@@ -525,7 +528,7 @@ const Membership = () => {
                           Loading...
                         </>
                       ) : (
-                        "Start Free Trial"
+                        "Subscribe Now"
                       )}
                     </Button>
                   )}
@@ -664,10 +667,10 @@ const Membership = () => {
           <div className="space-y-6 text-left">
             <div>
               <h3 className="font-medium text-foreground mb-2">
-                What happens after my free trial?
+                How does billing work?
               </h3>
               <p className="text-muted-foreground text-sm">
-                After your 7-day trial, you'll be charged the subscription amount. You can cancel anytime before the trial ends to avoid charges.
+                You'll be charged immediately when you subscribe. You can cancel anytime and retain access until the end of your billing period.
               </p>
             </div>
             <div>

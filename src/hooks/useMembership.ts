@@ -141,7 +141,7 @@ export function useMembership() {
       sessionStorage.setItem("pendingCheckoutPriceId", priceId);
       toast({
         title: "Create your account",
-        description: "Sign up to start your 7-day free trial.",
+        description: "Sign up to get started.",
       });
       navigate(`/auth?mode=signup&priceId=${priceId}`);
       return;

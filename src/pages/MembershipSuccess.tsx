@@ -86,7 +86,7 @@ const MembershipSuccess = () => {
             {loading 
               ? "Setting up your membership..."
               : tierName 
-                ? `You're now a ${tierName}. Your 7-day free trial has begun.`
+                ? `You're now a ${tierName}. Welcome to the Temple!`
                 : "Your subscription is being processed."
             }
           </CardDescription>
