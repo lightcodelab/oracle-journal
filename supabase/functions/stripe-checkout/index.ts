@@ -104,7 +104,6 @@ serve(async (req) => {
       ],
       mode: "subscription",
       subscription_data: {
-        trial_period_days: 7,
         metadata: {
           supabase_user_id: user.id,
           plan_code: priceData.plan_code,

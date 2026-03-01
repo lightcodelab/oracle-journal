@@ -339,7 +339,7 @@ const Auth = () => {
           </motion.div>
           <p className="text-foreground/70 text-sm leading-relaxed max-w-sm mx-auto">
             {isSignupMode 
-              ? "Create your account to start your 7-day free trial and access our digital card decks, courses, and more."
+              ? "Create your account to access our digital card decks, courses, and more."
               : "Sign in to access our digital card decks, AreekeerA® Templates, Energy Hygiene Resources, Guided Meditations, Courses, and a Digital Journal."
             }
           </p>
@@ -347,10 +347,10 @@ const Auth = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>{isSignupMode ? "Start Your Free Trial" : "Welcome Back"}</CardTitle>
+            <CardTitle>{isSignupMode ? "Create Your Account" : "Welcome Back"}</CardTitle>
             <CardDescription>
               {isSignupMode 
-                ? "Create your account to begin your 7-day trial"
+                ? "Sign up to get started"
                 : "Sign in to your account"
               }
             </CardDescription>
@@ -485,7 +485,7 @@ const Auth = () => {
                     onClick={() => navigate("/")}
                     className="text-primary hover:underline"
                   >
-                    Start a free trial
+                    View memberships
                   </button>
                 </p>
               </form>
