@@ -217,7 +217,7 @@ const Membership = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-card rounded-2xl p-8 md:p-12"
+            className="rounded-2xl p-8 md:p-12"
           >
             <div className="grid md:grid-cols-3 gap-8 text-center">
               {/* 40+ Years Proven */}
