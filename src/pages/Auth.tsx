@@ -198,9 +198,12 @@ const Auth = () => {
           });
         }
       } else {
+        // With auto-confirm enabled, the onAuthStateChange listener
+        // will handle the redirect to checkout automatically.
+        // Just show a brief success message.
         toast({
-          title: "Success!",
-          description: "Account created successfully. Please check your email to verify your account.",
+          title: "Account created!",
+          description: "Redirecting to checkout...",
         });
         setEmail("");
         setPassword("");
