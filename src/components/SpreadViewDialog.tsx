@@ -140,6 +140,7 @@ const SpreadViewDialog = ({ open, onOpenChange, spreadType, spreadName, spreadCa
         onOpenChange={setCardDetailOpen}
         card={selectedCard}
         hideActions
+        showBackToSpread
       />
     </>
   );

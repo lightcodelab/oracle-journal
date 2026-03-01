@@ -236,6 +236,7 @@ const SacredSpreads = () => {
         onOpenChange={setCardDialogOpen}
         card={selectedCard}
         hideActions
+        showBackToSpread
       />
     </div>
   );
