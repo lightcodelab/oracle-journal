@@ -84,6 +84,16 @@ const Profile = () => {
       });
       console.error("Error updating profile:", error);
     } else {
+      // Sync newsletter preference with MailerLite
+      try {
+        await supabase.functions.invoke("mailerlite-sync", {
+          body: { opt_in: newsletterOptIn },
+        });
+      } catch (syncError) {
+        console.error("MailerLite sync error:", syncError);
+        // Don't block profile save if sync fails
+      }
+
       toast({
         title: "Profile Updated",
         description: "Your profile has been saved successfully.",
