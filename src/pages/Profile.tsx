@@ -176,7 +176,7 @@ const Profile = () => {
                   </Label>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Receive occasional emails about new content, courses, and events
+                  We'll send you updates when new features, or new content has been updated in the app. If you don't select this option, you won't hear anything from us.
                 </p>
               </div>
               <Switch
