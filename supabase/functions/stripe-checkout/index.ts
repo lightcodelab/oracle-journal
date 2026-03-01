@@ -110,7 +110,7 @@ serve(async (req) => {
         },
       },
       success_url: `${req.headers.get("origin")}/membership/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get("origin")}/membership`,
+      cancel_url: `${req.headers.get("origin")}/`,
       metadata: {
         supabase_user_id: user.id,
         plan_code: priceData.plan_code,
