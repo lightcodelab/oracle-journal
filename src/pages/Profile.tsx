@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Save, User } from "lucide-react";
+import { Save, User, Mail } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
@@ -18,6 +19,7 @@ const Profile = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
+  const [newsletterOptIn, setNewsletterOptIn] = useState(false);
 
   useEffect(() => {
     const checkAuthAndLoadProfile = async () => {
@@ -34,7 +36,7 @@ const Profile = () => {
       // Load profile data
       const { data: profile, error } = await supabase
         .from("profiles")
-        .select("full_name, email")
+        .select("full_name, email, newsletter_opt_in")
         .eq("id", session.user.id)
         .single();
 
@@ -43,6 +45,7 @@ const Profile = () => {
       } else if (profile) {
         setFullName(profile.full_name || "");
         if (profile.email) setEmail(profile.email);
+        setNewsletterOptIn(profile.newsletter_opt_in ?? false);
       }
 
       setLoading(false);
@@ -68,6 +71,7 @@ const Profile = () => {
       .from("profiles")
       .update({
         full_name: fullName.trim(),
+        newsletter_opt_in: newsletterOptIn,
         updated_at: new Date().toISOString(),
       })
       .eq("id", userId);
@@ -151,6 +155,25 @@ const Profile = () => {
               <p className="text-xs text-muted-foreground">
                 Email cannot be changed here
               </p>
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg border border-border/50 p-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-primary" />
+                  <Label htmlFor="newsletter" className="text-sm font-medium">
+                    Subscribe to Updates
+                  </Label>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Receive occasional emails about new content, courses, and events
+                </p>
+              </div>
+              <Switch
+                id="newsletter"
+                checked={newsletterOptIn}
+                onCheckedChange={setNewsletterOptIn}
+              />
             </div>
 
             <Button

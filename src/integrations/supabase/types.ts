@@ -2106,6 +2106,7 @@ export type Database = {
           is_encrypted: boolean | null
           member_tier_code: string | null
           must_change_password: boolean | null
+          newsletter_opt_in: boolean
           plan_cadence: string | null
           stripe_customer_id: string | null
           subscription_status: string | null
@@ -2121,6 +2122,7 @@ export type Database = {
           is_encrypted?: boolean | null
           member_tier_code?: string | null
           must_change_password?: boolean | null
+          newsletter_opt_in?: boolean
           plan_cadence?: string | null
           stripe_customer_id?: string | null
           subscription_status?: string | null
@@ -2136,6 +2138,7 @@ export type Database = {
           is_encrypted?: boolean | null
           member_tier_code?: string | null
           must_change_password?: boolean | null
+          newsletter_opt_in?: boolean
           plan_cadence?: string | null
           stripe_customer_id?: string | null
           subscription_status?: string | null
