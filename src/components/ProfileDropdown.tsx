@@ -20,7 +20,8 @@ import {
   ChevronDown,
   CreditCard,
   ListMusic,
-  MessageSquarePlus
+  MessageSquarePlus,
+  Bug
 } from 'lucide-react';
 
 interface ProfileDropdownProps {
@@ -101,6 +102,14 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
     },
   ];
 
+  const betaItems = [
+    {
+      label: 'Bug Reports',
+      icon: <Bug className="w-4 h-4 mr-2" />,
+      route: '/bugs',
+    },
+  ];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -128,6 +137,20 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           </>
         )}
         {menuItems.map((item) => (
+          <DropdownMenuItem
+            key={item.route}
+            onClick={() => navigate(item.route)}
+            className="cursor-pointer"
+          >
+            {item.icon}
+            {item.label}
+          </DropdownMenuItem>
+        ))}
+        <DropdownMenuSeparator />
+        <div className="px-2 py-1.5">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Beta Testing</span>
+        </div>
+        {betaItems.map((item) => (
           <DropdownMenuItem
             key={item.route}
             onClick={() => navigate(item.route)}
