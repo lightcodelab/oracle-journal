@@ -45,7 +45,7 @@ const TIER_FEATURES: Record<string, string[]> = {
     "All Seeker features",
     "Guided Meditations",
     "AI AreekeerA Guide",
-    "Altar Rituals",
+    
     "Energy Hygiene",
     "Healing Templates",
   ],

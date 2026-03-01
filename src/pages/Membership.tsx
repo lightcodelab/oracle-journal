@@ -257,10 +257,6 @@ const Membership = () => {
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Sacred altar rituals & ceremonies</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                   <span className="text-foreground/80">Energy hygiene & protection practices</span>
                 </li>
                 <li className="flex items-start gap-2">
@@ -589,7 +585,7 @@ const Membership = () => {
                 </TableRow>
                 <FeatureRow feature="Guided Meditations" t2 t3 />
                 <FeatureRow feature="Your AreekeerA® Healing Protocol Builder" t2 t3 />
-                <FeatureRow feature="Altar Rituals" t2 t3 />
+                
                 <FeatureRow feature="Energy Hygiene Practices" t2 t3 />
                 <FeatureRow feature="Healing Templates" t2 t3 />
                 
