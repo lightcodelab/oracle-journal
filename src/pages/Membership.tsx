@@ -176,7 +176,7 @@ const Membership = () => {
 
 
       {/* Social Proof / Trust Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-muted/30">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -193,7 +193,7 @@ const Membership = () => {
       </section>
 
       {/* AreekeerA Method Section */}
-      <section className="py-20 px-4 bg-muted/30">
+      <section className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -270,7 +270,7 @@ const Membership = () => {
       </section>
 
       {/* Benefits Section - Three Doors */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -406,7 +406,7 @@ const Membership = () => {
       </section>
 
       {/* Choose Your Path Section */}
-      <section className="py-16 px-4 text-center bg-muted/30">
+      <section className="py-16 px-4 text-center">
         <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
           Choose Your Path
         </h2>
@@ -437,7 +437,7 @@ const Membership = () => {
       </section>
 
       {/* Pricing Cards */}
-      <section className="pb-20 px-4 bg-muted/30">
+      <section className="pb-20 px-4">
         <div className="max-w-6xl mx-auto grid gap-6 md:grid-cols-3">
           {tiers.map((tier) => {
             const TierIcon = tierIcons[tier.code as keyof typeof tierIcons] || Sparkles;
@@ -535,7 +535,7 @@ const Membership = () => {
       </section>
 
       {/* Feature Comparison Table */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-muted/30">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-serif mb-8 text-center text-foreground">
             Compare Features
@@ -611,7 +611,7 @@ const Membership = () => {
       </section>
 
       {/* Your Guides Section */}
-      <section className="py-20 px-4 bg-muted/30">
+      <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -657,7 +657,7 @@ const Membership = () => {
       </section>
 
       {/* FAQ or Trust Signals */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-muted/30">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-2xl font-serif mb-8 text-foreground">
             Frequently Asked Questions
