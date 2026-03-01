@@ -221,6 +221,14 @@ const Membership = () => {
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                   <span className="text-foreground/80">Private digital journal for reflections</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Mini courses to deepen the Remembrance experience</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Rituals to prepare your spirit and body for healing</span>
+                </li>
               </ul>
             </motion.div>
 
@@ -485,63 +493,17 @@ const Membership = () => {
                     )}
                   </div>
 
-                  <div className="space-y-2 text-left">
-                    {tier.code === "T1" && (
-                      <>
-                        <p className="text-xs font-semibold text-foreground uppercase tracking-wide mb-1">The Door of Remembrance:</p>
-                        {[
-                          "All Digital Card Decks with Shuffle feature",
-                          "Unlimited Card Readings",
-                          "Unlimited Spreads",
-                          "Save Card Readings & Spreads",
-                          "Digital Journal for notes about readings",
-                          "Mini courses to deepen the Remembrance experience",
-                          "Rituals to prepare your spirit and body for healing",
-                        ].map((f) => (
-                          <div key={f} className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                            <span className="text-sm text-foreground">{f}</span>
-                          </div>
-                        ))}
-                      </>
-                    )}
-                    {tier.code === "T2" && (
-                      <>
-                        <p className="text-sm font-semibold text-foreground mb-1">Everything in The Seeker Level PLUS:</p>
-                        <p className="text-xs font-semibold text-foreground uppercase tracking-wide mb-1 mt-3">The Door of Devotion:</p>
-                        {[
-                          "Guided meditations",
-                          "Personalised AreekeerA® Protocols based on symptoms",
-                          "Energy hygiene practices",
-                          "Healing templates",
-                        ].map((f) => (
-                          <div key={f} className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                            <span className="text-sm text-foreground">{f}</span>
-                          </div>
-                        ))}
-                      </>
-                    )}
-                    {tier.code === "T3" && (
-                      <>
-                        <p className="text-sm font-semibold text-foreground mb-1">Everything in The Seeker & The Devotee Levels PLUS:</p>
-                        <p className="text-xs font-semibold text-foreground uppercase tracking-wide mb-1 mt-3">The Door of Communion:</p>
-                        {[
-                          "Live Readings",
-                          "Live Classes",
-                          "Live Workshops",
-                          "Live Meditation Classes",
-                          "All Replays",
-                        ].map((f) => (
-                          <div key={f} className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                            <span className="text-sm text-foreground">{f}</span>
-                          </div>
-                        ))}
-                      </>
-                    )}
-                    <div className="flex items-start gap-2 pt-2 border-t border-border/50 mt-3">
-                      <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                  <div className="space-y-3 text-left">
+                    {tier.buckets.map((bucket) => (
+                      <div key={bucket} className="flex items-center gap-2">
+                        <Check className="w-4 h-4 text-primary flex-shrink-0" />
+                        <span className="text-sm text-foreground">
+                          {bucketLabels[bucket] || bucket}
+                        </span>
+                      </div>
+                    ))}
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-primary flex-shrink-0" />
                       <span className="text-sm text-foreground">Cancel anytime</span>
                     </div>
                   </div>
