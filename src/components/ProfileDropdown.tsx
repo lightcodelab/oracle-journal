@@ -21,8 +21,10 @@ import {
   CreditCard,
   ListMusic,
   MessageSquarePlus,
-  Bug
+  Bug,
+  Smartphone
 } from 'lucide-react';
+import { useInstallApp } from '@/components/InstallAppDialog';
 
 interface ProfileDropdownProps {
   onSignOut?: () => void;
@@ -31,6 +33,7 @@ interface ProfileDropdownProps {
 const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
+  const { openInstallDialog } = useInstallApp();
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -146,6 +149,13 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
             {item.label}
           </DropdownMenuItem>
         ))}
+        <DropdownMenuItem
+          onClick={openInstallDialog}
+          className="cursor-pointer"
+        >
+          <Smartphone className="w-4 h-4 mr-2" />
+          Add App Icon to Phone
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <div className="px-2 py-1.5">
           <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Beta Testing</span>
