@@ -49,6 +49,7 @@ import SearchResults from "./pages/SearchResults";
 import FeatureSuggestions from "./pages/FeatureSuggestions";
 import BugReports from "./pages/BugReports";
 import InstallAppProvider from "./components/InstallAppDialog";
+import NewsletterBanner from "./components/NewsletterBanner";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -59,6 +60,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <InstallAppProvider>
+          <NewsletterBanner />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Membership />} />
