@@ -305,7 +305,7 @@ const Membership = () => {
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">4 Complete Oracle Card Decks with shuffle animations (7 more decks to come)</span>
+                  <span className="text-foreground/80">4 Complete Oracle Card Decks with shuffle animations (<span className="text-foreground/80">4 Complete Oracle Card Decks with shuffle animations (8 more decks to come)</span>)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
