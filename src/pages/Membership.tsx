@@ -207,31 +207,19 @@ const Membership = () => {
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">All Digital Card Decks with Shuffle feature</span>
+                  <span className="text-foreground/80">4 Complete Oracle Card Decks with shuffle animations (7 more decks to come)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Unlimited Card Readings</span>
+                  <span className="text-foreground/80">Unlimited card readings with deep interpretations</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Unlimited Spreads</span>
+                  <span className="text-foreground/80">Save & revisit meaningful readings</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Save Card Readings & Spreads</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Digital Journal for notes about readings</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Mini courses to deepen the Remembrance experience</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Rituals to prepare your spirit and body for healing</span>
+                  <span className="text-foreground/80">Private digital journal for reflections</span>
                 </li>
               </ul>
             </motion.div>
@@ -250,23 +238,26 @@ const Membership = () => {
               <p className="text-muted-foreground text-sm mb-4">
                 Deepen your practice with personalized healing protocols and sacred rituals.
               </p>
-              <p className="text-foreground/80 text-sm font-semibold mb-2">Everything in The Seeker Level PLUS:</p>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Guided meditations</span>
+                  <span className="text-foreground/80">Your symptoms automatically mapped to personalised protocols</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Personalised AreekeerA® Protocols based on symptoms</span>
+                  <span className="text-foreground/80">Library of guided meditations</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Energy hygiene practices</span>
+                  <span className="text-foreground/80">Sacred altar rituals & ceremonies</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Healing templates</span>
+                  <span className="text-foreground/80">Energy hygiene & protection practices</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground/80">Healing templates & somatic tools</span>
                 </li>
               </ul>
             </motion.div>
@@ -285,27 +276,26 @@ const Membership = () => {
               <p className="text-muted-foreground text-sm mb-4">
                 Join live ceremonies and connect with a global community of seekers.
               </p>
-              <p className="text-foreground/80 text-sm font-semibold mb-2">Everything in The Seeker & The Devotee Levels PLUS:</p>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Live Readings</span>
+                  <span className="text-foreground/80">Live oracle readings with Julie</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Live Classes</span>
+                  <span className="text-foreground/80">Weekly healing classes & teachings</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Live Workshops</span>
+                  <span className="text-foreground/80">Interactive workshops & intensives</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">Live Meditation Classes</span>
+                  <span className="text-foreground/80">Group meditation ceremonies</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground/80">All Replays</span>
+                  <span className="text-foreground/80">Full replay library access</span>
                 </li>
               </ul>
             </motion.div>
@@ -495,17 +485,63 @@ const Membership = () => {
                     )}
                   </div>
 
-                  <div className="space-y-3 text-left">
-                    {tier.buckets.map((bucket) => (
-                      <div key={bucket} className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                        <span className="text-sm text-foreground">
-                          {bucketLabels[bucket] || bucket}
-                        </span>
-                      </div>
-                    ))}
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-primary flex-shrink-0" />
+                  <div className="space-y-2 text-left">
+                    {tier.code === "T1" && (
+                      <>
+                        <p className="text-xs font-semibold text-foreground uppercase tracking-wide mb-1">The Door of Remembrance:</p>
+                        {[
+                          "All Digital Card Decks with Shuffle feature",
+                          "Unlimited Card Readings",
+                          "Unlimited Spreads",
+                          "Save Card Readings & Spreads",
+                          "Digital Journal for notes about readings",
+                          "Mini courses to deepen the Remembrance experience",
+                          "Rituals to prepare your spirit and body for healing",
+                        ].map((f) => (
+                          <div key={f} className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                            <span className="text-sm text-foreground">{f}</span>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                    {tier.code === "T2" && (
+                      <>
+                        <p className="text-sm font-semibold text-foreground mb-1">Everything in The Seeker Level PLUS:</p>
+                        <p className="text-xs font-semibold text-foreground uppercase tracking-wide mb-1 mt-3">The Door of Devotion:</p>
+                        {[
+                          "Guided meditations",
+                          "Personalised AreekeerA® Protocols based on symptoms",
+                          "Energy hygiene practices",
+                          "Healing templates",
+                        ].map((f) => (
+                          <div key={f} className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                            <span className="text-sm text-foreground">{f}</span>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                    {tier.code === "T3" && (
+                      <>
+                        <p className="text-sm font-semibold text-foreground mb-1">Everything in The Seeker & The Devotee Levels PLUS:</p>
+                        <p className="text-xs font-semibold text-foreground uppercase tracking-wide mb-1 mt-3">The Door of Communion:</p>
+                        {[
+                          "Live Readings",
+                          "Live Classes",
+                          "Live Workshops",
+                          "Live Meditation Classes",
+                          "All Replays",
+                        ].map((f) => (
+                          <div key={f} className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                            <span className="text-sm text-foreground">{f}</span>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                    <div className="flex items-start gap-2 pt-2 border-t border-border/50 mt-3">
+                      <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                       <span className="text-sm text-foreground">Cancel anytime</span>
                     </div>
                   </div>
