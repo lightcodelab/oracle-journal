@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.create-manual-user]
 verify_jwt = false
+
+[functions.mailerlite-sync]
+verify_jwt = false
