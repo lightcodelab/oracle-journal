@@ -494,6 +494,7 @@ const Membership = () => {
                   </div>
 
                   <div className="space-y-3 text-left">
+                    <p className="text-sm font-medium text-muted-foreground">Access the:</p>
                     {tier.buckets.map((bucket) => (
                       <div key={bucket} className="flex items-center gap-2">
                         <Check className="w-4 h-4 text-primary flex-shrink-0" />
@@ -502,10 +503,6 @@ const Membership = () => {
                         </span>
                       </div>
                     ))}
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                      <span className="text-sm text-foreground">Cancel anytime</span>
-                    </div>
                   </div>
                 </CardContent>
 
