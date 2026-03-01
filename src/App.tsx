@@ -48,6 +48,7 @@ import SacredSpreads from "./pages/SacredSpreads";
 import SearchResults from "./pages/SearchResults";
 import FeatureSuggestions from "./pages/FeatureSuggestions";
 import BugReports from "./pages/BugReports";
+import InstallAppDialog from "./components/InstallAppDialog";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -57,6 +58,7 @@ const App = () => (
         <EncryptionProvider>
           <Toaster />
           <Sonner />
+          <InstallAppDialog />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Membership />} />
