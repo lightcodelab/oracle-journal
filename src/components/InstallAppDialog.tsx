@@ -65,6 +65,7 @@ const InstallAppDialog = () => {
                 at the bottom of the screen
               </li>
               <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+              <li className="italic text-muted-foreground">Click the three dots "More" button if the full menu isn't showing.</li>
               <li>Tap <strong>"Add"</strong> in the top right corner</li>
             </ol>
             <p className="text-xs text-muted-foreground">The app icon will appear on your home screen.</p>
