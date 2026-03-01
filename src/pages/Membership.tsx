@@ -575,8 +575,11 @@ const Membership = () => {
                 </TableRow>
                 <FeatureRow feature="All Digital Card Decks with Shuffle" t1 t2 t3 />
                 <FeatureRow feature="Unlimited Card Readings" t1 t2 t3 />
-                <FeatureRow feature="Save Card Readings" t1 t2 t3 />
+                <FeatureRow feature="Unlimited Spreads" t1 t2 t3 />
+                <FeatureRow feature="Save Card Readings & Spreads" t1 t2 t3 />
                 <FeatureRow feature="Digital Journal" t1 t2 t3 />
+                <FeatureRow feature="Mini Courses" t1 t2 t3 />
+                <FeatureRow feature="Rituals" t1 t2 t3 />
                 
                 {/* Door of Devotion Section */}
                 <TableRow className="bg-rose-500/10">
