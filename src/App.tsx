@@ -47,6 +47,7 @@ import MyPlaylists from "./pages/MyPlaylists";
 import SacredSpreads from "./pages/SacredSpreads";
 import SearchResults from "./pages/SearchResults";
 import FeatureSuggestions from "./pages/FeatureSuggestions";
+import BugReports from "./pages/BugReports";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -104,6 +105,7 @@ const App = () => (
             <Route path="/membership/success" element={<MembershipSuccess />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/suggestions" element={<FeatureSuggestions />} />
+            <Route path="/bugs" element={<BugReports />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

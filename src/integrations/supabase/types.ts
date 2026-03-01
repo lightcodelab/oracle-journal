@@ -109,6 +109,51 @@ export type Database = {
           },
         ]
       }
+      bug_reports: {
+        Row: {
+          admin_notes: string | null
+          browser_info: string | null
+          created_at: string
+          description: string | null
+          id: string
+          page_url: string | null
+          severity: string
+          status: string
+          steps_to_reproduce: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          browser_info?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          page_url?: string | null
+          severity?: string
+          status?: string
+          steps_to_reproduce?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          browser_info?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          page_url?: string | null
+          severity?: string
+          status?: string
+          steps_to_reproduce?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       card_draws: {
         Row: {
           card_id: string
