@@ -161,10 +161,13 @@ const Membership = () => {
             </p>
             <div className="flex flex-wrap justify-center gap-4 mb-8">
               <Badge variant="secondary" className="px-4 py-2 text-sm bg-muted text-muted-foreground">
-                Cancel Anytime
+                Instant Access
               </Badge>
               <Badge variant="secondary" className="px-4 py-2 text-sm bg-muted text-muted-foreground">
-                Instant Access
+                Start when you're ready
+              </Badge>
+              <Badge variant="secondary" className="px-4 py-2 text-sm bg-muted text-muted-foreground">
+                Return when you need
               </Badge>
             </div>
           </motion.div>
