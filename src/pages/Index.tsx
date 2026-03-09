@@ -9,7 +9,7 @@ import { DeckSelection } from "@/components/DeckSelection";
 import { CardNumberSelector } from "@/components/CardNumberSelector";
 import { CardDropdownSelector } from "@/components/CardDropdownSelector";
 import { supabase } from "@/integrations/supabase/client";
-import { Shuffle, Sparkles, DoorOpen } from "lucide-react";
+import { Shuffle, Sparkles, DoorOpen, Lock, ArrowUpRight } from "lucide-react";
 import NavActions from "@/components/NavActions";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { motion } from "framer-motion";
@@ -25,6 +25,7 @@ import taoshBanner from "@/assets/taosh-banner.png";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
 import type { OracleCard } from "@/data/oracleCards";
+import { useTierAccess } from "@/hooks/useTierAccess";
 
 interface Deck {
   id: string;
@@ -55,6 +56,8 @@ const Index = () => {
   
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { hasAccess, loading: tierLoading } = useTierAccess();
+  const canAccessRemembrance = hasAccess('remembrance');
 
   useEffect(() => {
     // Check auth state
@@ -258,10 +261,32 @@ const Index = () => {
     return getCardBackForDeck(selectedDeck.name);
   };
 
-  if (loading) {
+  if (loading || tierLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Sparkles className="w-12 h-12 text-accent animate-spin" />
+      </div>
+    );
+  }
+
+  if (!canAccessRemembrance) {
+    return (
+      <div className="min-h-screen bg-background py-12 px-4 relative">
+        <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
+          <PageBreadcrumb items={[{ label: 'Door of Remembrance', icon: DoorOpen }]} />
+          <NavActions />
+        </div>
+        <div className="max-w-lg mx-auto pt-24 text-center">
+          <Lock className="w-16 h-16 text-muted-foreground mx-auto mb-6" />
+          <h1 className="font-serif text-3xl text-foreground mb-4">Access Required</h1>
+          <p className="text-muted-foreground mb-6">
+            You need an active membership to access the Door of Remembrance.
+          </p>
+          <Button onClick={() => navigate('/membership')} className="gap-2">
+            View Memberships
+            <ArrowUpRight className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
     );
   }
