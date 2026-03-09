@@ -98,41 +98,13 @@ const Index = () => {
     }
   };
 
-  const fetchUserPurchases = async (userId: string) => {
-    // UX-only admin check: Determines UI display (e.g., showing all decks).
-    // SECURITY NOTE: Actual data access is enforced by RLS policies. The can_view_card()
-    // and user_has_deck_access() SECURITY DEFINER functions enforce authorization
-    // at the database level regardless of client-side state.
-    const { data: roleData } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', userId)
-      .eq('role', 'admin')
-      .maybeSingle();
-
-    if (roleData) {
-      setIsAdmin(true);
-      // Admin has access to all decks - fetch all deck IDs
-      const { data: allDecks } = await supabase
-        .from('decks')
-        .select('id');
-      
-      setUserPurchases((allDecks || []).map(d => d.id));
-      return;
-    }
-
-    // Not admin, fetch actual purchases
-    const { data, error } = await supabase
-      .from('deck_purchases')
-      .select('deck_id')
-      .eq('user_id', userId)
-      .eq('verified', true);
-
-    if (error) {
-      console.error('Error fetching purchases:', error);
-    } else {
-      setUserPurchases((data || []).map(p => p.deck_id));
-    }
+  const fetchUserPurchases = async (_userId: string) => {
+    // All authenticated users have access to all decks
+    const { data: allDecks } = await supabase
+      .from('decks')
+      .select('id');
+    
+    setUserPurchases((allDecks || []).map(d => d.id));
   };
 
 
