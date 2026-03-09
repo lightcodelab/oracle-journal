@@ -9,7 +9,7 @@ import { DeckSelection } from "@/components/DeckSelection";
 import { CardNumberSelector } from "@/components/CardNumberSelector";
 import { CardDropdownSelector } from "@/components/CardDropdownSelector";
 import { supabase } from "@/integrations/supabase/client";
-import { Shuffle, Sparkles, DoorOpen } from "lucide-react";
+import { Shuffle, Sparkles, DoorOpen, Lock, ArrowUpRight } from "lucide-react";
 import NavActions from "@/components/NavActions";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { motion } from "framer-motion";
