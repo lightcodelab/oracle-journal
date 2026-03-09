@@ -115,32 +115,8 @@ const Index = () => {
 
     setSelectedDeck(deck);
 
-    // Check if user has premium access
-    if (!deck.is_free) {
-      const { data: roleData } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .eq('role', 'admin')
-        .maybeSingle();
-
-      if (roleData) {
-        setHasPremiumAccess(true);
-        return;
-      }
-
-      const { data } = await supabase
-        .from('deck_purchases')
-        .select('is_premium')
-        .eq('user_id', user.id)
-        .eq('deck_id', deckId)
-        .eq('verified', true)
-        .maybeSingle();
-
-      setHasPremiumAccess(data?.is_premium || false);
-    } else {
-      setHasPremiumAccess(false);
-    }
+    // All authenticated users have full access
+    setHasPremiumAccess(true);
   };
 
   const handleShuffle = async () => {
