@@ -56,6 +56,8 @@ const Index = () => {
   
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { hasAccess, loading: tierLoading } = useTierAccess();
+  const canAccessRemembrance = hasAccess('remembrance');
 
   useEffect(() => {
     // Check auth state
