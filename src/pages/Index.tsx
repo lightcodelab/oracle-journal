@@ -234,9 +234,6 @@ const Index = () => {
     setSelectedCard(null);
   };
 
-  const handleVerifyPurchase = (deckId: string) => {
-    setVerifyDeckId(deckId);
-  };
 
   // Get the appropriate card back image based on deck name
   const getCardBackForDeck = (deckName: string | null | undefined) => {
