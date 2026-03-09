@@ -6,7 +6,6 @@ import { CardDetail } from "@/components/CardDetail";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
 
 import { DeckSelection } from "@/components/DeckSelection";
-import { PurchaseVerification } from "@/components/PurchaseVerification";
 import { CardNumberSelector } from "@/components/CardNumberSelector";
 import { CardDropdownSelector } from "@/components/CardDropdownSelector";
 import { supabase } from "@/integrations/supabase/client";
@@ -51,9 +50,7 @@ const Index = () => {
   const [isShuffling, setIsShuffling] = useState(false);
   const [showCard, setShowCard] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
-  const [verifyDeckId, setVerifyDeckId] = useState<string | null>(null);
-  const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [hasPremiumAccess, setHasPremiumAccess] = useState(true);
   
   
   const navigate = useNavigate();
@@ -101,41 +98,13 @@ const Index = () => {
     }
   };
 
-  const fetchUserPurchases = async (userId: string) => {
-    // UX-only admin check: Determines UI display (e.g., showing all decks).
-    // SECURITY NOTE: Actual data access is enforced by RLS policies. The can_view_card()
-    // and user_has_deck_access() SECURITY DEFINER functions enforce authorization
-    // at the database level regardless of client-side state.
-    const { data: roleData } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', userId)
-      .eq('role', 'admin')
-      .maybeSingle();
-
-    if (roleData) {
-      setIsAdmin(true);
-      // Admin has access to all decks - fetch all deck IDs
-      const { data: allDecks } = await supabase
-        .from('decks')
-        .select('id');
-      
-      setUserPurchases((allDecks || []).map(d => d.id));
-      return;
-    }
-
-    // Not admin, fetch actual purchases
-    const { data, error } = await supabase
-      .from('deck_purchases')
-      .select('deck_id')
-      .eq('user_id', userId)
-      .eq('verified', true);
-
-    if (error) {
-      console.error('Error fetching purchases:', error);
-    } else {
-      setUserPurchases((data || []).map(p => p.deck_id));
-    }
+  const fetchUserPurchases = async (_userId: string) => {
+    // All authenticated users have access to all decks
+    const { data: allDecks } = await supabase
+      .from('decks')
+      .select('id');
+    
+    setUserPurchases((allDecks || []).map(d => d.id));
   };
 
 
@@ -146,32 +115,8 @@ const Index = () => {
 
     setSelectedDeck(deck);
 
-    // Check if user has premium access
-    if (!deck.is_free) {
-      const { data: roleData } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .eq('role', 'admin')
-        .maybeSingle();
-
-      if (roleData) {
-        setHasPremiumAccess(true);
-        return;
-      }
-
-      const { data } = await supabase
-        .from('deck_purchases')
-        .select('is_premium')
-        .eq('user_id', user.id)
-        .eq('deck_id', deckId)
-        .eq('verified', true)
-        .maybeSingle();
-
-      setHasPremiumAccess(data?.is_premium || false);
-    } else {
-      setHasPremiumAccess(false);
-    }
+    // All authenticated users have full access
+    setHasPremiumAccess(true);
   };
 
   const handleShuffle = async () => {
@@ -289,9 +234,6 @@ const Index = () => {
     setSelectedCard(null);
   };
 
-  const handleVerifyPurchase = (deckId: string) => {
-    setVerifyDeckId(deckId);
-  };
 
   // Get the appropriate card back image based on deck name
   const getCardBackForDeck = (deckName: string | null | undefined) => {
@@ -359,7 +301,6 @@ const Index = () => {
             decks={decks}
             userPurchases={userPurchases}
             onSelectDeck={handleSelectDeck}
-            onVerifyPurchase={handleVerifyPurchase}
           />
         )}
 
@@ -517,18 +458,6 @@ const Index = () => {
         )}
       </div>
 
-      {/* Purchase Verification Dialog */}
-      <PurchaseVerification
-        deckId={verifyDeckId}
-        deckName={decks.find(d => d.id === verifyDeckId)?.name || ""}
-        isOpen={!!verifyDeckId}
-        onClose={() => setVerifyDeckId(null)}
-        onSuccess={() => {
-          if (user) {
-            fetchUserPurchases(user.id);
-          }
-        }}
-      />
     </div>
   );
 };
