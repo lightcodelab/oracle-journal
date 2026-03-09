@@ -50,9 +50,7 @@ const Index = () => {
   const [isShuffling, setIsShuffling] = useState(false);
   const [showCard, setShowCard] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
-  const [verifyDeckId, setVerifyDeckId] = useState<string | null>(null);
-  const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [hasPremiumAccess, setHasPremiumAccess] = useState(true);
   
   
   const navigate = useNavigate();
