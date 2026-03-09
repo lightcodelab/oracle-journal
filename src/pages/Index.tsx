@@ -25,6 +25,7 @@ import taoshBanner from "@/assets/taosh-banner.png";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
 import type { OracleCard } from "@/data/oracleCards";
+import { useTierAccess } from "@/hooks/useTierAccess";
 
 interface Deck {
   id: string;
