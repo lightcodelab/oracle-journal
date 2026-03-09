@@ -26,19 +26,13 @@ interface DeckSelectionProps {
   decks: Deck[];
   userPurchases: string[];
   onSelectDeck: (deckId: string) => void;
-  onVerifyPurchase: (deckId: string) => void;
 }
 
 export const DeckSelection = ({ 
   decks, 
-  userPurchases, 
   onSelectDeck,
-  onVerifyPurchase,
 }: DeckSelectionProps) => {
   const navigate = useNavigate();
-  const hasAccess = (deck: Deck) => {
-    return deck.is_free || deck.is_starter || userPurchases.includes(deck.id);
-  };
 
   return (
     <motion.div
