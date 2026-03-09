@@ -458,18 +458,6 @@ const Index = () => {
         )}
       </div>
 
-      {/* Purchase Verification Dialog */}
-      <PurchaseVerification
-        deckId={verifyDeckId}
-        deckName={decks.find(d => d.id === verifyDeckId)?.name || ""}
-        isOpen={!!verifyDeckId}
-        onClose={() => setVerifyDeckId(null)}
-        onSuccess={() => {
-          if (user) {
-            fetchUserPurchases(user.id);
-          }
-        }}
-      />
     </div>
   );
 };
