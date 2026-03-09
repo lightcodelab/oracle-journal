@@ -301,7 +301,6 @@ const Index = () => {
             decks={decks}
             userPurchases={userPurchases}
             onSelectDeck={handleSelectDeck}
-            onVerifyPurchase={handleVerifyPurchase}
           />
         )}
 
