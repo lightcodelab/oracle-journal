@@ -161,7 +161,6 @@ export const DeckSelection = ({
             </motion.div>
 
             {decks.filter(d => !d.is_starter).map((deck, index) => {
-              const accessible = hasAccess(deck);
               const bannerSrc = deck.name === "The Sacred Rewrite" ? tsrBanner
                 : deck.name === "Magic not Logic" ? mnlBanner
                 : deck.name === "AreekeerA" ? areekeeraBanner
@@ -174,7 +173,7 @@ export const DeckSelection = ({
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: (index + 1) * 0.1 }}
-                  onClick={() => accessible ? onSelectDeck(deck.id) : onVerifyPurchase(deck.id)}
+                  onClick={() => onSelectDeck(deck.id)}
                   className="group cursor-pointer"
                 >
                   <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30">
@@ -190,17 +189,11 @@ export const DeckSelection = ({
                           <Sparkles className="w-12 h-12 text-white/80" />
                         </div>
                       )}
-                      <div className="absolute top-2 right-2 flex items-center gap-2">
-                        {deck.is_free && (
+                      {deck.is_free && (
+                        <div className="absolute top-2 right-2">
                           <Badge className="bg-primary/90 hover:bg-primary text-primary-foreground text-xs">Free</Badge>
-                        )}
-                        {!accessible && !deck.is_free && !deck.is_starter && (
-                          <Badge variant="outline" className="bg-background/80 text-xs">
-                            <Lock className="w-3 h-3 mr-1" />
-                            Locked
-                          </Badge>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-2 mb-2">
@@ -216,15 +209,9 @@ export const DeckSelection = ({
                           {deck.theme}
                         </p>
                       )}
-                      {accessible ? (
-                        <Badge variant="secondary" className="text-xs">
-                          Draw from Deck
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="text-xs">
-                          Verify Purchase
-                        </Badge>
-                      )}
+                      <Badge variant="secondary" className="text-xs">
+                        Draw from Deck
+                      </Badge>
                     </div>
                   </div>
                 </motion.div>
