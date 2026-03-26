@@ -285,7 +285,7 @@ const UserManagement = () => {
     const areas = createdUserDetails.buckets
       .map((b) => CONTENT_AREAS.find((a) => a.key === b)?.label || b)
       .join(", ");
-    const loginUrl = window.location.origin + "/auth";
+    const loginUrl = SITE_CONFIG.productionDomain + "/auth";
     const text = `Hi${createdUserDetails.name ? ` ${createdUserDetails.name}` : ""},
 
 Here are your login details for the Temple of Sustainment:
@@ -351,7 +351,7 @@ If you'd like to continue your access after this date, you can become a member a
 
   const handleCopyResetDetails = async () => {
     if (!resetPasswordDetails) return;
-    const loginUrl = window.location.origin + "/auth";
+    const loginUrl = SITE_CONFIG.productionDomain + "/auth";
     const text = `Hi${resetPasswordDetails.name ? ` ${resetPasswordDetails.name}` : ""},
 
 Your password for the Temple of Sustainment has been reset.
