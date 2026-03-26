@@ -98,6 +98,22 @@ const MyAccount = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  // Fetch manual access grants
+  useEffect(() => {
+    const fetchManualGrants = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const now = new Date().toISOString();
+      const { data } = await supabase
+        .from("manual_access_grants")
+        .select("bucket_key, ends_at")
+        .eq("user_id", session.user.id)
+        .gte("ends_at", now);
+      if (data) setManualGrants(data);
+    };
+    fetchManualGrants();
+  }, []);
+
   const handleManageBilling = async () => {
     setPortalLoading(true);
     try {
