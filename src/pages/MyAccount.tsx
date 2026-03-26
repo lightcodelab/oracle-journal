@@ -59,16 +59,23 @@ const TIER_FEATURES: Record<string, string[]> = {
   ],
 };
 
+const BUCKET_LABELS: Record<string, string> = {
+  remembrance: "Door of Remembrance",
+  devotion: "Door of Devotion",
+  communion: "Door of Communion",
+};
+
 const MyAccount = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { memberTierCode, subscriptionStatus, tierName, loading: tierLoading, isAdmin, refetch } = useTierAccess();
+  const { memberTierCode, subscriptionStatus, tierName, loading: tierLoading, isAdmin, bucketAccess, refetch } = useTierAccess();
   const { tiers, loading: tiersLoading, startCheckout, checkoutLoading } = useMembership();
   const [portalLoading, setPortalLoading] = useState(false);
   const [pauseLoading, setPauseLoading] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [billingCadence, setBillingCadence] = useState<"monthly" | "yearly">("monthly");
+  const [manualGrants, setManualGrants] = useState<{ bucket_key: string; ends_at: string }[]>([]);
 
   useEffect(() => {
     const checkAuth = async () => {
