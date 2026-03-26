@@ -202,6 +202,7 @@ const MyAccount = () => {
 
   const isActiveMember = subscriptionStatus === "active" || subscriptionStatus === "trialing";
   const isPaused = subscriptionStatus === "paused";
+  const hasManualAccess = manualGrants.length > 0;
   const hasSubscription = isActiveMember || isPaused;
 
   if (loading || tierLoading || tiersLoading) {
