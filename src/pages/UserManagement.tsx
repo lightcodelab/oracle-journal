@@ -437,7 +437,7 @@ You will be prompted to change your password when you next sign in.`;
     const areas = u.buckets
       .map((b) => CONTENT_AREAS.find((a) => a.key === b)?.label || b)
       .join(", ");
-    const loginUrl = window.location.origin + "/auth";
+    const loginUrl = SITE_CONFIG.productionDomain + "/auth";
     const expiryDate = new Date(u.ends_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
     const text = `Hi${u.full_name ? ` ${u.full_name}` : ""},
 
