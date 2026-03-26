@@ -114,15 +114,8 @@ export function useTierAccess(): TierAccess {
       return true;
     }
     // Check bucket access (includes both paid subscription AND manual grants)
-    if (bucketAccess[bucket] === true) {
-      return true;
-    }
-    // Check if user has active/trialing subscription for tier-based access
-    if (subscriptionStatus !== 'active' && subscriptionStatus !== 'trialing') {
-      return false;
-    }
-    return false;
-  }, [bucketAccess, subscriptionStatus, isAdmin]);
+    return bucketAccess[bucket] === true;
+  }, [bucketAccess, isAdmin]);
 
   return {
     memberTierCode,
