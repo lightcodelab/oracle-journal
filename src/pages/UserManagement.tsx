@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { SITE_CONFIG } from "@/lib/siteConfig";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -285,7 +286,7 @@ const UserManagement = () => {
     const areas = createdUserDetails.buckets
       .map((b) => CONTENT_AREAS.find((a) => a.key === b)?.label || b)
       .join(", ");
-    const loginUrl = window.location.origin + "/auth";
+    const loginUrl = SITE_CONFIG.productionDomain + "/auth";
     const text = `Hi${createdUserDetails.name ? ` ${createdUserDetails.name}` : ""},
 
 Here are your login details for the Temple of Sustainment:
@@ -351,7 +352,7 @@ If you'd like to continue your access after this date, you can become a member a
 
   const handleCopyResetDetails = async () => {
     if (!resetPasswordDetails) return;
-    const loginUrl = window.location.origin + "/auth";
+    const loginUrl = SITE_CONFIG.productionDomain + "/auth";
     const text = `Hi${resetPasswordDetails.name ? ` ${resetPasswordDetails.name}` : ""},
 
 Your password for the Temple of Sustainment has been reset.
@@ -436,7 +437,7 @@ You will be prompted to change your password when you next sign in.`;
     const areas = u.buckets
       .map((b) => CONTENT_AREAS.find((a) => a.key === b)?.label || b)
       .join(", ");
-    const loginUrl = window.location.origin + "/auth";
+    const loginUrl = SITE_CONFIG.productionDomain + "/auth";
     const expiryDate = new Date(u.ends_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
     const text = `Hi${u.full_name ? ` ${u.full_name}` : ""},
 
