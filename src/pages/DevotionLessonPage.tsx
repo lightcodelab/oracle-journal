@@ -48,7 +48,7 @@ const DevotionLessonPage = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
 
   useEffect(() => {
