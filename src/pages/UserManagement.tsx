@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { SITE_CONFIG } from "@/lib/siteConfig";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
