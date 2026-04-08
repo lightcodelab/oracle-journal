@@ -179,8 +179,11 @@ const AllResourcesSection = () => {
   }, []);
 
   const filtered = useMemo(() => {
-    if (activeTab === 'all') return resources;
-    return resources.filter(r => (r as any).location_id === activeTab);
+    const items = activeTab === 'all' ? resources : resources.filter(r => (r as any).location_id === activeTab);
+    if (activeTab === 'all') {
+      return [...items].sort((a, b) => a.title.localeCompare(b.title));
+    }
+    return items;
   }, [activeTab, resources]);
 
   if (loading) {
