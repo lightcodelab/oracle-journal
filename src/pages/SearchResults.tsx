@@ -58,6 +58,17 @@ const SearchResults = () => {
         .or(`title.ilike.${searchPattern},summary.ilike.${searchPattern}`)
         .limit(50);
 
+      // Search legacy courses table by title/description (include location for door mapping)
+      const { data: coursesData } = await supabase
+        .from('courses')
+        .select(`
+          id, title, description, image_url, door_type,
+          location:content_categories!courses_location_id_fkey(id, page)
+        `)
+        .eq('is_published', true)
+        .or(`title.ilike.${searchPattern},description.ilike.${searchPattern}`)
+        .limit(50);
+
       // Search healing_resources by title/summary (include location for door mapping)
       const { data: healingData } = await supabase
         .from('healing_resources')
@@ -165,7 +176,24 @@ const SearchResults = () => {
         doorBucket: r.location?.page || null,
       }));
 
-      setResults([...contentResults, ...healingResults]);
+      const courseResults: SearchResult[] = (coursesData || []).map((r: any) => ({
+        id: r.id,
+        title: r.title,
+        slug: `legacy-course-${r.id}`,
+        summary: r.description,
+        thumbnail_url: r.image_url || null,
+        main_media_kind: 'none' as const,
+        main_media_file_url: null,
+        main_media_embed_url: null,
+        secondary_audio_url: null,
+        is_course: true,
+        status: 'published' as const,
+        source: 'content' as const,
+        resource_type: { id: '', name: 'Course', slug: 'course' },
+        doorBucket: r.location?.page || r.door_type || null,
+      }));
+
+      setResults([...contentResults, ...courseResults, ...healingResults]);
       setLoading(false);
     };
 
