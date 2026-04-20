@@ -123,6 +123,11 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
           )}
 
           <div className="flex items-center gap-2 flex-wrap">
+            {comingSoon && (
+              <Badge className="bg-muted text-muted-foreground border border-border text-xs font-serif">
+                Coming Soon
+              </Badge>
+            )}
             {resource.is_course && (
               <Badge variant="secondary" className="text-xs">
                 Course
