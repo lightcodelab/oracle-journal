@@ -208,7 +208,7 @@ const SearchResults = () => {
         doorBucket: r.location?.page || null,
       }));
 
-      const courseResults: SearchResult[] = (coursesData || []).map((r: any) => ({
+      const courseResults: SearchResult[] = allCoursesData.map((r: any) => ({
         id: r.id,
         title: r.title,
         slug: `legacy-course-${r.id}`,
