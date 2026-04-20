@@ -169,7 +169,7 @@ const AllResourcesSection = () => {
           name: 'Course',
           slug: 'course',
         },
-        location_id: energyHygieneLoc?.id || null,
+        location_id: c.location_id || energyHygieneLoc?.id || null,
       }));
 
       setResources([...transformedContent, ...transformedHealing, ...transformedCourses]);
