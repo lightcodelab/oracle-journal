@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, X, Image as ImageIcon } from 'lucide-react';
 import CourseLessonEditor from './CourseLessonEditor';
+import CourseTagPicker from './CourseTagPicker';
 
 interface Category {
   id: string;
@@ -39,11 +40,32 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
   const [displayOrder, setDisplayOrder] = useState<number>(0);
   const [isPublished, setIsPublished] = useState(false);
   const [savedCourseId, setSavedCourseId] = useState<string | null>(courseId || null);
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
 
   useEffect(() => {
     fetchLocations();
-    if (courseId) fetchCourse();
+    if (courseId) {
+      fetchCourse();
+      fetchCourseTags(courseId);
+    }
   }, [courseId]);
+
+  const fetchCourseTags = async (id: string) => {
+    const { data } = await supabase
+      .from('course_tag_assignments')
+      .select('tag_id')
+      .eq('course_id', id);
+    if (data) setSelectedTagIds(data.map((row: any) => row.tag_id));
+  };
+
+  const syncCourseTags = async (id: string) => {
+    // Replace strategy: delete all then insert current selection
+    await supabase.from('course_tag_assignments').delete().eq('course_id', id);
+    if (selectedTagIds.length > 0) {
+      const rows = selectedTagIds.map((tag_id) => ({ course_id: id, tag_id }));
+      await supabase.from('course_tag_assignments').insert(rows);
+    }
+  };
 
   const fetchLocations = async () => {
     const { data } = await supabase
@@ -123,12 +145,14 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
       if (savedCourseId) {
         const { error } = await supabase.from('courses').update(payload).eq('id', savedCourseId);
         if (error) throw error;
+        await syncCourseTags(savedCourseId);
         toast({ title: 'Updated', description: 'Course updated successfully.' });
         onSuccess?.();
       } else {
         const { data, error } = await supabase.from('courses').insert(payload).select().single();
         if (error) throw error;
         setSavedCourseId(data.id);
+        await syncCourseTags(data.id);
         toast({ title: 'Created', description: 'Course created. You can now add lessons below.' });
       }
     } catch (error: any) {
@@ -187,6 +211,11 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
               rows={3}
             />
           </div>
+
+          <CourseTagPicker
+            selectedTagIds={selectedTagIds}
+            onChange={setSelectedTagIds}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
