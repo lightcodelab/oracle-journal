@@ -92,11 +92,12 @@ const AllResourcesSection = () => {
         healingQuery = healingQuery.eq('status', 'published');
       }
 
-      // Fetch legacy courses (from courses table, e.g. Energy Hygiene Kit) - only devotion door type
+      // Fetch legacy courses (from courses table, e.g. Energy Hygiene Kit)
+      // Filter by location_id (already a Devotion-page location) so courses mapped
+      // to Remembrance locations (e.g. Rites) don't leak into Devotion.
       const coursesQuery = supabase
         .from('courses')
-        .select('id, title, description, image_url, door_type, is_published')
-        .eq('door_type', 'devotion')
+        .select('id, title, description, image_url, door_type, is_published, location_id')
         .eq('is_published', true)
         .in('location_id', locationIds);
 
