@@ -58,6 +58,17 @@ const SearchResults = () => {
         .or(`title.ilike.${searchPattern},summary.ilike.${searchPattern}`)
         .limit(50);
 
+      // Search legacy courses table by title/description (include location for door mapping)
+      const { data: coursesData } = await supabase
+        .from('courses')
+        .select(`
+          id, title, description, image_url, door_type,
+          location:content_categories!courses_location_id_fkey(id, page)
+        `)
+        .eq('is_published', true)
+        .or(`title.ilike.${searchPattern},description.ilike.${searchPattern}`)
+        .limit(50);
+
       // Search healing_resources by title/summary (include location for door mapping)
       const { data: healingData } = await supabase
         .from('healing_resources')
