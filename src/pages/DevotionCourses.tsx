@@ -53,14 +53,26 @@ const DevotionCourses = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  // Also fetch legacy courses from the courses table
+  // Also fetch legacy courses from the courses table — scope to this location
+  // so courses mapped to other doors (e.g. Remembrance) don't leak in.
   const { data: legacyCourses, isLoading: coursesLoading } = useQuery({
-    queryKey: ['devotion-courses'],
+    queryKey: ['devotion-courses', LOCATION_SLUG],
     queryFn: async () => {
+      // Look up the location id for Energy Hygiene Practices
+      const { data: locationData, error: locErr } = await supabase
+        .from('content_categories')
+        .select('id')
+        .eq('slug', LOCATION_SLUG)
+        .eq('type', 'location')
+        .eq('active', true)
+        .single();
+
+      if (locErr || !locationData) return [] as Course[];
+
       const { data, error } = await supabase
         .from('courses')
         .select('*')
-        .eq('door_type', 'devotion')
+        .eq('location_id', locationData.id)
         .eq('is_published', true)
         .order('display_order', { ascending: true });
 
