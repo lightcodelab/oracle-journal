@@ -288,8 +288,28 @@ const CardDeckAdmin = () => {
       toast({ title: 'Name and Theme required', variant: 'destructive' });
       return;
     }
+    if (backMode === 'image' && !backImageFile) {
+      toast({ title: 'Card back image required', description: 'Upload an image or switch to Color.', variant: 'destructive' });
+      return;
+    }
     setCreatingDeck(true);
     try {
+      // If user uploaded an image, compress + push to storage and store URL in image_color.
+      let imageColorValue = newDeck.image_color || '#8b5e3c';
+      if (backMode === 'image' && backImageFile) {
+        setUploadingImage(true);
+        const compressed = await compressImage(backImageFile);
+        const ext = compressed.name.split('.').pop() || 'webp';
+        const path = `card-backs/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from('content-images')
+          .upload(path, compressed, { contentType: compressed.type, upsert: false });
+        if (upErr) throw upErr;
+        const { data: pub } = supabase.storage.from('content-images').getPublicUrl(path);
+        imageColorValue = pub.publicUrl;
+        setUploadingImage(false);
+      }
+
       const nextOrder = (decks.length || 0) + 1;
       const { data: created, error } = await supabase
         .from('decks')
@@ -297,7 +317,7 @@ const CardDeckAdmin = () => {
           name: newDeck.name.trim(),
           theme: newDeck.theme.trim(),
           description: newDeck.description.trim() || null,
-          image_color: newDeck.image_color || '#8b5e3c',
+          image_color: imageColorValue,
           display_order: nextOrder,
           is_free: false,
           is_starter: false,
@@ -313,6 +333,9 @@ const CardDeckAdmin = () => {
       setSelectedDeckId(created.id);
       setNewDeckOpen(false);
       setNewDeck({ name: '', theme: '', description: '', image_color: '#8b5e3c' });
+      setBackImageFile(null);
+      setBackImagePreview('');
+      setBackMode('image');
       toast({
         title: 'Deck created',
         description: `${created.name} created with The Sacred Rewrite field structure. Add cards using the form below.`,
@@ -321,6 +344,7 @@ const CardDeckAdmin = () => {
       toast({ title: 'Failed to create deck', description: err.message, variant: 'destructive' });
     } finally {
       setCreatingDeck(false);
+      setUploadingImage(false);
     }
   };
 
