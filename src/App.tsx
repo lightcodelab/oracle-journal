@@ -24,6 +24,7 @@ import AreekeeraBot from "./pages/AreekeeraBot";
 import AreekeeraAdmin from "./pages/AreekeeraAdmin";
 import ContentAdmin from "./pages/ContentAdmin";
 import CourseAdmin from "./pages/CourseAdmin";
+import CardDeckAdmin from "./pages/CardDeckAdmin";
 import LiveSessions from "./pages/LiveSessions";
 import LiveSessionJoin from "./pages/LiveSessionJoin";
 import AdminLiveSessions from "./pages/AdminLiveSessions";
@@ -80,6 +81,7 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/content" element={<ContentAdmin />} />
             <Route path="/admin/courses" element={<CourseAdmin />} />
+            <Route path="/admin/card-decks" element={<CardDeckAdmin />} />
             <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
             <Route path="/devotion/section/energy-hygiene-practices" element={<DevotionCourses />} />
             <Route path="/devotion/section/:section" element={<DevotionSectionPage />} />
