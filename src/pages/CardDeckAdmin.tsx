@@ -44,6 +44,38 @@ interface CardRow {
   content_sections: Record<string, any> | null;
 }
 
+// Mirror the labels shown on the Door of Remembrance public selectors
+// (CardNumberSelector + CardDropdownSelector) so admins see the same wording.
+const getPublicCardLabel = (card: CardRow, deckName: string | undefined): string => {
+  const sections = (card.content_sections || {}) as Record<string, any>;
+
+  if (deckName === 'Magic not Logic') {
+    if (sections.clearing_statement) {
+      const text = String(sections.clearing_statement);
+      const firstLine = text.split('\n')[0];
+      return firstLine.length > 60 ? firstLine.substring(0, 60) + '…' : firstLine;
+    }
+    return `Card ${card.card_number}`;
+  }
+
+  if (deckName === 'AreekeerA') {
+    return card.card_title || '';
+  }
+
+  if (deckName === 'The Art of Self-Healing') {
+    if (sections.activity_heading) {
+      return String(sections.activity_heading)
+        .replace(/^Exercise:\s*/i, '')
+        .replace(/^Template:\s*/i, '')
+        .trim();
+    }
+    return '';
+  }
+
+  // The Sacred Rewrite + everything else
+  return card.card_title || '';
+};
+
 type FieldDef = {
   key: string;
   label: string;
