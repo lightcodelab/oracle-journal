@@ -351,11 +351,27 @@ const CardDeckAdmin = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Card Title</Label>
+                  <Label>
+                    {selectedDeck?.name === 'AreekeerA' && 'Card Title (one-word, e.g. BODILY)'}
+                    {selectedDeck?.name === 'The Sacred Rewrite' && 'Card Title'}
+                    {selectedDeck?.name === 'Magic not Logic' && 'Card Title (the clearing statement, e.g. "I have to be in control")'}
+                    {selectedDeck?.name === 'The Art of Self-Healing' && 'Card Title (matches Activity heading, e.g. "Exercise: Access Memory")'}
+                    {!['AreekeerA','The Sacred Rewrite','Magic not Logic','The Art of Self-Healing'].includes(selectedDeck?.name || '') && 'Card Title'}
+                  </Label>
                   <Input
                     value={draft.card_title || ''}
                     onChange={(e) => setDraft({ ...draft, card_title: e.target.value })}
                   />
+                  {selectedDeck?.name === 'Magic not Logic' && (
+                    <p className="text-xs text-muted-foreground">
+                      This is shown in the Door of Remembrance card dropdown. Should match the CLEARING line in Card Details and the Clearing Statement below.
+                    </p>
+                  )}
+                  {selectedDeck?.name === 'The Art of Self-Healing' && (
+                    <p className="text-xs text-muted-foreground">
+                      The dropdown displays the Activity heading (with "Exercise:" / "Template:" stripped). Keep this in sync with the Activity Heading field below.
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2 sm:col-span-2">
                   <Label>Image File Name</Label>
