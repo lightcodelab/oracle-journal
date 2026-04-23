@@ -449,20 +449,51 @@ const CardDeckAdmin = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Card Back Color (hex)</Label>
-                      <Input
-                        value={newDeck.image_color}
-                        placeholder="#8b5e3c"
-                        onChange={(e) => setNewDeck({ ...newDeck, image_color: e.target.value })}
-                      />
+                      <Label>Card Back</Label>
+                      <Tabs value={backMode} onValueChange={(v) => setBackMode(v as 'image' | 'color')}>
+                        <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="image">Upload Image</TabsTrigger>
+                          <TabsTrigger value="color">Solid Color</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="image" className="space-y-3 pt-3">
+                          <Input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0] || null;
+                              setBackImageFile(file);
+                              if (backImagePreview) URL.revokeObjectURL(backImagePreview);
+                              setBackImagePreview(file ? URL.createObjectURL(file) : '');
+                            }}
+                          />
+                          {backImagePreview && (
+                            <div className="rounded-md border border-border overflow-hidden w-32 aspect-[2/3] bg-muted">
+                              <img src={backImagePreview} alt="Card back preview" className="w-full h-full object-cover" />
+                            </div>
+                          )}
+                          <p className="text-xs text-muted-foreground">
+                            JPG, PNG or WebP. Auto-compressed to ~60% quality, max 1920px.
+                          </p>
+                        </TabsContent>
+                        <TabsContent value="color" className="space-y-2 pt-3">
+                          <Input
+                            value={newDeck.image_color}
+                            placeholder="#8b5e3c"
+                            onChange={(e) => setNewDeck({ ...newDeck, image_color: e.target.value })}
+                          />
+                          <p className="text-xs text-muted-foreground">Hex color used as the card back fill.</p>
+                        </TabsContent>
+                      </Tabs>
                     </div>
                   </div>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setNewDeckOpen(false)} disabled={creatingDeck}>
                       Cancel
                     </Button>
-                    <Button onClick={handleCreateDeck} disabled={creatingDeck}>
-                      {creatingDeck ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating…</> : 'Create Deck'}
+                    <Button onClick={handleCreateDeck} disabled={creatingDeck || uploadingImage}>
+                      {(creatingDeck || uploadingImage)
+                        ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{uploadingImage ? 'Uploading…' : 'Creating…'}</>
+                        : 'Create Deck'}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
