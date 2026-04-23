@@ -153,6 +153,16 @@ const CardDeckAdmin = () => {
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   const [draft, setDraft] = useState<CardRow | null>(null);
 
+  // New-deck dialog state
+  const [newDeckOpen, setNewDeckOpen] = useState(false);
+  const [creatingDeck, setCreatingDeck] = useState(false);
+  const [newDeck, setNewDeck] = useState({
+    name: '',
+    theme: '',
+    description: '',
+    image_color: '#8b5e3c',
+  });
+
   // Auth + load decks
   useEffect(() => {
     (async () => {
