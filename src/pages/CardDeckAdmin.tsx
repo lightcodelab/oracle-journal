@@ -375,7 +375,69 @@ const CardDeckAdmin = () => {
         {/* Deck + Card selectors */}
         <Card>
           <CardHeader>
-            <CardTitle className="font-serif text-lg">Select a card to edit</CardTitle>
+            <div className="flex items-center justify-between gap-4">
+              <CardTitle className="font-serif text-lg">Select a card to edit</CardTitle>
+              <Dialog open={newDeckOpen} onOpenChange={setNewDeckOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Plus className="w-4 h-4 mr-2" /> New Deck
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="font-serif">Create a new card deck</DialogTitle>
+                    <DialogDescription>
+                      New decks use the same field structure as <em>The Sacred Rewrite</em>
+                      {' '}(Opening Invocation, Spiral of Inquiry, Acknowledgement, Spiral of Seeing,
+                      Living Inquiry, Guided Audio, Embodiment Ritual, Closing Benediction).
+                      You can add cards to it after creating.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-2">
+                    <div className="space-y-2">
+                      <Label>Deck Name *</Label>
+                      <Input
+                        value={newDeck.name}
+                        placeholder="e.g. The Sacred Rewrite Vol. II"
+                        onChange={(e) => setNewDeck({ ...newDeck, name: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Theme *</Label>
+                      <Input
+                        value={newDeck.theme}
+                        placeholder="e.g. Remembrance, Awakening, Sovereignty"
+                        onChange={(e) => setNewDeck({ ...newDeck, theme: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Description</Label>
+                      <Textarea
+                        rows={3}
+                        value={newDeck.description}
+                        onChange={(e) => setNewDeck({ ...newDeck, description: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Card Back Color (hex)</Label>
+                      <Input
+                        value={newDeck.image_color}
+                        placeholder="#8b5e3c"
+                        onChange={(e) => setNewDeck({ ...newDeck, image_color: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setNewDeckOpen(false)} disabled={creatingDeck}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleCreateDeck} disabled={creatingDeck}>
+                      {creatingDeck ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating…</> : 'Create Deck'}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
@@ -390,14 +452,25 @@ const CardDeckAdmin = () => {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Card</Label>
+              <div className="flex items-center justify-between">
+                <Label>Card</Label>
+                {selectedDeckId && (
+                  <Button type="button" variant="ghost" size="sm" onClick={handleAddCard}>
+                    <Plus className="w-3 h-3 mr-1" /> Add Card
+                  </Button>
+                )}
+              </div>
               <Select
                 value={selectedCardId}
                 onValueChange={setSelectedCardId}
-                disabled={!selectedDeckId || cards.length === 0}
+                disabled={!selectedDeckId}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder={selectedDeckId ? 'Choose a card…' : 'Pick a deck first'} />
+                  <SelectValue placeholder={
+                    selectedDeckId
+                      ? (cards.length === 0 ? 'No cards yet — click Add Card' : 'Choose a card…')
+                      : 'Pick a deck first'
+                  } />
                 </SelectTrigger>
                 <SelectContent>
                   {cards.map((c) => (
