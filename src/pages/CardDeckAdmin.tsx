@@ -163,6 +163,10 @@ const CardDeckAdmin = () => {
     description: '',
     image_color: '#8b5e3c',
   });
+  const [backMode, setBackMode] = useState<'image' | 'color'>('image');
+  const [backImageFile, setBackImageFile] = useState<File | null>(null);
+  const [backImagePreview, setBackImagePreview] = useState<string>('');
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Auth + load decks
   useEffect(() => {
