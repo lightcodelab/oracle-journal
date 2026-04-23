@@ -413,7 +413,7 @@ const CardDeckAdmin = () => {
                     <Plus className="w-4 h-4 mr-2" /> New Deck
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle className="font-serif">Create a new card deck</DialogTitle>
                     <DialogDescription>
