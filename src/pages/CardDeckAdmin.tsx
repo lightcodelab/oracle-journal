@@ -119,8 +119,8 @@ const DECK_FIELDS: Record<string, FieldDef[]> = {
     { key: 'activity', label: 'Activity — Content', type: 'textarea', storage: 'json', rows: 8 },
   ],
   'Magic not Logic': [
-    { key: 'card_details', label: 'The Card (card_details)', type: 'textarea', storage: 'json', rows: 6, helper: 'Stored in content_sections for Magic not Logic.' },
-    { key: 'clearing_statement', label: 'Clearing Statement', type: 'textarea', storage: 'json', rows: 4 },
+    { key: 'card_details', label: 'Card Details (CLEARING + ACTIVATION)', type: 'textarea', storage: 'column', rows: 8, helper: 'Two lines exactly as shown on the card. Format: "CLEARING: …" on line 1, "ACTIVATION: …" on line 2. Saving mirrors this to content_sections.card_details automatically.' },
+    { key: 'clearing_statement', label: 'Clearing Statement (drives the dropdown label)', type: 'textarea', storage: 'json', rows: 4, helper: 'First line of this is what appears in the Door of Remembrance card dropdown. Usually identical to the CLEARING line above.' },
     { key: 'journalling_activity_heading', label: 'Journalling Activity — Heading', type: 'input', storage: 'json' },
     { key: 'journalling_activity', label: 'Journalling Activity — Content', type: 'textarea', storage: 'json', rows: 8 },
     { key: 'vimeo_video', label: 'Vimeo Video ID', type: 'input', storage: 'json', helper: 'Just the ID (e.g. 123456789), not the full URL.' },
@@ -226,12 +226,19 @@ const CardDeckAdmin = () => {
     if (!draft) return;
     setSaving(true);
     try {
+      // Magic not Logic stores card_details in BOTH the column AND content_sections.
+      // Keep them in sync so the public Door of Remembrance display always matches.
+      const mergedSections: Record<string, any> = { ...(draft.content_sections || {}) };
+      if (selectedDeck?.name === 'Magic not Logic') {
+        mergedSections.card_details = draft.card_details ?? null;
+      }
+
       // Build update payload: only known column fields + content_sections
       const payload: Record<string, any> = {
         card_title: draft.card_title,
         card_number: draft.card_number,
         image_file_name: draft.image_file_name,
-        content_sections: draft.content_sections || {},
+        content_sections: mergedSections,
       };
       // Add all column fields for this deck
       fields.filter((f) => f.storage === 'column').forEach((f) => {
