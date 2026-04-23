@@ -309,7 +309,10 @@ const CardDeckAdmin = () => {
                 <SelectContent>
                   {cards.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
-                      #{c.card_number} — {c.card_title}
+                      Card {c.card_number}
+                      {getPublicCardLabel(c, selectedDeck?.name)
+                        ? ` — ${getPublicCardLabel(c, selectedDeck?.name)}`
+                        : ''}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -323,7 +326,10 @@ const CardDeckAdmin = () => {
           <Card>
             <CardHeader>
               <CardTitle className="font-serif text-lg">
-                Editing: #{draft.card_number} — {draft.card_title}
+                Editing: Card {draft.card_number}
+                {getPublicCardLabel(draft, selectedDeck?.name)
+                  ? ` — ${getPublicCardLabel(draft, selectedDeck?.name)}`
+                  : ''}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
