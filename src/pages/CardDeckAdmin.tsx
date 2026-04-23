@@ -277,6 +277,72 @@ const CardDeckAdmin = () => {
     }
   };
 
+  const handleCreateDeck = async () => {
+    if (!newDeck.name.trim() || !newDeck.theme.trim()) {
+      toast({ title: 'Name and Theme required', variant: 'destructive' });
+      return;
+    }
+    setCreatingDeck(true);
+    try {
+      const nextOrder = (decks.length || 0) + 1;
+      const { data: created, error } = await supabase
+        .from('decks')
+        .insert({
+          name: newDeck.name.trim(),
+          theme: newDeck.theme.trim(),
+          description: newDeck.description.trim() || null,
+          image_color: newDeck.image_color || '#8b5e3c',
+          display_order: nextOrder,
+          is_free: false,
+          is_starter: false,
+        })
+        .select('id, name')
+        .single();
+      if (error) throw error;
+
+      // Refresh deck list and select the new deck
+      const { data: deckData } = await supabase
+        .from('decks').select('id, name').order('display_order', { ascending: true });
+      setDecks(deckData || []);
+      setSelectedDeckId(created.id);
+      setNewDeckOpen(false);
+      setNewDeck({ name: '', theme: '', description: '', image_color: '#8b5e3c' });
+      toast({
+        title: 'Deck created',
+        description: `${created.name} created with The Sacred Rewrite field structure. Add cards using the form below.`,
+      });
+    } catch (err: any) {
+      toast({ title: 'Failed to create deck', description: err.message, variant: 'destructive' });
+    } finally {
+      setCreatingDeck(false);
+    }
+  };
+
+  const handleAddCard = async () => {
+    if (!selectedDeckId || !selectedDeck) return;
+    const nextNumber = (cards.reduce((max, c) => Math.max(max, c.card_number), 0) || 0) + 1;
+    try {
+      const { data, error } = await supabase
+        .from('cards')
+        .insert({
+          deck_id: selectedDeckId,
+          deck_name: selectedDeck.name,
+          card_number: nextNumber,
+          card_title: `Card ${nextNumber}`,
+          content_sections: {},
+        })
+        .select('*')
+        .single();
+      if (error) throw error;
+      const newCard = data as CardRow;
+      setCards((prev) => [...prev, newCard].sort((a, b) => a.card_number - b.card_number));
+      setSelectedCardId(newCard.id);
+      toast({ title: 'Card added', description: `Card ${nextNumber} created. Edit and save below.` });
+    } catch (err: any) {
+      toast({ title: 'Failed to add card', description: err.message, variant: 'destructive' });
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
