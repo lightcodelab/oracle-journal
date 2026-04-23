@@ -11,6 +11,8 @@ import { Loader2, Save, ArrowLeft, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
+import { compressImage } from '@/lib/imageCompression';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Dialog,
   DialogContent,
@@ -162,6 +164,10 @@ const CardDeckAdmin = () => {
     description: '',
     image_color: '#8b5e3c',
   });
+  const [backMode, setBackMode] = useState<'image' | 'color'>('image');
+  const [backImageFile, setBackImageFile] = useState<File | null>(null);
+  const [backImagePreview, setBackImagePreview] = useState<string>('');
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Auth + load decks
   useEffect(() => {
@@ -283,8 +289,28 @@ const CardDeckAdmin = () => {
       toast({ title: 'Name and Theme required', variant: 'destructive' });
       return;
     }
+    if (backMode === 'image' && !backImageFile) {
+      toast({ title: 'Card back image required', description: 'Upload an image or switch to Color.', variant: 'destructive' });
+      return;
+    }
     setCreatingDeck(true);
     try {
+      // If user uploaded an image, compress + push to storage and store URL in image_color.
+      let imageColorValue = newDeck.image_color || '#8b5e3c';
+      if (backMode === 'image' && backImageFile) {
+        setUploadingImage(true);
+        const compressed = await compressImage(backImageFile);
+        const ext = compressed.name.split('.').pop() || 'webp';
+        const path = `card-backs/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from('content-images')
+          .upload(path, compressed, { contentType: compressed.type, upsert: false });
+        if (upErr) throw upErr;
+        const { data: pub } = supabase.storage.from('content-images').getPublicUrl(path);
+        imageColorValue = pub.publicUrl;
+        setUploadingImage(false);
+      }
+
       const nextOrder = (decks.length || 0) + 1;
       const { data: created, error } = await supabase
         .from('decks')
@@ -292,7 +318,7 @@ const CardDeckAdmin = () => {
           name: newDeck.name.trim(),
           theme: newDeck.theme.trim(),
           description: newDeck.description.trim() || null,
-          image_color: newDeck.image_color || '#8b5e3c',
+          image_color: imageColorValue,
           display_order: nextOrder,
           is_free: false,
           is_starter: false,
@@ -308,6 +334,9 @@ const CardDeckAdmin = () => {
       setSelectedDeckId(created.id);
       setNewDeckOpen(false);
       setNewDeck({ name: '', theme: '', description: '', image_color: '#8b5e3c' });
+      setBackImageFile(null);
+      setBackImagePreview('');
+      setBackMode('image');
       toast({
         title: 'Deck created',
         description: `${created.name} created with The Sacred Rewrite field structure. Add cards using the form below.`,
@@ -316,6 +345,7 @@ const CardDeckAdmin = () => {
       toast({ title: 'Failed to create deck', description: err.message, variant: 'destructive' });
     } finally {
       setCreatingDeck(false);
+      setUploadingImage(false);
     }
   };
 
@@ -419,20 +449,51 @@ const CardDeckAdmin = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Card Back Color (hex)</Label>
-                      <Input
-                        value={newDeck.image_color}
-                        placeholder="#8b5e3c"
-                        onChange={(e) => setNewDeck({ ...newDeck, image_color: e.target.value })}
-                      />
+                      <Label>Card Back</Label>
+                      <Tabs value={backMode} onValueChange={(v) => setBackMode(v as 'image' | 'color')}>
+                        <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="image">Upload Image</TabsTrigger>
+                          <TabsTrigger value="color">Solid Color</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="image" className="space-y-3 pt-3">
+                          <Input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0] || null;
+                              setBackImageFile(file);
+                              if (backImagePreview) URL.revokeObjectURL(backImagePreview);
+                              setBackImagePreview(file ? URL.createObjectURL(file) : '');
+                            }}
+                          />
+                          {backImagePreview && (
+                            <div className="rounded-md border border-border overflow-hidden w-32 aspect-[2/3] bg-muted">
+                              <img src={backImagePreview} alt="Card back preview" className="w-full h-full object-cover" />
+                            </div>
+                          )}
+                          <p className="text-xs text-muted-foreground">
+                            JPG, PNG or WebP. Auto-compressed to ~60% quality, max 1920px.
+                          </p>
+                        </TabsContent>
+                        <TabsContent value="color" className="space-y-2 pt-3">
+                          <Input
+                            value={newDeck.image_color}
+                            placeholder="#8b5e3c"
+                            onChange={(e) => setNewDeck({ ...newDeck, image_color: e.target.value })}
+                          />
+                          <p className="text-xs text-muted-foreground">Hex color used as the card back fill.</p>
+                        </TabsContent>
+                      </Tabs>
                     </div>
                   </div>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setNewDeckOpen(false)} disabled={creatingDeck}>
                       Cancel
                     </Button>
-                    <Button onClick={handleCreateDeck} disabled={creatingDeck}>
-                      {creatingDeck ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating…</> : 'Create Deck'}
+                    <Button onClick={handleCreateDeck} disabled={creatingDeck || uploadingImage}>
+                      {(creatingDeck || uploadingImage)
+                        ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{uploadingImage ? 'Uploading…' : 'Creating…'}</>
+                        : 'Create Deck'}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
