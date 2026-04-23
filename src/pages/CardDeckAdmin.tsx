@@ -44,6 +44,38 @@ interface CardRow {
   content_sections: Record<string, any> | null;
 }
 
+// Mirror the labels shown on the Door of Remembrance public selectors
+// (CardNumberSelector + CardDropdownSelector) so admins see the same wording.
+const getPublicCardLabel = (card: CardRow, deckName: string | undefined): string => {
+  const sections = (card.content_sections || {}) as Record<string, any>;
+
+  if (deckName === 'Magic not Logic') {
+    if (sections.clearing_statement) {
+      const text = String(sections.clearing_statement);
+      const firstLine = text.split('\n')[0];
+      return firstLine.length > 60 ? firstLine.substring(0, 60) + '…' : firstLine;
+    }
+    return `Card ${card.card_number}`;
+  }
+
+  if (deckName === 'AreekeerA') {
+    return card.card_title || '';
+  }
+
+  if (deckName === 'The Art of Self-Healing') {
+    if (sections.activity_heading) {
+      return String(sections.activity_heading)
+        .replace(/^Exercise:\s*/i, '')
+        .replace(/^Template:\s*/i, '')
+        .trim();
+    }
+    return '';
+  }
+
+  // The Sacred Rewrite + everything else
+  return card.card_title || '';
+};
+
 type FieldDef = {
   key: string;
   label: string;
@@ -277,7 +309,10 @@ const CardDeckAdmin = () => {
                 <SelectContent>
                   {cards.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
-                      #{c.card_number} — {c.card_title}
+                      Card {c.card_number}
+                      {getPublicCardLabel(c, selectedDeck?.name)
+                        ? ` — ${getPublicCardLabel(c, selectedDeck?.name)}`
+                        : ''}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -291,7 +326,10 @@ const CardDeckAdmin = () => {
           <Card>
             <CardHeader>
               <CardTitle className="font-serif text-lg">
-                Editing: #{draft.card_number} — {draft.card_title}
+                Editing: Card {draft.card_number}
+                {getPublicCardLabel(draft, selectedDeck?.name)
+                  ? ` — ${getPublicCardLabel(draft, selectedDeck?.name)}`
+                  : ''}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
