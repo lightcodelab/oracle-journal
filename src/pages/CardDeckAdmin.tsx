@@ -218,7 +218,8 @@ const CardDeckAdmin = () => {
   const selectedDeck = decks.find((d) => d.id === selectedDeckId);
   const fields = useMemo<FieldDef[]>(() => {
     if (!selectedDeck) return [];
-    return DECK_FIELDS[selectedDeck.name] || ALL_FIELDS;
+    // New decks created from this admin default to The Sacred Rewrite field structure.
+    return DECK_FIELDS[selectedDeck.name] || DECK_FIELDS['The Sacred Rewrite'];
   }, [selectedDeck]);
 
   const updateField = (f: FieldDef, value: string) => {
