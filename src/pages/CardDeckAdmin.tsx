@@ -7,10 +7,19 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Save, ArrowLeft } from 'lucide-react';
+import { Loader2, Save, ArrowLeft, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 interface DeckRow {
   id: string;
@@ -144,6 +153,16 @@ const CardDeckAdmin = () => {
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   const [draft, setDraft] = useState<CardRow | null>(null);
 
+  // New-deck dialog state
+  const [newDeckOpen, setNewDeckOpen] = useState(false);
+  const [creatingDeck, setCreatingDeck] = useState(false);
+  const [newDeck, setNewDeck] = useState({
+    name: '',
+    theme: '',
+    description: '',
+    image_color: '#8b5e3c',
+  });
+
   // Auth + load decks
   useEffect(() => {
     (async () => {
@@ -199,7 +218,8 @@ const CardDeckAdmin = () => {
   const selectedDeck = decks.find((d) => d.id === selectedDeckId);
   const fields = useMemo<FieldDef[]>(() => {
     if (!selectedDeck) return [];
-    return DECK_FIELDS[selectedDeck.name] || ALL_FIELDS;
+    // New decks created from this admin default to The Sacred Rewrite field structure.
+    return DECK_FIELDS[selectedDeck.name] || DECK_FIELDS['The Sacred Rewrite'];
   }, [selectedDeck]);
 
   const updateField = (f: FieldDef, value: string) => {
@@ -258,6 +278,72 @@ const CardDeckAdmin = () => {
     }
   };
 
+  const handleCreateDeck = async () => {
+    if (!newDeck.name.trim() || !newDeck.theme.trim()) {
+      toast({ title: 'Name and Theme required', variant: 'destructive' });
+      return;
+    }
+    setCreatingDeck(true);
+    try {
+      const nextOrder = (decks.length || 0) + 1;
+      const { data: created, error } = await supabase
+        .from('decks')
+        .insert({
+          name: newDeck.name.trim(),
+          theme: newDeck.theme.trim(),
+          description: newDeck.description.trim() || null,
+          image_color: newDeck.image_color || '#8b5e3c',
+          display_order: nextOrder,
+          is_free: false,
+          is_starter: false,
+        })
+        .select('id, name')
+        .single();
+      if (error) throw error;
+
+      // Refresh deck list and select the new deck
+      const { data: deckData } = await supabase
+        .from('decks').select('id, name').order('display_order', { ascending: true });
+      setDecks(deckData || []);
+      setSelectedDeckId(created.id);
+      setNewDeckOpen(false);
+      setNewDeck({ name: '', theme: '', description: '', image_color: '#8b5e3c' });
+      toast({
+        title: 'Deck created',
+        description: `${created.name} created with The Sacred Rewrite field structure. Add cards using the form below.`,
+      });
+    } catch (err: any) {
+      toast({ title: 'Failed to create deck', description: err.message, variant: 'destructive' });
+    } finally {
+      setCreatingDeck(false);
+    }
+  };
+
+  const handleAddCard = async () => {
+    if (!selectedDeckId || !selectedDeck) return;
+    const nextNumber = (cards.reduce((max, c) => Math.max(max, c.card_number), 0) || 0) + 1;
+    try {
+      const { data, error } = await supabase
+        .from('cards')
+        .insert({
+          deck_id: selectedDeckId,
+          deck_name: selectedDeck.name,
+          card_number: nextNumber,
+          card_title: `Card ${nextNumber}`,
+          content_sections: {},
+        })
+        .select('*')
+        .single();
+      if (error) throw error;
+      const newCard = data as CardRow;
+      setCards((prev) => [...prev, newCard].sort((a, b) => a.card_number - b.card_number));
+      setSelectedCardId(newCard.id);
+      toast({ title: 'Card added', description: `Card ${nextNumber} created. Edit and save below.` });
+    } catch (err: any) {
+      toast({ title: 'Failed to add card', description: err.message, variant: 'destructive' });
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -289,7 +375,69 @@ const CardDeckAdmin = () => {
         {/* Deck + Card selectors */}
         <Card>
           <CardHeader>
-            <CardTitle className="font-serif text-lg">Select a card to edit</CardTitle>
+            <div className="flex items-center justify-between gap-4">
+              <CardTitle className="font-serif text-lg">Select a card to edit</CardTitle>
+              <Dialog open={newDeckOpen} onOpenChange={setNewDeckOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Plus className="w-4 h-4 mr-2" /> New Deck
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="font-serif">Create a new card deck</DialogTitle>
+                    <DialogDescription>
+                      New decks use the same field structure as <em>The Sacred Rewrite</em>
+                      {' '}(Opening Invocation, Spiral of Inquiry, Acknowledgement, Spiral of Seeing,
+                      Living Inquiry, Guided Audio, Embodiment Ritual, Closing Benediction).
+                      You can add cards to it after creating.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-2">
+                    <div className="space-y-2">
+                      <Label>Deck Name *</Label>
+                      <Input
+                        value={newDeck.name}
+                        placeholder="e.g. The Sacred Rewrite Vol. II"
+                        onChange={(e) => setNewDeck({ ...newDeck, name: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Theme *</Label>
+                      <Input
+                        value={newDeck.theme}
+                        placeholder="e.g. Remembrance, Awakening, Sovereignty"
+                        onChange={(e) => setNewDeck({ ...newDeck, theme: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Description</Label>
+                      <Textarea
+                        rows={3}
+                        value={newDeck.description}
+                        onChange={(e) => setNewDeck({ ...newDeck, description: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Card Back Color (hex)</Label>
+                      <Input
+                        value={newDeck.image_color}
+                        placeholder="#8b5e3c"
+                        onChange={(e) => setNewDeck({ ...newDeck, image_color: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setNewDeckOpen(false)} disabled={creatingDeck}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleCreateDeck} disabled={creatingDeck}>
+                      {creatingDeck ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating…</> : 'Create Deck'}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
@@ -304,14 +452,25 @@ const CardDeckAdmin = () => {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Card</Label>
+              <div className="flex items-center justify-between">
+                <Label>Card</Label>
+                {selectedDeckId && (
+                  <Button type="button" variant="ghost" size="sm" onClick={handleAddCard}>
+                    <Plus className="w-3 h-3 mr-1" /> Add Card
+                  </Button>
+                )}
+              </div>
               <Select
                 value={selectedCardId}
                 onValueChange={setSelectedCardId}
-                disabled={!selectedDeckId || cards.length === 0}
+                disabled={!selectedDeckId}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder={selectedDeckId ? 'Choose a card…' : 'Pick a deck first'} />
+                  <SelectValue placeholder={
+                    selectedDeckId
+                      ? (cards.length === 0 ? 'No cards yet — click Add Card' : 'Choose a card…')
+                      : 'Pick a deck first'
+                  } />
                 </SelectTrigger>
                 <SelectContent>
                   {cards.map((c) => (
