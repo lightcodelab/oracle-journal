@@ -2846,6 +2846,104 @@ export type Database = {
           },
         ]
       }
+      snail_mail_letters: {
+        Row: {
+          card_ids: string[]
+          card_snapshot: Json | null
+          created_at: string
+          draft_content: string | null
+          final_content: string | null
+          generated_at: string | null
+          id: string
+          model_used: string | null
+          month_number: number
+          sent_at: string | null
+          status: string
+          subscriber_id: string
+          theme: string
+          updated_at: string
+        }
+        Insert: {
+          card_ids?: string[]
+          card_snapshot?: Json | null
+          created_at?: string
+          draft_content?: string | null
+          final_content?: string | null
+          generated_at?: string | null
+          id?: string
+          model_used?: string | null
+          month_number: number
+          sent_at?: string | null
+          status?: string
+          subscriber_id: string
+          theme: string
+          updated_at?: string
+        }
+        Update: {
+          card_ids?: string[]
+          card_snapshot?: Json | null
+          created_at?: string
+          draft_content?: string | null
+          final_content?: string | null
+          generated_at?: string | null
+          id?: string
+          model_used?: string | null
+          month_number?: number
+          sent_at?: string | null
+          status?: string
+          subscriber_id?: string
+          theme?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "snail_mail_letters_subscriber_id_fkey"
+            columns: ["subscriber_id"]
+            isOneToOne: false
+            referencedRelation: "snail_mail_subscribers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      snail_mail_subscribers: {
+        Row: {
+          created_at: string
+          current_month: number
+          email: string | null
+          full_name: string
+          id: string
+          notes: string | null
+          postal_address: string
+          started_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_month?: number
+          email?: string | null
+          full_name: string
+          id?: string
+          notes?: string | null
+          postal_address: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_month?: number
+          email?: string | null
+          full_name?: string
+          id?: string
+          notes?: string | null
+          postal_address?: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscription_events: {
         Row: {
           error_message: string | null
