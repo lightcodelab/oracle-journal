@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, Upload, Settings, Video, ImageDown, Loader2, BookOpen, Users, Layers, Mail } from 'lucide-react';
+import { Calendar, Upload, Settings, Video, ImageDown, Loader2, BookOpen, Users, Layers, Mail, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
@@ -56,6 +56,12 @@ const adminTasks = [
     description: '12-month snail mail series — draw 4 cards, draft, refine, print, post',
     icon: Mail,
     href: '/admin/snail-mail',
+  },
+  {
+    title: 'Transformation Tools',
+    description: 'Edit the 9 guided reflections — fields, dropdowns, score formulas, recommendations',
+    icon: Sparkles,
+    href: '/admin/transformation-tools',
   },
 ];
 
