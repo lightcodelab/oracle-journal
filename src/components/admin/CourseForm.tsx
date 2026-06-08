@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, X, Image as ImageIcon } from 'lucide-react';
 import CourseLessonEditor from './CourseLessonEditor';
 import CourseTagPicker from './CourseTagPicker';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface Category {
   id: string;
@@ -41,12 +42,16 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
   const [isPublished, setIsPublished] = useState(false);
   const [savedCourseId, setSavedCourseId] = useState<string | null>(courseId || null);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+  const [trackingTools, setTrackingTools] = useState<Array<{ id: string; title: string; short_description: string | null }>>([]);
+  const [selectedToolIds, setSelectedToolIds] = useState<string[]>([]);
 
   useEffect(() => {
     fetchLocations();
+    fetchTrackingTools();
     if (courseId) {
       fetchCourse();
       fetchCourseTags(courseId);
+      fetchCourseTools(courseId);
     }
   }, [courseId]);
 
@@ -64,6 +69,30 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
     if (selectedTagIds.length > 0) {
       const rows = selectedTagIds.map((tag_id) => ({ course_id: id, tag_id }));
       await supabase.from('course_tag_assignments').insert(rows);
+    }
+  };
+
+  const fetchTrackingTools = async () => {
+    const { data } = await supabase
+      .from('transformation_tools')
+      .select('id, title, short_description')
+      .order('display_order');
+    if (data) setTrackingTools(data as any);
+  };
+
+  const fetchCourseTools = async (id: string) => {
+    const { data } = await (supabase as any)
+      .from('course_transformation_tools')
+      .select('tool_id')
+      .eq('course_id', id);
+    if (data) setSelectedToolIds(data.map((r: any) => r.tool_id));
+  };
+
+  const syncCourseTools = async (id: string) => {
+    await (supabase as any).from('course_transformation_tools').delete().eq('course_id', id);
+    if (selectedToolIds.length > 0) {
+      const rows = selectedToolIds.map((tool_id, i) => ({ course_id: id, tool_id, display_order: i }));
+      await (supabase as any).from('course_transformation_tools').insert(rows);
     }
   };
 
@@ -146,6 +175,7 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
         const { error } = await supabase.from('courses').update(payload).eq('id', savedCourseId);
         if (error) throw error;
         await syncCourseTags(savedCourseId);
+        await syncCourseTools(savedCourseId);
         toast({ title: 'Updated', description: 'Course updated successfully.' });
         onSuccess?.();
       } else {
@@ -153,6 +183,7 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
         if (error) throw error;
         setSavedCourseId(data.id);
         await syncCourseTags(data.id);
+        await syncCourseTools(data.id);
         toast({ title: 'Created', description: 'Course created. You can now add lessons below.' });
       }
     } catch (error: any) {
@@ -173,11 +204,12 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="details" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="details">Details</TabsTrigger>
           <TabsTrigger value="lessons" disabled={!savedCourseId}>
             Lessons {!savedCourseId && '(save first)'}
           </TabsTrigger>
+          <TabsTrigger value="tracking">Tracking Tools</TabsTrigger>
           <TabsTrigger value="publishing">Publishing</TabsTrigger>
         </TabsList>
 
