@@ -3286,6 +3286,250 @@ export type Database = {
         }
         Relationships: []
       }
+      transformation_entries: {
+        Row: {
+          answers_json: Json
+          created_at: string
+          id: string
+          linked_card_id: string | null
+          linked_course_id: string | null
+          linked_symptom_pathway: string | null
+          scores_json: Json
+          tool_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          answers_json?: Json
+          created_at?: string
+          id?: string
+          linked_card_id?: string | null
+          linked_course_id?: string | null
+          linked_symptom_pathway?: string | null
+          scores_json?: Json
+          tool_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          answers_json?: Json
+          created_at?: string
+          id?: string
+          linked_card_id?: string | null
+          linked_course_id?: string | null
+          linked_symptom_pathway?: string | null
+          scores_json?: Json
+          tool_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transformation_entries_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "transformation_tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transformation_insights_cache: {
+        Row: {
+          expires_at: string
+          generated_at: string
+          id: string
+          insight_text: string
+          user_id: string
+        }
+        Insert: {
+          expires_at?: string
+          generated_at?: string
+          id?: string
+          insight_text: string
+          user_id: string
+        }
+        Update: {
+          expires_at?: string
+          generated_at?: string
+          id?: string
+          insight_text?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      transformation_recommendation_rules: {
+        Row: {
+          condition_json: Json
+          created_at: string
+          id: string
+          is_active: boolean
+          microcopy: string | null
+          priority: number
+          recommended_resource_id: string | null
+          recommended_tool_id: string | null
+          tool_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          condition_json?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          microcopy?: string | null
+          priority?: number
+          recommended_resource_id?: string | null
+          recommended_tool_id?: string | null
+          tool_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          condition_json?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          microcopy?: string | null
+          priority?: number
+          recommended_resource_id?: string | null
+          recommended_tool_id?: string | null
+          tool_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transformation_recommendation_rules_recommended_tool_id_fkey"
+            columns: ["recommended_tool_id"]
+            isOneToOne: false
+            referencedRelation: "transformation_tools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transformation_recommendation_rules_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "transformation_tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transformation_tool_fields: {
+        Row: {
+          contributes_to_score: boolean
+          created_at: string
+          field_type: string
+          helper_text: string | null
+          id: string
+          is_required: boolean
+          key: string
+          label: string
+          max: number | null
+          max_label: string | null
+          min: number | null
+          min_label: string | null
+          options: Json
+          order_index: number
+          tool_id: string
+          updated_at: string
+        }
+        Insert: {
+          contributes_to_score?: boolean
+          created_at?: string
+          field_type: string
+          helper_text?: string | null
+          id?: string
+          is_required?: boolean
+          key: string
+          label: string
+          max?: number | null
+          max_label?: string | null
+          min?: number | null
+          min_label?: string | null
+          options?: Json
+          order_index?: number
+          tool_id: string
+          updated_at?: string
+        }
+        Update: {
+          contributes_to_score?: boolean
+          created_at?: string
+          field_type?: string
+          helper_text?: string | null
+          id?: string
+          is_required?: boolean
+          key?: string
+          label?: string
+          max?: number | null
+          max_label?: string | null
+          min?: number | null
+          min_label?: string | null
+          options?: Json
+          order_index?: number
+          tool_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transformation_tool_fields_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "transformation_tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transformation_tools: {
+        Row: {
+          created_at: string
+          display_order: number
+          icon_name: string | null
+          id: string
+          intro_microcopy: string | null
+          is_published: boolean
+          purpose: string | null
+          recommended_resource_ids: string[]
+          save_button_label: string
+          score_formula: Json
+          short_description: string | null
+          slug: string
+          title: string
+          updated_at: string
+          when_to_use: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          icon_name?: string | null
+          id?: string
+          intro_microcopy?: string | null
+          is_published?: boolean
+          purpose?: string | null
+          recommended_resource_ids?: string[]
+          save_button_label?: string
+          score_formula?: Json
+          short_description?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+          when_to_use?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          icon_name?: string | null
+          id?: string
+          intro_microcopy?: string | null
+          is_published?: boolean
+          purpose?: string | null
+          recommended_resource_ids?: string[]
+          save_button_label?: string
+          score_formula?: Json
+          short_description?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+          when_to_use?: string | null
+        }
+        Relationships: []
+      }
       user_areekeera_protocols: {
         Row: {
           id: string
