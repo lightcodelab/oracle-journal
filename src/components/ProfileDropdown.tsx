@@ -22,7 +22,8 @@ import {
   ListMusic,
   MessageSquarePlus,
   Bug,
-  Smartphone
+  Smartphone,
+  LineChart
 } from 'lucide-react';
 import { useInstallApp } from '@/components/InstallAppDialog';
 
@@ -92,6 +93,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       label: 'My Readings',
       icon: <Sparkles className="w-4 h-4 mr-2" />,
       route: '/readings',
+    },
+    {
+      label: 'My Tracking',
+      icon: <LineChart className="w-4 h-4 mr-2" />,
+      route: '/tracking',
     },
     {
       label: 'My Playlists',
