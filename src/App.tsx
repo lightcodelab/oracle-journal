@@ -30,6 +30,7 @@ import Tools from "./pages/Tools";
 import ToolDetail from "./pages/ToolDetail";
 import ToolReflection from "./pages/ToolReflection";
 import TransformationToolsAdmin from "./pages/TransformationToolsAdmin";
+import MyTracking from "./pages/MyTracking";
 import LiveSessions from "./pages/LiveSessions";
 import LiveSessionJoin from "./pages/LiveSessionJoin";
 import AdminLiveSessions from "./pages/AdminLiveSessions";
@@ -92,6 +93,7 @@ const App = () => (
             <Route path="/tools" element={<Tools />} />
             <Route path="/tools/:slug" element={<ToolDetail />} />
             <Route path="/tools/:slug/new" element={<ToolReflection />} />
+            <Route path="/tracking" element={<MyTracking />} />
             <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
             <Route path="/devotion/section/energy-hygiene-practices" element={<DevotionCourses />} />
             <Route path="/devotion/section/:section" element={<DevotionSectionPage />} />
