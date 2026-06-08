@@ -8,6 +8,8 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ContextualJournal from '@/components/journal/ContextualJournal';
 import CourseSessionNav from '@/components/CourseSessionNav';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sparkles } from 'lucide-react';
 
 interface Lesson {
   id: string;
@@ -101,6 +103,22 @@ const DevotionCoursePage = () => {
     enabled: !loading && !!userId && !!lessons && lessons.length > 0,
   });
 
+  const { data: trackingTools } = useQuery({
+    queryKey: ['course-tracking-tools', courseId],
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from('course_transformation_tools')
+        .select('display_order, tool:transformation_tools(id, slug, title, short_description, is_published)')
+        .eq('course_id', courseId)
+        .order('display_order');
+      if (error) throw error;
+      return (data || [])
+        .map((r: any) => r.tool)
+        .filter((t: any) => t && t.is_published);
+    },
+    enabled: !loading && !!courseId,
+  });
+
   const handleLessonClick = (lessonId: string) => {
     navigate(`/devotion/course/${courseId}/lesson/${lessonId}`);
   };
@@ -179,8 +197,86 @@ const DevotionCoursePage = () => {
             )}
           </motion.div>
 
-          {/* Lessons List */}
-          <div className="space-y-4">
+          {trackingTools && trackingTools.length > 0 ? (
+            <Tabs defaultValue="sessions" className="w-full">
+              <TabsList>
+                <TabsTrigger value="sessions">Sessions</TabsTrigger>
+                <TabsTrigger value="tracking">Tracking Tools</TabsTrigger>
+              </TabsList>
+              <TabsContent value="sessions" className="mt-6">
+                <LessonsList
+                  lessons={lessons}
+                  journalEntries={journalEntries}
+                  onLessonClick={handleLessonClick}
+                />
+              </TabsContent>
+              <TabsContent value="tracking" className="mt-6 space-y-4">
+                {trackingTools.map((tool: any, index: number) => (
+                  <motion.div
+                    key={tool.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.08 }}
+                    onClick={() => navigate(`/tools/${tool.slug}`)}
+                    className="cursor-pointer group"
+                  >
+                    <div className="bg-card border border-border rounded-lg p-6 flex items-center gap-4 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <Sparkles className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="flex-grow">
+                        <h3 className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">
+                          {tool.title}
+                        </h3>
+                        {tool.short_description && (
+                          <p className="text-muted-foreground text-sm mt-1">{tool.short_description}</p>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </TabsContent>
+            </Tabs>
+          ) : (
+            <LessonsList
+              lessons={lessons}
+              journalEntries={journalEntries}
+              onLessonClick={handleLessonClick}
+            />
+          )}
+
+          {/* Course-level Journal */}
+          {courseId && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <ContextualJournal
+                contextType="course"
+                contextId={courseId}
+                contextTitle={course.title}
+                placeholder="Capture your overall course insights and reflections..."
+              />
+            </motion.div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const LessonsList = ({
+  lessons,
+  journalEntries,
+  onLessonClick,
+}: {
+  lessons: Lesson[] | undefined;
+  journalEntries: string[] | undefined;
+  onLessonClick: (id: string) => void;
+}) => {
+  return (
+    <div className="space-y-4">
             {lessons && lessons.length > 0 ? (
               lessons.map((lesson, index) => {
                 const hasStarted = journalEntries?.includes(lesson.id);
@@ -191,7 +287,7 @@ const DevotionCoursePage = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    onClick={() => handleLessonClick(lesson.id)}
+                    onClick={() => onLessonClick(lesson.id)}
                     className="cursor-pointer group"
                   >
                     <div className="bg-card border border-border rounded-lg p-6 flex items-center gap-4 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30">
@@ -223,25 +319,6 @@ const DevotionCoursePage = () => {
                 </p>
               </div>
             )}
-          </div>
-
-          {/* Course-level Journal */}
-          {courseId && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <ContextualJournal
-                contextType="course"
-                contextId={courseId}
-                contextTitle={course.title}
-                placeholder="Capture your overall course insights and reflections..."
-              />
-            </motion.div>
-          )}
-        </div>
-      </div>
     </div>
   );
 };
