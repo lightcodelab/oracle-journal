@@ -312,6 +312,44 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
             <Switch checked={isPublished} onCheckedChange={setIsPublished} />
           </div>
         </TabsContent>
+
+        <TabsContent value="tracking" className="space-y-3 mt-4">
+          <div className="space-y-1">
+            <Label className="text-base">Transformation Tracking Tools</Label>
+            <p className="text-sm text-muted-foreground">
+              Selected tools appear as a tab on this course for users to log reflections.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {trackingTools.map((tool) => {
+              const checked = selectedToolIds.includes(tool.id);
+              return (
+                <label
+                  key={tool.id}
+                  className="flex items-start gap-3 rounded-md border p-3 cursor-pointer hover:bg-muted/40"
+                >
+                  <Checkbox
+                    checked={checked}
+                    onCheckedChange={(v) => {
+                      setSelectedToolIds((prev) =>
+                        v ? [...prev, tool.id] : prev.filter((id) => id !== tool.id),
+                      );
+                    }}
+                  />
+                  <div className="space-y-0.5">
+                    <div className="text-sm font-medium">{tool.title}</div>
+                    {tool.short_description && (
+                      <div className="text-xs text-muted-foreground">{tool.short_description}</div>
+                    )}
+                  </div>
+                </label>
+              );
+            })}
+            {trackingTools.length === 0 && (
+              <p className="text-sm text-muted-foreground">No tracking tools available yet.</p>
+            )}
+          </div>
+        </TabsContent>
       </Tabs>
 
       <div className="flex justify-end gap-2 pt-4 border-t">
