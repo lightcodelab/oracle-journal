@@ -20,7 +20,7 @@ const ToolDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="flex items-center justify-between p-4 border-b border-border">
-        <PageBreadcrumb items={[{ label: "Tools", path: "/tools" }, { label: tool.title }]} />
+        <PageBreadcrumb items={[{ label: "Tools", href: "/tools" }, { label: tool.title }]} />
         <ProfileDropdown />
       </div>
       <div className="max-w-3xl mx-auto px-6 py-10 space-y-8">
