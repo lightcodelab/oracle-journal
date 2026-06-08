@@ -24,6 +24,12 @@ const ToolDetail = () => {
         <ProfileDropdown />
       </div>
       <div className="max-w-3xl mx-auto px-6 py-10 space-y-8">
+        <div className="space-y-4">
+          <Button variant="ghost" size="sm" onClick={() => navigate("/tools")}>
+            ← Back to Tools
+          </Button>
+          <hr className="border-border" />
+        </div>
         <div className="space-y-3">
           <h1 className="font-serif text-4xl">{tool.title}</h1>
           {tool.short_description && <p className="text-lg text-foreground/80">{tool.short_description}</p>}
