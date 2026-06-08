@@ -26,6 +26,10 @@ import ContentAdmin from "./pages/ContentAdmin";
 import CourseAdmin from "./pages/CourseAdmin";
 import CardDeckAdmin from "./pages/CardDeckAdmin";
 import SnailMailAdmin from "./pages/SnailMailAdmin";
+import Tools from "./pages/Tools";
+import ToolDetail from "./pages/ToolDetail";
+import ToolReflection from "./pages/ToolReflection";
+import TransformationToolsAdmin from "./pages/TransformationToolsAdmin";
 import LiveSessions from "./pages/LiveSessions";
 import LiveSessionJoin from "./pages/LiveSessionJoin";
 import AdminLiveSessions from "./pages/AdminLiveSessions";
@@ -84,6 +88,10 @@ const App = () => (
             <Route path="/admin/courses" element={<CourseAdmin />} />
             <Route path="/admin/card-decks" element={<CardDeckAdmin />} />
             <Route path="/admin/snail-mail" element={<SnailMailAdmin />} />
+            <Route path="/admin/transformation-tools" element={<TransformationToolsAdmin />} />
+            <Route path="/tools" element={<Tools />} />
+            <Route path="/tools/:slug" element={<ToolDetail />} />
+            <Route path="/tools/:slug/new" element={<ToolReflection />} />
             <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
             <Route path="/devotion/section/energy-hygiene-practices" element={<DevotionCourses />} />
             <Route path="/devotion/section/:section" element={<DevotionSectionPage />} />
