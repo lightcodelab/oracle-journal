@@ -285,10 +285,10 @@ const DevotionLessonPage = () => {
             const locSlug = (course as any)?.location?.slug as string | undefined;
             const isRemembrance = locName === 'The Alchemy of Becoming';
             const doorCrumb = isRemembrance
-              ? { label: 'Door of Remembrance', href: '/', icon: DoorOpen }
+              ? { label: 'Door of Remembrance', href: '/decks', icon: DoorOpen }
               : { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen };
             const sectionCrumb = locName
-              ? { label: locName, href: isRemembrance ? '/' : `/devotion/section/${locSlug?.replace(/^loc-/, '') ?? ''}` }
+              ? { label: locName, href: isRemembrance ? `/decks/section/${locSlug?.replace(/^loc-/, '') ?? ''}` : `/devotion/section/${locSlug?.replace(/^loc-/, '') ?? ''}` }
               : null;
             return (
               <PageBreadcrumb
