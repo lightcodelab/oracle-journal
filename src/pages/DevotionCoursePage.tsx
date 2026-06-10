@@ -10,6 +10,7 @@ import ContextualJournal from '@/components/journal/ContextualJournal';
 import CourseSessionNav from '@/components/CourseSessionNav';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sparkles } from 'lucide-react';
+import { ToolDetailDialog } from '@/components/tools/ToolDetailDialog';
 
 interface Lesson {
   id: string;
@@ -30,6 +31,7 @@ const DevotionCoursePage = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [activeToolSlug, setActiveToolSlug] = useState<string | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -217,7 +219,7 @@ const DevotionCoursePage = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.08 }}
-                    onClick={() => navigate(`/tools/${tool.slug}`)}
+                    onClick={() => setActiveToolSlug(tool.slug)}
                     className="cursor-pointer group"
                   >
                     <div className="bg-card border border-border rounded-lg p-6 flex items-center gap-4 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30">
@@ -262,6 +264,11 @@ const DevotionCoursePage = () => {
           )}
         </div>
       </div>
+      <ToolDetailDialog
+        slug={activeToolSlug}
+        open={!!activeToolSlug}
+        onClose={() => setActiveToolSlug(null)}
+      />
     </div>
   );
 };
