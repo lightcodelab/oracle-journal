@@ -13,7 +13,7 @@ export interface ContentResource {
   secondary_audio_url: string | null;
   is_course: boolean | null;
   status: 'draft' | 'published';
-  source: 'content' | 'healing';
+  source: 'content' | 'healing' | 'legacy';
   resource_type: {
     id: string;
     name: string;
