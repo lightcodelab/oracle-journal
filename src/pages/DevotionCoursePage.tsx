@@ -273,7 +273,13 @@ const DevotionCoursePage = () => {
       <ToolDetailDialog
         slug={activeToolSlug}
         open={!!activeToolSlug}
-        onClose={() => setActiveToolSlug(null)}
+        onClose={() => {
+          setActiveToolSlug(null);
+          if (searchParams.get('tool')) {
+            searchParams.delete('tool');
+            setSearchParams(searchParams, { replace: true });
+          }
+        }}
       />
     </div>
   );
