@@ -24,6 +24,7 @@ interface Course {
   title: string;
   description: string | null;
   image_url: string | null;
+  location_id?: string | null;
 }
 
 const DevotionCoursePage = () => {
@@ -68,12 +69,12 @@ const DevotionCoursePage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('courses')
-        .select('*')
+        .select('*, location:content_categories!courses_location_id_fkey(id, name, slug)')
         .eq('id', courseId)
         .single();
 
       if (error) throw error;
-      return data as Course;
+      return data as Course & { location?: { id: string; name: string; slug: string } | null };
     },
     enabled: !loading && !!courseId,
   });
@@ -167,13 +168,26 @@ const DevotionCoursePage = () => {
       <div className="ml-64 md:ml-72">
         {/* Navigation Header */}
         <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3 flex items-center justify-between">
-          <PageBreadcrumb 
-            items={[
-              { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen },
-              { label: 'Energy Hygiene Practices', href: '/devotion/section/energy-hygiene-practices' },
-              { label: course.title }
-            ]} 
-          />
+          {(() => {
+            const locName = (course as any).location?.name as string | undefined;
+            const locSlug = (course as any).location?.slug as string | undefined;
+            const isRemembrance = locName === 'The Alchemy of Becoming';
+            const doorCrumb = isRemembrance
+              ? { label: 'Door of Remembrance', href: '/', icon: DoorOpen }
+              : { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen };
+            const sectionCrumb = locName
+              ? { label: locName, href: isRemembrance ? '/' : `/devotion/section/${locSlug?.replace(/^loc-/, '') ?? ''}` }
+              : null;
+            return (
+              <PageBreadcrumb
+                items={[
+                  doorCrumb,
+                  ...(sectionCrumb ? [sectionCrumb] : []),
+                  { label: course.title },
+                ]}
+              />
+            );
+          })()}
           <ProfileDropdown />
         </div>
 
