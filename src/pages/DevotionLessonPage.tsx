@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic } from 'lucide-react';
+import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic, DoorOpen } from 'lucide-react';
 import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -80,7 +80,7 @@ const DevotionLessonPage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('courses')
-        .select('title')
+        .select('title, location:content_categories!courses_location_id_fkey(id, name, slug)')
         .eq('id', courseId)
         .single();
 
@@ -280,13 +280,26 @@ const DevotionLessonPage = () => {
       <div className="ml-64 md:ml-72">
         {/* Navigation Header */}
         <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3 flex items-center justify-between">
-          <PageBreadcrumb 
-            items={[
-              { label: 'Devotion', href: '/devotion' },
-              { label: 'Energy Hygiene Practices', href: '/devotion/section/energy-hygiene-practices' },
-              { label: course?.title || 'Course', href: `/devotion/course/${courseId}` },
-            ]}
-          />
+          {(() => {
+            const locName = (course as any)?.location?.name as string | undefined;
+            const locSlug = (course as any)?.location?.slug as string | undefined;
+            const isRemembrance = locName === 'The Alchemy of Becoming';
+            const doorCrumb = isRemembrance
+              ? { label: 'Door of Remembrance', href: '/', icon: DoorOpen }
+              : { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen };
+            const sectionCrumb = locName
+              ? { label: locName, href: isRemembrance ? '/' : `/devotion/section/${locSlug?.replace(/^loc-/, '') ?? ''}` }
+              : null;
+            return (
+              <PageBreadcrumb
+                items={[
+                  doorCrumb,
+                  ...(sectionCrumb ? [sectionCrumb] : []),
+                  { label: course?.title || 'Course', href: `/devotion/course/${courseId}` },
+                ]}
+              />
+            );
+          })()}
           <ProfileDropdown />
         </div>
 
