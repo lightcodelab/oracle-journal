@@ -209,7 +209,7 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
           <TabsTrigger value="lessons" disabled={!savedCourseId}>
             Lessons {!savedCourseId && '(save first)'}
           </TabsTrigger>
-          <TabsTrigger value="tracking">Tracking Tools</TabsTrigger>
+          <TabsTrigger value="tracking">Relevant Tracking Tools</TabsTrigger>
           <TabsTrigger value="publishing">Publishing</TabsTrigger>
         </TabsList>
 

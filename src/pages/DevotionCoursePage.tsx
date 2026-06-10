@@ -201,7 +201,7 @@ const DevotionCoursePage = () => {
             <Tabs defaultValue="sessions" className="w-full">
               <TabsList>
                 <TabsTrigger value="sessions">Sessions</TabsTrigger>
-                <TabsTrigger value="tracking">Tracking Tools</TabsTrigger>
+                <TabsTrigger value="tracking">Relevant Tracking Tools</TabsTrigger>
               </TabsList>
               <TabsContent value="sessions" className="mt-6">
                 <LessonsList
