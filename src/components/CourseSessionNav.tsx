@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Lesson {
   id: string;
@@ -27,6 +29,26 @@ export default function CourseSessionNav({
 
   const handleLessonClick = (lessonId: string) => {
     navigate(`/devotion/course/${courseId}/lesson/${lessonId}`);
+  };
+
+  const { data: trackingTools } = useQuery({
+    queryKey: ['course-tracking-tools-nav', courseId],
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from('course_transformation_tools')
+        .select('display_order, tool:transformation_tools(id, slug, title, is_published)')
+        .eq('course_id', courseId)
+        .order('display_order');
+      if (error) throw error;
+      return (data || [])
+        .map((r: any) => r.tool)
+        .filter((t: any) => t && t.is_published);
+    },
+    enabled: !!courseId,
+  });
+
+  const handleToolClick = (slug: string) => {
+    navigate(`/devotion/course/${courseId}?tool=${encodeURIComponent(slug)}`);
   };
 
   const completedCount = lessons.filter(l => completedLessonIds.includes(l.id)).length;
@@ -99,6 +121,28 @@ export default function CourseSessionNav({
           })}
         </div>
       </nav>
+
+      {trackingTools && trackingTools.length > 0 && (
+        <div className="border-t border-border p-2">
+          <div className="px-3 pt-2 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Tracking Tools
+          </div>
+          <div className="space-y-0.5">
+            {trackingTools.map((tool: any) => (
+              <button
+                key={tool.id}
+                onClick={() => handleToolClick(tool.slug)}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-left text-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
+              >
+                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Sparkles className="w-3.5 h-3.5 text-primary" />
+                </div>
+                <span className="text-sm leading-tight">{tool.title}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 
