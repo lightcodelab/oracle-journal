@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Play, CheckCircle, DoorOpen } from 'lucide-react';
@@ -29,9 +29,15 @@ interface Course {
 const DevotionCoursePage = () => {
   const navigate = useNavigate();
   const { courseId } = useParams<{ courseId: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [activeToolSlug, setActiveToolSlug] = useState<string | null>(null);
+
+  useEffect(() => {
+    const t = searchParams.get('tool');
+    if (t) setActiveToolSlug(t);
+  }, [searchParams]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -267,7 +273,13 @@ const DevotionCoursePage = () => {
       <ToolDetailDialog
         slug={activeToolSlug}
         open={!!activeToolSlug}
-        onClose={() => setActiveToolSlug(null)}
+        onClose={() => {
+          setActiveToolSlug(null);
+          if (searchParams.get('tool')) {
+            searchParams.delete('tool');
+            setSearchParams(searchParams, { replace: true });
+          }
+        }}
       />
     </div>
   );
