@@ -13,7 +13,7 @@ export interface RemembranceCourse {
   secondary_audio_url: string | null;
   is_course: boolean | null;
   status: 'draft' | 'published';
-  source: 'content';
+  source: 'content' | 'legacy';
   resource_type: {
     id: string;
     name: string;
@@ -81,7 +81,7 @@ export const useRemembranceCourses = (): UseRemembranceCoursesResult => {
         }
 
         // Fetch content_resources for this location
-        let query = supabase
+        let contentQuery = supabase
           .from('content_resources')
           .select(`
             id,
@@ -104,21 +104,33 @@ export const useRemembranceCourses = (): UseRemembranceCoursesResult => {
           .eq('location_id', locationData.id)
           .order('created_at', { ascending: false });
 
-        // Non-admins only see published content
         if (!userIsAdmin) {
-          query = query.eq('status', 'published');
+          contentQuery = contentQuery.eq('status', 'published');
         }
 
-        const { data, error: fetchError } = await query;
+        // Also fetch legacy courses from the `courses` table at this location
+        let legacyQuery = supabase
+          .from('courses')
+          .select('*')
+          .eq('location_id', locationData.id)
+          .order('display_order', { ascending: true });
 
-        if (fetchError) {
+        if (!userIsAdmin) {
+          legacyQuery = legacyQuery.eq('is_published', true);
+        }
+
+        const [contentResult, legacyResult] = await Promise.all([
+          contentQuery,
+          legacyQuery,
+        ]);
+
+        if (contentResult.error) {
           setError('Failed to load courses');
           setLoading(false);
           return;
         }
 
-        // Transform resources
-        const transformed = (data || []).map(resource => ({
+        const transformedContent = (contentResult.data || []).map(resource => ({
           ...resource,
           thumbnail_url: getPublicUrl('content-thumbnails', resource.thumbnail_url),
           main_media_file_url: getPublicUrl('content-main-media', resource.main_media_file_url),
@@ -126,7 +138,27 @@ export const useRemembranceCourses = (): UseRemembranceCoursesResult => {
           source: 'content' as const,
         })) as RemembranceCourse[];
 
-        setCourses(transformed);
+        const transformedLegacy = (legacyResult.data || []).map((course: any) => ({
+          id: course.id,
+          title: course.title,
+          slug: `legacy-course-${course.id}`,
+          summary: course.description || null,
+          thumbnail_url: course.image_url || null,
+          main_media_kind: null,
+          main_media_file_url: null,
+          main_media_embed_url: null,
+          secondary_audio_url: null,
+          is_course: true,
+          status: (course.is_published ? 'published' : 'draft') as 'draft' | 'published',
+          source: 'legacy' as const,
+          resource_type: {
+            id: 'course',
+            name: 'Course',
+            slug: 'course',
+          },
+        })) as RemembranceCourse[];
+
+        setCourses([...transformedContent, ...transformedLegacy]);
       } catch (err) {
         setError('An error occurred');
       } finally {
