@@ -109,6 +109,149 @@ export type Database = {
           },
         ]
       }
+      boundary_audit_entries: {
+        Row: {
+          abandonment_patterns: Json
+          abandonment_text: string | null
+          body_first_response: string | null
+          body_signals: Json
+          created_at: string
+          id: string
+          integrity_rating: number | null
+          needed_boundary: string | null
+          next_time_script: string | null
+          relationship_category: string | null
+          situation: string | null
+          truth_status: string | null
+          truth_text: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          abandonment_patterns?: Json
+          abandonment_text?: string | null
+          body_first_response?: string | null
+          body_signals?: Json
+          created_at?: string
+          id?: string
+          integrity_rating?: number | null
+          needed_boundary?: string | null
+          next_time_script?: string | null
+          relationship_category?: string | null
+          situation?: string | null
+          truth_status?: string | null
+          truth_text?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          abandonment_patterns?: Json
+          abandonment_text?: string | null
+          body_first_response?: string | null
+          body_signals?: Json
+          created_at?: string
+          id?: string
+          integrity_rating?: number | null
+          needed_boundary?: string | null
+          next_time_script?: string | null
+          relationship_category?: string | null
+          situation?: string | null
+          truth_status?: string | null
+          truth_text?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      boundary_rehearsal_scripts: {
+        Row: {
+          added_to_library: boolean
+          audit_entry_id: string | null
+          created_at: string
+          final_text: string | null
+          id: string
+          no_apology_text: string | null
+          no_overexplain_text: string | null
+          original_text: string | null
+          relationship_category: string | null
+          shorter_text: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          added_to_library?: boolean
+          audit_entry_id?: string | null
+          created_at?: string
+          final_text?: string | null
+          id?: string
+          no_apology_text?: string | null
+          no_overexplain_text?: string | null
+          original_text?: string | null
+          relationship_category?: string | null
+          shorter_text?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          added_to_library?: boolean
+          audit_entry_id?: string | null
+          created_at?: string
+          final_text?: string | null
+          id?: string
+          no_apology_text?: string | null
+          no_overexplain_text?: string | null
+          original_text?: string | null
+          relationship_category?: string | null
+          shorter_text?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boundary_rehearsal_scripts_audit_entry_id_fkey"
+            columns: ["audit_entry_id"]
+            isOneToOne: false
+            referencedRelation: "boundary_audit_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      boundary_script_library: {
+        Row: {
+          category: string
+          created_at: string
+          display_order: number
+          id: string
+          is_favourite: boolean
+          is_seed: boolean
+          text: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_favourite?: boolean
+          is_seed?: boolean
+          text: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_favourite?: boolean
+          is_seed?: boolean
+          text?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bug_reports: {
         Row: {
           admin_notes: string | null
@@ -1435,6 +1578,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      integrity_reflections: {
+        Row: {
+          boundary_outcome: string | null
+          communication: number | null
+          created_at: string
+          exhaustion: number | null
+          held_text: string | null
+          id: string
+          practise_text: string | null
+          recovery_time: string | null
+          resentment: number | null
+          status: string | null
+          updated_at: string
+          user_id: string
+          wobbled_text: string | null
+        }
+        Insert: {
+          boundary_outcome?: string | null
+          communication?: number | null
+          created_at?: string
+          exhaustion?: number | null
+          held_text?: string | null
+          id?: string
+          practise_text?: string | null
+          recovery_time?: string | null
+          resentment?: number | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+          wobbled_text?: string | null
+        }
+        Update: {
+          boundary_outcome?: string | null
+          communication?: number | null
+          created_at?: string
+          exhaustion?: number | null
+          held_text?: string | null
+          id?: string
+          practise_text?: string | null
+          recovery_time?: string | null
+          resentment?: number | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+          wobbled_text?: string | null
+        }
+        Relationships: []
       }
       invoices: {
         Row: {
