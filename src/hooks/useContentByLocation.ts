@@ -125,9 +125,20 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
           healingQuery = healingQuery.eq('status', 'published');
         }
 
-        const [contentResult, healingResult] = await Promise.all([
+        // Fetch legacy courses mapped to this location
+        let legacyCoursesQuery = supabase
+          .from('courses')
+          .select('id, title, description, image_url, is_published, location_id')
+          .eq('location_id', locationData.id);
+
+        if (!userIsAdmin) {
+          legacyCoursesQuery = legacyCoursesQuery.eq('is_published', true);
+        }
+
+        const [contentResult, healingResult, legacyResult] = await Promise.all([
           contentQuery,
           healingQuery,
+          legacyCoursesQuery,
         ]);
 
         if (contentResult.error) {
@@ -186,8 +197,28 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
           };
         }) as ContentResource[];
 
-        // Merge and sort by created_at (most recent first)
-        const allResources = [...transformedContent, ...transformedHealing];
+        const transformedLegacy = (legacyResult.data || []).map(c => ({
+          id: c.id,
+          title: c.title,
+          slug: `legacy-course-${c.id}`,
+          summary: c.description || null,
+          thumbnail_url: c.image_url || null,
+          main_media_kind: null,
+          main_media_file_url: null,
+          main_media_embed_url: null,
+          secondary_audio_url: null,
+          is_course: true,
+          status: (c.is_published ? 'published' : 'draft') as 'draft' | 'published',
+          source: 'legacy' as const,
+          resource_type: {
+            id: 'course',
+            name: 'Course',
+            slug: 'course',
+          },
+        })) as ContentResource[];
+
+        // Merge all sources
+        const allResources = [...transformedContent, ...transformedHealing, ...transformedLegacy];
         
         setResources(allResources);
       } catch (err) {
