@@ -370,12 +370,6 @@ const RehearsalSection = ({
   const [finalText, setFinalText] = useState("");
   const [category, setCategory] = useState<string>(carry?.category ?? "");
 
-  // Apply carry whenever it changes
-  useState(() => {
-    if (carry) { setOriginal(carry.text); setCategory(carry.category ?? ""); }
-    return null;
-  });
-
   const reset = () => {
     setOriginal(""); setShorter(""); setNoApology(""); setNoOver(""); setFinalText(""); setCategory("");
     onClear();
