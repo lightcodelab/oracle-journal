@@ -1138,6 +1138,252 @@ export type Database = {
         }
         Relationships: []
       }
+      emotional_capacity_checkins: {
+        Row: {
+          activation_duration: string
+          created_at: string
+          id: string
+          intensity: number
+          notes: string | null
+          presence_score: number
+          regulated_before_reacting: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activation_duration: string
+          created_at?: string
+          id?: string
+          intensity: number
+          notes?: string | null
+          presence_score: number
+          regulated_before_reacting: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activation_duration?: string
+          created_at?: string
+          id?: string
+          intensity?: number
+          notes?: string | null
+          presence_score?: number
+          regulated_before_reacting?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      emotional_now_then_entries: {
+        Row: {
+          created_at: string
+          felt_before: string
+          id: string
+          intensity: number
+          proportionate: string
+          result: string
+          story: string | null
+          trigger_text: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          felt_before: string
+          id?: string
+          intensity: number
+          proportionate: string
+          result: string
+          story?: string | null
+          trigger_text: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          felt_before?: string
+          id?: string
+          intensity?: number
+          proportionate?: string
+          result?: string
+          story?: string | null
+          trigger_text?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      emotional_recovery_logs: {
+        Row: {
+          activation_at: string
+          baseline_at: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          recovery_minutes: number | null
+          trigger_text: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activation_at?: string
+          baseline_at?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          recovery_minutes?: number | null
+          trigger_text: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activation_at?: string
+          baseline_at?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          recovery_minutes?: number | null
+          trigger_text?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      emotional_regulation_logs: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          regulated_score: number | null
+          state: string
+          tool_key: string
+          tool_label: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          regulated_score?: number | null
+          state: string
+          tool_key: string
+          tool_label: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          regulated_score?: number | null
+          state?: string
+          tool_key?: string
+          tool_label?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      emotional_somatic_entries: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          selections: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          selections?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          selections?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      emotional_translation_entries: {
+        Row: {
+          chosen_action: string | null
+          created_at: string
+          emotion: string
+          id: string
+          need: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chosen_action?: string | null
+          created_at?: string
+          emotion: string
+          id?: string
+          need: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chosen_action?: string | null
+          created_at?: string
+          emotion?: string
+          id?: string
+          need?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      emotional_weekly_reflections: {
+        Row: {
+          created_at: string
+          emotion_avoided: string | null
+          emotion_most: string | null
+          id: string
+          need_discovered: string | null
+          proud_of: string | null
+          reacted_before_regulating: string | null
+          regulated_before_reacting: string | null
+          trigger_taught: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emotion_avoided?: string | null
+          emotion_most?: string | null
+          id?: string
+          need_discovered?: string | null
+          proud_of?: string | null
+          reacted_before_regulating?: string | null
+          regulated_before_reacting?: string | null
+          trigger_taught?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emotion_avoided?: string | null
+          emotion_most?: string | null
+          id?: string
+          need_discovered?: string | null
+          proud_of?: string | null
+          reacted_before_regulating?: string | null
+          regulated_before_reacting?: string | null
+          trigger_taught?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       entry_categories: {
         Row: {
           added_at: string
