@@ -57,9 +57,18 @@ import FeatureSuggestions from "./pages/FeatureSuggestions";
 import BugReports from "./pages/BugReports";
 import InstallAppProvider from "./components/InstallAppDialog";
 import NewsletterBanner from "./components/NewsletterBanner";
+import AffiliateRedirect from "./pages/AffiliateRedirect";
+import AffiliatePortal from "./pages/AffiliatePortal";
+import AdminAffiliates from "./pages/AdminAffiliates";
+import { captureRefFromQueryString } from "@/lib/affiliateTracking";
+import { useEffect } from "react";
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  useEffect(() => {
+    void captureRefFromQueryString();
+  }, []);
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
@@ -124,6 +133,9 @@ const App = () => (
             <Route path="/search" element={<SearchResults />} />
             <Route path="/suggestions" element={<FeatureSuggestions />} />
             <Route path="/bugs" element={<BugReports />} />
+            <Route path="/r/:code" element={<AffiliateRedirect />} />
+            <Route path="/affiliate" element={<AffiliatePortal />} />
+            <Route path="/admin/affiliates" element={<AdminAffiliates />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -134,5 +146,6 @@ const App = () => (
     </TooltipProvider>
   </QueryClientProvider>
 );
+};
 
 export default App;
