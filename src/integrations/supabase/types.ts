@@ -283,56 +283,74 @@ export type Database = {
         Row: {
           applied_at: string
           approved_at: string | null
+          audience_characteristics: string | null
           commission_recurring_pct: number | null
           commission_signup_pct: number | null
           created_at: string
           display_name: string | null
+          facebook_handle: string | null
           id: string
+          instagram_handle: string | null
           notes: string | null
+          other_social: string | null
           payout_email: string | null
           payout_method: string
           referral_code: string
           status: string
           stripe_connect_account_id: string | null
           terms_accepted_at: string | null
+          tiktok_handle: string | null
           updated_at: string
           user_id: string
+          website_url: string | null
         }
         Insert: {
           applied_at?: string
           approved_at?: string | null
+          audience_characteristics?: string | null
           commission_recurring_pct?: number | null
           commission_signup_pct?: number | null
           created_at?: string
           display_name?: string | null
+          facebook_handle?: string | null
           id?: string
+          instagram_handle?: string | null
           notes?: string | null
+          other_social?: string | null
           payout_email?: string | null
           payout_method?: string
           referral_code: string
           status?: string
           stripe_connect_account_id?: string | null
           terms_accepted_at?: string | null
+          tiktok_handle?: string | null
           updated_at?: string
           user_id: string
+          website_url?: string | null
         }
         Update: {
           applied_at?: string
           approved_at?: string | null
+          audience_characteristics?: string | null
           commission_recurring_pct?: number | null
           commission_signup_pct?: number | null
           created_at?: string
           display_name?: string | null
+          facebook_handle?: string | null
           id?: string
+          instagram_handle?: string | null
           notes?: string | null
+          other_social?: string | null
           payout_email?: string | null
           payout_method?: string
           referral_code?: string
           status?: string
           stripe_connect_account_id?: string | null
           terms_accepted_at?: string | null
+          tiktok_handle?: string | null
           updated_at?: string
           user_id?: string
+          website_url?: string | null
         }
         Relationships: []
       }
