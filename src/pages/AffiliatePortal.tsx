@@ -249,6 +249,66 @@ const AffiliatePortal = () => {
                 <Label>How will you promote the Temple? (optional)</Label>
                 <Textarea value={applyNotes} onChange={(e) => setApplyNotes(e.target.value)} maxLength={1000} />
               </div>
+              <div>
+                <Label>Website URL</Label>
+                <Input
+                  type="url"
+                  placeholder="https://"
+                  value={applyWebsite}
+                  onChange={(e) => setApplyWebsite(e.target.value)}
+                  maxLength={255}
+                />
+              </div>
+              <div className="space-y-3 pt-2">
+                <h3 className="font-serif text-lg text-foreground">Social media accounts</h3>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div>
+                    <Label>Instagram @</Label>
+                    <Input
+                      placeholder="@yourhandle"
+                      value={applyInstagram}
+                      onChange={(e) => setApplyInstagram(e.target.value)}
+                      maxLength={100}
+                    />
+                  </div>
+                  <div>
+                    <Label>TikTok @</Label>
+                    <Input
+                      placeholder="@yourhandle"
+                      value={applyTiktok}
+                      onChange={(e) => setApplyTiktok(e.target.value)}
+                      maxLength={100}
+                    />
+                  </div>
+                  <div>
+                    <Label>Facebook @</Label>
+                    <Input
+                      placeholder="@yourhandle or page name"
+                      value={applyFacebook}
+                      onChange={(e) => setApplyFacebook(e.target.value)}
+                      maxLength={100}
+                    />
+                  </div>
+                  <div>
+                    <Label>Other</Label>
+                    <Input
+                      placeholder="YouTube, Substack, podcast, etc."
+                      value={applyOtherSocial}
+                      onChange={(e) => setApplyOtherSocial(e.target.value)}
+                      maxLength={255}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <Label>Your audience characteristics</Label>
+                <Textarea
+                  placeholder="Who follows you? Size, demographics, interests, why they'd resonate with the Temple…"
+                  value={applyAudience}
+                  onChange={(e) => setApplyAudience(e.target.value)}
+                  maxLength={1000}
+                />
+              </div>
               <Button onClick={apply} disabled={submitting}>
                 {submitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
                 Submit application
