@@ -61,6 +61,9 @@ serve(async (req) => {
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription;
         await handleSubscriptionChange(subscription, event.type.includes("created") ? "created" : "updated");
+        if (event.type === "customer.subscription.created") {
+          await handleAffiliateOnSubscription(subscription);
+        }
         break;
       }
 
@@ -73,6 +76,7 @@ serve(async (req) => {
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as Stripe.Invoice;
         await handleInvoicePaid(invoice);
+        await handleAffiliateOnInvoice(invoice);
         break;
       }
 
