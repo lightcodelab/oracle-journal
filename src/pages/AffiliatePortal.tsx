@@ -62,6 +62,7 @@ const AffiliatePortal = () => {
   const [applyName, setApplyName] = useState("");
   const [applyEmail, setApplyEmail] = useState("");
   const [applyNotes, setApplyNotes] = useState("");
+  const [applyModel, setApplyModel] = useState<"one_time" | "recurring">("recurring");
   const [submitting, setSubmitting] = useState(false);
 
   // New link form
@@ -127,6 +128,8 @@ const AffiliatePortal = () => {
         referral_code: code,
         notes: applyNotes.trim() || null,
         terms_accepted_at: new Date().toISOString(),
+        commission_signup_pct: applyModel === "one_time" ? 40 : 0,
+        commission_recurring_pct: applyModel === "recurring" ? 10 : 0,
       });
       if (error) throw error;
       toast({ title: "Application submitted", description: "An admin will review your affiliate application shortly." });
@@ -216,6 +219,19 @@ const AffiliatePortal = () => {
                   <Label>Payout email</Label>
                   <Input type="email" value={applyEmail} onChange={(e) => setApplyEmail(e.target.value)} maxLength={255} />
                 </div>
+              </div>
+              <div>
+                <Label>Commission model</Label>
+                <Select value={applyModel} onValueChange={(v: any) => setApplyModel(v)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="one_time">40% on initial signup only</SelectItem>
+                    <SelectItem value="recurring">10% recurring for the lifetime of the subscriber</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground mt-1">
+                  This sets your default. Admins may adjust rates and you can still create per-link overrides later.
+                </p>
               </div>
               <div>
                 <Label>How will you promote the Temple? (optional)</Label>
