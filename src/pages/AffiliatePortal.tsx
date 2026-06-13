@@ -63,6 +63,12 @@ const AffiliatePortal = () => {
   const [applyEmail, setApplyEmail] = useState("");
   const [applyNotes, setApplyNotes] = useState("");
   const [applyModel, setApplyModel] = useState<"one_time" | "recurring">("recurring");
+  const [applyWebsite, setApplyWebsite] = useState("");
+  const [applyInstagram, setApplyInstagram] = useState("");
+  const [applyTiktok, setApplyTiktok] = useState("");
+  const [applyFacebook, setApplyFacebook] = useState("");
+  const [applyOtherSocial, setApplyOtherSocial] = useState("");
+  const [applyAudience, setApplyAudience] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   // New link form
@@ -130,6 +136,12 @@ const AffiliatePortal = () => {
         terms_accepted_at: new Date().toISOString(),
         commission_signup_pct: applyModel === "one_time" ? 40 : 0,
         commission_recurring_pct: applyModel === "recurring" ? 10 : 0,
+        website_url: applyWebsite.trim() || null,
+        instagram_handle: applyInstagram.trim() || null,
+        tiktok_handle: applyTiktok.trim() || null,
+        facebook_handle: applyFacebook.trim() || null,
+        other_social: applyOtherSocial.trim() || null,
+        audience_characteristics: applyAudience.trim() || null,
       });
       if (error) throw error;
       toast({ title: "Application submitted", description: "An admin will review your affiliate application shortly." });
