@@ -338,3 +338,174 @@ async function getUserIdFromSubscription(subscription: Stripe.Subscription): Pro
   // Then try customer lookup
   return getUserIdFromCustomer(subscription.customer as string);
 }
+
+// =====================================================
+// AFFILIATE ATTRIBUTION
+// =====================================================
+async function getAffiliateSettings() {
+  const { data } = await supabaseAdmin
+    .from("affiliate_settings")
+    .select("default_signup_pct, default_recurring_pct")
+    .eq("id", 1)
+    .maybeSingle();
+  return {
+    signupPct: Number(data?.default_signup_pct ?? 20),
+    recurringPct: Number(data?.default_recurring_pct ?? 10),
+  };
+}
+
+async function handleAffiliateOnSubscription(subscription: Stripe.Subscription) {
+  try {
+    const affCode = subscription.metadata?.affiliate_code;
+    if (!affCode) return;
+
+    const userId = await getUserIdFromSubscription(subscription);
+    if (!userId) return;
+
+    const linkCode = subscription.metadata?.affiliate_link_code || null;
+    const model = (subscription.metadata?.commission_model as "one_time" | "recurring") || "recurring";
+
+    const { data: aff } = await supabaseAdmin
+      .from("affiliates")
+      .select("id, user_id, status, commission_signup_pct, commission_recurring_pct")
+      .eq("referral_code", affCode)
+      .maybeSingle();
+
+    if (!aff || aff.status !== "active") {
+      console.log("Affiliate not found or not active:", affCode);
+      return;
+    }
+    if (aff.user_id === userId) {
+      console.log("Skipping self-referral");
+      return;
+    }
+
+    let linkId: string | null = null;
+    if (linkCode) {
+      const { data: link } = await supabaseAdmin
+        .from("affiliate_links")
+        .select("id")
+        .eq("code", linkCode)
+        .eq("affiliate_id", aff.id)
+        .maybeSingle();
+      linkId = link?.id ?? null;
+    }
+
+    // Upsert referral (unique by referred_user_id)
+    const { data: existing } = await supabaseAdmin
+      .from("affiliate_referrals")
+      .select("id, commission_model")
+      .eq("referred_user_id", userId)
+      .maybeSingle();
+
+    let referralId: string;
+    if (existing) {
+      referralId = existing.id;
+      await supabaseAdmin
+        .from("affiliate_referrals")
+        .update({ status: "converted", converted_at: new Date().toISOString() })
+        .eq("id", referralId);
+    } else {
+      const { data: newRef, error } = await supabaseAdmin
+        .from("affiliate_referrals")
+        .insert({
+          affiliate_id: aff.id,
+          link_id: linkId,
+          referred_user_id: userId,
+          commission_model: model,
+          status: "converted",
+          converted_at: new Date().toISOString(),
+        })
+        .select("id")
+        .single();
+      if (error || !newRef) {
+        console.error("Failed to insert referral:", error);
+        return;
+      }
+      referralId = newRef.id;
+    }
+
+    // Only create signup commission for one_time model.
+    // Recurring model earns on every paid invoice (handled in handleAffiliateOnInvoice).
+    if (model !== "one_time") return;
+
+    const settings = await getAffiliateSettings();
+    const rate = Number(aff.commission_signup_pct ?? settings.signupPct);
+
+    // Use the subscription's first item price as base
+    const item = subscription.items.data[0];
+    const baseCents = item?.price?.unit_amount ?? 0;
+    const amountCents = Math.round((baseCents * rate) / 100);
+    if (amountCents <= 0) return;
+
+    const currency = (item?.price?.currency || "usd").toLowerCase();
+
+    const { error: cErr } = await supabaseAdmin.from("affiliate_commissions").insert({
+      affiliate_id: aff.id,
+      referral_id: referralId,
+      type: "signup",
+      source_subscription_id: subscription.id,
+      base_amount_cents: baseCents,
+      rate_pct: rate,
+      amount_cents: amountCents,
+      currency,
+      status: "pending",
+    });
+    if (cErr) console.error("Failed to insert signup commission:", cErr);
+  } catch (e) {
+    console.error("handleAffiliateOnSubscription error", e);
+  }
+}
+
+async function handleAffiliateOnInvoice(invoice: Stripe.Invoice) {
+  try {
+    if (!invoice.subscription) return;
+    const subId = invoice.subscription as string;
+    const subscription = await stripe.subscriptions.retrieve(subId);
+    const affCode = subscription.metadata?.affiliate_code;
+    if (!affCode) return;
+    const model = (subscription.metadata?.commission_model as string) || "recurring";
+    if (model !== "recurring") return;
+
+    const { data: aff } = await supabaseAdmin
+      .from("affiliates")
+      .select("id, status, commission_recurring_pct")
+      .eq("referral_code", affCode)
+      .maybeSingle();
+    if (!aff || aff.status !== "active") return;
+
+    const { data: ref } = await supabaseAdmin
+      .from("affiliate_referrals")
+      .select("id")
+      .eq("affiliate_id", aff.id)
+      .eq("referred_user_id", subscription.metadata?.supabase_user_id || "")
+      .maybeSingle();
+
+    const settings = await getAffiliateSettings();
+    const rate = Number(aff.commission_recurring_pct ?? settings.recurringPct);
+    const baseCents = invoice.amount_paid ?? 0;
+    if (baseCents <= 0) return;
+    const amountCents = Math.round((baseCents * rate) / 100);
+    if (amountCents <= 0) return;
+
+    const { error } = await supabaseAdmin.from("affiliate_commissions").insert({
+      affiliate_id: aff.id,
+      referral_id: ref?.id ?? null,
+      type: "recurring",
+      source_invoice_id: invoice.id,
+      source_subscription_id: subId,
+      base_amount_cents: baseCents,
+      rate_pct: rate,
+      amount_cents: amountCents,
+      currency: (invoice.currency || "usd").toLowerCase(),
+      status: "pending",
+      period_start: invoice.period_start ? new Date(invoice.period_start * 1000).toISOString() : null,
+      period_end: invoice.period_end ? new Date(invoice.period_end * 1000).toISOString() : null,
+    });
+    if (error && error.code !== "23505") {
+      console.error("Failed to insert recurring commission:", error);
+    }
+  } catch (e) {
+    console.error("handleAffiliateOnInvoice error", e);
+  }
+}
