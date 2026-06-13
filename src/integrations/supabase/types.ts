@@ -14,6 +14,328 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_commissions: {
+        Row: {
+          affiliate_id: string
+          amount_cents: number
+          base_amount_cents: number
+          created_at: string
+          currency: string
+          id: string
+          notes: string | null
+          payout_id: string | null
+          period_end: string | null
+          period_start: string | null
+          rate_pct: number | null
+          referral_id: string | null
+          source_invoice_id: string | null
+          source_subscription_id: string | null
+          status: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          affiliate_id: string
+          amount_cents: number
+          base_amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          payout_id?: string | null
+          period_end?: string | null
+          period_start?: string | null
+          rate_pct?: number | null
+          referral_id?: string | null
+          source_invoice_id?: string | null
+          source_subscription_id?: string | null
+          status?: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          affiliate_id?: string
+          amount_cents?: number
+          base_amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          payout_id?: string | null
+          period_end?: string | null
+          period_start?: string | null
+          rate_pct?: number | null
+          referral_id?: string | null
+          source_invoice_id?: string | null
+          source_subscription_id?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_commissions_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affiliate_commissions_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_links: {
+        Row: {
+          affiliate_id: string
+          clicks: number
+          code: string
+          commission_model: string
+          created_at: string
+          destination_path: string
+          id: string
+          label: string | null
+          updated_at: string
+        }
+        Insert: {
+          affiliate_id: string
+          clicks?: number
+          code: string
+          commission_model?: string
+          created_at?: string
+          destination_path?: string
+          id?: string
+          label?: string | null
+          updated_at?: string
+        }
+        Update: {
+          affiliate_id?: string
+          clicks?: number
+          code?: string
+          commission_model?: string
+          created_at?: string
+          destination_path?: string
+          id?: string
+          label?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_links_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_payouts: {
+        Row: {
+          affiliate_id: string
+          amount_cents: number
+          created_at: string
+          currency: string
+          id: string
+          method: string
+          notes: string | null
+          paid_at: string | null
+          period_end: string | null
+          period_start: string | null
+          reference: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          affiliate_id: string
+          amount_cents: number
+          created_at?: string
+          currency?: string
+          id?: string
+          method?: string
+          notes?: string | null
+          paid_at?: string | null
+          period_end?: string | null
+          period_start?: string | null
+          reference?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          affiliate_id?: string
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          method?: string
+          notes?: string | null
+          paid_at?: string | null
+          period_end?: string | null
+          period_start?: string | null
+          reference?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_payouts_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_referrals: {
+        Row: {
+          affiliate_id: string
+          commission_model: string
+          converted_at: string | null
+          created_at: string
+          id: string
+          link_id: string | null
+          referred_user_id: string | null
+          signed_up_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          affiliate_id: string
+          commission_model?: string
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          link_id?: string | null
+          referred_user_id?: string | null
+          signed_up_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          affiliate_id?: string
+          commission_model?: string
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          link_id?: string | null
+          referred_user_id?: string | null
+          signed_up_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_referrals_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affiliate_referrals_link_id_fkey"
+            columns: ["link_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_settings: {
+        Row: {
+          cookie_window_days: number
+          created_at: string
+          currency: string
+          default_recurring_pct: number
+          default_signup_pct: number
+          id: number
+          min_payout_cents: number
+          terms_md: string | null
+          updated_at: string
+        }
+        Insert: {
+          cookie_window_days?: number
+          created_at?: string
+          currency?: string
+          default_recurring_pct?: number
+          default_signup_pct?: number
+          id?: number
+          min_payout_cents?: number
+          terms_md?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cookie_window_days?: number
+          created_at?: string
+          currency?: string
+          default_recurring_pct?: number
+          default_signup_pct?: number
+          id?: number
+          min_payout_cents?: number
+          terms_md?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      affiliates: {
+        Row: {
+          applied_at: string
+          approved_at: string | null
+          commission_recurring_pct: number | null
+          commission_signup_pct: number | null
+          created_at: string
+          display_name: string | null
+          id: string
+          notes: string | null
+          payout_email: string | null
+          payout_method: string
+          referral_code: string
+          status: string
+          stripe_connect_account_id: string | null
+          terms_accepted_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          applied_at?: string
+          approved_at?: string | null
+          commission_recurring_pct?: number | null
+          commission_signup_pct?: number | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          notes?: string | null
+          payout_email?: string | null
+          payout_method?: string
+          referral_code: string
+          status?: string
+          stripe_connect_account_id?: string | null
+          terms_accepted_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          applied_at?: string
+          approved_at?: string | null
+          commission_recurring_pct?: number | null
+          commission_signup_pct?: number | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          notes?: string | null
+          payout_email?: string | null
+          payout_method?: string
+          referral_code?: string
+          status?: string
+          stripe_connect_account_id?: string | null
+          terms_accepted_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       areekeera_protocol_steps: {
         Row: {
           completed_at: string | null
@@ -4314,6 +4636,10 @@ export type Database = {
       }
     }
     Functions: {
+      attribute_affiliate_referral: {
+        Args: { _code: string; _commission_model?: string; _link_code?: string }
+        Returns: string
+      }
       can_view_card: {
         Args: { _deck_id: string; _user_id: string }
         Returns: boolean
@@ -4362,6 +4688,16 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      track_affiliate_click: {
+        Args: { _code: string }
+        Returns: {
+          affiliate_id: string
+          commission_model: string
+          destination_path: string
+          link_id: string
+          referral_code: string
+        }[]
       }
       user_has_deck_access: {
         Args: { _deck_id: string; _user_id: string }

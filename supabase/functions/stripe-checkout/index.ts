@@ -36,7 +36,7 @@ serve(async (req) => {
 
     console.log("User authenticated:", user.id, user.email);
 
-    const { priceId } = await req.json();
+    const { priceId, affiliateCode, affiliateLinkCode, commissionModel } = await req.json();
 
     if (!priceId) {
       throw new Error("Missing priceId");
@@ -93,6 +93,12 @@ serve(async (req) => {
       console.log("Using existing Stripe customer:", customerId);
     }
 
+    // Build affiliate metadata (only include keys we have)
+    const affMeta: Record<string, string> = {};
+    if (affiliateCode) affMeta.affiliate_code = String(affiliateCode);
+    if (affiliateLinkCode) affMeta.affiliate_link_code = String(affiliateLinkCode);
+    if (commissionModel) affMeta.commission_model = String(commissionModel);
+
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -107,6 +113,7 @@ serve(async (req) => {
         metadata: {
           supabase_user_id: user.id,
           plan_code: priceData.plan_code,
+          ...affMeta,
         },
       },
       success_url: `${req.headers.get("origin")}/membership/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -114,6 +121,7 @@ serve(async (req) => {
       metadata: {
         supabase_user_id: user.id,
         plan_code: priceData.plan_code,
+        ...affMeta,
       },
     });
 

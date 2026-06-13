@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { getStoredAffiliateRef } from "@/lib/affiliateTracking";
 
 interface Plan {
   code: string;
@@ -150,8 +151,14 @@ export function useMembership() {
     setCheckoutLoading(priceId);
 
     try {
+      const ref = getStoredAffiliateRef();
       const { data, error } = await supabase.functions.invoke("stripe-checkout", {
-        body: { priceId },
+        body: {
+          priceId,
+          affiliateCode: ref?.code ?? null,
+          affiliateLinkCode: ref?.linkCode ?? null,
+          commissionModel: ref?.commissionModel ?? null,
+        },
       });
 
       if (error) throw error;

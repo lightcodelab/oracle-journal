@@ -23,7 +23,8 @@ import {
   MessageSquarePlus,
   Bug,
   Smartphone,
-  LineChart
+  LineChart,
+  Share2
 } from 'lucide-react';
 import { useInstallApp } from '@/components/InstallAppDialog';
 
@@ -103,6 +104,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       label: 'My Playlists',
       icon: <ListMusic className="w-4 h-4 mr-2" />,
       route: '/playlists',
+    },
+    {
+      label: 'Affiliate Program',
+      icon: <Share2 className="w-4 h-4 mr-2" />,
+      route: '/affiliate',
     },
     {
       label: 'Feature Suggestions',
