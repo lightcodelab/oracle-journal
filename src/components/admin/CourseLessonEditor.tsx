@@ -90,6 +90,11 @@ const LessonEditorPanel = ({
   const [surveyOptions, setSurveyOptions] = useState<string[]>(
     Array.isArray(lesson.survey_options) ? lesson.survey_options : []
   );
+  const [formQuestions, setFormQuestions] = useState<LessonFormQuestion[]>(
+    Array.isArray(lesson.form_questions) && lesson.form_questions.length > 0
+      ? (lesson.form_questions as LessonFormQuestion[])
+      : (legacyToFormQuestions(lesson.survey_question, Array.isArray(lesson.survey_options) ? lesson.survey_options : null) || [])
+  );
   const [mediaKind, setMediaKind] = useState(lesson.main_media_kind || 'none');
   const [mediaEmbedUrl, setMediaEmbedUrl] = useState(lesson.main_media_embed_url || '');
   const [mediaFileUrl, setMediaFileUrl] = useState(lesson.main_media_file_url || '');
