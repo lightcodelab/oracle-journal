@@ -36,6 +36,8 @@ interface Lesson {
   form_questions: LessonFormQuestion[] | null;
   body_richtext: any;
   downloadable_files: Array<{ file_url: string; file_name: string }> | null;
+  main_media_kind: string | null;
+  main_media_file_url: string | null;
 }
 
 interface JournalEntry {
@@ -283,6 +285,21 @@ const DevotionLessonPage = () => {
     Array.isArray(lesson.form_questions) && lesson.form_questions.length > 0
       ? lesson.form_questions
       : legacyToFormQuestions(lesson.survey_question, surveyOptions) || [];
+  const savedDownloadableFiles = Array.isArray(lesson.downloadable_files)
+    ? lesson.downloadable_files.filter((file) => file?.file_url)
+    : [];
+  const legacyDownloadableFile = lesson.main_media_kind === 'file' && lesson.main_media_file_url
+    ? [{
+        file_url: lesson.main_media_file_url,
+        file_name: lesson.main_media_file_url.split('/').pop() || 'Downloadable file',
+      }]
+    : [];
+  const downloadableFiles = [
+    ...savedDownloadableFiles,
+    ...legacyDownloadableFile.filter(
+      (legacyFile) => !savedDownloadableFiles.some((file) => file.file_url === legacyFile.file_url)
+    ),
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -421,7 +438,7 @@ const DevotionLessonPage = () => {
           </motion.div>
 
           {/* Downloadables */}
-          {Array.isArray(lesson.downloadable_files) && lesson.downloadable_files.length > 0 && (
+          {downloadableFiles.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -431,7 +448,7 @@ const DevotionLessonPage = () => {
               <div className="bg-card border border-border rounded-lg p-6">
                 <h2 className="font-serif text-2xl text-foreground mb-4">Downloadables</h2>
                 <div className="space-y-2">
-                  {lesson.downloadable_files.map((f, i) => {
+                  {downloadableFiles.map((f, i) => {
                     const url = f.file_url.startsWith('http')
                       ? f.file_url
                       : supabase.storage.from('content-main-media').getPublicUrl(f.file_url).data.publicUrl;
