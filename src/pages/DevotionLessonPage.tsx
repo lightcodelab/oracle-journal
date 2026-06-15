@@ -52,6 +52,7 @@ const DevotionLessonPage = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [journalText, setJournalText] = useState('');
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [formResponses, setFormResponses] = useState<LessonFormResponses>({});
   const [audioPosition, setAudioPosition] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   const { toast } = useToast();
@@ -169,6 +170,7 @@ const DevotionLessonPage = () => {
       setJournalText(journalEntry.journal_text || '');
       setSelectedAnswer(journalEntry.selected_answer);
       setAudioPosition(journalEntry.audio_position || 0);
+      setFormResponses((journalEntry.form_responses as LessonFormResponses) || {});
     }
   }, [journalEntry]);
 
@@ -180,7 +182,7 @@ const DevotionLessonPage = () => {
   }, [audioPosition, journalLoading]);
 
   const saveJournalMutation = useMutation({
-    mutationFn: async (data: { journal_text?: string; selected_answer?: number | null; audio_position?: number }) => {
+    mutationFn: async (data: { journal_text?: string; selected_answer?: number | null; audio_position?: number; form_responses?: LessonFormResponses }) => {
       if (!userId || !lessonId) throw new Error('Missing required data');
 
       const payload = {
@@ -188,7 +190,7 @@ const DevotionLessonPage = () => {
         lesson_id: lessonId,
         ...data,
         updated_at: new Date().toISOString(),
-      };
+      } as any;
 
       if (journalEntry) {
         const { error } = await supabase
@@ -208,7 +210,7 @@ const DevotionLessonPage = () => {
     },
   });
 
-  const debouncedSave = useCallback((data: { journal_text?: string; selected_answer?: number | null; audio_position?: number }) => {
+  const debouncedSave = useCallback((data: { journal_text?: string; selected_answer?: number | null; audio_position?: number; form_responses?: LessonFormResponses }) => {
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
@@ -216,6 +218,11 @@ const DevotionLessonPage = () => {
       saveJournalMutation.mutate(data);
     }, 1000);
   }, [saveJournalMutation]);
+
+  const handleFormResponsesChange = (next: LessonFormResponses) => {
+    setFormResponses(next);
+    debouncedSave({ form_responses: next });
+  };
 
   const handleJournalChange = (text: string) => {
     setJournalText(text);
