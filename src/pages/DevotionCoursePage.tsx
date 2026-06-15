@@ -311,50 +311,99 @@ const LessonsList = ({
   journalEntries: string[] | undefined;
   onLessonClick: (id: string) => void;
 }) => {
-  return (
-    <div className="space-y-4">
-            {lessons && lessons.length > 0 ? (
-              lessons.map((lesson, index) => {
-                const hasStarted = journalEntries?.includes(lesson.id);
-                
-                return (
-                  <motion.div
-                    key={lesson.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    onClick={() => onLessonClick(lesson.id)}
-                    className="cursor-pointer group"
-                  >
-                    <div className="bg-card border border-border rounded-lg p-6 flex items-center gap-4 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                        {hasStarted ? (
-                          <CheckCircle className="w-6 h-6 text-primary" />
-                        ) : (
-                          <Play className="w-5 h-5 text-primary ml-0.5" />
-                        )}
-                      </div>
-                      <div className="flex-grow">
-                        <h3 className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">
-                          Session {lesson.lesson_number}: {lesson.title}
-                        </h3>
-                        {lesson.description && (
-                          <p className="text-muted-foreground text-sm mt-1">
-                            {lesson.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })
+  if (!lessons || lessons.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground font-sans">
+          Sessions are being prepared for this course.
+        </p>
+      </div>
+    );
+  }
+
+  // Group lessons by module_title, preserving module_order for module groups
+  const moduleOrderMap = new Map<string, number>();
+  lessons.forEach((l) => {
+    const key = l.module_title || '';
+    const existing = moduleOrderMap.get(key);
+    const order = l.module_order ?? Number.MAX_SAFE_INTEGER;
+    if (existing === undefined || order < existing) {
+      moduleOrderMap.set(key, order);
+    }
+  });
+
+  const moduleKeys = Array.from(moduleOrderMap.keys()).sort((a, b) => {
+    // Empty (unassigned) goes last
+    if (a === '' && b !== '') return 1;
+    if (b === '' && a !== '') return -1;
+    return (moduleOrderMap.get(a) ?? 0) - (moduleOrderMap.get(b) ?? 0);
+  });
+
+  let globalIndex = 0;
+
+  const renderLesson = (lesson: Lesson) => {
+    const hasStarted = journalEntries?.includes(lesson.id);
+    const delay = globalIndex * 0.06;
+    globalIndex += 1;
+    return (
+      <motion.div
+        key={lesson.id}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay }}
+        onClick={() => onLessonClick(lesson.id)}
+        className="cursor-pointer group"
+      >
+        <div className="bg-card border border-border rounded-lg p-6 flex items-center gap-4 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30">
+          <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+            {hasStarted ? (
+              <CheckCircle className="w-6 h-6 text-primary" />
             ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground font-sans">
-                  Sessions are being prepared for this course.
-                </p>
-              </div>
+              <Play className="w-5 h-5 text-primary ml-0.5" />
             )}
+          </div>
+          <div className="flex-grow">
+            <h3 className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">
+              Session {lesson.lesson_number}: {lesson.title}
+            </h3>
+            {lesson.description && (
+              <p className="text-muted-foreground text-sm mt-1">
+                {lesson.description}
+              </p>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    );
+  };
+
+  const hasAnyModule = moduleKeys.some((k) => k !== '');
+
+  return (
+    <div className="space-y-8">
+      {moduleKeys.map((moduleKey) => {
+        const moduleLessons = lessons
+          .filter((l) => (l.module_title || '') === moduleKey)
+          .sort((a, b) => a.lesson_number - b.lesson_number);
+        if (moduleLessons.length === 0) return null;
+
+        return (
+          <div key={moduleKey || '__unassigned__'} className="space-y-4">
+            {moduleKey ? (
+              <div className="border-b border-border pb-2">
+                <h2 className="font-serif text-2xl text-primary">{moduleKey}</h2>
+              </div>
+            ) : hasAnyModule ? (
+              <div className="border-b border-border pb-2">
+                <h2 className="font-serif text-2xl text-muted-foreground">Additional Sessions</h2>
+              </div>
+            ) : null}
+            <div className="space-y-4">
+              {moduleLessons.map(renderLesson)}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
