@@ -217,7 +217,7 @@ const LessonEditorPanel = ({
               {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
               <FileText className="w-4 h-4 text-primary" />
               <CardTitle className="text-base font-medium flex-1">
-                Lesson {lesson.lesson_number}: {title || 'Untitled'}
+                Lesson {lessonNumber}: {title || 'Untitled'}
               </CardTitle>
               <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                 <AlertDialog>
