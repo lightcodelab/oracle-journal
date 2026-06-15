@@ -119,8 +119,9 @@ const DevotionLessonPage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('lessons')
-        .select('id, lesson_number, title')
+        .select('id, lesson_number, title, module_title, module_order')
         .eq('course_id', courseId)
+        .order('module_order', { ascending: true, nullsFirst: false })
         .order('lesson_number', { ascending: true });
 
       if (error) throw error;
