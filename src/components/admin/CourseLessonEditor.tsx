@@ -458,7 +458,7 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
       .order('module_order', { ascending: true })
       .order('lesson_number', { ascending: true });
 
-    if (data) setLessons(data as Lesson[]);
+    if (data) setLessons(data as unknown as Lesson[]);
     setLoading(false);
   };
 
@@ -509,13 +509,13 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
       return;
     }
 
-    setLessons([...lessons, data as Lesson]);
+    setLessons([...lessons, data as unknown as Lesson]);
     setNewLessonTitle('');
     toast({ title: 'Added', description: 'Lesson added. Expand it to add content.' });
   };
 
   const saveLesson = async (id: string, data: Partial<Lesson>, lessonAudioFiles?: AudioFile[]) => {
-    const { error } = await supabase.from('lessons').update(data).eq('id', id);
+    const { error } = await supabase.from('lessons').update(data as any).eq('id', id);
     if (error) {
       toast({ title: 'Error', description: 'Failed to save lesson.', variant: 'destructive' });
       return;
