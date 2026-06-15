@@ -2500,6 +2500,7 @@ export type Database = {
         Row: {
           audio_position: number | null
           created_at: string | null
+          form_responses: Json | null
           id: string
           journal_text: string | null
           lesson_id: string
@@ -2510,6 +2511,7 @@ export type Database = {
         Insert: {
           audio_position?: number | null
           created_at?: string | null
+          form_responses?: Json | null
           id?: string
           journal_text?: string | null
           lesson_id: string
@@ -2520,6 +2522,7 @@ export type Database = {
         Update: {
           audio_position?: number | null
           created_at?: string | null
+          form_responses?: Json | null
           id?: string
           journal_text?: string | null
           lesson_id?: string
@@ -2546,6 +2549,7 @@ export type Database = {
           course_id: string
           created_at: string | null
           description: string | null
+          form_questions: Json | null
           id: string
           lesson_number: number
           main_media_embed_url: string | null
@@ -2566,6 +2570,7 @@ export type Database = {
           course_id: string
           created_at?: string | null
           description?: string | null
+          form_questions?: Json | null
           id?: string
           lesson_number: number
           main_media_embed_url?: string | null
@@ -2586,6 +2591,7 @@ export type Database = {
           course_id?: string
           created_at?: string | null
           description?: string | null
+          form_questions?: Json | null
           id?: string
           lesson_number?: number
           main_media_embed_url?: string | null
