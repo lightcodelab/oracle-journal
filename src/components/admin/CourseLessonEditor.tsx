@@ -380,45 +380,16 @@ const LessonEditorPanel = ({
               )}
             </div>
 
-            {/* Survey */}
+            {/* Lesson Form (Google Forms–style) */}
             <div className="space-y-4 p-4 border border-dashed rounded-lg">
-              <Label className="text-base">Survey Question (Optional)</Label>
-              <Input
-                value={surveyQuestion}
-                onChange={(e) => setSurveyQuestion(e.target.value)}
-                placeholder="Ask a reflection question..."
-              />
-              {surveyQuestion && (
-                <div className="space-y-2">
-                  <Label className="text-sm">Survey Options</Label>
-                  {surveyOptions.map((opt, i) => (
-                    <div key={i} className="flex gap-2">
-                      <Input
-                        value={opt}
-                        onChange={(e) => {
-                          const updated = [...surveyOptions];
-                          updated[i] = e.target.value;
-                          setSurveyOptions(updated);
-                        }}
-                        placeholder={`Option ${i + 1}`}
-                      />
-                      <Button variant="ghost" size="sm" onClick={() => {
-                        setSurveyOptions(surveyOptions.filter((_, idx) => idx !== i));
-                      }}>
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSurveyOptions([...surveyOptions, ''])}
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Option
-                  </Button>
-                </div>
-              )}
+              <div>
+                <Label className="text-base">Lesson Form (Optional)</Label>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Add one or more questions. Supports short answer, paragraph, multiple choice,
+                  checkboxes, dropdown, linear scale, date, time, number, and email.
+                </p>
+              </div>
+              <LessonFormBuilder questions={formQuestions} onChange={setFormQuestions} />
             </div>
 
             {/* Save Button */}
