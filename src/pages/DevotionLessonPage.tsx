@@ -493,9 +493,7 @@ const DevotionLessonPage = () => {
                 <h2 className="font-serif text-2xl text-foreground mb-4">Downloadables</h2>
                 <div className="space-y-2">
                   {downloadableFiles.map((f, i) => {
-                    const url = f.file_url.startsWith('http')
-                      ? f.file_url
-                      : supabase.storage.from('content-main-media').getPublicUrl(f.file_url).data.publicUrl;
+                    const isDownloading = downloadingFileUrl === f.file_url;
                     return (
                       <div
                         key={i}
@@ -504,15 +502,18 @@ const DevotionLessonPage = () => {
                         <FileText className="w-5 h-5 text-primary flex-shrink-0" />
                         <span className="flex-1 text-sm text-foreground truncate">{f.file_name}</span>
                         <Button
-                          asChild
                           variant="outline"
                           size="sm"
                           className="flex-shrink-0"
+                          onClick={() => handleDownloadFile(f)}
+                          disabled={isDownloading}
                         >
-                          <a href={url} download={f.file_name} target="_blank" rel="noopener noreferrer">
+                          {isDownloading ? (
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          ) : (
                             <Download className="w-4 h-4 mr-2" />
-                            Download
-                          </a>
+                          )}
+                          Download
                         </Button>
                       </div>
                     );
