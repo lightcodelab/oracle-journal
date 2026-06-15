@@ -101,7 +101,16 @@ const LessonEditorPanel = ({
   const [mediaEmbedUrl, setMediaEmbedUrl] = useState(lesson.main_media_embed_url || '');
   const [mediaFileUrl, setMediaFileUrl] = useState(lesson.main_media_file_url || '');
   const [downloadableFiles, setDownloadableFiles] = useState<Array<{ file_url: string; file_name: string }>>(
-    Array.isArray(lesson.downloadable_files) ? lesson.downloadable_files : []
+    (() => {
+      const saved = Array.isArray(lesson.downloadable_files) ? lesson.downloadable_files : [];
+      if (saved.length === 0 && lesson.main_media_kind === 'file' && lesson.main_media_file_url) {
+        return [{
+          file_url: lesson.main_media_file_url,
+          file_name: lesson.main_media_file_url.split('/').pop() || 'Downloadable file',
+        }];
+      }
+      return saved;
+    })()
   );
 
   // Load audio files when expanded
@@ -354,7 +363,15 @@ const LessonEditorPanel = ({
                       {downloadableFiles.map((f, i) => (
                         <div key={i} className="flex items-center gap-2 p-3 bg-muted rounded-md">
                           <FileText className="w-5 h-5 text-primary" />
-                          <span className="flex-1 text-sm truncate">{f.file_name}</span>
+                          <Input
+                            className="flex-1 h-8 text-sm"
+                            value={f.file_name}
+                            onChange={(e) =>
+                              setDownloadableFiles(prev =>
+                                prev.map((entry, idx) => idx === i ? { ...entry, file_name: e.target.value } : entry)
+                              )
+                            }
+                          />
                           <Button
                             variant="ghost"
                             size="sm"
