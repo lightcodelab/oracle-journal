@@ -636,12 +636,17 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
                       const FileIcon = getFileIcon(mainMediaUrl);
                       return <FileIcon className="w-5 h-5 text-primary" />;
                     })()}
-                    <span className="flex-1 text-sm truncate">{mainMediaUrl}</span>
+                    <span className="flex-1 text-sm truncate">
+                      {mainMediaName || displayStorageFileName(mainMediaUrl, mainMediaUrl)}
+                    </span>
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      onClick={() => setMainMediaUrl(null)}
+                      onClick={() => {
+                        setMainMediaUrl(null);
+                        setMainMediaName(null);
+                      }}
                     >
                       <X className="w-4 h-4" />
                     </Button>
@@ -653,7 +658,7 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
                       accept="image/*,audio/*,video/*,.pdf"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
-                        if (file) handleFileUpload(file, 'content-main-media', setMainMediaUrl);
+                        if (file) handleFileUpload(file, 'content-main-media', setMainMediaUrl, setMainMediaName);
                       }}
                       disabled={uploading}
                       className="flex-1"
