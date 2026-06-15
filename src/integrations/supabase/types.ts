@@ -2549,6 +2549,7 @@ export type Database = {
           course_id: string
           created_at: string | null
           description: string | null
+          downloadable_files: Json
           form_questions: Json | null
           id: string
           lesson_number: number
@@ -2570,6 +2571,7 @@ export type Database = {
           course_id: string
           created_at?: string | null
           description?: string | null
+          downloadable_files?: Json
           form_questions?: Json | null
           id?: string
           lesson_number: number
@@ -2591,6 +2593,7 @@ export type Database = {
           course_id?: string
           created_at?: string | null
           description?: string | null
+          downloadable_files?: Json
           form_questions?: Json | null
           id?: string
           lesson_number?: number
