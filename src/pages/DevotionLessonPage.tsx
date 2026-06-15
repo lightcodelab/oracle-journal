@@ -15,6 +15,12 @@ import ContextualJournal from '@/components/journal/ContextualJournal';
 import CourseSessionNav from '@/components/CourseSessionNav';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import DOMPurify from 'dompurify';
+import LessonFormRenderer from '@/components/lesson/LessonFormRenderer';
+import {
+  LessonFormQuestion,
+  LessonFormResponses,
+  legacyToFormQuestions,
+} from '@/lib/lessonFormTypes';
 
 interface Lesson {
   id: string;
@@ -27,6 +33,7 @@ interface Lesson {
   course_id: string;
   survey_question: string | null;
   survey_options: string[] | null;
+  form_questions: LessonFormQuestion[] | null;
   body_richtext: any;
 }
 
@@ -35,6 +42,7 @@ interface JournalEntry {
   journal_text: string | null;
   selected_answer: number | null;
   audio_position: number | null;
+  form_responses: LessonFormResponses | null;
 }
 
 const DevotionLessonPage = () => {
@@ -44,6 +52,7 @@ const DevotionLessonPage = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [journalText, setJournalText] = useState('');
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [formResponses, setFormResponses] = useState<LessonFormResponses>({});
   const [audioPosition, setAudioPosition] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   const { toast } = useToast();
@@ -100,7 +109,7 @@ const DevotionLessonPage = () => {
         .single();
 
       if (error) throw error;
-      return data as Lesson;
+      return data as unknown as Lesson;
     },
     enabled: !loading && !!lessonId,
   });
@@ -161,6 +170,7 @@ const DevotionLessonPage = () => {
       setJournalText(journalEntry.journal_text || '');
       setSelectedAnswer(journalEntry.selected_answer);
       setAudioPosition(journalEntry.audio_position || 0);
+      setFormResponses((journalEntry.form_responses as LessonFormResponses) || {});
     }
   }, [journalEntry]);
 
@@ -172,7 +182,7 @@ const DevotionLessonPage = () => {
   }, [audioPosition, journalLoading]);
 
   const saveJournalMutation = useMutation({
-    mutationFn: async (data: { journal_text?: string; selected_answer?: number | null; audio_position?: number }) => {
+    mutationFn: async (data: { journal_text?: string; selected_answer?: number | null; audio_position?: number; form_responses?: LessonFormResponses }) => {
       if (!userId || !lessonId) throw new Error('Missing required data');
 
       const payload = {
@@ -180,7 +190,7 @@ const DevotionLessonPage = () => {
         lesson_id: lessonId,
         ...data,
         updated_at: new Date().toISOString(),
-      };
+      } as any;
 
       if (journalEntry) {
         const { error } = await supabase
@@ -200,7 +210,7 @@ const DevotionLessonPage = () => {
     },
   });
 
-  const debouncedSave = useCallback((data: { journal_text?: string; selected_answer?: number | null; audio_position?: number }) => {
+  const debouncedSave = useCallback((data: { journal_text?: string; selected_answer?: number | null; audio_position?: number; form_responses?: LessonFormResponses }) => {
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
@@ -208,6 +218,11 @@ const DevotionLessonPage = () => {
       saveJournalMutation.mutate(data);
     }, 1000);
   }, [saveJournalMutation]);
+
+  const handleFormResponsesChange = (next: LessonFormResponses) => {
+    setFormResponses(next);
+    debouncedSave({ form_responses: next });
+  };
 
   const handleJournalChange = (text: string) => {
     setJournalText(text);
@@ -262,6 +277,10 @@ const DevotionLessonPage = () => {
   }
 
   const surveyOptions = Array.isArray(lesson.survey_options) ? lesson.survey_options : [];
+  const formQuestions: LessonFormQuestion[] =
+    Array.isArray(lesson.form_questions) && lesson.form_questions.length > 0
+      ? lesson.form_questions
+      : legacyToFormQuestions(lesson.survey_question, surveyOptions) || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -399,8 +418,8 @@ const DevotionLessonPage = () => {
             )}
           </motion.div>
 
-          {/* Survey Question */}
-          {lesson.survey_question && surveyOptions.length > 0 && (
+          {/* Lesson Form */}
+          {formQuestions.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -408,30 +427,11 @@ const DevotionLessonPage = () => {
               className="mb-8"
             >
               <div className="bg-card border border-border rounded-lg p-6">
-                <h3 className="font-serif text-xl text-foreground mb-4">
-                  {lesson.survey_question}
-                </h3>
-                <RadioGroup
-                  value={selectedAnswer?.toString()}
-                  onValueChange={handleAnswerChange}
-                  className="space-y-3"
-                >
-                  {surveyOptions.map((option, index) => (
-                    <div key={index} className="flex items-center space-x-3">
-                      <RadioGroupItem
-                        value={index.toString()}
-                        id={`option-${index}`}
-                        className="border-primary"
-                      />
-                      <Label
-                        htmlFor={`option-${index}`}
-                        className="text-foreground/90 font-sans cursor-pointer"
-                      >
-                        {option}
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
+                <LessonFormRenderer
+                  questions={formQuestions}
+                  responses={formResponses}
+                  onChange={handleFormResponsesChange}
+                />
               </div>
             </motion.div>
           )}

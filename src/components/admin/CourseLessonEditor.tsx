@@ -26,6 +26,8 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import AudioFileList from './AudioFileList';
+import LessonFormBuilder from './LessonFormBuilder';
+import { LessonFormQuestion, legacyToFormQuestions } from '@/lib/lessonFormTypes';
 
 interface Lesson {
   id: string;
@@ -38,6 +40,7 @@ interface Lesson {
   audio_timestamp: string | null;
   survey_question: string | null;
   survey_options: string[] | null;
+  form_questions: LessonFormQuestion[] | null;
   body_richtext: any;
   main_media_embed_url: string | null;
   main_media_kind: string | null;
@@ -86,6 +89,11 @@ const LessonEditorPanel = ({
   const [surveyQuestion, setSurveyQuestion] = useState(lesson.survey_question || '');
   const [surveyOptions, setSurveyOptions] = useState<string[]>(
     Array.isArray(lesson.survey_options) ? lesson.survey_options : []
+  );
+  const [formQuestions, setFormQuestions] = useState<LessonFormQuestion[]>(
+    Array.isArray(lesson.form_questions) && lesson.form_questions.length > 0
+      ? (lesson.form_questions as LessonFormQuestion[])
+      : (legacyToFormQuestions(lesson.survey_question, Array.isArray(lesson.survey_options) ? lesson.survey_options : null) || [])
   );
   const [mediaKind, setMediaKind] = useState(lesson.main_media_kind || 'none');
   const [mediaEmbedUrl, setMediaEmbedUrl] = useState(lesson.main_media_embed_url || '');
@@ -146,6 +154,7 @@ const LessonEditorPanel = ({
       audio_timestamp: audioTimestamp || null,
       survey_question: surveyQuestion || null,
       survey_options: surveyOptions.length > 0 ? surveyOptions : null,
+      form_questions: formQuestions.length > 0 ? formQuestions : null,
       main_media_kind: mediaKind,
       main_media_embed_url: mediaKind === 'video_embed' ? mediaEmbedUrl : null,
       main_media_file_url: mediaKind === 'file' ? mediaFileUrl : null,
@@ -371,45 +380,16 @@ const LessonEditorPanel = ({
               )}
             </div>
 
-            {/* Survey */}
+            {/* Lesson Form (Google Forms–style) */}
             <div className="space-y-4 p-4 border border-dashed rounded-lg">
-              <Label className="text-base">Survey Question (Optional)</Label>
-              <Input
-                value={surveyQuestion}
-                onChange={(e) => setSurveyQuestion(e.target.value)}
-                placeholder="Ask a reflection question..."
-              />
-              {surveyQuestion && (
-                <div className="space-y-2">
-                  <Label className="text-sm">Survey Options</Label>
-                  {surveyOptions.map((opt, i) => (
-                    <div key={i} className="flex gap-2">
-                      <Input
-                        value={opt}
-                        onChange={(e) => {
-                          const updated = [...surveyOptions];
-                          updated[i] = e.target.value;
-                          setSurveyOptions(updated);
-                        }}
-                        placeholder={`Option ${i + 1}`}
-                      />
-                      <Button variant="ghost" size="sm" onClick={() => {
-                        setSurveyOptions(surveyOptions.filter((_, idx) => idx !== i));
-                      }}>
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSurveyOptions([...surveyOptions, ''])}
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Option
-                  </Button>
-                </div>
-              )}
+              <div>
+                <Label className="text-base">Lesson Form (Optional)</Label>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Add one or more questions. Supports short answer, paragraph, multiple choice,
+                  checkboxes, dropdown, linear scale, date, time, number, and email.
+                </p>
+              </div>
+              <LessonFormBuilder questions={formQuestions} onChange={setFormQuestions} />
             </div>
 
             {/* Save Button */}
@@ -455,7 +435,7 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
       .order('module_order', { ascending: true })
       .order('lesson_number', { ascending: true });
 
-    if (data) setLessons(data as Lesson[]);
+    if (data) setLessons(data as unknown as Lesson[]);
     setLoading(false);
   };
 
@@ -506,13 +486,13 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
       return;
     }
 
-    setLessons([...lessons, data as Lesson]);
+    setLessons([...lessons, data as unknown as Lesson]);
     setNewLessonTitle('');
     toast({ title: 'Added', description: 'Lesson added. Expand it to add content.' });
   };
 
   const saveLesson = async (id: string, data: Partial<Lesson>, lessonAudioFiles?: AudioFile[]) => {
-    const { error } = await supabase.from('lessons').update(data).eq('id', id);
+    const { error } = await supabase.from('lessons').update(data as any).eq('id', id);
     if (error) {
       toast({ title: 'Error', description: 'Failed to save lesson.', variant: 'destructive' });
       return;
