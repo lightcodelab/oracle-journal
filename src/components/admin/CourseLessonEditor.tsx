@@ -573,11 +573,12 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
     );
   }
 
-  // Group lessons: unassigned first, then by module
-  const unassignedLessons = lessons.filter(l => !l.module_title);
+  // Group lessons: unassigned first, then by module. Sort each group by lesson_number.
+  const byNumber = (a: Lesson, b: Lesson) => a.lesson_number - b.lesson_number;
+  const unassignedLessons = lessons.filter(l => !l.module_title).sort(byNumber);
   const groupedByModule = allModules.map(m => ({
     module: m,
-    lessons: lessons.filter(l => l.module_title === m.title),
+    lessons: lessons.filter(l => l.module_title === m.title).sort(byNumber),
   }));
 
   return (
