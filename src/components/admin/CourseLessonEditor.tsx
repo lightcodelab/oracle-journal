@@ -19,7 +19,7 @@ import RichTextEditorToolbar from './RichTextEditorToolbar';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import {
   Plus, Trash2, ChevronDown, ChevronRight, Loader2, FileText, Save, X,
-  Link as LinkIcon, FileAudio, BookOpen, FolderPlus,
+  Link as LinkIcon, FileAudio, BookOpen, FolderPlus, ArrowUp, ArrowDown,
 } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -534,6 +534,37 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
     toast({ title: 'Deleted', description: 'Lesson deleted.' });
   };
 
+  const moveModule = async (moduleTitle: string, direction: 'up' | 'down') => {
+    const ordered = [...modules];
+    const idx = ordered.findIndex(m => m.title === moduleTitle);
+    if (idx === -1) return;
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= ordered.length) return;
+
+    // Normalize: assign sequential orders, then swap
+    const newOrders = ordered.map((m, i) => ({ title: m.title, order: i }));
+    const a = newOrders[idx].order;
+    newOrders[idx].order = newOrders[swapIdx].order;
+    newOrders[swapIdx].order = a;
+
+    // Update all affected lessons in DB
+    const updates = newOrders.map(({ title, order }) =>
+      supabase.from('lessons').update({ module_order: order } as any)
+        .eq('course_id', courseId).eq('module_title', title)
+    );
+    const results = await Promise.all(updates);
+    if (results.some(r => r.error)) {
+      toast({ title: 'Error', description: 'Failed to reorder modules.', variant: 'destructive' });
+      return;
+    }
+
+    setLessons(lessons.map(l => {
+      const match = newOrders.find(o => o.title === l.module_title);
+      return match ? { ...l, module_order: match.order } : l;
+    }));
+    toast({ title: 'Reordered', description: 'Module order updated.' });
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -612,12 +643,34 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
       )}
 
       {/* Module groups */}
-      {groupedByModule.map(({ module, lessons: moduleLessons }) => (
+      {groupedByModule.map(({ module, lessons: moduleLessons }, mIdx) => (
         <div key={module.title} className="space-y-3">
           <div className="flex items-center gap-2 pb-1 border-b border-border">
             <BookOpen className="w-4 h-4 text-primary" />
             <h3 className="text-sm font-semibold text-foreground">{module.title}</h3>
             <span className="text-xs text-muted-foreground">({moduleLessons.length} lessons)</span>
+            <div className="ml-auto flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0"
+                onClick={() => moveModule(module.title, 'up')}
+                disabled={mIdx === 0}
+                title="Move module up"
+              >
+                <ArrowUp className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0"
+                onClick={() => moveModule(module.title, 'down')}
+                disabled={mIdx === groupedByModule.length - 1}
+                title="Move module down"
+              >
+                <ArrowDown className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
           {moduleLessons.length === 0 ? (
             <p className="text-sm text-muted-foreground pl-6 py-2">
