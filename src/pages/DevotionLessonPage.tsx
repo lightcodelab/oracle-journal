@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic, DoorOpen, Download, FileText } from 'lucide-react';
+import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic, DoorOpen, Download, FileText, Loader2 } from 'lucide-react';
 import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -63,6 +63,7 @@ const DevotionLessonPage = () => {
   const queryClient = useQueryClient();
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
+  const [downloadingFileUrl, setDownloadingFileUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -247,6 +248,37 @@ const DevotionLessonPage = () => {
       if (Math.floor(currentTime) % 10 === 0 && currentTime > 0) {
         debouncedSave({ journal_text: journalText, selected_answer: selectedAnswer, audio_position: currentTime });
       }
+    }
+  };
+
+  const handleDownloadFile = async (file: { file_url: string; file_name: string }) => {
+    setDownloadingFileUrl(file.file_url);
+    try {
+      const fileName = displayStorageFileName(file.file_name || file.file_url, titleFileNameFallback(lesson?.title, file.file_url));
+      let blob: Blob;
+
+      if (file.file_url.startsWith('http')) {
+        const response = await fetch(file.file_url);
+        if (!response.ok) throw new Error('Unable to download file');
+        blob = await response.blob();
+      } else {
+        const { data, error } = await supabase.storage.from('content-main-media').download(file.file_url);
+        if (error || !data) throw error || new Error('Unable to download file');
+        blob = data;
+      }
+
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+      toast({ title: 'Download failed', description: 'Please try again.', variant: 'destructive' });
+    } finally {
+      setDownloadingFileUrl(null);
     }
   };
 
@@ -461,9 +493,7 @@ const DevotionLessonPage = () => {
                 <h2 className="font-serif text-2xl text-foreground mb-4">Downloadables</h2>
                 <div className="space-y-2">
                   {downloadableFiles.map((f, i) => {
-                    const url = f.file_url.startsWith('http')
-                      ? f.file_url
-                      : supabase.storage.from('content-main-media').getPublicUrl(f.file_url).data.publicUrl;
+                    const isDownloading = downloadingFileUrl === f.file_url;
                     return (
                       <div
                         key={i}
@@ -472,15 +502,18 @@ const DevotionLessonPage = () => {
                         <FileText className="w-5 h-5 text-primary flex-shrink-0" />
                         <span className="flex-1 text-sm text-foreground truncate">{f.file_name}</span>
                         <Button
-                          asChild
                           variant="outline"
                           size="sm"
                           className="flex-shrink-0"
+                          onClick={() => handleDownloadFile(f)}
+                          disabled={isDownloading}
                         >
-                          <a href={url} download={f.file_name} target="_blank" rel="noopener noreferrer">
+                          {isDownloading ? (
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          ) : (
                             <Download className="w-4 h-4 mr-2" />
-                            Download
-                          </a>
+                          )}
+                          Download
                         </Button>
                       </div>
                     );
