@@ -30,6 +30,7 @@ import CourseBuilder from './CourseBuilder';
 import RichTextEditorToolbar from './RichTextEditorToolbar';
 import { useResourceEditLock } from '@/hooks/useResourceEditLock';
 import ResourceEditLockWarning from './ResourceEditLockWarning';
+import { createStorageFileName, displayStorageFileName } from '@/lib/storageFileNames';
 
 const resourceSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
@@ -66,6 +67,7 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
   const [categories, setCategories] = useState<Category[]>([]);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
   const [mainMediaUrl, setMainMediaUrl] = useState<string | null>(null);
+  const [mainMediaName, setMainMediaName] = useState<string | null>(null);
   const [courseId, setCourseId] = useState<string | null>(null);
   const [scheduledPublishAt, setScheduledPublishAt] = useState<Date | undefined>(undefined);
   const [scheduledTime, setScheduledTime] = useState('12:00');
@@ -173,6 +175,7 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
 
       setThumbnailUrl(resource.thumbnail_url);
       setMainMediaUrl(resource.main_media_file_url);
+      setMainMediaName(displayStorageFileName(resource.main_media_file_url, resource.main_media_file_url || 'Media file'));
 
       // Load scheduled publish date
       if ((resource as any).scheduled_publish_at) {
@@ -223,7 +226,8 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
   const handleFileUpload = async (
     file: File,
     bucket: string,
-    setUrl: (url: string | null) => void
+    setUrl: (url: string | null) => void,
+    setDisplayName?: (name: string | null) => void
   ) => {
     setUploading(true);
 
@@ -232,8 +236,7 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
       const { compressImage, isCompressibleImage } = await import('@/lib/imageCompression');
       const processedFile = isCompressibleImage(file) ? await compressImage(file) : file;
 
-      const fileExt = processedFile.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const fileName = createStorageFileName(processedFile.name || file.name);
       const filePath = `${fileName}`;
 
       const { error: uploadError } = await supabase.storage
@@ -243,6 +246,7 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
       if (uploadError) throw uploadError;
 
       setUrl(filePath);
+      setDisplayName?.(file.name);
       toast({
         title: 'Uploaded',
         description: 'File uploaded successfully.',
@@ -632,12 +636,17 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
                       const FileIcon = getFileIcon(mainMediaUrl);
                       return <FileIcon className="w-5 h-5 text-primary" />;
                     })()}
-                    <span className="flex-1 text-sm truncate">{mainMediaUrl}</span>
+                    <span className="flex-1 text-sm truncate">
+                      {mainMediaName || displayStorageFileName(mainMediaUrl, mainMediaUrl)}
+                    </span>
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      onClick={() => setMainMediaUrl(null)}
+                      onClick={() => {
+                        setMainMediaUrl(null);
+                        setMainMediaName(null);
+                      }}
                     >
                       <X className="w-4 h-4" />
                     </Button>
@@ -649,7 +658,7 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
                       accept="image/*,audio/*,video/*,.pdf"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
-                        if (file) handleFileUpload(file, 'content-main-media', setMainMediaUrl);
+                        if (file) handleFileUpload(file, 'content-main-media', setMainMediaUrl, setMainMediaName);
                       }}
                       disabled={uploading}
                       className="flex-1"

@@ -21,6 +21,7 @@ import {
   LessonFormResponses,
   legacyToFormQuestions,
 } from '@/lib/lessonFormTypes';
+import { displayStorageFileName } from '@/lib/storageFileNames';
 
 interface Lesson {
   id: string;
@@ -286,12 +287,17 @@ const DevotionLessonPage = () => {
       ? lesson.form_questions
       : legacyToFormQuestions(lesson.survey_question, surveyOptions) || [];
   const savedDownloadableFiles = Array.isArray(lesson.downloadable_files)
-    ? lesson.downloadable_files.filter((file) => file?.file_url)
+    ? lesson.downloadable_files
+        .filter((file) => file?.file_url)
+        .map((file) => ({
+          file_url: file.file_url,
+          file_name: displayStorageFileName(file.file_name || file.file_url),
+        }))
     : [];
   const legacyDownloadableFile = lesson.main_media_kind === 'file' && lesson.main_media_file_url
     ? [{
         file_url: lesson.main_media_file_url,
-        file_name: lesson.main_media_file_url.split('/').pop() || 'Downloadable file',
+        file_name: displayStorageFileName(lesson.main_media_file_url),
       }]
     : [];
   const downloadableFiles = [
