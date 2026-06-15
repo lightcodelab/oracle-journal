@@ -277,6 +277,10 @@ const DevotionLessonPage = () => {
   }
 
   const surveyOptions = Array.isArray(lesson.survey_options) ? lesson.survey_options : [];
+  const formQuestions: LessonFormQuestion[] =
+    Array.isArray(lesson.form_questions) && lesson.form_questions.length > 0
+      ? lesson.form_questions
+      : legacyToFormQuestions(lesson.survey_question, surveyOptions) || [];
 
   return (
     <div className="min-h-screen bg-background">
