@@ -19,7 +19,7 @@ import RichTextEditorToolbar from './RichTextEditorToolbar';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import {
   Plus, Trash2, ChevronDown, ChevronRight, Loader2, FileText, Save, X,
-  Link as LinkIcon, FileAudio, BookOpen, FolderPlus,
+  Link as LinkIcon, FileAudio, BookOpen, FolderPlus, ArrowUp, ArrowDown,
 } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
