@@ -267,14 +267,16 @@ const DevotionLessonPage = () => {
         blob = data;
       }
 
-      const objectUrl = URL.createObjectURL(blob);
+      const downloadBlob = new Blob([blob], { type: 'application/octet-stream' });
+      const objectUrl = URL.createObjectURL(downloadBlob);
       const link = document.createElement('a');
       link.href = objectUrl;
       link.download = fileName;
+      link.rel = 'noopener noreferrer';
       document.body.appendChild(link);
       link.click();
       link.remove();
-      URL.revokeObjectURL(objectUrl);
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
     } catch (error) {
       toast({ title: 'Download failed', description: 'Please try again.', variant: 'destructive' });
     } finally {
