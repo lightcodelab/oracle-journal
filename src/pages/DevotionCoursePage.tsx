@@ -17,6 +17,8 @@ interface Lesson {
   title: string;
   description: string | null;
   lesson_number: number;
+  module_title: string | null;
+  module_order: number | null;
 }
 
 interface Course {
@@ -84,8 +86,9 @@ const DevotionCoursePage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('lessons')
-        .select('id, title, description, lesson_number')
+        .select('id, title, description, lesson_number, module_title, module_order')
         .eq('course_id', courseId)
+        .order('module_order', { ascending: true, nullsFirst: false })
         .order('lesson_number', { ascending: true });
 
       if (error) throw error;
