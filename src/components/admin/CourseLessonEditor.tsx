@@ -383,7 +383,7 @@ const LessonEditorPanel = ({
             {/* Lesson Form (Google Forms–style) */}
             <div className="space-y-4 p-4 border border-dashed rounded-lg">
               <div>
-                <Label className="text-base">Lesson Form (Optional)</Label>
+                <Label className="text-base">Lesson Prompts (Optional)</Label>
                 <p className="text-xs text-muted-foreground mt-1">
                   Add one or more questions. Supports short answer, paragraph, multiple choice,
                   checkboxes, dropdown, linear scale, date, time, number, and email.
