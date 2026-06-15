@@ -454,7 +454,7 @@ const DevotionLessonPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="prose prose-invert max-w-none mb-8"
+            className="prose prose-invert prose-p:my-2 prose-p:leading-relaxed max-w-none mb-8"
           >
             {lesson.body_richtext ? (
               <div 
