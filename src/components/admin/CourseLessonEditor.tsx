@@ -501,7 +501,7 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
   const saveLesson = async (id: string, data: Partial<Lesson>, lessonAudioFiles?: AudioFile[]) => {
     const { error } = await supabase.from('lessons').update(data as any).eq('id', id);
     if (error) {
-      toast({ title: 'Error', description: 'Failed to save lesson.', variant: 'destructive' });
+      toast({ title: 'Error', description: error.message || 'Failed to save lesson.', variant: 'destructive' });
       return;
     }
 

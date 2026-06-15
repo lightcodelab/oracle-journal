@@ -1,0 +1,1 @@
+ALTER TABLE public.lessons DROP CONSTRAINT IF EXISTS lessons_course_id_lesson_number_key;
