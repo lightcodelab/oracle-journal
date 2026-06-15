@@ -15,6 +15,12 @@ import ContextualJournal from '@/components/journal/ContextualJournal';
 import CourseSessionNav from '@/components/CourseSessionNav';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import DOMPurify from 'dompurify';
+import LessonFormRenderer from '@/components/lesson/LessonFormRenderer';
+import {
+  LessonFormQuestion,
+  LessonFormResponses,
+  legacyToFormQuestions,
+} from '@/lib/lessonFormTypes';
 
 interface Lesson {
   id: string;
@@ -27,6 +33,7 @@ interface Lesson {
   course_id: string;
   survey_question: string | null;
   survey_options: string[] | null;
+  form_questions: LessonFormQuestion[] | null;
   body_richtext: any;
 }
 
@@ -35,6 +42,7 @@ interface JournalEntry {
   journal_text: string | null;
   selected_answer: number | null;
   audio_position: number | null;
+  form_responses: LessonFormResponses | null;
 }
 
 const DevotionLessonPage = () => {
