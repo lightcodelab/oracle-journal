@@ -108,7 +108,7 @@ const DevotionLessonPage = () => {
         .single();
 
       if (error) throw error;
-      return data as Lesson;
+      return data as unknown as Lesson;
     },
     enabled: !loading && !!lessonId,
   });
