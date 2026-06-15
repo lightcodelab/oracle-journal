@@ -82,6 +82,7 @@ const LessonEditorPanel = ({
   const [uploading, setUploading] = useState(false);
   const [uploadingAudio, setUploadingAudio] = useState(false);
   const [title, setTitle] = useState(lesson.title);
+  const [lessonNumber, setLessonNumber] = useState<number>(lesson.lesson_number);
   const [moduleTitle, setModuleTitle] = useState(lesson.module_title || '');
   const [description, setDescription] = useState(lesson.description || '');
   const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
@@ -147,6 +148,7 @@ const LessonEditorPanel = ({
     setSaving(true);
     await onSave(lesson.id, {
       title,
+      lesson_number: lessonNumber,
       description: description || null,
       content: editor?.getText() || '',
       body_richtext: editor?.getJSON() || null,
@@ -250,7 +252,12 @@ const LessonEditorPanel = ({
               </div>
               <div className="space-y-2">
                 <Label>Lesson Number</Label>
-                <Input type="number" value={lesson.lesson_number} disabled className="bg-muted" />
+                <Input
+                  type="number"
+                  min={1}
+                  value={lessonNumber}
+                  onChange={(e) => setLessonNumber(parseInt(e.target.value, 10) || 1)}
+                />
               </div>
               <div className="space-y-2">
                 <Label>Module (Optional)</Label>
