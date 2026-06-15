@@ -418,8 +418,8 @@ const DevotionLessonPage = () => {
             )}
           </motion.div>
 
-          {/* Survey Question */}
-          {lesson.survey_question && surveyOptions.length > 0 && (
+          {/* Lesson Form */}
+          {formQuestions.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -427,30 +427,11 @@ const DevotionLessonPage = () => {
               className="mb-8"
             >
               <div className="bg-card border border-border rounded-lg p-6">
-                <h3 className="font-serif text-xl text-foreground mb-4">
-                  {lesson.survey_question}
-                </h3>
-                <RadioGroup
-                  value={selectedAnswer?.toString()}
-                  onValueChange={handleAnswerChange}
-                  className="space-y-3"
-                >
-                  {surveyOptions.map((option, index) => (
-                    <div key={index} className="flex items-center space-x-3">
-                      <RadioGroupItem
-                        value={index.toString()}
-                        id={`option-${index}`}
-                        className="border-primary"
-                      />
-                      <Label
-                        htmlFor={`option-${index}`}
-                        className="text-foreground/90 font-sans cursor-pointer"
-                      >
-                        {option}
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
+                <LessonFormRenderer
+                  questions={formQuestions}
+                  responses={formResponses}
+                  onChange={handleFormResponsesChange}
+                />
               </div>
             </motion.div>
           )}
