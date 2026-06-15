@@ -47,6 +47,7 @@ interface Lesson {
   main_media_file_url: string | null;
   module_title: string | null;
   module_order: number | null;
+  downloadable_files: Array<{ file_url: string; file_name: string }> | null;
 }
 
 interface Module {
@@ -99,6 +100,9 @@ const LessonEditorPanel = ({
   const [mediaKind, setMediaKind] = useState(lesson.main_media_kind || 'none');
   const [mediaEmbedUrl, setMediaEmbedUrl] = useState(lesson.main_media_embed_url || '');
   const [mediaFileUrl, setMediaFileUrl] = useState(lesson.main_media_file_url || '');
+  const [downloadableFiles, setDownloadableFiles] = useState<Array<{ file_url: string; file_name: string }>>(
+    Array.isArray(lesson.downloadable_files) ? lesson.downloadable_files : []
+  );
 
   // Load audio files when expanded
   useEffect(() => {
@@ -161,6 +165,7 @@ const LessonEditorPanel = ({
       main_media_embed_url: mediaKind === 'video_embed' ? mediaEmbedUrl : null,
       main_media_file_url: mediaKind === 'file' ? mediaFileUrl : null,
       module_title: moduleTitle || null,
+      downloadable_files: downloadableFiles,
     }, audioFiles);
     setSaving(false);
   };
@@ -182,19 +187,22 @@ const LessonEditorPanel = ({
     }
   };
 
-  const handleFileUpload = async (file: File) => {
+  const handleFileUpload = async (files: FileList | File[]) => {
     setUploading(true);
     try {
       const { compressImage, isCompressibleImage } = await import('@/lib/imageCompression');
-      const processedFile = isCompressibleImage(file) ? await compressImage(file) : file;
-      const fileExt = processedFile.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-      const { error } = await supabase.storage.from('content-main-media').upload(fileName, processedFile);
-      if (error) throw error;
-
-      setMediaFileUrl(fileName);
-      toast({ title: 'Uploaded', description: 'File uploaded.' });
+      const uploaded: Array<{ file_url: string; file_name: string }> = [];
+      for (const file of Array.from(files)) {
+        const processedFile = isCompressibleImage(file) ? await compressImage(file) : file;
+        const fileExt = processedFile.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const { error } = await supabase.storage.from('content-main-media').upload(fileName, processedFile);
+        if (error) throw error;
+        uploaded.push({ file_url: fileName, file_name: file.name });
+      }
+      setDownloadableFiles(prev => [...prev, ...uploaded]);
+      if (uploaded.length > 0 && !mediaFileUrl) setMediaFileUrl(uploaded[0].file_url);
+      toast({ title: 'Uploaded', description: `${uploaded.length} file(s) uploaded.` });
     } catch (error: any) {
       toast({ title: 'Error', description: 'Upload failed.', variant: 'destructive' });
     } finally {
@@ -340,30 +348,46 @@ const LessonEditorPanel = ({
 
               {mediaKind === 'file' && (
                 <div className="space-y-2">
-                  <Label>Upload Media File</Label>
-                  {mediaFileUrl ? (
-                    <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
-                      <FileAudio className="w-5 h-5 text-primary" />
-                      <span className="flex-1 text-sm truncate">{mediaFileUrl}</span>
-                      <Button variant="ghost" size="sm" onClick={() => setMediaFileUrl('')}>
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <Input
-                        type="file"
-                        accept="image/*,audio/*,video/*,.pdf"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleFileUpload(file);
-                        }}
-                        disabled={uploading}
-                        className="flex-1"
-                      />
-                      {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  <Label>Upload Media / Downloadable Files</Label>
+                  {downloadableFiles.length > 0 && (
+                    <div className="space-y-2">
+                      {downloadableFiles.map((f, i) => (
+                        <div key={i} className="flex items-center gap-2 p-3 bg-muted rounded-md">
+                          <FileText className="w-5 h-5 text-primary" />
+                          <span className="flex-1 text-sm truncate">{f.file_name}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              setDownloadableFiles(prev => prev.filter((_, idx) => idx !== i))
+                            }
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
                     </div>
                   )}
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="file"
+                      multiple
+                      accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip"
+                      onChange={(e) => {
+                        const files = e.target.files;
+                        if (files && files.length > 0) {
+                          handleFileUpload(files);
+                          e.target.value = '';
+                        }
+                      }}
+                      disabled={uploading}
+                      className="flex-1"
+                    />
+                    {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Upload multiple files of any type. They'll appear in the Downloadables section on the lesson page.
+                  </p>
                 </div>
               )}
 

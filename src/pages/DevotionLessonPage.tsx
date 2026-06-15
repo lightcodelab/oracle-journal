@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic, DoorOpen } from 'lucide-react';
+import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic, DoorOpen, Download, FileText } from 'lucide-react';
 import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -35,6 +35,7 @@ interface Lesson {
   survey_options: string[] | null;
   form_questions: LessonFormQuestion[] | null;
   body_richtext: any;
+  downloadable_files: Array<{ file_url: string; file_name: string }> | null;
 }
 
 interface JournalEntry {
@@ -451,6 +452,45 @@ const DevotionLessonPage = () => {
               placeholder="Add deeper reflections, insights, or notes to your digital journal..."
             />
           </motion.div>
+
+          {/* Downloadables */}
+          {Array.isArray(lesson.downloadable_files) && lesson.downloadable_files.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="mb-12"
+            >
+              <h2 className="font-serif text-2xl text-foreground mb-4">Downloadables</h2>
+              <div className="space-y-2">
+                {lesson.downloadable_files.map((f, i) => {
+                  const url = f.file_url.startsWith('http')
+                    ? f.file_url
+                    : supabase.storage.from('content-main-media').getPublicUrl(f.file_url).data.publicUrl;
+                  return (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 p-4 bg-card border border-border rounded-lg"
+                    >
+                      <FileText className="w-5 h-5 text-primary flex-shrink-0" />
+                      <span className="flex-1 text-sm text-foreground truncate">{f.file_name}</span>
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="flex-shrink-0"
+                      >
+                        <a href={url} download={f.file_name} target="_blank" rel="noopener noreferrer">
+                          <Download className="w-4 h-4 mr-2" />
+                          Download
+                        </a>
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
 
           {/* Navigation Footer */}
           <motion.div

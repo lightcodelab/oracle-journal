@@ -1,0 +1,1 @@
+ALTER TABLE public.lessons ADD COLUMN IF NOT EXISTS downloadable_files JSONB NOT NULL DEFAULT '[]'::jsonb;
