@@ -28,7 +28,7 @@ import {
 import AudioFileList from './AudioFileList';
 import LessonFormBuilder from './LessonFormBuilder';
 import { LessonFormQuestion, legacyToFormQuestions } from '@/lib/lessonFormTypes';
-import { createStorageFileName, displayStorageFileName } from '@/lib/storageFileNames';
+import { createStorageFileName, displayStorageFileName, titleFileNameFallback } from '@/lib/storageFileNames';
 
 interface Lesson {
   id: string;
@@ -108,13 +108,19 @@ const LessonEditorPanel = ({
             .filter((file) => file?.file_url)
             .map((file) => ({
               file_url: file.file_url,
-              file_name: displayStorageFileName(file.file_name || file.file_url),
+              file_name: displayStorageFileName(
+                file.file_name || file.file_url,
+                titleFileNameFallback(lesson.title, file.file_url)
+              ),
             }))
         : [];
       if (saved.length === 0 && lesson.main_media_kind === 'file' && lesson.main_media_file_url) {
         return [{
           file_url: lesson.main_media_file_url,
-          file_name: displayStorageFileName(lesson.main_media_file_url),
+          file_name: displayStorageFileName(
+            lesson.main_media_file_url,
+            titleFileNameFallback(lesson.title, lesson.main_media_file_url)
+          ),
         }];
       }
       return saved;
@@ -182,7 +188,13 @@ const LessonEditorPanel = ({
       main_media_embed_url: mediaKind === 'video_embed' ? mediaEmbedUrl : null,
       main_media_file_url: mediaKind === 'file' ? mediaFileUrl : null,
       module_title: moduleTitle || null,
-      downloadable_files: downloadableFiles,
+      downloadable_files: downloadableFiles.map((file) => ({
+        ...file,
+        file_name: displayStorageFileName(
+          file.file_name || file.file_url,
+          titleFileNameFallback(title, file.file_url)
+        ),
+      })),
     }, audioFiles);
     setSaving(false);
   };
