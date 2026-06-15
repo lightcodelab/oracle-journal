@@ -49,6 +49,9 @@ interface JournalEntry {
   form_responses: LessonFormResponses | null;
 }
 
+const safeDownloadFileName = (fileName: string) =>
+  fileName.replace(/[<>:"/\\|?*]+/g, '-').replace(/\s+/g, ' ').trim() || 'Downloadable file';
+
 const DevotionLessonPage = () => {
   const navigate = useNavigate();
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
@@ -254,8 +257,27 @@ const DevotionLessonPage = () => {
   const handleDownloadFile = async (file: { file_url: string; file_name: string }) => {
     setDownloadingFileUrl(file.file_url);
     try {
-      const fileName = displayStorageFileName(file.file_name || file.file_url, titleFileNameFallback(lesson?.title, file.file_url));
+      const fileName = safeDownloadFileName(
+        displayStorageFileName(file.file_name || file.file_url, titleFileNameFallback(lesson?.title, file.file_url))
+      );
       let blob: Blob;
+
+      if (!file.file_url.startsWith('http')) {
+        const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+          .from('content-main-media')
+          .createSignedUrl(file.file_url, 60, { download: fileName });
+
+        if (!signedUrlError && signedUrlData?.signedUrl) {
+          const link = document.createElement('a');
+          link.href = signedUrlData.signedUrl;
+          link.download = fileName;
+          link.rel = 'noopener noreferrer';
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          return;
+        }
+      }
 
       if (file.file_url.startsWith('http')) {
         const response = await fetch(file.file_url);
