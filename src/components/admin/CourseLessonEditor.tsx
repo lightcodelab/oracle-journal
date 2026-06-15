@@ -26,6 +26,8 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import AudioFileList from './AudioFileList';
+import LessonFormBuilder from './LessonFormBuilder';
+import { LessonFormQuestion, legacyToFormQuestions } from '@/lib/lessonFormTypes';
 
 interface Lesson {
   id: string;
@@ -38,6 +40,7 @@ interface Lesson {
   audio_timestamp: string | null;
   survey_question: string | null;
   survey_options: string[] | null;
+  form_questions: LessonFormQuestion[] | null;
   body_richtext: any;
   main_media_embed_url: string | null;
   main_media_kind: string | null;
