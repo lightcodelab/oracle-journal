@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic, DoorOpen } from 'lucide-react';
+import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic, DoorOpen, Download, FileText } from 'lucide-react';
 import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -35,6 +35,7 @@ interface Lesson {
   survey_options: string[] | null;
   form_questions: LessonFormQuestion[] | null;
   body_richtext: any;
+  downloadable_files: Array<{ file_url: string; file_name: string }> | null;
 }
 
 interface JournalEntry {
