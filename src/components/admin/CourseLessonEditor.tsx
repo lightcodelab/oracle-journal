@@ -154,6 +154,7 @@ const LessonEditorPanel = ({
       audio_timestamp: audioTimestamp || null,
       survey_question: surveyQuestion || null,
       survey_options: surveyOptions.length > 0 ? surveyOptions : null,
+      form_questions: formQuestions.length > 0 ? formQuestions : null,
       main_media_kind: mediaKind,
       main_media_embed_url: mediaKind === 'video_embed' ? mediaEmbedUrl : null,
       main_media_file_url: mediaKind === 'file' ? mediaFileUrl : null,
