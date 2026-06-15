@@ -8,6 +8,8 @@ interface Lesson {
   id: string;
   title: string;
   lesson_number: number;
+  module_title?: string | null;
+  module_order?: number | null;
 }
 
 interface CourseSessionNavProps {
@@ -54,6 +56,61 @@ export default function CourseSessionNav({
   const completedCount = lessons.filter(l => completedLessonIds.includes(l.id)).length;
   const progressPercent = lessons.length > 0 ? (completedCount / lessons.length) * 100 : 0;
 
+  // Group lessons by module
+  const moduleOrderMap = new Map<string, number>();
+  lessons.forEach((l) => {
+    const key = l.module_title || '';
+    const existing = moduleOrderMap.get(key);
+    const order = l.module_order ?? Number.MAX_SAFE_INTEGER;
+    if (existing === undefined || order < existing) {
+      moduleOrderMap.set(key, order);
+    }
+  });
+  const moduleKeys = Array.from(moduleOrderMap.keys()).sort((a, b) => {
+    if (a === '' && b !== '') return 1;
+    if (b === '' && a !== '') return -1;
+    return (moduleOrderMap.get(a) ?? 0) - (moduleOrderMap.get(b) ?? 0);
+  });
+  const hasAnyModule = moduleKeys.some((k) => k !== '');
+
+  const renderLessonButton = (lesson: Lesson) => {
+    const isActive = lesson.id === currentLessonId;
+    const isCompleted = completedLessonIds.includes(lesson.id);
+    return (
+      <button
+        key={lesson.id}
+        onClick={() => handleLessonClick(lesson.id)}
+        className={cn(
+          "w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-colors",
+          isActive
+            ? "bg-primary/10 text-primary border-l-2 border-primary"
+            : "text-foreground/70 hover:bg-muted hover:text-foreground"
+        )}
+      >
+        <div className={cn(
+          "flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium",
+          isActive
+            ? "bg-primary text-primary-foreground"
+            : isCompleted
+              ? "bg-primary/20 text-primary"
+              : "bg-muted text-muted-foreground"
+        )}>
+          {isCompleted ? (
+            <CheckCircle className="w-3.5 h-3.5" />
+          ) : (
+            lesson.lesson_number
+          )}
+        </div>
+        <span className={cn(
+          "text-sm leading-tight",
+          isActive && "font-medium"
+        )}>
+          {lesson.title}
+        </span>
+      </button>
+    );
+  };
+
   const navContent = (
     <>
       {/* Course Header */}
@@ -80,43 +137,27 @@ export default function CourseSessionNav({
 
       {/* Sessions List */}
       <nav className="flex-1 overflow-y-auto p-2">
-        <div className="space-y-0.5">
-          {lessons.map((lesson) => {
-            const isActive = lesson.id === currentLessonId;
-            const isCompleted = completedLessonIds.includes(lesson.id);
-
+        <div className="space-y-4">
+          {moduleKeys.map((moduleKey) => {
+            const moduleLessons = lessons
+              .filter((l) => (l.module_title || '') === moduleKey)
+              .sort((a, b) => a.lesson_number - b.lesson_number);
+            if (moduleLessons.length === 0) return null;
             return (
-              <button
-                key={lesson.id}
-                onClick={() => handleLessonClick(lesson.id)}
-                className={cn(
-                  "w-full flex items-center gap-3 px-3 py-3 rounded-md text-left transition-colors",
-                  isActive
-                    ? "bg-primary/10 text-primary border-l-2 border-primary"
-                    : "text-foreground/70 hover:bg-muted hover:text-foreground"
-                )}
-              >
-                <div className={cn(
-                  "flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium",
-                  isActive
-                    ? "bg-primary text-primary-foreground"
-                    : isCompleted
-                      ? "bg-primary/20 text-primary"
-                      : "bg-muted text-muted-foreground"
-                )}>
-                  {isCompleted ? (
-                    <CheckCircle className="w-3.5 h-3.5" />
-                  ) : (
-                    lesson.lesson_number
-                  )}
+              <div key={moduleKey || '__unassigned__'} className="space-y-1">
+                {moduleKey ? (
+                  <div className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-wide text-primary/80">
+                    {moduleKey}
+                  </div>
+                ) : hasAnyModule ? (
+                  <div className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Additional Sessions
+                  </div>
+                ) : null}
+                <div className="space-y-0.5">
+                  {moduleLessons.map(renderLessonButton)}
                 </div>
-                <span className={cn(
-                  "text-sm leading-tight",
-                  isActive && "font-medium"
-                )}>
-                  {lesson.title}
-                </span>
-              </button>
+              </div>
             );
           })}
         </div>
