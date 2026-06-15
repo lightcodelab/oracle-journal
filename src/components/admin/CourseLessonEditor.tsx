@@ -28,6 +28,7 @@ import {
 import AudioFileList from './AudioFileList';
 import LessonFormBuilder from './LessonFormBuilder';
 import { LessonFormQuestion, legacyToFormQuestions } from '@/lib/lessonFormTypes';
+import { createStorageFileName, displayStorageFileName } from '@/lib/storageFileNames';
 
 interface Lesson {
   id: string;
@@ -102,11 +103,18 @@ const LessonEditorPanel = ({
   const [mediaFileUrl, setMediaFileUrl] = useState(lesson.main_media_file_url || '');
   const [downloadableFiles, setDownloadableFiles] = useState<Array<{ file_url: string; file_name: string }>>(
     (() => {
-      const saved = Array.isArray(lesson.downloadable_files) ? lesson.downloadable_files : [];
+      const saved = Array.isArray(lesson.downloadable_files)
+        ? lesson.downloadable_files
+            .filter((file) => file?.file_url)
+            .map((file) => ({
+              file_url: file.file_url,
+              file_name: displayStorageFileName(file.file_name || file.file_url),
+            }))
+        : [];
       if (saved.length === 0 && lesson.main_media_kind === 'file' && lesson.main_media_file_url) {
         return [{
           file_url: lesson.main_media_file_url,
-          file_name: lesson.main_media_file_url.split('/').pop() || 'Downloadable file',
+          file_name: displayStorageFileName(lesson.main_media_file_url),
         }];
       }
       return saved;
@@ -203,8 +211,7 @@ const LessonEditorPanel = ({
       const uploaded: Array<{ file_url: string; file_name: string }> = [];
       for (const file of Array.from(files)) {
         const processedFile = isCompressibleImage(file) ? await compressImage(file) : file;
-        const fileExt = processedFile.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const fileName = createStorageFileName(processedFile.name || file.name);
         const { error } = await supabase.storage.from('content-main-media').upload(fileName, processedFile);
         if (error) throw error;
         uploaded.push({ file_url: fileName, file_name: file.name });
