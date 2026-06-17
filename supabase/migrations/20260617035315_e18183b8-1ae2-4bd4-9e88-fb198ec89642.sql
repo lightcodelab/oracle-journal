@@ -1,0 +1,1 @@
+ALTER TABLE public.lesson_journal_entries ADD COLUMN IF NOT EXISTS completed_at timestamp with time zone;
