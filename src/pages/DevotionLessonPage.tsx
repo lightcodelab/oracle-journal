@@ -72,6 +72,46 @@ const DevotionLessonPage = () => {
   const [submittingPrompts, setSubmittingPrompts] = useState(false);
   const createJournalEntry = useCreateJournalEntry();
 
+  const toggleCompleteMutation = useMutation({
+    mutationFn: async (nextCompleted: boolean) => {
+      if (!userId || !lessonId) throw new Error('Missing required data');
+      const completed_at = nextCompleted ? new Date().toISOString() : null;
+
+      if (journalEntry) {
+        const { error } = await supabase
+          .from('lesson_journal_entries')
+          .update({ completed_at, updated_at: new Date().toISOString() } as any)
+          .eq('id', journalEntry.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('lesson_journal_entries')
+          .insert({
+            user_id: userId,
+            lesson_id: lessonId,
+            completed_at,
+          } as any);
+        if (error) throw error;
+      }
+    },
+    onSuccess: (_, nextCompleted) => {
+      queryClient.invalidateQueries({ queryKey: ['devotion-journal-entry', lessonId, userId] });
+      queryClient.invalidateQueries({ queryKey: ['devotion-lesson-progress-nav', courseId, userId] });
+      queryClient.invalidateQueries({ queryKey: ['devotion-lesson-progress', courseId, userId] });
+      toast({
+        title: nextCompleted ? 'Lesson marked complete' : 'Marked as incomplete',
+        description: nextCompleted ? 'Your progress has been updated.' : 'You can revisit it any time.',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Could not update',
+        description: error?.message || 'Please try again.',
+        variant: 'destructive',
+      });
+    },
+  });
+
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
