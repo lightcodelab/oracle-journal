@@ -8,7 +8,7 @@ import areekeeraBanner from "@/assets/areekeera-banner.png";
 import taoshBanner from "@/assets/taosh-banner.png";
 import RemembranceCourseSection from "@/components/RemembranceCourseSection";
 import RitesOfRemembranceSection from "@/components/RitesOfRemembranceSection";
-import sacredSpreadsBanner from "@/assets/sacred-spreads-banner.png";
+import sacredSpreadsBanner from "@/assets/sacred-spreads-thumbnail.png.asset.json";
 
 interface Deck {
   id: string;
