@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Sparkles, DoorOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import tsrBanner from "@/assets/sacred-rewrite-thumbnail.png.asset.json";
-import mnlBanner from "@/assets/mnl-banner.png";
+import mnlBanner from "@/assets/magic-not-logic-thumbnail.png.asset.json";
 import areekeeraBanner from "@/assets/areekeera-banner.png";
 import taoshBanner from "@/assets/taosh-banner.png";
 import RemembranceCourseSection from "@/components/RemembranceCourseSection";
@@ -162,7 +162,7 @@ export const DeckSelection = ({
 
             {decks.filter(d => !d.is_starter).map((deck, index) => {
               const bannerSrc = deck.name === "The Sacred Rewrite" ? tsrBanner.url
-                : deck.name === "Magic not Logic" ? mnlBanner
+                : deck.name === "Magic not Logic" ? mnlBanner.url
                 : deck.name === "AreekeerA" ? areekeeraBanner
                 : deck.name === "The Art of Self-Healing" ? taoshBanner
                 : null;
