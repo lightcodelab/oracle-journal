@@ -163,7 +163,7 @@ export const DeckSelection = ({
             {decks.filter(d => !d.is_starter).map((deck, index) => {
               const bannerSrc = deck.name === "The Sacred Rewrite" ? tsrBanner.url
                 : deck.name === "Magic not Logic" ? mnlBanner.url
-                : deck.name === "AreekeerA" ? areekeeraBanner
+                : deck.name === "AreekeerA" ? areekeeraBanner.url
                 : deck.name === "The Art of Self-Healing" ? taoshBanner
                 : null;
 
