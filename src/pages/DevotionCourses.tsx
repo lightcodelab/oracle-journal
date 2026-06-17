@@ -102,7 +102,7 @@ const DevotionCourses = () => {
       <div className="min-h-screen bg-background py-12 px-4 relative">
         <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
           <PageBreadcrumb items={[
-            { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen },
+             { label: 'The Door of Devotion', href: '/devotion', icon: DoorOpen },
             { label: 'Energy Hygiene Practices' }
           ]} />
           <ProfileDropdown />
@@ -153,7 +153,7 @@ const DevotionCourses = () => {
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <PageBreadcrumb 
           items={[
-            { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen },
+            { label: 'The Door of Devotion', href: '/devotion', icon: DoorOpen },
             { label: 'Energy Hygiene Practices' }
           ]} 
         />

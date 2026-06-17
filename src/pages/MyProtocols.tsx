@@ -159,7 +159,7 @@ const MyProtocols = () => {
       <div className="flex items-center justify-between p-4 border-b border-border">
         <PageBreadcrumb 
           items={[
-            { label: 'Door of Devotion', href: '/devotion' },
+            { label: 'The Door of Devotion', href: '/devotion' },
             { label: 'My Protocols' }
           ]} 
         />
