@@ -454,7 +454,7 @@ const DevotionLessonPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="prose prose-invert prose-p:my-2 prose-p:leading-relaxed max-w-none mb-8"
+            className="max-w-none mb-8"
           >
             {lesson.body_richtext ? (
               <div 
@@ -488,6 +488,7 @@ const DevotionLessonPage = () => {
                           case 'listItem': return `<li>${children}</li>`;
                           case 'blockquote': return `<blockquote>${children}</blockquote>`;
                           case 'horizontalRule': return '<hr>';
+                          case 'hardBreak': return '<br>';
                           case 'image': return `<img src="${node.attrs?.src || ''}" alt="${node.attrs?.alt || ''}" />`;
                           default: return children;
                         }

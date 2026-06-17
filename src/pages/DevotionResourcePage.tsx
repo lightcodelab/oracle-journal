@@ -293,6 +293,7 @@ const DevotionResourcePage = () => {
     if (!textNodes || textNodes.length === 0) return null;
     
     return textNodes.map((node: any, idx: number) => {
+      if (node.type === 'hardBreak') return <br key={idx} />;
       if (!node.text) return null;
       
       let content: React.ReactNode = node.text;
@@ -809,7 +810,7 @@ const DevotionResourcePage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="prose prose-invert max-w-none mb-8"
+            className="max-w-none mb-8"
           >
             {renderRichText(resource.body_richtext)}
           </motion.div>

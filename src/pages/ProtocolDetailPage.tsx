@@ -243,8 +243,11 @@ const ProtocolDetailPage = () => {
               });
             }
             return text;
-          }
-          return null;
+        }
+        if (textChild.type === 'hardBreak') {
+          return <br key={childIndex} />;
+        }
+        return null;
         });
         return <p key={index} className="mb-4 leading-relaxed">{textContent}</p>;
       }
@@ -511,7 +514,7 @@ const ProtocolDetailPage = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="mb-8"
             >
-              <div className="prose prose-invert max-w-none">
+              <div className="max-w-none">
                 <div className="text-foreground/90 font-sans leading-relaxed">
                   {renderRichText(resource.body_richtext)}
                 </div>
