@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import tsrBanner from "@/assets/sacred-rewrite-thumbnail.png.asset.json";
 import mnlBanner from "@/assets/magic-not-logic-thumbnail.png.asset.json";
 import areekeeraBanner from "@/assets/areekeera-thumbnail.png.asset.json";
-import taoshBanner from "@/assets/taosh-banner.png";
+import taoshBanner from "@/assets/taosh-thumbnail.png.asset.json";
 import RemembranceCourseSection from "@/components/RemembranceCourseSection";
 import RitesOfRemembranceSection from "@/components/RitesOfRemembranceSection";
 import sacredSpreadsBanner from "@/assets/sacred-spreads-thumbnail.png.asset.json";
@@ -164,7 +164,7 @@ export const DeckSelection = ({
               const bannerSrc = deck.name === "The Sacred Rewrite" ? tsrBanner.url
                 : deck.name === "Magic not Logic" ? mnlBanner.url
                 : deck.name === "AreekeerA" ? areekeeraBanner.url
-                : deck.name === "The Art of Self-Healing" ? taoshBanner
+                : deck.name === "The Art of Self-Healing" ? taoshBanner.url
                 : null;
 
               return (
