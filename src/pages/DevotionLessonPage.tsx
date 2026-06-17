@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic, DoorOpen, Download, FileText, Loader2 } from 'lucide-react';
+import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic, DoorOpen, Download, FileText, Loader2, CheckCircle2 } from 'lucide-react';
 import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -48,6 +48,7 @@ interface JournalEntry {
   selected_answer: number | null;
   audio_position: number | null;
   form_responses: LessonFormResponses | null;
+  completed_at: string | null;
 }
 
 const safeDownloadFileName = (fileName: string) =>
@@ -70,6 +71,46 @@ const DevotionLessonPage = () => {
   const [downloadingFileUrl, setDownloadingFileUrl] = useState<string | null>(null);
   const [submittingPrompts, setSubmittingPrompts] = useState(false);
   const createJournalEntry = useCreateJournalEntry();
+
+  const toggleCompleteMutation = useMutation({
+    mutationFn: async (nextCompleted: boolean) => {
+      if (!userId || !lessonId) throw new Error('Missing required data');
+      const completed_at = nextCompleted ? new Date().toISOString() : null;
+
+      if (journalEntry) {
+        const { error } = await supabase
+          .from('lesson_journal_entries')
+          .update({ completed_at, updated_at: new Date().toISOString() } as any)
+          .eq('id', journalEntry.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('lesson_journal_entries')
+          .insert({
+            user_id: userId,
+            lesson_id: lessonId,
+            completed_at,
+          } as any);
+        if (error) throw error;
+      }
+    },
+    onSuccess: (_, nextCompleted) => {
+      queryClient.invalidateQueries({ queryKey: ['devotion-journal-entry', lessonId, userId] });
+      queryClient.invalidateQueries({ queryKey: ['devotion-lesson-progress-nav', courseId, userId] });
+      queryClient.invalidateQueries({ queryKey: ['devotion-lesson-progress', courseId, userId] });
+      toast({
+        title: nextCompleted ? 'Lesson marked complete' : 'Marked as incomplete',
+        description: nextCompleted ? 'Your progress has been updated.' : 'You can revisit it any time.',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Could not update',
+        description: error?.message || 'Please try again.',
+        variant: 'destructive',
+      });
+    },
+  });
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -168,6 +209,7 @@ const DevotionLessonPage = () => {
         .from('lesson_journal_entries')
         .select('lesson_id')
         .eq('user_id', userId)
+        .not('completed_at', 'is', null)
         .in('lesson_id', lessonIds);
 
       if (error) throw error;
@@ -680,6 +722,35 @@ const DevotionLessonPage = () => {
               contextTitle={`Session ${lesson.lesson_number}: ${lesson.title}`}
               placeholder="Add deeper reflections, insights, or notes to your digital journal..."
             />
+          </motion.div>
+
+          {/* Mark Complete */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.58 }}
+            className="mb-8 flex justify-center"
+          >
+            {(() => {
+              const isCompleted = !!journalEntry?.completed_at;
+              return (
+                <Button
+                  onClick={() => toggleCompleteMutation.mutate(!isCompleted)}
+                  disabled={toggleCompleteMutation.isPending}
+                  variant={isCompleted ? 'outline' : 'default'}
+                  className={isCompleted
+                    ? 'border-primary/40 text-primary hover:bg-primary/10'
+                    : 'bg-primary text-primary-foreground hover:bg-primary/90'}
+                >
+                  {toggleCompleteMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                  )}
+                  {isCompleted ? 'Completed — Mark Incomplete' : 'Mark Lesson as Completed'}
+                </Button>
+              );
+            })()}
           </motion.div>
 
           {/* Navigation Footer */}

@@ -2499,6 +2499,7 @@ export type Database = {
       lesson_journal_entries: {
         Row: {
           audio_position: number | null
+          completed_at: string | null
           created_at: string | null
           form_responses: Json | null
           id: string
@@ -2510,6 +2511,7 @@ export type Database = {
         }
         Insert: {
           audio_position?: number | null
+          completed_at?: string | null
           created_at?: string | null
           form_responses?: Json | null
           id?: string
@@ -2521,6 +2523,7 @@ export type Database = {
         }
         Update: {
           audio_position?: number | null
+          completed_at?: string | null
           created_at?: string | null
           form_responses?: Json | null
           id?: string
