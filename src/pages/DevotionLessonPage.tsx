@@ -644,6 +644,25 @@ const DevotionLessonPage = () => {
                   responses={formResponses}
                   onChange={handleFormResponsesChange}
                 />
+                <div className="mt-6 flex justify-end">
+                  <Button
+                    onClick={() => handleSubmitPrompts(formQuestions, lesson.title, lesson.lesson_number)}
+                    disabled={submittingPrompts}
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
+                  >
+                    {submittingPrompts ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Saving…
+                      </>
+                    ) : (
+                      <>
+                        <FileText className="w-4 h-4 mr-2" />
+                        Submit to My Journal
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
             </motion.div>
           )}
