@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, DoorOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import tsrBanner from "@/assets/tsr-banner.png";
+import tsrBanner from "@/assets/sacred-rewrite-thumbnail.png.asset.json";
 import mnlBanner from "@/assets/mnl-banner.png";
 import areekeeraBanner from "@/assets/areekeera-banner.png";
 import taoshBanner from "@/assets/taosh-banner.png";
@@ -161,7 +161,7 @@ export const DeckSelection = ({
             </motion.div>
 
             {decks.filter(d => !d.is_starter).map((deck, index) => {
-              const bannerSrc = deck.name === "The Sacred Rewrite" ? tsrBanner
+              const bannerSrc = deck.name === "The Sacred Rewrite" ? tsrBanner.url
                 : deck.name === "Magic not Logic" ? mnlBanner
                 : deck.name === "AreekeerA" ? areekeeraBanner
                 : deck.name === "The Art of Self-Healing" ? taoshBanner
