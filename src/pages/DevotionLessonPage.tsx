@@ -383,9 +383,9 @@ const DevotionLessonPage = () => {
       )}
 
       {/* Main Content Area - offset by sidebar width on desktop */}
-      <div className="ml-64 md:ml-72">
+      <div className="ml-0 md:ml-72">
         {/* Navigation Header */}
-        <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border pl-14 pr-4 py-3 md:px-4 flex items-center justify-between">
           {(() => {
             const locName = (course as any)?.location?.name as string | undefined;
             const locSlug = (course as any)?.location?.slug as string | undefined;
