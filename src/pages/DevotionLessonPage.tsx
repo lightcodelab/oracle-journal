@@ -22,6 +22,7 @@ import {
   legacyToFormQuestions,
 } from '@/lib/lessonFormTypes';
 import { displayStorageFileName, titleFileNameFallback } from '@/lib/storageFileNames';
+import { useCreateJournalEntry } from '@/hooks/useJournalEntries';
 
 interface Lesson {
   id: string;
@@ -67,6 +68,8 @@ const DevotionLessonPage = () => {
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
   const [downloadingFileUrl, setDownloadingFileUrl] = useState<string | null>(null);
+  const [submittingPrompts, setSubmittingPrompts] = useState(false);
+  const createJournalEntry = useCreateJournalEntry();
 
   useEffect(() => {
     const checkAuth = async () => {
