@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, Sparkles } from 'lucide-react';
+import { CheckCircle, Sparkles, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -28,8 +29,10 @@ export default function CourseSessionNav({
   courseTitle,
 }: CourseSessionNavProps) {
   const navigate = useNavigate();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const handleLessonClick = (lessonId: string) => {
+    setIsMobileOpen(false);
     navigate(`/devotion/course/${courseId}/lesson/${lessonId}`);
   };
 
@@ -50,6 +53,7 @@ export default function CourseSessionNav({
   });
 
   const handleToolClick = (slug: string) => {
+    setIsMobileOpen(false);
     navigate(`/devotion/course/${courseId}?tool=${encodeURIComponent(slug)}`);
   };
 
@@ -115,11 +119,20 @@ export default function CourseSessionNav({
     <>
       {/* Course Header */}
       <div className="p-4 border-b border-border">
-        {courseTitle && (
-          <h2 className="font-serif text-lg text-foreground leading-tight">
-            {courseTitle}
-          </h2>
-        )}
+        <div className="flex items-start justify-between">
+          {courseTitle && (
+            <h2 className="font-serif text-lg text-foreground leading-tight">
+              {courseTitle}
+            </h2>
+          )}
+          <button
+            onClick={() => setIsMobileOpen(false)}
+            className="md:hidden p-1 hover:bg-muted rounded ml-2"
+            aria-label="Close navigation"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
         {/* Progress Bar */}
         <div className="mt-3">
           <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
@@ -188,8 +201,35 @@ export default function CourseSessionNav({
   );
 
   return (
-    <aside className="fixed top-0 left-0 h-full w-64 md:w-72 bg-card border-r border-border flex flex-col z-40">
-      {navContent}
-    </aside>
+    <>
+      {/* Mobile Toggle Button */}
+      <button
+        onClick={() => setIsMobileOpen(true)}
+        className={cn(
+          "md:hidden fixed top-3 left-3 z-50 p-2 bg-card border border-border rounded-lg shadow-lg transition-opacity",
+          isMobileOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+        )}
+        aria-label="Open navigation"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+
+      {/* Mobile Backdrop */}
+      {isMobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      <aside
+        className={cn(
+          "fixed top-0 left-0 h-full w-64 md:w-72 bg-card border-r border-border flex flex-col transition-transform duration-300",
+          isMobileOpen ? "translate-x-0 z-50" : "-translate-x-full md:translate-x-0 z-40"
+        )}
+      >
+        {navContent}
+      </aside>
+    </>
   );
 }
