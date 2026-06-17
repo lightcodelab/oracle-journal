@@ -4,7 +4,7 @@ import { Sparkles, DoorOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import tsrBanner from "@/assets/sacred-rewrite-thumbnail.png.asset.json";
 import mnlBanner from "@/assets/magic-not-logic-thumbnail.png.asset.json";
-import areekeeraBanner from "@/assets/areekeera-banner.png";
+import areekeeraBanner from "@/assets/areekeera-thumbnail.png.asset.json";
 import taoshBanner from "@/assets/taosh-banner.png";
 import RemembranceCourseSection from "@/components/RemembranceCourseSection";
 import RitesOfRemembranceSection from "@/components/RitesOfRemembranceSection";
@@ -163,7 +163,7 @@ export const DeckSelection = ({
             {decks.filter(d => !d.is_starter).map((deck, index) => {
               const bannerSrc = deck.name === "The Sacred Rewrite" ? tsrBanner.url
                 : deck.name === "Magic not Logic" ? mnlBanner.url
-                : deck.name === "AreekeerA" ? areekeeraBanner
+                : deck.name === "AreekeerA" ? areekeeraBanner.url
                 : deck.name === "The Art of Self-Healing" ? taoshBanner
                 : null;
 
