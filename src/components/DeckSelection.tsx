@@ -8,7 +8,7 @@ import areekeeraBanner from "@/assets/areekeera-banner.png";
 import taoshBanner from "@/assets/taosh-banner.png";
 import RemembranceCourseSection from "@/components/RemembranceCourseSection";
 import RitesOfRemembranceSection from "@/components/RitesOfRemembranceSection";
-import sacredSpreadsBanner from "@/assets/sacred-spreads-banner.png";
+import sacredSpreadsBanner from "@/assets/sacred-spreads-thumbnail.png.asset.json";
 
 interface Deck {
   id: string;
@@ -136,7 +136,7 @@ export const DeckSelection = ({
               <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30">
                 <div className="aspect-video w-full overflow-hidden bg-muted relative">
                   <img
-                    src={sacredSpreadsBanner}
+                    src={sacredSpreadsBanner.url}
                     alt="Sacred Spreads"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
