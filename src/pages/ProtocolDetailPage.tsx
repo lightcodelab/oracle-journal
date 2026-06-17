@@ -511,7 +511,7 @@ const ProtocolDetailPage = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="mb-8"
             >
-              <div className="prose prose-invert max-w-none">
+              <div className="max-w-none">
                 <div className="text-foreground/90 font-sans leading-relaxed">
                   {renderRichText(resource.body_richtext)}
                 </div>
