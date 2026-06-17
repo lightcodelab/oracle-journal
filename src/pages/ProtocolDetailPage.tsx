@@ -243,8 +243,11 @@ const ProtocolDetailPage = () => {
               });
             }
             return text;
-          }
-          return null;
+        }
+        if (textChild.type === 'hardBreak') {
+          return <br key={childIndex} />;
+        }
+        return null;
         });
         return <p key={index} className="mb-4 leading-relaxed">{textContent}</p>;
       }

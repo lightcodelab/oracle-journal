@@ -293,6 +293,7 @@ const DevotionResourcePage = () => {
     if (!textNodes || textNodes.length === 0) return null;
     
     return textNodes.map((node: any, idx: number) => {
+      if (node.type === 'hardBreak') return <br key={idx} />;
       if (!node.text) return null;
       
       let content: React.ReactNode = node.text;

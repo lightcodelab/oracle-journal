@@ -488,6 +488,7 @@ const DevotionLessonPage = () => {
                           case 'listItem': return `<li>${children}</li>`;
                           case 'blockquote': return `<blockquote>${children}</blockquote>`;
                           case 'horizontalRule': return '<hr>';
+                          case 'hardBreak': return '<br>';
                           case 'image': return `<img src="${node.attrs?.src || ''}" alt="${node.attrs?.alt || ''}" />`;
                           default: return children;
                         }
