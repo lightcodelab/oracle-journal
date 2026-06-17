@@ -169,6 +169,7 @@ const DevotionLessonPage = () => {
         .from('lesson_journal_entries')
         .select('lesson_id')
         .eq('user_id', userId)
+        .not('completed_at', 'is', null)
         .in('lesson_id', lessonIds);
 
       if (error) throw error;
