@@ -273,7 +273,7 @@ const Index = () => {
     return (
       <div className="min-h-screen bg-background py-12 px-4 relative">
         <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-          <PageBreadcrumb items={[{ label: 'Door of Remembrance', icon: DoorOpen }]} />
+          <PageBreadcrumb items={[{ label: 'The Door of Remembrance', icon: DoorOpen }]} />
           <NavActions />
         </div>
         <div className="max-w-lg mx-auto pt-24 text-center">
@@ -308,11 +308,11 @@ const Index = () => {
           items={
             selectedDeck
               ? [
-                  { label: 'Door of Remembrance', onClick: handleBackToDecks, icon: DoorOpen },
+                  { label: 'The Door of Remembrance', onClick: handleBackToDecks, icon: DoorOpen },
                   { label: selectedDeck.name }
                 ]
               : [
-                  { label: 'Door of Remembrance', icon: DoorOpen }
+                  { label: 'The Door of Remembrance', icon: DoorOpen }
                 ]
           } 
         />

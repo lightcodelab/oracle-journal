@@ -133,7 +133,7 @@ const DoorOfDevotion = () => {
     return (
       <div className="min-h-screen bg-background py-12 px-4 relative">
         <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-          <PageBreadcrumb items={[{ label: 'Door of Devotion', icon: DoorOpen }]} />
+          <PageBreadcrumb items={[{ label: 'The Door of Devotion', icon: DoorOpen }]} />
           <NavActions />
         </div>
 
@@ -176,7 +176,7 @@ const DoorOfDevotion = () => {
     <div className="min-h-screen bg-background py-12 px-4 relative">
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-        <PageBreadcrumb items={[{ label: 'Door of Devotion', icon: DoorOpen }]} />
+        <PageBreadcrumb items={[{ label: 'The Door of Devotion', icon: DoorOpen }]} />
         <div className="flex items-center gap-3">
           {tierName && (
             <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 hidden sm:flex">

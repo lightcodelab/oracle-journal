@@ -110,7 +110,7 @@ const DevotionSectionPage = () => {
       <div className="min-h-screen bg-background py-12 px-4 relative">
         <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
           <PageBreadcrumb items={[
-            { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen },
+            { label: 'The Door of Devotion', href: '/devotion', icon: DoorOpen },
             { label: sectionTitle }
           ]} />
           <ProfileDropdown />
@@ -156,7 +156,7 @@ const DevotionSectionPage = () => {
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <PageBreadcrumb items={[
-          { label: 'Door of Devotion', href: '/devotion', icon: DoorOpen },
+          { label: 'The Door of Devotion', href: '/devotion', icon: DoorOpen },
           { label: sectionTitle }
         ]} />
         <div className="flex items-center gap-3">
