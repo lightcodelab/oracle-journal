@@ -22,6 +22,7 @@ import {
   legacyToFormQuestions,
 } from '@/lib/lessonFormTypes';
 import { displayStorageFileName, titleFileNameFallback } from '@/lib/storageFileNames';
+import { useCreateJournalEntry } from '@/hooks/useJournalEntries';
 
 interface Lesson {
   id: string;
@@ -67,6 +68,8 @@ const DevotionLessonPage = () => {
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
   const [downloadingFileUrl, setDownloadingFileUrl] = useState<string | null>(null);
+  const [submittingPrompts, setSubmittingPrompts] = useState(false);
+  const createJournalEntry = useCreateJournalEntry();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -231,6 +234,84 @@ const DevotionLessonPage = () => {
   const handleFormResponsesChange = (next: LessonFormResponses) => {
     setFormResponses(next);
     debouncedSave({ form_responses: next });
+  };
+
+  const formatResponseValue = (value: string | string[] | number | null | undefined): string => {
+    if (value === null || value === undefined || value === '') return '(no response)';
+    if (Array.isArray(value)) return value.length ? value.join(', ') : '(no response)';
+    return String(value);
+  };
+
+  const handleSubmitPrompts = async (
+    questions: LessonFormQuestion[],
+    lessonTitle: string,
+    lessonNumber: number,
+  ) => {
+    const answered = questions.filter((q) => {
+      const v = formResponses[q.id];
+      if (v === null || v === undefined || v === '') return false;
+      if (Array.isArray(v) && v.length === 0) return false;
+      return true;
+    });
+
+    if (answered.length === 0) {
+      toast({
+        title: 'Nothing to submit',
+        description: 'Please answer at least one prompt before submitting.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setSubmittingPrompts(true);
+    try {
+      // Make sure latest answers are persisted to lesson_journal_entries too
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+      await saveJournalMutation.mutateAsync({ form_responses: formResponses });
+
+      const contextTitle = `Session ${lessonNumber}: ${lessonTitle}`;
+      const title = `Lesson Notes — ${contextTitle}`;
+
+      // Build TipTap JSON doc: each question as a heading, answer as paragraph
+      const docContent: any[] = [];
+      const lines: string[] = [];
+      questions.forEach((q) => {
+        const answer = formatResponseValue(formResponses[q.id]);
+        docContent.push({
+          type: 'heading',
+          attrs: { level: 3 },
+          content: [{ type: 'text', text: q.label || 'Prompt' }],
+        });
+        docContent.push({
+          type: 'paragraph',
+          content: [{ type: 'text', text: answer }],
+        });
+        lines.push(`${q.label || 'Prompt'}\n${answer}`);
+      });
+
+      await createJournalEntry.mutateAsync({
+        title,
+        content_json: { type: 'doc', content: docContent },
+        content_text: lines.join('\n\n'),
+        is_quick_capture: false,
+        context_type: 'lesson',
+        context_id: lessonId || undefined,
+        context_title: contextTitle,
+      });
+
+      toast({
+        title: 'Saved to My Journal',
+        description: 'Your responses are filed under Lesson Notes.',
+      });
+    } catch (err: any) {
+      toast({
+        title: 'Could not save',
+        description: err?.message || 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setSubmittingPrompts(false);
+    }
   };
 
   const handleJournalChange = (text: string) => {
@@ -563,6 +644,25 @@ const DevotionLessonPage = () => {
                   responses={formResponses}
                   onChange={handleFormResponsesChange}
                 />
+                <div className="mt-6 flex justify-end">
+                  <Button
+                    onClick={() => handleSubmitPrompts(formQuestions, lesson.title, lesson.lesson_number)}
+                    disabled={submittingPrompts}
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
+                  >
+                    {submittingPrompts ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Saving…
+                      </>
+                    ) : (
+                      <>
+                        <FileText className="w-4 h-4 mr-2" />
+                        Submit to My Journal
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
             </motion.div>
           )}
