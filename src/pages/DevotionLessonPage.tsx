@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic, DoorOpen, Download, FileText, Loader2 } from 'lucide-react';
+import { ArrowRight, RotateCcw, ChevronLeft, ChevronRight, ListMusic, DoorOpen, Download, FileText, Loader2, CheckCircle2 } from 'lucide-react';
 import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
