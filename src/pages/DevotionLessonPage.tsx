@@ -724,6 +724,35 @@ const DevotionLessonPage = () => {
             />
           </motion.div>
 
+          {/* Mark Complete */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.58 }}
+            className="mb-8 flex justify-center"
+          >
+            {(() => {
+              const isCompleted = !!journalEntry?.completed_at;
+              return (
+                <Button
+                  onClick={() => toggleCompleteMutation.mutate(!isCompleted)}
+                  disabled={toggleCompleteMutation.isPending}
+                  variant={isCompleted ? 'outline' : 'default'}
+                  className={isCompleted
+                    ? 'border-primary/40 text-primary hover:bg-primary/10'
+                    : 'bg-primary text-primary-foreground hover:bg-primary/90'}
+                >
+                  {toggleCompleteMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                  )}
+                  {isCompleted ? 'Completed — Mark Incomplete' : 'Mark Lesson as Completed'}
+                </Button>
+              );
+            })()}
+          </motion.div>
+
           {/* Navigation Footer */}
           <motion.div
             initial={{ opacity: 0 }}
