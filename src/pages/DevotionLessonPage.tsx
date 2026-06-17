@@ -48,6 +48,7 @@ interface JournalEntry {
   selected_answer: number | null;
   audio_position: number | null;
   form_responses: LessonFormResponses | null;
+  completed_at: string | null;
 }
 
 const safeDownloadFileName = (fileName: string) =>
