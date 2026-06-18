@@ -8,6 +8,7 @@ import ProfileDropdown from "@/components/ProfileDropdown";
 import { ToolTrendChart } from "@/components/tools/ToolTrendChart";
 import { BoundaryIntegrityAuditHub } from "@/components/tools/BoundaryIntegrityAuditHub";
 import { EmotionalMasteryAuditHub } from "@/components/tools/EmotionalMasteryAuditHub";
+import { NervousSystemAnchoringHub } from "@/components/tools/NervousSystemAnchoringHub";
 
 const ToolDetail = () => {
   const { slug } = useParams();
@@ -62,6 +63,30 @@ const ToolDetail = () => {
             )}
           </div>
           <EmotionalMasteryAuditHub />
+        </div>
+      </div>
+    );
+  }
+
+  if (tool.slug === "nervous-system-anchoring") {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <PageBreadcrumb items={[{ label: "Tools", href: "/tools" }, { label: tool.title }]} />
+          <ProfileDropdown />
+        </div>
+        <div className="max-w-4xl mx-auto px-6 py-10 space-y-6">
+          <Button variant="ghost" size="sm" onClick={() => navigate("/tools")}>← Back to Tools</Button>
+          <div className="space-y-2">
+            <h1 className="font-serif text-4xl">{tool.title}</h1>
+            {tool.short_description && <p className="text-lg text-foreground/80">{tool.short_description}</p>}
+            {tool.when_to_use && (
+              <p className="text-sm italic text-muted-foreground">
+                <span className="font-medium not-italic">When to use this:</span> {tool.when_to_use}
+              </p>
+            )}
+          </div>
+          <NervousSystemAnchoringHub />
         </div>
       </div>
     );

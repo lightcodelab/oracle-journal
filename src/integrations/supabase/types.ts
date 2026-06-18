@@ -2751,6 +2751,150 @@ export type Database = {
           },
         ]
       }
+      nervous_anchor_maps: {
+        Row: {
+          created_at: string
+          id: string
+          primary_anchor: string | null
+          ratings: Json
+          secondary_anchors: Json
+          sensations: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          primary_anchor?: string | null
+          ratings?: Json
+          secondary_anchors?: Json
+          sensations?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          primary_anchor?: string | null
+          ratings?: Json
+          secondary_anchors?: Json
+          sensations?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      nervous_anchoring_sessions: {
+        Row: {
+          completed: boolean
+          created_at: string
+          duration_minutes: number
+          id: string
+          reflection: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          duration_minutes: number
+          id?: string
+          reflection?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          reflection?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      nervous_anchoring_weekly: {
+        Row: {
+          best_tool: string | null
+          body_response: string | null
+          created_at: string
+          id: string
+          next_week_focus: string | null
+          return_strategy: string | null
+          triggers: Json
+          truth: string | null
+          updated_at: string
+          user_id: string
+          week_start: string
+        }
+        Insert: {
+          best_tool?: string | null
+          body_response?: string | null
+          created_at?: string
+          id?: string
+          next_week_focus?: string | null
+          return_strategy?: string | null
+          triggers?: Json
+          truth?: string | null
+          updated_at?: string
+          user_id: string
+          week_start: string
+        }
+        Update: {
+          best_tool?: string | null
+          body_response?: string | null
+          created_at?: string
+          id?: string
+          next_week_focus?: string | null
+          return_strategy?: string | null
+          triggers?: Json
+          truth?: string | null
+          updated_at?: string
+          user_id?: string
+          week_start?: string
+        }
+        Relationships: []
+      }
+      nervous_stability_checkins: {
+        Row: {
+          body_connection: number
+          capacity: number
+          created_at: string
+          entry_date: string
+          id: string
+          regulation: number
+          score: number
+          truth_connection: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body_connection: number
+          capacity: number
+          created_at?: string
+          entry_date?: string
+          id?: string
+          regulation: number
+          score: number
+          truth_connection: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body_connection?: number
+          capacity?: number
+          created_at?: string
+          entry_date?: string
+          id?: string
+          regulation?: number
+          score?: number
+          truth_connection?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       outcomes_cache: {
         Row: {
           id: string

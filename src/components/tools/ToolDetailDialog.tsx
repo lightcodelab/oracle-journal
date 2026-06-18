@@ -15,6 +15,7 @@ import { DynamicFieldRenderer } from "@/components/tools/DynamicFieldRenderer";
 import { useToast } from "@/hooks/use-toast";
 import { BoundaryIntegrityAuditHub } from "@/components/tools/BoundaryIntegrityAuditHub";
 import { EmotionalMasteryAuditHub } from "@/components/tools/EmotionalMasteryAuditHub";
+import { NervousSystemAnchoringHub } from "@/components/tools/NervousSystemAnchoringHub";
 
 interface ToolDetailDialogProps {
   slug: string | null;
@@ -108,6 +109,16 @@ export const ToolDetailDialog = ({ slug, open, onClose }: ToolDetailDialogProps)
               )}
             </div>
             <EmotionalMasteryAuditHub />
+          </div>
+        ) : tool.slug === "nervous-system-anchoring" ? (
+          <div className="space-y-4 pt-2">
+            <div className="space-y-2">
+              <h1 className="font-serif text-3xl">{tool.title}</h1>
+              {tool.short_description && (
+                <p className="text-foreground/80">{tool.short_description}</p>
+              )}
+            </div>
+            <NervousSystemAnchoringHub />
           </div>
         ) : mode === "reflection" ? (
           <div className="space-y-6 pt-2">
