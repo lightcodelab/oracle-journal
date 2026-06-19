@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .select("role")
       .eq("user_id", userId)
       .eq("role", "admin")
-      .single();
+      .maybeSingle();
 
     setIsAdmin(!error && !!data);
   };
@@ -59,14 +59,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        setLoading(false);
 
-        // Check must_change_password flag and admin role when user signs in
         if (session?.user && event === "SIGNED_IN") {
+          // Defer Supabase calls out of the auth callback
           setTimeout(() => {
-            checkMustChangePassword(session.user.id);
-            checkAdminRole(session.user.id);
+            Promise.all([
+              checkMustChangePassword(session.user.id),
+              checkAdminRole(session.user.id),
+            ]).finally(() => setLoading(false));
           }, 0);
+        } else if (!session?.user) {
+          setLoading(false);
         }
 
         if (event === "SIGNED_OUT") {
@@ -80,11 +83,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
 
       if (session?.user) {
-        checkMustChangePassword(session.user.id);
-        checkAdminRole(session.user.id);
+        Promise.all([
+          checkMustChangePassword(session.user.id),
+          checkAdminRole(session.user.id),
+        ]).finally(() => setLoading(false));
+      } else {
+        setLoading(false);
       }
     });
 
