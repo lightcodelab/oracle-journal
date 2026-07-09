@@ -3298,6 +3298,297 @@ export type Database = {
           },
         ]
       }
+      quiz_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          quiz_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          quiz_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          quiz_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_events_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_options: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          position: number
+          question_id: string
+          result_id: string | null
+          text: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          position?: number
+          question_id: string
+          result_id?: string | null
+          text: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          position?: number
+          question_id?: string
+          result_id?: string | null
+          text?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_options_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_options_result_id_fkey"
+            columns: ["result_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_results"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_questions: {
+        Row: {
+          created_at: string
+          help_text: string | null
+          id: string
+          image_url: string | null
+          position: number
+          quiz_id: string
+          text: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          help_text?: string | null
+          id?: string
+          image_url?: string | null
+          position?: number
+          quiz_id: string
+          text: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          help_text?: string | null
+          id?: string
+          image_url?: string | null
+          position?: number
+          quiz_id?: string
+          text?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_questions_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_responses: {
+        Row: {
+          answers: Json
+          completed: boolean
+          created_at: string
+          email: string | null
+          id: string
+          ip_hash: string | null
+          name: string | null
+          quiz_id: string
+          result_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          answers?: Json
+          completed?: boolean
+          created_at?: string
+          email?: string | null
+          id?: string
+          ip_hash?: string | null
+          name?: string | null
+          quiz_id: string
+          result_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          answers?: Json
+          completed?: boolean
+          created_at?: string
+          email?: string | null
+          id?: string
+          ip_hash?: string | null
+          name?: string | null
+          quiz_id?: string
+          result_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_responses_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_responses_result_id_fkey"
+            columns: ["result_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_results"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_results: {
+        Row: {
+          created_at: string
+          cta_label: string | null
+          cta_url: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          position: number
+          quiz_id: string
+          redirect_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          cta_label?: string | null
+          cta_url?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          position?: number
+          quiz_id: string
+          redirect_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          cta_label?: string | null
+          cta_url?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          position?: number
+          quiz_id?: string
+          redirect_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_results_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quizzes: {
+        Row: {
+          accent_color: string
+          access: string
+          button_label: string
+          collect_name: boolean
+          consent_text: string | null
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          mailerlite_group_id: string | null
+          primary_color: string
+          require_email: boolean
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          status: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          accent_color?: string
+          access?: string
+          button_label?: string
+          collect_name?: boolean
+          consent_text?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          mailerlite_group_id?: string | null
+          primary_color?: string
+          require_email?: boolean
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          status?: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          accent_color?: string
+          access?: string
+          button_label?: string
+          collect_name?: boolean
+          consent_text?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          mailerlite_group_id?: string | null
+          primary_color?: string
+          require_email?: boolean
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          status?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       recommendation_events: {
         Row: {
           chosen_resources: Json | null
