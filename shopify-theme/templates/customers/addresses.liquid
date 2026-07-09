@@ -1,0 +1,43 @@
+<section class="section">
+  <div class="page-width">
+    <h1>Addresses</h1>
+    <p><a href="{{ routes.account_url }}" style="color:var(--color-muted);">← Back to account</a></p>
+
+    {%- paginate customer.addresses by 6 -%}
+      {%- for address in customer.addresses -%}
+        <div style="border:1px solid var(--color-border);padding:1.5rem;margin:1rem 0;">
+          {%- if address == customer.default_address -%}<span class="eyebrow">Default</span>{%- endif -%}
+          <p>{{ address | format_address }}</p>
+          <a href="#edit-{{ address.id }}" onclick="document.getElementById('edit-{{ address.id }}').hidden=false;return false;" class="btn btn--outline">Edit</a>
+          {%- form 'customer_address', address -%}
+            <div id="edit-{{ address.id }}" hidden style="margin-top:1rem;display:grid;gap:.75rem;">
+              <input type="text" name="address[first_name]" placeholder="First name" value="{{ form.first_name }}">
+              <input type="text" name="address[last_name]" placeholder="Last name" value="{{ form.last_name }}">
+              <input type="text" name="address[address1]" placeholder="Address" value="{{ form.address1 }}">
+              <input type="text" name="address[city]" placeholder="City" value="{{ form.city }}">
+              <input type="text" name="address[zip]" placeholder="ZIP" value="{{ form.zip }}">
+              <input type="text" name="address[country]" placeholder="Country" value="{{ form.country }}">
+              <input type="text" name="address[phone]" placeholder="Phone" value="{{ form.phone }}">
+              <button class="btn" type="submit">Save</button>
+            </div>
+          {%- endform -%}
+        </div>
+      {%- endfor -%}
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+
+    <h2 style="margin-top:3rem;">Add a new address</h2>
+    {%- form 'customer_address', customer.new_address -%}
+      <div style="display:grid;gap:.75rem;max-width:480px;">
+        <input type="text" name="address[first_name]" placeholder="First name">
+        <input type="text" name="address[last_name]" placeholder="Last name">
+        <input type="text" name="address[address1]" placeholder="Address">
+        <input type="text" name="address[city]" placeholder="City">
+        <input type="text" name="address[zip]" placeholder="ZIP">
+        <input type="text" name="address[country]" placeholder="Country">
+        <input type="text" name="address[phone]" placeholder="Phone">
+        <button class="btn" type="submit">Add address</button>
+      </div>
+    {%- endform -%}
+  </div>
+</section>

@@ -1,0 +1,14 @@
+<section class="section">
+  <div class="page-width" style="max-width:480px;">
+    <div class="section-heading" style="margin-bottom:2rem;"><h1>Activate your account</h1></div>
+    {%- form 'activate_customer_password' -%}
+      {%- if form.errors -%}<div style="color:var(--color-accent);margin-bottom:1rem;">{{ form.errors | default_errors }}</div>{%- endif -%}
+      <div style="display:grid;gap:1rem;">
+        <div><label for="ActivatePass">Password</label><input type="password" id="ActivatePass" name="customer[password]" required></div>
+        <div><label for="ActivatePassConfirm">Confirm password</label><input type="password" id="ActivatePassConfirm" name="customer[password_confirmation]" required></div>
+        <button type="submit" class="btn btn--full">Activate account</button>
+        <button type="submit" name="decline" class="btn btn--outline">Decline invitation</button>
+      </div>
+    {%- endform -%}
+  </div>
+</section>

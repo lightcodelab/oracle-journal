@@ -1,0 +1,17 @@
+<section class="section">
+  <div class="page-width" style="max-width:520px;text-align:center;">
+    <span class="eyebrow">Gift card</span>
+    <h1>{{ shop.name }}</h1>
+    <p style="color:var(--color-muted);">Present this code at checkout.</p>
+    <div style="border:1px solid var(--color-accent);padding:2rem;margin:2rem 0;font-family:var(--font-heading);font-size:2rem;letter-spacing:.1em;">
+      {{ gift_card.code | format_code }}
+    </div>
+    <p style="font-family:var(--font-heading);font-size:2.5rem;color:var(--color-accent);">{{ gift_card.balance | money }}</p>
+    {%- if gift_card.enabled == false or gift_card.expired -%}
+      <p style="color:var(--color-muted);">Expired</p>
+    {%- else -%}
+      <p style="color:var(--color-muted);">Balance {{ gift_card.balance | money }} of {{ gift_card.initial_value | money }}</p>
+    {%- endif -%}
+    <a href="{{ shop.url }}" class="btn" style="margin-top:2rem;">Shop now</a>
+  </div>
+</section>

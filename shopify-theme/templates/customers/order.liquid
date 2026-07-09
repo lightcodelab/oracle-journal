@@ -1,0 +1,31 @@
+<section class="section">
+  <div class="page-width">
+    <p><a href="{{ routes.account_url }}" style="color:var(--color-muted);">← Back to account</a></p>
+    <h1>{{ order.name }}</h1>
+    <p style="color:var(--color-muted);">Placed {{ order.created_at | date: '%B %-d, %Y' }} · {{ order.financial_status_label }} · {{ order.fulfillment_status_label }}</p>
+
+    <table class="cart-items" style="margin-top:2rem;">
+      <thead><tr><th>Item</th><th>Qty</th><th style="text-align:right;">Total</th></tr></thead>
+      <tbody>
+        {%- for line in order.line_items -%}
+          <tr>
+            <td>{{ line.title }}</td>
+            <td>{{ line.quantity }}</td>
+            <td style="text-align:right;">{{ line.final_line_price | money }}</td>
+          </tr>
+        {%- endfor -%}
+      </tbody>
+      <tfoot>
+        <tr><td colspan="2" style="text-align:right;">Subtotal</td><td style="text-align:right;">{{ order.subtotal_price | money }}</td></tr>
+        <tr><td colspan="2" style="text-align:right;">Shipping</td><td style="text-align:right;">{{ order.shipping_price | money }}</td></tr>
+        <tr><td colspan="2" style="text-align:right;">Tax</td><td style="text-align:right;">{{ order.tax_price | money }}</td></tr>
+        <tr><td colspan="2" style="text-align:right;font-family:var(--font-heading);font-size:1.2rem;">Total</td><td style="text-align:right;font-family:var(--font-heading);font-size:1.2rem;">{{ order.total_price | money }}</td></tr>
+      </tfoot>
+    </table>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:3rem;">
+      <div><h3 style="font-size:1rem;letter-spacing:.14em;text-transform:uppercase;color:var(--color-muted);">Billing</h3><p>{{ order.billing_address | format_address }}</p></div>
+      <div><h3 style="font-size:1rem;letter-spacing:.14em;text-transform:uppercase;color:var(--color-muted);">Shipping</h3><p>{{ order.shipping_address | format_address }}</p></div>
+    </div>
+  </div>
+</section>
