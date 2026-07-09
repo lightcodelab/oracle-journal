@@ -60,6 +60,10 @@ import NewsletterBanner from "./components/NewsletterBanner";
 import AffiliateRedirect from "./pages/AffiliateRedirect";
 import AffiliatePortal from "./pages/AffiliatePortal";
 import AdminAffiliates from "./pages/AdminAffiliates";
+import AdminQuizzes from "./pages/AdminQuizzes";
+import AdminQuizEditor from "./pages/AdminQuizEditor";
+import AdminQuizAnalytics from "./pages/AdminQuizAnalytics";
+import QuizPlayer from "./pages/QuizPlayer";
 import { captureRefFromQueryString } from "@/lib/affiliateTracking";
 import { useEffect } from "react";
 const queryClient = new QueryClient();
@@ -136,6 +140,10 @@ const App = () => {
             <Route path="/r/:code" element={<AffiliateRedirect />} />
             <Route path="/affiliate" element={<AffiliatePortal />} />
             <Route path="/admin/affiliates" element={<AdminAffiliates />} />
+            <Route path="/admin/quizzes" element={<AdminQuizzes />} />
+            <Route path="/admin/quizzes/:id" element={<AdminQuizEditor />} />
+            <Route path="/admin/quizzes/:id/analytics" element={<AdminQuizAnalytics />} />
+            <Route path="/quiz/:slug" element={<QuizPlayer />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
