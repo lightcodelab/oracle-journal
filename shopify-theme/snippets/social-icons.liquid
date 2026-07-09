@@ -1,0 +1,28 @@
+{%- assign has_socials = false -%}
+{%- if settings.social_instagram != blank or settings.social_facebook != blank or settings.social_youtube != blank or settings.social_tiktok != blank -%}
+  {%- assign has_socials = true -%}
+{%- endif -%}
+{%- if has_socials -%}
+<div class="social-icons" style="margin-top:1.25rem;">
+  {%- if settings.social_instagram != blank -%}
+    <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+    </a>
+  {%- endif -%}
+  {%- if settings.social_facebook != blank -%}
+    <a href="{{ settings.social_facebook }}" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7.5c0-1.2.4-2 2-2h2V2c-.5 0-1.6-.1-2.8-.1-2.8 0-4.7 1.7-4.7 4.9V10H6v4h3.5v8H13z"/></svg>
+    </a>
+  {%- endif -%}
+  {%- if settings.social_youtube != blank -%}
+    <a href="{{ settings.social_youtube }}" target="_blank" rel="noopener" aria-label="YouTube">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.5-.4-5.2c-.2-.9-1-1.7-1.9-1.9C18.8 4.5 12 4.5 12 4.5s-6.8 0-8.7.4c-.9.2-1.7 1-1.9 1.9C1 8.5 1 12 1 12s0 3.5.4 5.2c.2.9 1 1.7 1.9 1.9 1.9.4 8.7.4 8.7.4s6.8 0 8.7-.4c.9-.2 1.7-1 1.9-1.9.4-1.7.4-5.2.4-5.2ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg>
+    </a>
+  {%- endif -%}
+  {%- if settings.social_tiktok != blank -%}
+    <a href="{{ settings.social_tiktok }}" target="_blank" rel="noopener" aria-label="TikTok">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 6.9a5.5 5.5 0 0 1-3.3-1.1V15a5.7 5.7 0 1 1-5-5.6v3a2.7 2.7 0 1 0 2 2.6V2h3a5.5 5.5 0 0 0 3.3 5v3z"/></svg>
+    </a>
+  {%- endif -%}
+</div>
+{%- endif -%}

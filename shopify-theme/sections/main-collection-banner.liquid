@@ -1,0 +1,14 @@
+<section class="section section--sm">
+  <div class="page-width">
+    <div class="section-heading">
+      <span class="eyebrow">Collection</span>
+      <h1>{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <div style="color:var(--color-muted);">{{ collection.description }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{ "name": "Collection banner", "settings": [] }
+{% endschema %}

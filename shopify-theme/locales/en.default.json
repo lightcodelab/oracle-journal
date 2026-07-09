@@ -1,0 +1,85 @@
+{
+  "general": {
+    "meta": { "tags": "Tagged \"{{ tags }}\"", "page": "Page {{ page }}" },
+    "404": {
+      "title": "Page not found",
+      "subtext": "The page you were looking for has drifted beyond the veil.",
+      "link": "Return home"
+    },
+    "search": {
+      "title": "Search",
+      "placeholder": "Search the shop…",
+      "submit": "Search",
+      "no_results": "No results found for \"{{ terms }}\".",
+      "results_with_count": { "one": "{{ count }} result for \"{{ terms }}\"", "other": "{{ count }} results for \"{{ terms }}\"" }
+    },
+    "pagination": { "previous": "Previous", "next": "Next" },
+    "newsletter": {
+      "heading": "Join the Temple",
+      "subtext": "Receive rites, offerings, and new arrivals.",
+      "placeholder": "your@email.com",
+      "submit": "Subscribe",
+      "success": "Thank you — check your inbox."
+    },
+    "social": { "alt_text": "Follow us on {{ name }}" }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "vendor": "By {{ vendor }}",
+      "sku": "SKU: {{ sku }}",
+      "on_sale": "Sale",
+      "from_price": "From {{ price }}",
+      "description": "Description",
+      "share": "Share"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Your cart",
+      "empty": "Your cart is empty.",
+      "continue_shopping": "Continue shopping",
+      "subtotal": "Subtotal",
+      "checkout": "Checkout",
+      "note": "Add a note to your order",
+      "remove": "Remove",
+      "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout"
+    }
+  },
+  "collections": {
+    "general": {
+      "no_matches": "No products found.",
+      "products_count": { "one": "{{ count }} product", "other": "{{ count }} products" },
+      "sort_by": "Sort by",
+      "view_all": "View all"
+    },
+    "sorting": {
+      "manual": "Featured",
+      "best_selling": "Best selling",
+      "az": "A–Z",
+      "za": "Z–A",
+      "price_ascending": "Price, low to high",
+      "price_descending": "Price, high to low",
+      "date_ascending": "Date, old to new",
+      "date_descending": "Date, new to old"
+    }
+  },
+  "blogs": { "article": { "read_more": "Continue reading", "by_author": "By {{ author }}", "posted_in": "Posted in" } },
+  "customer": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "forgot_password": "Forgot your password?",
+      "create_account": "Create account",
+      "cancel": "Cancel"
+    },
+    "register": { "title": "Create account", "first_name": "First name", "last_name": "Last name", "email": "Email", "password": "Password", "submit": "Create" },
+    "account": { "title": "My account", "details": "Account details", "orders": "Order history", "logout": "Sign out", "no_orders": "You haven't placed any orders yet." },
+    "recover_password": { "title": "Reset your password", "submit": "Send reset link", "success": "We've sent you an email with a link to reset your password." }
+  }
+}

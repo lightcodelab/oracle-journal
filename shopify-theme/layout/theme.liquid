@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; {{ 'general.meta.tags' | t: tags: current_tags | join: ', ' }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    {% render 'meta-tags' %}
+
+    {%- liquid
+      assign heading_font = settings.font_heading
+      assign body_font = settings.font_body
+      assign body_font_bold = body_font | font_modify: 'weight', 'bold'
+      assign body_font_italic = body_font | font_modify: 'style', 'italic'
+    -%}
+
+    {{ heading_font | font_face: font_display: 'swap' }}
+    {{ body_font | font_face: font_display: 'swap' }}
+    {{ body_font_bold | font_face: font_display: 'swap' }}
+    {{ body_font_italic | font_face: font_display: 'swap' }}
+
+    <style>
+      :root {
+        --color-bg: {{ settings.color_bg }};
+        --color-surface: {{ settings.color_surface }};
+        --color-fg: {{ settings.color_fg }};
+        --color-muted: {{ settings.color_muted }};
+        --color-accent: {{ settings.color_accent }};
+        --color-accent-hover: {{ settings.color_accent_hover }};
+        --color-border: {{ settings.color_border }};
+        --font-heading: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+        --font-body: {{ body_font.family }}, {{ body_font.fallback_families }};
+        --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
+        --body-scale: {{ settings.body_scale | divided_by: 100.0 }};
+        --page-width: {{ settings.page_width }}px;
+        --section-spacing: {{ settings.section_spacing }}px;
+        --radius-btn: {{ settings.button_radius }}px;
+      }
+    </style>
+
+    {{ content_for_header }}
+
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  </head>
+
+  <body class="template-{{ template.name | handle }}">
+    <a class="skip-to-content-link" href="#main-content">Skip to content</a>
+
+    {% sections 'header-group' %}
+
+    <main id="main-content" role="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    <script>document.documentElement.classList.remove('no-js');</script>
+  </body>
+</html>

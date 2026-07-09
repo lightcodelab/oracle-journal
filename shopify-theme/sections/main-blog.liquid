@@ -1,0 +1,28 @@
+<section class="section">
+  <div class="page-width">
+    <div class="section-heading">
+      <span class="eyebrow">Journal</span>
+      <h1>{{ blog.title }}</h1>
+    </div>
+    {%- paginate blog.articles by 12 -%}
+      <div class="blog-grid">
+        {%- for article in blog.articles -%}
+          <a class="blog-card" href="{{ article.url }}">
+            {%- if article.image -%}
+              <div class="blog-card__media"><img src="{{ article.image | image_url: width: 800 }}" alt="{{ article.image.alt | default: article.title | escape }}" loading="lazy"></div>
+            {%- endif -%}
+            <div class="blog-card__meta">{{ article.published_at | date: '%B %-d, %Y' }}</div>
+            <h2 class="blog-card__title">{{ article.title }}</h2>
+            {%- if article.excerpt_or_content != blank -%}
+              <p style="color:var(--color-muted);">{{ article.excerpt_or_content | strip_html | truncatewords: 20 }}</p>
+            {%- endif -%}
+          </a>
+        {%- endfor -%}
+      </div>
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+  </div>
+</section>
+{% schema %}
+{ "name": "Blog", "settings": [] }
+{% endschema %}

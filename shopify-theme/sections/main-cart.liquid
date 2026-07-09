@@ -1,0 +1,72 @@
+<section class="section">
+  <div class="page-width">
+    <div class="section-heading" style="text-align:left;margin-bottom:2rem;">
+      <h1>{{ 'cart.general.title' | t }}</h1>
+    </div>
+
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post" novalidate>
+        <table class="cart-items">
+          <thead>
+            <tr>
+              <th colspan="2">Product</th>
+              <th>Qty</th>
+              <th style="text-align:right;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for item in cart.items -%}
+              <tr>
+                <td class="cart-items__media">
+                  <a href="{{ item.url }}">
+                    {%- if item.image -%}
+                      <img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.title | escape }}">
+                    {%- endif -%}
+                  </a>
+                </td>
+                <td>
+                  <a href="{{ item.url }}" style="color:var(--color-fg);font-family:var(--font-heading);font-size:1.05rem;">{{ item.product.title }}</a>
+                  {%- unless item.product.has_only_default_variant -%}
+                    <div style="color:var(--color-muted);font-size:.9rem;margin-top:.25rem;">{{ item.variant.title }}</div>
+                  {%- endunless -%}
+                  <div style="color:var(--color-muted);font-size:.9rem;margin-top:.25rem;">{{ item.original_price | money }}</div>
+                  <a href="{{ item.url_to_remove }}" style="color:var(--color-muted);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;display:inline-block;margin-top:.75rem;">{{ 'cart.general.remove' | t }}</a>
+                </td>
+                <td>
+                  <div class="quantity">
+                    <button type="button" data-qty-step="-1" aria-label="Decrease">−</button>
+                    <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" data-line="{{ forloop.index }}">
+                    <button type="button" data-qty-step="1" aria-label="Increase">+</button>
+                  </div>
+                </td>
+                <td style="text-align:right;font-family:var(--font-heading);font-size:1.1rem;">{{ item.final_line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+
+        <div class="cart__footer">
+          <div>
+            <label for="CartNote">{{ 'cart.general.note' | t }}</label>
+            <textarea id="CartNote" name="note" rows="3">{{ cart.note }}</textarea>
+            <button type="submit" name="update" class="btn btn--outline" style="margin-top:1rem;">Update cart</button>
+          </div>
+          <div class="cart__totals">
+            <div style="color:var(--color-muted);font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;">{{ 'cart.general.subtotal' | t }}</div>
+            <p>{{ cart.total_price | money }}</p>
+            <div style="color:var(--color-muted);font-size:.8rem;margin-bottom:1.5rem;">{{ 'cart.general.taxes_and_shipping_at_checkout' | t }}</div>
+            <button type="submit" name="checkout" class="btn btn--full">{{ 'cart.general.checkout' | t }}</button>
+          </div>
+        </div>
+      </form>
+    {%- else -%}
+      <div class="empty">
+        <p>{{ 'cart.general.empty' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn" style="margin-top:1.5rem;">{{ 'cart.general.continue_shopping' | t }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+{% schema %}
+{ "name": "Cart", "settings": [] }
+{% endschema %}

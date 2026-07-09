@@ -1,0 +1,29 @@
+<section class="section">
+  <div class="page-width">
+    <article class="article">
+      <div class="article__meta">
+        {{ article.published_at | date: '%B %-d, %Y' }}
+        {%- if article.author != blank %} · {{ 'blogs.article.by_author' | t: author: article.author }}{%- endif -%}
+      </div>
+      <h1 class="article__title">{{ article.title }}</h1>
+      {%- if article.image -%}
+        <div class="article__hero"><img src="{{ article.image | image_url: width: 1600 }}" alt="{{ article.image.alt | default: article.title | escape }}"></div>
+      {%- endif -%}
+      <div class="article__body">{{ article.content }}</div>
+      {%- if blog.comments_enabled? -%}
+        <div style="margin-top:4rem;padding-top:3rem;border-top:1px solid var(--color-border);">
+          <h3>Comments</h3>
+          {%- for comment in article.comments -%}
+            <div style="margin:1.5rem 0;padding:1.5rem;background:var(--color-surface);">
+              <div style="color:var(--color-muted);font-size:.85rem;">{{ comment.author }} · {{ comment.created_at | date: '%B %-d, %Y' }}</div>
+              <div>{{ comment.content }}</div>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </article>
+  </div>
+</section>
+{% schema %}
+{ "name": "Article", "settings": [] }
+{% endschema %}
