@@ -1,0 +1,68 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "The Temple Shop",
+        "heading": "Sacred offerings for the seeker's path",
+        "subheading": "Handcrafted journals, oracle decks, and rituals of remembrance — objects made to walk with you.",
+        "button_label": "Shop the collection",
+        "button_link": "/collections/all",
+        "alignment": "left"
+      }
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "New arrivals",
+        "heading": "Latest offerings",
+        "limit": 8,
+        "show_view_all": true
+      }
+    },
+    "collections": {
+      "type": "collection-list",
+      "blocks": {
+        "b1": { "type": "collection", "settings": {} },
+        "b2": { "type": "collection", "settings": {} },
+        "b3": { "type": "collection", "settings": {} }
+      },
+      "block_order": ["b1", "b2", "b3"],
+      "settings": {
+        "eyebrow": "Shop by category",
+        "heading": "Explore the shop"
+      }
+    },
+    "image_with_text": {
+      "type": "image-with-text",
+      "settings": {
+        "eyebrow": "Our practice",
+        "heading": "Made with intention",
+        "text": "<p>Every offering leaves the Temple prepared as if for a friend — chosen paper, considered weight, packaging that honors what it carries.</p>",
+        "button_label": "Read our story",
+        "button_link": "/pages/about"
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "t1": { "type": "testimonial", "settings": { "quote": "The journal arrived wrapped in linen and I wept. This is craft as devotion.", "author": "Maya S." } },
+        "t2": { "type": "testimonial", "settings": { "quote": "The deck lives on my altar now. I return to it every morning.", "author": "Ren K." } },
+        "t3": { "type": "testimonial", "settings": { "quote": "Every detail speaks. These are heirlooms, not products.", "author": "A. Torres" } }
+      },
+      "block_order": ["t1", "t2", "t3"],
+      "settings": {
+        "eyebrow": "Reflections",
+        "heading": "What the community says"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Join the Temple",
+        "subheading": "Receive rites, offerings, and word of new arrivals."
+      }
+    }
+  },
+  "order": ["hero", "featured", "collections", "image_with_text", "testimonials", "newsletter"]
+}

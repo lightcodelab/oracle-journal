@@ -1,0 +1,18 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "newsletter": { "type": "newsletter", "settings": {} },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "shop": { "type": "menu", "settings": { "heading": "Shop", "menu": "footer" } },
+        "help": { "type": "menu", "settings": { "heading": "Help", "menu": "footer" } },
+        "about": { "type": "text", "settings": { "heading": "About", "text": "<p>Handcrafted physical offerings from the Temple of Sustainment.</p>" } }
+      },
+      "block_order": ["shop", "help", "about"],
+      "settings": { "show_payment_icons": true }
+    }
+  },
+  "order": ["newsletter", "footer"]
+}

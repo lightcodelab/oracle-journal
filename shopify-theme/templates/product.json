@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": { "type": "main-product", "settings": {} },
+    "related": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "You may also love",
+        "heading": "More offerings",
+        "limit": 4,
+        "show_view_all": true
+      }
+    }
+  },
+  "order": ["main", "related"]
+}
