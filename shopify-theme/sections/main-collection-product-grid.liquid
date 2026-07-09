@@ -1,0 +1,40 @@
+<section class="section">
+  <div class="page-width">
+    {%- paginate collection.products by section.settings.products_per_page -%}
+      <div class="collection-toolbar">
+        <div class="collection-toolbar__count">
+          {{ 'collections.general.products_count' | t: count: collection.products_count }}
+        </div>
+        <form>
+          <label class="sr-only" for="SortBy">{{ 'collections.general.sort_by' | t }}</label>
+          <select id="SortBy" name="sort_by" onchange="this.form.submit()">
+            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>{{ option.name }}</option>
+            {%- endfor -%}
+          </select>
+        </form>
+      </div>
+
+      {%- if collection.products.size > 0 -%}
+        <div class="product-grid">
+          {%- for product in collection.products -%}
+            {% render 'product-card', product: product, collection: collection %}
+          {%- endfor -%}
+        </div>
+        {% render 'pagination', paginate: paginate %}
+      {%- else -%}
+        <div class="empty">{{ 'collections.general.no_matches' | t }}</div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product grid",
+  "settings": [
+    { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 }
+  ]
+}
+{% endschema %}
