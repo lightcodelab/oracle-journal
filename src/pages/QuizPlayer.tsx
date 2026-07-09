@@ -17,7 +17,8 @@ const QuizPlayer = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { isActive, loading: memLoading } = useMembership();
+  const { subscriptionStatus, loading: memLoading } = useMembership();
+  const isActive = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
 
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
