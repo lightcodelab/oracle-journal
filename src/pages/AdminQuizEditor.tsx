@@ -9,12 +9,13 @@ import { Switch } from '@/components/ui/switch';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, GripVertical, Loader2, Upload, ExternalLink, ChevronUp, ChevronDown } from 'lucide-react';
+import { Plus, Trash2, GripVertical, Loader2, Upload, ExternalLink, ChevronUp, ChevronDown, Copy, Check } from 'lucide-react';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import { useToast } from '@/hooks/use-toast';
 import type { Quiz, QuizResult, QuizQuestion, QuizOption } from '@/lib/quizTypes';
 import { compressImage } from '@/lib/imageCompression';
+import { SITE_CONFIG } from '@/lib/siteConfig';
 
 type QQ = QuizQuestion & { options: QuizOption[] };
 
@@ -59,6 +60,14 @@ const AdminQuizEditor = () => {
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [results, setResults] = useState<QuizResult[]>([]);
   const [questions, setQuestions] = useState<QQ[]>([]);
+  const [linkBase, setLinkBase] = useState<string>(SITE_CONFIG.productionDomain);
+  const [copied, setCopied] = useState(false);
+
+  const linkOptions = [
+    { label: 'Custom domain (thetemple.lightcodelab.com)', value: 'https://thetemple.lightcodelab.com' },
+    { label: 'Published (templeofsustainment.lovable.app)', value: 'https://templeofsustainment.lovable.app' },
+    { label: 'Current preview', value: typeof window !== 'undefined' ? window.location.origin : '' },
+  ].filter((o) => o.value);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -202,6 +211,50 @@ const AdminQuizEditor = () => {
       </div>
 
       <div className="max-w-4xl mx-auto p-6">
+        {quiz.status === 'published' && quiz.access === 'public' ? (
+          <Card className="p-4 mb-6 bg-muted/30 border-primary/30">
+            <Label className="text-sm font-semibold">Public share link</Label>
+            <p className="text-xs text-muted-foreground mb-3">Anyone with this link can take the quiz.</p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Select value={linkBase} onValueChange={setLinkBase}>
+                <SelectTrigger className="sm:w-72"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {linkOptions.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Input readOnly className="flex-1 font-mono text-xs" value={`${linkBase}/quiz/${quiz.slug}`} />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(`${linkBase}/quiz/${quiz.slug}`);
+                  setCopied(true);
+                  toast({ title: 'Link copied' });
+                  setTimeout(() => setCopied(false), 1500);
+                }}
+              >
+                {copied ? <Check className="w-3 h-3 mr-1" /> : <Copy className="w-3 h-3 mr-1" />}
+                {copied ? 'Copied' : 'Copy'}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.open(`${linkBase}/quiz/${quiz.slug}`, '_blank')}
+              >
+                <ExternalLink className="w-3 h-3 mr-1" /> Open
+              </Button>
+            </div>
+          </Card>
+        ) : (
+          <Card className="p-4 mb-6 bg-muted/20 border-dashed">
+            <p className="text-xs text-muted-foreground">
+              Publish this quiz and set access to <span className="font-semibold">Public</span> in the Settings tab to get a shareable link.
+            </p>
+          </Card>
+        )}
+
         <Tabs defaultValue="cover">
           <TabsList className="grid grid-cols-5 w-full">
             <TabsTrigger value="cover">Cover</TabsTrigger>
