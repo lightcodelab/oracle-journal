@@ -45,7 +45,6 @@ export function useMemberState() {
       return;
     }
     setLoading(true);
-    // @ts-expect-error - RPC types regenerate after migration
     const { data, error } = await supabase.rpc("get_member_state", {
       _user_id: user.id,
     });
