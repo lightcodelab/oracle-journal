@@ -699,7 +699,7 @@ const Membership = () => {
                   "Three random stickers from the monthly artwork",
                   "A letter from Julie & Tash",
                   "A personal three-card reading based on your submitted question",
-                  "Three stickers for each card in their personal reading",
+                  "Three stickers for each card in your personal reading",
                   "App access for the month paid",
                 ],
               },
