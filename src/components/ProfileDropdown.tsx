@@ -56,7 +56,13 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
   }, []);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    // Use local scope so we always clear client-side tokens, even if the
+    // server-side session was already invalidated (avoids 403 session_not_found
+    // leaving the user stuck "signed in" locally).
+    const { error } = await supabase.auth.signOut({ scope: 'local' });
+    if (error) {
+      console.warn('signOut warning:', error.message);
+    }
     if (onSignOut) {
       onSignOut();
     } else {
