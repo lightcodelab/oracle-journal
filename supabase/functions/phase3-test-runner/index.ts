@@ -32,7 +32,8 @@ serve(async (req) => {
     for (const [label, fn] of [
       ["phase1_run1", "_phase1_run_access_tests"],
       ["phase1_run2", "_phase1_run_access_tests"],
-      ["phase3_1_run1", "_phase3_1_isolation_self_test"],
+      ["phase3_1_run1", "_phase3_run_isolation_tests"],
+      ["phase3_1_run2", "_phase3_run_isolation_tests"],
       ["phase3_2_run1", "_phase3_2_run_tests"],
       ["phase3_2_run2", "_phase3_2_run_tests"],
     ] as const) {
