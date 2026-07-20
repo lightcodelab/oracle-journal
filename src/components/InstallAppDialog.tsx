@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
   DialogContent,
@@ -26,10 +27,21 @@ export const InstallAppProvider = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    // Only auto-prompt authenticated members — never interrupt anonymous
+    // visitors on the public sales page.
     const dismissed = localStorage.getItem(INSTALL_DIALOG_KEY);
     if (dismissed) return;
-    const timer = setTimeout(() => setOpen(true), 2000);
-    return () => clearTimeout(timer);
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (cancelled || !data.session) return;
+      timer = setTimeout(() => setOpen(true), 2000);
+    })();
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
   }, []);
 
   const handleDismiss = () => {

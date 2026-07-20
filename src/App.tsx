@@ -87,6 +87,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Membership />} />
+            <Route path="/membership" element={<Navigate to="/" replace />} />
             <Route path="/temple" element={<Temple />} />
             <Route path="/decks" element={<Index />} />
             <Route path="/decks/section/:section" element={<RemembranceSectionPage />} />

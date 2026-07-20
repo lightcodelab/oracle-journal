@@ -35,7 +35,12 @@ interface MembershipOffer {
   server_time: string;
 }
 
-const SHOPIFY_URL = "https://thetemple.lightcodelab.com";
+// External Shopify storefront URL is not yet configured. When the real
+// URL is available, set it here (e.g. https://<store>.myshopify.com or
+// a custom shop domain). While null, the "Visit the Temple Shop" link is
+// disabled and clearly marked as coming soon — we do not link back to
+// the app itself.
+const SHOPIFY_URL: string | null = null;
 
 const formatAudDate = (iso: string | null) => {
   if (!iso) return "";
@@ -145,11 +150,20 @@ const Membership = () => {
 
   const HeroCta = () => {
     if (state === "pre_launch") {
+      // Pre-launch: intentional launch-state chip (informational, not a
+      // disabled control). Sign In remains available alongside via the
+      // parent layout.
       return (
-        <Button size="lg" variant="outline" disabled>
-          <CalendarClock className="w-4 h-4 mr-2" />
-          Opening {openingDate}
-        </Button>
+        <div
+          className="inline-flex items-center gap-2 rounded-full border border-primary/50 bg-primary/10 px-5 py-2.5 text-sm md:text-base text-foreground"
+          role="status"
+          aria-label={`Doors open ${openingDate}`}
+        >
+          <CalendarClock className="w-4 h-4 text-primary" aria-hidden />
+          <span className="font-serif tracking-wide">
+            Doors open {openingDate}
+          </span>
+        </div>
       );
     }
     const label =
@@ -365,19 +379,39 @@ const Membership = () => {
         </div>
       </section>
 
-      {state === "founding" && (
-        <section className="py-20 px-4">
+      {(state === "founding" || state === "pre_launch") && (
+        <section className="py-16 px-4">
           <div className="max-w-3xl mx-auto rounded-2xl border border-primary/30 bg-gradient-to-b from-primary/10 to-background p-8 md:p-12">
             <div className="flex items-center gap-2 text-primary mb-3">
               <Sparkles className="w-5 h-5" />
               <span className="uppercase text-xs tracking-widest">
-                Founding invitation
+                {state === "pre_launch"
+                  ? "Founding invitation — opens 14 September 2026"
+                  : "Founding invitation"}
               </span>
             </div>
             <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
-              Enter as a Founding Member — A$35 AUD / month
+              {state === "pre_launch"
+                ? "Founding Membership — A$35 AUD / month"
+                : "Enter as a Founding Member — A$35 AUD / month"}
             </h2>
+            {state === "pre_launch" && (
+              <p className="text-foreground/85 leading-relaxed mb-6">
+                Founding Membership opens{" "}
+                <span className="text-foreground">
+                  14 September 2026 at 10:00am AEST
+                </span>
+                . Checkout is not available before that time.
+              </p>
+            )}
             <ul className="space-y-3 mb-8 text-foreground/90">
+              <li className="flex gap-3">
+                <Check className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
+                <span>
+                  Every practice, course, deck, and live gathering inside the
+                  app is included in your membership.
+                </span>
+              </li>
               <li className="flex gap-3">
                 <Check className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                 <span>
@@ -388,31 +422,35 @@ const Membership = () => {
               <li className="flex gap-3">
                 <Check className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                 <span>
-                  If a payment fails, you receive a 15-day recovery period so
-                  your Founding price isn't lost to a missed card.
+                  If a payment fails, a 15-day recovery period keeps your
+                  Founding price intact. A successful recovery in that window
+                  preserves continuity.
                 </span>
               </li>
               <li className="flex gap-3">
                 <Check className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                 <span>
-                  Founding Members carry the Founder badge as a permanent
-                  recognition of arriving at the beginning.
+                  Permanent cancellation forfeits the Founding price. Rejoining
+                  later uses the then-current standard price (currently A$50
+                  AUD / month).
                 </span>
               </li>
               <li className="flex gap-3">
                 <Check className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                 <span>
-                  If you permanently cancel, the Founding price is forfeited.
-                  Rejoining later uses the then-current standard price
-                  (currently A$50 AUD / month).
+                  Founding Members carry the Founder badge as recognition of
+                  arriving at the beginning. It is recognition only and does
+                  not change access.
                 </span>
               </li>
             </ul>
             <HeroCta />
-            <p className="text-xs text-muted-foreground mt-4">
-              Founding window closes{" "}
-              {formatAudDate(offer?.founding_window_closes_at ?? null)}.
-            </p>
+            {state === "founding" && (
+              <p className="text-xs text-muted-foreground mt-4">
+                Founding window closes{" "}
+                {formatAudDate(offer?.founding_window_closes_at ?? null)}.
+              </p>
+            )}
           </div>
         </section>
       )}
@@ -429,44 +467,93 @@ const Membership = () => {
               they are not part of app membership.
             </p>
           </div>
+          <p className="text-xs uppercase tracking-widest text-primary/80 text-center mb-8">
+            Every physical piece is handprinted and handmade
+          </p>
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
                 icon: Mail,
                 title: "Snail Mail",
-                body: "Handwritten letters posted to your door, in season.",
+                price: "A$20 AUD / month",
+                items: [
+                  "A letter from Julie & Tash",
+                  "A shared three-card collective reading",
+                  "One journal page for reflecting on the reading",
+                  "Three stickers for each card in the reading",
+                ],
               },
               {
                 icon: BookHeart,
-                title: "The Journal Box",
-                body: "A curated box of journaling and healing companions.",
+                title: "Journal Box",
+                price: "A$50 AUD / month",
+                items: [
+                  "Fourteen double-sided journal pages",
+                  "Month one: handmade hard front & back cover with binder rings — later months arrive as pages",
+                  "One double-sided artwork unique to that month's archetype",
+                  "Three random stickers from the monthly artwork",
+                  "A letter from Julie & Tash",
+                  "A shared three-card collective reading",
+                  "Three stickers for each reading card",
+                ],
               },
               {
                 icon: BookHeart,
                 title: "Personalised Journal Box",
-                body: "A Journal Box shaped to your season and needs.",
+                price: "A$200 AUD / month",
+                items: [
+                  "Everything in the Journal Box",
+                  "A personal three-card reading based on your submitted question",
+                  "Three stickers for each personal reading card",
+                  "App access for the month paid",
+                ],
               },
-            ].map(({ icon: Icon, title, body }) => (
+            ].map(({ icon: Icon, title, price, items }) => (
               <div
                 key={title}
-                className="rounded-lg border border-border/60 bg-card/40 p-6"
+                className="rounded-lg border border-border/60 bg-card/40 p-6 flex flex-col"
               >
-                <Icon className="w-6 h-6 text-primary mb-3" />
-                <h3 className="font-serif text-lg mb-2 text-foreground">
+                <Icon className="w-6 h-6 text-primary mb-3" aria-hidden />
+                <h3 className="font-serif text-lg mb-1 text-foreground">
                   {title}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {body}
+                <p className="text-sm text-primary font-medium mb-4">
+                  {price}
                 </p>
+                <ul className="space-y-2 text-sm text-foreground/80 leading-relaxed">
+                  {items.map((it) => (
+                    <li key={it} className="flex gap-2">
+                      <Check className="w-4 h-4 text-primary/80 mt-0.5 flex-shrink-0" />
+                      <span>{it}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
-          <div className="text-center mt-8">
-            <Button variant="outline" asChild>
-              <a href={SHOPIFY_URL} target="_blank" rel="noreferrer">
-                Visit the Temple Shop
-              </a>
-            </Button>
+          <div className="text-center mt-10">
+            {SHOPIFY_URL ? (
+              <Button variant="outline" asChild>
+                <a
+                  href={SHOPIFY_URL}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Visit the Temple Shop
+                </a>
+              </Button>
+            ) : (
+              <div className="inline-flex flex-col items-center gap-2">
+                <Button variant="outline" disabled>
+                  Temple Shop — coming soon
+                </Button>
+                <p className="text-xs text-muted-foreground max-w-md">
+                  The physical offerings are ordered from the Temple's
+                  external shop, which is being prepared. The link will
+                  appear here once it is live.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>
