@@ -37,10 +37,14 @@ const Auth = () => {
         sessionStorage.setItem("pendingTrialPriceId", priceId);
       }
       
+      const rawRedirect = searchParams.get("redirect");
+      const oauthRedirect =
+        rawRedirect && rawRedirect.startsWith("/")
+          ? `${window.location.origin}${rawRedirect}`
+          : window.location.origin;
       const { error } = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+        redirect_uri: oauthRedirect,
       });
-      // (rewritten below)
       if (error) {
         toast({
           title: "Error",
@@ -67,8 +71,13 @@ const Auth = () => {
         sessionStorage.setItem("pendingTrialPriceId", priceId);
       }
       
+      const rawRedirect = searchParams.get("redirect");
+      const oauthRedirect =
+        rawRedirect && rawRedirect.startsWith("/")
+          ? `${window.location.origin}${rawRedirect}`
+          : window.location.origin;
       const { error } = await lovable.auth.signInWithOAuth("apple", {
-        redirect_uri: window.location.origin,
+        redirect_uri: oauthRedirect,
       });
       if (error) {
         toast({
