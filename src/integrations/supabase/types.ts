@@ -5306,6 +5306,10 @@ export type Database = {
         Returns: boolean
       }
       is_active_member: { Args: { _user_id: string }; Returns: boolean }
+      recompute_profile_active_member: {
+        Args: { _user_id: string }
+        Returns: undefined
+      }
       track_affiliate_click: {
         Args: { _code: string }
         Returns: {
@@ -5316,6 +5320,40 @@ export type Database = {
           referral_code: string
         }[]
       }
+      upsert_entitlement: {
+        Args: {
+          _ends_at: string
+          _grace_until: string
+          _metadata?: Json
+          _product_kind: string
+          _source: string
+          _source_ref: string
+          _starts_at: string
+          _status: string
+          _user_id: string
+        }
+        Returns: {
+          created_at: string
+          ends_at: string | null
+          grace_until: string | null
+          id: string
+          metadata: Json
+          product_kind: string
+          source: string
+          source_ref: string | null
+          starts_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "entitlements"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      use_new_entitlement_model: { Args: never; Returns: boolean }
       user_has_deck_access: {
         Args: { _deck_id: string; _user_id: string }
         Returns: boolean
