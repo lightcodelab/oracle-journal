@@ -1757,6 +1757,7 @@ export type Database = {
           source_ref: string | null
           starts_at: string | null
           status: string
+          stripe_environment: string | null
           updated_at: string
           user_id: string
         }
@@ -1771,6 +1772,7 @@ export type Database = {
           source_ref?: string | null
           starts_at?: string | null
           status: string
+          stripe_environment?: string | null
           updated_at?: string
           user_id: string
         }
@@ -1785,6 +1787,7 @@ export type Database = {
           source_ref?: string | null
           starts_at?: string | null
           status?: string
+          stripe_environment?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1974,6 +1977,7 @@ export type Database = {
           from_status: string | null
           id: string
           reason: string | null
+          stripe_environment: string | null
           to_status: string | null
           user_id: string
         }
@@ -1984,6 +1988,7 @@ export type Database = {
           from_status?: string | null
           id?: string
           reason?: string | null
+          stripe_environment?: string | null
           to_status?: string | null
           user_id: string
         }
@@ -1994,6 +1999,7 @@ export type Database = {
           from_status?: string | null
           id?: string
           reason?: string | null
+          stripe_environment?: string | null
           to_status?: string | null
           user_id?: string
         }
@@ -2010,6 +2016,7 @@ export type Database = {
           founding_subscription_id: string | null
           is_founding_member: boolean
           notes: string | null
+          stripe_environment: string
           updated_at: string
           user_id: string
         }
@@ -2023,6 +2030,7 @@ export type Database = {
           founding_subscription_id?: string | null
           is_founding_member?: boolean
           notes?: string | null
+          stripe_environment?: string
           updated_at?: string
           user_id: string
         }
@@ -2036,6 +2044,7 @@ export type Database = {
           founding_subscription_id?: string | null
           is_founding_member?: boolean
           notes?: string | null
+          stripe_environment?: string
           updated_at?: string
           user_id?: string
         }
@@ -4356,22 +4365,40 @@ export type Database = {
       }
       stripe_webhook_events: {
         Row: {
+          attempt_count: number
+          completed_at: string | null
           event_created_at: string
           event_id: string
           event_type: string
+          last_error: string | null
           processed_at: string
+          started_at: string | null
+          status: string
+          stripe_environment: string
         }
         Insert: {
+          attempt_count?: number
+          completed_at?: string | null
           event_created_at: string
           event_id: string
           event_type: string
+          last_error?: string | null
           processed_at?: string
+          started_at?: string | null
+          status?: string
+          stripe_environment?: string
         }
         Update: {
+          attempt_count?: number
+          completed_at?: string | null
           event_created_at?: string
           event_id?: string
           event_type?: string
+          last_error?: string | null
           processed_at?: string
+          started_at?: string | null
+          status?: string
+          stripe_environment?: string
         }
         Relationships: []
       }
@@ -4458,6 +4485,7 @@ export type Database = {
           provider_subscription_id: string | null
           quantity: number | null
           status: Database["public"]["Enums"]["subscription_status"]
+          stripe_environment: string
           trial_end: string | null
           updated_at: string | null
         }
@@ -4476,6 +4504,7 @@ export type Database = {
           provider_subscription_id?: string | null
           quantity?: number | null
           status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_environment?: string
           trial_end?: string | null
           updated_at?: string | null
         }
@@ -4494,6 +4523,7 @@ export type Database = {
           provider_subscription_id?: string | null
           quantity?: number | null
           status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_environment?: string
           trial_end?: string | null
           updated_at?: string | null
         }
@@ -5279,6 +5309,18 @@ export type Database = {
           passed: boolean
         }[]
       }
+      _phase3_run_isolation_tests: {
+        Args: never
+        Returns: {
+          label: string
+          note: string
+          passed: boolean
+        }[]
+      }
+      admin_inspect_test_entitlements: {
+        Args: { _user_id: string }
+        Returns: Json
+      }
       attribute_affiliate_referral: {
         Args: { _code: string; _commission_model?: string; _link_code?: string }
         Returns: string
@@ -5345,6 +5387,7 @@ export type Database = {
           _current_period_end: string
           _current_period_start: string
           _event_created_at: string
+          _stripe_environment?: string
           _stripe_price_id: string
           _stripe_status: string
           _stripe_subscription_id: string
@@ -5360,6 +5403,23 @@ export type Database = {
       recompute_profile_active_member: {
         Args: { _user_id: string }
         Returns: undefined
+      }
+      stripe_webhook_complete_event: {
+        Args: { _event_id: string; _stripe_environment: string }
+        Returns: undefined
+      }
+      stripe_webhook_fail_event: {
+        Args: { _error: string; _event_id: string; _stripe_environment: string }
+        Returns: undefined
+      }
+      stripe_webhook_reserve_event: {
+        Args: {
+          _event_created_at: string
+          _event_id: string
+          _event_type: string
+          _stripe_environment: string
+        }
+        Returns: string
       }
       track_affiliate_click: {
         Args: { _code: string }
@@ -5394,6 +5454,7 @@ export type Database = {
           source_ref: string | null
           starts_at: string | null
           status: string
+          stripe_environment: string | null
           updated_at: string
           user_id: string
         }
