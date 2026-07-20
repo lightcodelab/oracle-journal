@@ -71,6 +71,31 @@ serve(async (req) => {
   }
   console.log(`Webhook event received (${stripeEnv}):`, event.type, event.id);
 
+  // ---- livemode consistency check --------------------------------
+  // event.livemode must agree with the environment derived from the
+  // signing secret. On mismatch, audit and abort without mutating
+  // subscriptions, entitlements, profiles, Founder records or legacy
+  // access data.
+  const expectedLivemode = stripeEnv === "live";
+  if (typeof event.livemode === "boolean" && event.livemode !== expectedLivemode) {
+    const reason = `livemode=${event.livemode} does not match verified_env=${stripeEnv}`;
+    console.error("Stripe env/livemode mismatch:", event.id, reason);
+    try {
+      await supabaseAdmin.rpc("stripe_webhook_record_env_mismatch", {
+        _event_id: event.id,
+        _verified_env: stripeEnv,
+        _event_livemode: event.livemode,
+        _reason: reason,
+      });
+    } catch (e) {
+      console.error("record_env_mismatch failed:", e);
+    }
+    return new Response(
+      JSON.stringify({ error: "env/livemode mismatch" }),
+      { status: 400 }
+    );
+  }
+
   // ---- Idempotency lifecycle: reserve event row ------------------
   const eventCreatedAt = new Date(event.created * 1000).toISOString();
   const { data: reserveStatus, error: reserveErr } = await supabaseAdmin.rpc(
@@ -86,13 +111,34 @@ serve(async (req) => {
     console.error("reserve_event failed:", reserveErr);
     return new Response("reserve failed", { status: 500 });
   }
-  if (reserveStatus === "completed") {
+  const reserveInfo = (reserveStatus ?? {}) as {
+    status?: string;
+    lease_token?: string;
+    attempt_count?: number;
+  };
+  if (reserveInfo.status === "completed") {
     console.log("Duplicate completed event, skipping:", event.id);
     return new Response(JSON.stringify({ received: true, duplicate: true }), {
       headers: { "Content-Type": "application/json" },
       status: 200,
     });
   }
+  if (reserveInfo.status === "in_progress") {
+    // Another delivery holds a fresh lease — do NOT process concurrently.
+    // Return 200 so Stripe does not immediately hammer retries; the owning
+    // worker will complete the event. Stale leases become reclaimable after
+    // the 15-minute timeout enforced by the RPC.
+    console.log("Event in progress under active lease, skipping:", event.id);
+    return new Response(JSON.stringify({ received: true, in_progress: true }), {
+      headers: { "Content-Type": "application/json" },
+      status: 200,
+    });
+  }
+  if (reserveInfo.status !== "acquired" || !reserveInfo.lease_token) {
+    console.error("reserve_event unexpected response:", reserveInfo);
+    return new Response("reserve failed", { status: 500 });
+  }
+  const leaseToken = reserveInfo.lease_token;
 
   try {
     switch (event.type) {
@@ -130,14 +176,25 @@ serve(async (req) => {
       }
 
       case "customer.subscription.deleted": {
-        const subscription = event.data.object as Stripe.Subscription;
+        // Re-retrieve canonical state so stale/delayed deletes cannot be
+        // undone by a later stale event carrying older canceled_at data.
+        const raw = event.data.object as Stripe.Subscription;
+        let subscription: Stripe.Subscription;
+        try {
+          subscription = await stripeClient.subscriptions.retrieve(raw.id);
+        } catch (_e) {
+          // Stripe returns the deleted object; canonical retrieval may fail
+          // once fully purged. Fall back to the event payload.
+          subscription = raw;
+        }
         await handleSubscriptionCanceled(subscription, stripeEnv, event.created);
         break;
       }
 
+      case "invoice.paid":
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as Stripe.Invoice;
-        await handleInvoicePaid(invoice, stripeEnv);
+        await handleInvoicePaid(invoice, stripeEnv, stripeClient, event.created);
         if (stripeEnv === "live") {
           await handleAffiliateOnInvoice(invoice);
         }
@@ -146,7 +203,7 @@ serve(async (req) => {
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        await handleInvoiceFailed(invoice, stripeEnv);
+        await handleInvoiceFailed(invoice, stripeEnv, stripeClient, event.created);
         break;
       }
 
@@ -158,6 +215,7 @@ serve(async (req) => {
     await supabaseAdmin.rpc("stripe_webhook_complete_event", {
       _event_id: event.id,
       _stripe_environment: stripeEnv,
+      _lease_token: leaseToken,
     });
 
     return new Response(JSON.stringify({ received: true }), {
@@ -170,6 +228,7 @@ serve(async (req) => {
     await supabaseAdmin.rpc("stripe_webhook_fail_event", {
       _event_id: event.id,
       _stripe_environment: stripeEnv,
+      _lease_token: leaseToken,
       _error: errorMessage,
     });
     return new Response(
