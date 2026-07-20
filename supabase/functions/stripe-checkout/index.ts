@@ -36,30 +36,41 @@ serve(async (req) => {
 
     console.log("User authenticated:", user.id, user.email);
 
-    const { priceId, affiliateCode, affiliateLinkCode, commissionModel } = await req.json();
+    const { affiliateCode, affiliateLinkCode, commissionModel } =
+      await req.json().catch(() => ({}));
 
-    if (!priceId) {
-      throw new Error("Missing priceId");
+    // ---------------------------------------------------------------
+    // Server-authoritative price selection.
+    // The browser cannot influence which Stripe price is charged.
+    // The database RPC resolves the current offer (founding vs
+    // standard) using server time; this function then resolves the
+    // Stripe price ID matching the current Stripe key mode.
+    // ---------------------------------------------------------------
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY") || "";
+    const stripeMode =
+      stripeKey.startsWith("sk_test_") || stripeKey.startsWith("rk_test_")
+        ? "test"
+        : "live";
+
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    );
+
+    const { data: offer, error: offerError } = await supabaseAdmin.rpc(
+      "get_stripe_price_id_for_current_offer",
+      { _mode: stripeMode }
+    );
+    if (offerError || !offer) {
+      console.error("Offer resolution failed:", offerError);
+      throw new Error("Membership pricing is not currently available.");
     }
 
-    console.log("Creating checkout for price:", priceId);
+    const stripePriceId = (offer as Record<string, unknown>).stripe_price_id as string;
+    const offerTier = (offer as Record<string, unknown>).tier as string;
+    console.log("Server-selected offer:", offerTier, "price:", stripePriceId, "mode:", stripeMode);
 
-    // Get the price details from our database
-    const { data: priceData, error: priceError } = await supabaseClient
-      .from("prices")
-      .select("*, plans!inner(*)")
-      .eq("id", priceId)
-      .eq("provider", "stripe")
-      .single();
-
-    if (priceError || !priceData) {
-      console.error("Price lookup error:", priceError);
-      throw new Error("Invalid price ID");
-    }
-
-    console.log("Price data:", priceData);
-
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+    const stripe = new Stripe(stripeKey, {
       apiVersion: "2023-10-16",
     });
 
@@ -104,7 +115,7 @@ serve(async (req) => {
       customer: customerId,
       line_items: [
         {
-          price: priceData.provider_price_id,
+          price: stripePriceId,
           quantity: 1,
         },
       ],
@@ -112,7 +123,8 @@ serve(async (req) => {
       subscription_data: {
         metadata: {
           supabase_user_id: user.id,
-          plan_code: priceData.plan_code,
+          plan_code: offerTier === "founding" ? "founding" : "standard",
+          offer_tier: offerTier,
           ...affMeta,
         },
       },
@@ -120,7 +132,8 @@ serve(async (req) => {
       cancel_url: `${req.headers.get("origin")}/`,
       metadata: {
         supabase_user_id: user.id,
-        plan_code: priceData.plan_code,
+        plan_code: offerTier === "founding" ? "founding" : "standard",
+        offer_tier: offerTier,
         ...affMeta,
       },
     });
