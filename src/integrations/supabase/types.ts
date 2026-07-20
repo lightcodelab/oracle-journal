@@ -4363,6 +4363,33 @@ export type Database = {
         }
         Relationships: []
       }
+      stripe_webhook_env_mismatches: {
+        Row: {
+          event_id: string | null
+          event_livemode: boolean | null
+          id: string
+          reason: string
+          recorded_at: string
+          verified_env: string
+        }
+        Insert: {
+          event_id?: string | null
+          event_livemode?: boolean | null
+          id?: string
+          reason: string
+          recorded_at?: string
+          verified_env: string
+        }
+        Update: {
+          event_id?: string | null
+          event_livemode?: boolean | null
+          id?: string
+          reason?: string
+          recorded_at?: string
+          verified_env?: string
+        }
+        Relationships: []
+      }
       stripe_webhook_events: {
         Row: {
           attempt_count: number
@@ -4371,6 +4398,7 @@ export type Database = {
           event_id: string
           event_type: string
           last_error: string | null
+          lease_token: string | null
           processed_at: string
           started_at: string | null
           status: string
@@ -4383,6 +4411,7 @@ export type Database = {
           event_id: string
           event_type: string
           last_error?: string | null
+          lease_token?: string | null
           processed_at?: string
           started_at?: string | null
           status?: string
@@ -4395,6 +4424,7 @@ export type Database = {
           event_id?: string
           event_type?: string
           last_error?: string | null
+          lease_token?: string | null
           processed_at?: string
           started_at?: string | null
           status?: string
@@ -5309,6 +5339,14 @@ export type Database = {
           passed: boolean
         }[]
       }
+      _phase3_2_run_tests: {
+        Args: never
+        Returns: {
+          label: string
+          note: string
+          passed: boolean
+        }[]
+      }
       _phase3_run_isolation_tests: {
         Args: never
         Returns: {
@@ -5317,7 +5355,16 @@ export type Database = {
           passed: boolean
         }[]
       }
+      _stripe_webhook_stale_after: { Args: never; Returns: string }
       admin_inspect_test_entitlements: {
+        Args: { _user_id: string }
+        Returns: Json
+      }
+      admin_test_get_membership_offer_at: {
+        Args: { _as_of: string; _mode: string }
+        Returns: Json
+      }
+      admin_test_reset_user_lifecycle: {
         Args: { _user_id: string }
         Returns: Json
       }
@@ -5396,20 +5443,44 @@ export type Database = {
         Returns: Json
       }
       is_active_member: { Args: { _user_id: string }; Returns: boolean }
-      mark_founder_price_lost: {
-        Args: { _reason: string; _user_id: string }
-        Returns: undefined
-      }
+      mark_founder_price_lost:
+        | { Args: { _reason: string; _user_id: string }; Returns: undefined }
+        | {
+            Args: {
+              _reason: string
+              _stripe_environment: string
+              _user_id: string
+            }
+            Returns: undefined
+          }
       recompute_profile_active_member: {
         Args: { _user_id: string }
         Returns: undefined
       }
       stripe_webhook_complete_event: {
-        Args: { _event_id: string; _stripe_environment: string }
-        Returns: undefined
+        Args: {
+          _event_id: string
+          _lease_token: string
+          _stripe_environment: string
+        }
+        Returns: boolean
       }
       stripe_webhook_fail_event: {
-        Args: { _error: string; _event_id: string; _stripe_environment: string }
+        Args: {
+          _error: string
+          _event_id: string
+          _lease_token: string
+          _stripe_environment: string
+        }
+        Returns: boolean
+      }
+      stripe_webhook_record_env_mismatch: {
+        Args: {
+          _event_id: string
+          _event_livemode: boolean
+          _reason: string
+          _verified_env: string
+        }
         Returns: undefined
       }
       stripe_webhook_reserve_event: {
@@ -5419,7 +5490,7 @@ export type Database = {
           _event_type: string
           _stripe_environment: string
         }
-        Returns: string
+        Returns: Json
       }
       track_affiliate_click: {
         Args: { _code: string }
