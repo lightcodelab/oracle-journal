@@ -36,8 +36,16 @@ serve(async (req) => {
 
     console.log("User authenticated:", user.id, user.email);
 
-    const { affiliateCode, affiliateLinkCode, commissionModel, mode: requestedMode } =
-      await req.json().catch(() => ({}));
+    const {
+      affiliateCode,
+      affiliateLinkCode,
+      commissionModel,
+      mode: requestedMode,
+      as_of: requestedAsOf,
+    } = await req.json().catch(() => ({}));
+    // NOTE: `priceId` is intentionally NOT read from the client. The
+    // server selects the Stripe Price ID from app_settings via a
+    // security-definer RPC. Any priceId sent by the client is ignored.
 
     // ---------------------------------------------------------------
     // Server-authoritative price selection and environment resolution.
@@ -63,6 +71,12 @@ serve(async (req) => {
       }
       stripeMode = "test";
     }
+    // Simulated-time is admin-only and test-only. Reject any as_of on
+    // the live production path so ordinary users cannot influence offer
+    // timing.
+    if (requestedAsOf && stripeMode !== "test") {
+      throw new Error("as_of is only permitted in test mode");
+    }
 
     const stripeKey =
       stripeMode === "test"
@@ -83,18 +97,46 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    const { data: offer, error: offerError } = await supabaseAdmin.rpc(
-      "get_stripe_price_id_for_current_offer",
-      { _mode: stripeMode }
-    );
-    if (offerError || !offer) {
-      console.error("Offer resolution failed:", offerError);
-      throw new Error("Membership pricing is not currently available.");
-    }
+    let stripePriceId: string;
+    let offerTier: string;
 
-    const stripePriceId = (offer as Record<string, unknown>).stripe_price_id as string;
-    const offerTier = (offer as Record<string, unknown>).tier as string;
-    console.log("Server-selected offer:", offerTier, "price:", stripePriceId, "mode:", stripeMode);
+    if (stripeMode === "test" && requestedAsOf) {
+      // Admin-only simulated-time path. The RPC itself enforces admin
+      // role and mode=test; we still resolve the concrete Price ID
+      // server-side from app_settings so the client cannot inject one.
+      const { data: simOffer, error: simErr } = await supabaseAdmin.rpc(
+        "admin_test_get_membership_offer_at",
+        { _as_of: requestedAsOf, _mode: "test" }
+      );
+      if (simErr || !simOffer) {
+        console.error("Simulated-time offer resolution failed:", simErr);
+        throw new Error("Simulated-time offer resolution failed");
+      }
+      offerTier = (simOffer as Record<string, unknown>).offer as string;
+      const settingKey = `${offerTier}_price_id_test`;
+      const { data: priceRow, error: settingErr } = await supabaseAdmin
+        .from("app_settings")
+        .select("value")
+        .eq("key", settingKey)
+        .maybeSingle();
+      if (settingErr || !priceRow?.value) {
+        throw new Error(`No test Stripe price configured for ${settingKey}`);
+      }
+      stripePriceId = String(priceRow.value).replace(/^"|"$/g, "");
+      console.log("Simulated-time offer:", offerTier, "price:", stripePriceId, "as_of:", requestedAsOf);
+    } else {
+      const { data: offer, error: offerError } = await supabaseAdmin.rpc(
+        "get_stripe_price_id_for_current_offer",
+        { _mode: stripeMode }
+      );
+      if (offerError || !offer) {
+        console.error("Offer resolution failed:", offerError);
+        throw new Error("Membership pricing is not currently available.");
+      }
+      stripePriceId = (offer as Record<string, unknown>).stripe_price_id as string;
+      offerTier = (offer as Record<string, unknown>).tier as string;
+      console.log("Server-selected offer:", offerTier, "price:", stripePriceId, "mode:", stripeMode);
+    }
 
     const stripe = new Stripe(stripeKey, {
       apiVersion: "2023-10-16",
