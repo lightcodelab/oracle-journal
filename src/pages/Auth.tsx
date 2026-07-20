@@ -40,6 +40,7 @@ const Auth = () => {
       const { error } = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: window.location.origin,
       });
+      // (rewritten below)
       if (error) {
         toast({
           title: "Error",
