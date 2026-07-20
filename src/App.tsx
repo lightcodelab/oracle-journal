@@ -11,7 +11,9 @@ import Temple from "./pages/Temple";
 import ImportCards from "./pages/ImportCards";
 import NotFound from "./pages/NotFound";
 import DoorOfDevotion from "./pages/DoorOfDevotion";
-import HealingBot from "./pages/HealingBot";
+// HealingBot / Maelin retired 2026-07-20 — see docs/DEPRECATED_MAELIN.md
+// Route redirected to the AreekeerA Protocol Builder. Data + file preserved
+// for retention review.
 import MyProtocols from "./pages/MyProtocols";
 import AdminDashboard from "./pages/AdminDashboard";
 import Profile from "./pages/Profile";
@@ -95,7 +97,7 @@ const App = () => {
             <Route path="/auth" element={<Auth />} />
             <Route path="/import-cards" element={<ImportCards />} />
             <Route path="/devotion" element={<DoorOfDevotion />} />
-            <Route path="/devotion/healing-bot" element={<HealingBot />} />
+            <Route path="/devotion/healing-bot" element={<Navigate to="/devotion/areekeera" replace />} />
             <Route path="/devotion/protocols" element={<MyProtocols />} />
             <Route path="/devotion/protocols/:protocolId" element={<ProtocolDetailPage />} />
             <Route path="/admin" element={<AdminDashboard />} />
