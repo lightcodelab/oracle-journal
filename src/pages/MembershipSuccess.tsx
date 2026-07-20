@@ -133,10 +133,11 @@ const MembershipSuccess = () => {
               <div className="flex flex-col gap-2">
                 {isSandbox ? (
                   <Button
-                    onClick={() => navigate("/admin/test-checkout")}
+                    variant="outline"
+                    onClick={() => navigate("/admin")}
                     className="w-full"
                   >
-                    Back to Sandbox Test Checkout
+                    Return to Admin Dashboard
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 ) : (
