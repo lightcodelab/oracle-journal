@@ -362,14 +362,27 @@ const Membership = () => {
               AreekeerA<sup className="text-xl align-super">®</sup> The Method
             </h2>
             <p className="text-lg text-foreground/85 max-w-3xl mx-auto leading-relaxed">
-              AreekeerA<sup>®</sup> The Method is Julie Lewin's trauma-informed
-              healing modality, channelled through more than four decades of
-              clinical practice. It listens to the body as an intelligent,
-              communicative system — treating symptoms as messages, survival
-              responses as wisdom, and identity as something the nervous system
-              is quietly organised around. It is the philosophy that shapes
-              every practice, deck, course and live gathering inside The
-              Temple.
+              AreekeerA<sup>®</sup> The Method is Julie Lewin's body-based
+              healing modality, channelled and developed through more than
+              forty years of practice and client work. It approaches the body
+              as an intelligent, communicative system and invites us to listen
+              to symptoms in context — not as isolated problems to overpower,
+              but as part of the body's physical, emotional, neurological and
+              energetic history.
+            </p>
+            <p className="text-lg text-foreground/85 max-w-3xl mx-auto leading-relaxed mt-5">
+              AreekeerA<sup>®</sup> is one of the foundational bodies of work
+              within The Temple. Members encounter it most directly through
+              the Protocol Builder, guided creative visualisations,
+              meditations, somatic and energetic practices, reflective
+              processes, and Julie and Tash's teaching.
+            </p>
+            <p className="text-base text-foreground/80 max-w-3xl mx-auto leading-relaxed mt-5 italic">
+              AreekeerA<sup>®</sup> was channelled and developed by Julie
+              Lewin through more than forty years of practice and client work.
+              Julie has appeared twice on the television program The
+              Extraordinary, and her guided meditations have received more
+              than 1.1 million listens on Insight Timer.
             </p>
           </div>
 
@@ -390,46 +403,43 @@ const Membership = () => {
                   A different way of listening to the body
                 </h3>
                 <p className="text-foreground/85 leading-relaxed">
-                  Most wellness content is delivered as material to consume.
-                  The Method is different: it is a way of relating to your own
-                  physiology, emotions and identity so that what you already
-                  carry — memory, protection, adaptation — can be met, softened
-                  and re-organised. Practices are chosen to meet your capacity,
-                  not to override it.
+                  Rather than approaching a symptom in isolation, AreekeerA<sup>®</sup>{" "}
+                  explores how trauma, stress, unresolved emotional
+                  experiences and long-held protective responses may be
+                  reflected through the body and nervous system.
                 </p>
-              </div>
-              <div>
-                <h3 className="font-serif text-2xl text-foreground mb-2">
-                  Symptoms as messages, not problems to override
-                </h3>
-                <p className="text-foreground/85 leading-relaxed">
-                  The Method treats symptoms — physical, mental, emotional and
-                  energetic — as communication from a system that has adapted
-                  to what it lived through. Rather than pushing symptoms away,
-                  it works with grounding, processing and integration in that
-                  order, so the body is not asked to do more than it can hold
-                  in a given moment.
+                <p className="text-foreground/85 leading-relaxed mt-4">
+                  The Method does not ask the system to push harder than it
+                  can safely hold. Practices are approached according to
+                  present severity, available capacity and safety — beginning
+                  with grounding and stabilisation before moving through
+                  processing and integration.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {[
               {
+                icon: <Sparkles className="w-5 h-5" />,
+                title: "The body is communicative",
+                body: "The body is approached as an intelligent system whose symptoms and patterns can be explored within the wider context of a person's lived experience.",
+              },
+              {
                 icon: <HeartPulse className="w-5 h-5" />,
-                title: "Trauma-informed by design",
-                body: "Severity, capacity and safety are considered before intensity. When the system is under strain, the Method prioritises grounding and stabilisation — never force, never bypass.",
+                title: "Safety before intensity",
+                body: "When the system is under strain, AreekeerA® prioritises grounding and stabilisation. The intention is to work gently, without force or bypassing.",
               },
               {
                 icon: <Layers className="w-5 h-5" />,
-                title: "Body, identity and energy together",
-                body: "It works across physical, mental, emotional and energetic layers as one system, and includes the identity and protective patterns that shape how healing is received.",
+                title: "Body, nervous system and energy",
+                body: "The Method considers physical experience alongside emotional, neurological, spiritual and energetic patterns rather than treating each as entirely separate.",
               },
               {
                 icon: <Compass className="w-5 h-5" />,
                 title: "Grounding → processing → integration",
-                body: "Every practice honours a simple sequence: settle the nervous system first, meet what surfaces gently, and give the body time to integrate before moving on.",
+                body: "Practices follow a considered sequence: create sufficient grounding, meet what is present within available capacity, and allow time for integration.",
               },
             ].map((p) => (
               <div
@@ -451,28 +461,20 @@ const Membership = () => {
 
           <div className="rounded-2xl border border-border/60 bg-card/40 p-6 md:p-8">
             <h3 className="font-serif text-xl md:text-2xl text-foreground mb-4 text-center">
-              How members experience the Method inside The Temple
+              How AreekeerA<sup>®</sup> lives inside The Temple
             </h3>
-            <p className="text-foreground/80 leading-relaxed max-w-3xl mx-auto text-center mb-6">
-              The Method is not a single lesson. It is the through-line of the
-              whole environment. You meet it in different forms depending on
-              what you need in the moment.
+            <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto text-center">
+              The Temple is larger than any one method or tool. It contains
+              card decks, courses, meditations, healing templates, journaling
+              practices and live experiences that offer different ways to
+              reflect, learn and engage.
             </p>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm text-foreground/85">
-              {[
-                "AreekeerA® Protocol Builder — a personalised, symptom-informed sequence",
-                "Guided meditations & energy hygiene practices",
-                "Courses & learning journeys through Remembrance, Devotion and Communion",
-                "Oracle card decks and Sacred Spreads for reflection",
-                "Healing templates, journal prompts and nervous-system tools",
-                "Live gatherings with Julie & Tash each month",
-              ].map((line) => (
-                <div key={line} className="flex gap-2">
-                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span>{line}</span>
-                </div>
-              ))}
-            </div>
+            <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto text-center mt-4">
+              AreekeerA<sup>®</sup> is expressed most directly through the
+              Protocol Builder and the practices it draws together. The
+              Temple's other resources may be used alongside that work as
+              complementary paths of reflection, remembrance and sustainment.
+            </p>
           </div>
         </div>
       </section>
@@ -484,37 +486,40 @@ const Membership = () => {
             <div className="inline-flex items-center gap-2 text-primary mb-3">
               <Sparkles className="w-4 h-4" />
               <span className="uppercase text-xs tracking-[0.2em]">
-                One expression of the Method
+                One practical expression of the Method
               </span>
             </div>
             <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
               The AreekeerA<sup>®</sup> Protocol Builder
             </h2>
             <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto">
-              The Protocol Builder is one practical application of AreekeerA<sup>®</sup> The
-              Method — not the whole Method. You share what you are
-              experiencing across physical, mental, emotional and energetic
-              domains, along with relevant context and the time you have. The
-              Builder then assembles a personalised sequence of practices
-              already inside The Temple — meditations, somatic tools, rituals
-              and reflective processes — sequenced through the Method's
-              grounding → processing → integration flow.
+              The Protocol Builder is one practical application of AreekeerA<sup>®</sup>{" "}
+              The Method — not the whole Method.
+            </p>
+            <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto mt-4">
+              You share what you are presently experiencing across the
+              Builder's physical, mental, emotional and spiritual domains,
+              together with severity, your goals and the time you have
+              available. The Builder then assembles a personalised sequence
+              from existing Temple practices, following the grounding →
+              processing → integration flow and applying trauma-informed
+              safety guardrails.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                title: "You describe what's present",
-                body: "Symptoms, severity, and what you have capacity for — held with trauma-informed safety guardrails.",
+                title: "Describe what is present",
+                body: "Share your symptoms, their severity, your goals and the time you have. The Builder uses this information to understand your submitted state; it does not diagnose its medical cause.",
               },
               {
-                title: "The Builder assembles a protocol",
-                body: "A sequence of existing Temple practices, chosen to match your submitted state and the time you have.",
+                title: "Receive a suggested protocol",
+                body: "The Builder assembles a sequence of relevant Temple practices, such as meditations, visualisations, somatic tools, rituals and reflective processes.",
               },
               {
-                title: "You practise, at your own pace",
-                body: "Save the protocol, return to it, adjust as your capacity changes. Nothing is prescribed; everything is offered.",
+                title: "Practise at your own pace",
+                body: "Save your protocol, return to it and adjust your engagement as your capacity changes. The protocol is an educational, self-directed suggestion — not a medical prescription.",
               },
             ].map((s, i) => (
               <div
@@ -536,12 +541,12 @@ const Membership = () => {
 
           <div className="max-w-3xl mx-auto mt-10 rounded-xl border border-border/60 bg-background/60 p-5">
             <p className="text-sm text-muted-foreground leading-relaxed text-center">
-              The Protocol Builder does not diagnose conditions, determine a
-              medical cause, or replace professional care. It offers
-              educational, self-directed practice suggestions drawn from the
-              Temple's own library, held within the Method's safety
-              guardrails. If you are in crisis or need medical attention,
-              please contact a qualified healthcare professional.
+              The AreekeerA<sup>®</sup> Protocol Builder does not diagnose
+              conditions, determine medical causes, prescribe treatment or
+              replace professional care. It offers educational and
+              self-directed practice suggestions from The Temple's resource
+              library. Seek qualified professional assistance for medical
+              concerns, emergencies or crises.
             </p>
           </div>
         </div>
@@ -789,9 +794,11 @@ const Membership = () => {
                 system can return to safety, repair, and resilience.
               </p>
               <p className="text-foreground/90 leading-relaxed">
-                Julie's AreekeerA® Modality was channelled through decades of
-                clinical practice and shared with thousands of listeners on
-                Insight Timer and beyond.
+                Julie channelled and developed the AreekeerA<sup>®</sup>{" "}
+                Modality through more than forty years of practice and client
+                work. She has appeared twice on the television program The
+                Extraordinary, and her guided meditations have received more
+                than 1.1 million listens on Insight Timer.
               </p>
             </div>
             <div>
