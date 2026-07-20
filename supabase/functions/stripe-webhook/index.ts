@@ -2,9 +2,22 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-  apiVersion: "2023-10-16",
-});
+// Dual-secret Stripe clients. Live is the default (used by legacy helpers
+// like affiliate lookups). Test is used only when a webhook payload
+// verifies against the test signing secret.
+const STRIPE_LIVE_KEY = Deno.env.get("STRIPE_SECRET_KEY") || "";
+const STRIPE_TEST_KEY = Deno.env.get("STRIPE_SECRET_KEY_TEST") || "";
+const STRIPE_LIVE_WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") || "";
+const STRIPE_TEST_WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET_TEST") || "";
+
+const stripeLive = new Stripe(STRIPE_LIVE_KEY, { apiVersion: "2023-10-16" });
+const stripeTest = STRIPE_TEST_KEY
+  ? new Stripe(STRIPE_TEST_KEY, { apiVersion: "2023-10-16" })
+  : null;
+// Default alias used by legacy affiliate helpers (live-only by policy).
+const stripe = stripeLive;
+
+type StripeEnv = "test" | "live";
 
 const supabaseAdmin = createClient(
   Deno.env.get("SUPABASE_URL") ?? "",
@@ -20,84 +33,120 @@ const planToTier: Record<string, string> = {
 
 serve(async (req) => {
   const signature = req.headers.get("stripe-signature");
-  const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
-
-  if (!signature || !webhookSecret) {
+  if (!signature) {
     console.error("Missing signature or webhook secret");
     return new Response("Missing signature", { status: 400 });
   }
 
   let event: Stripe.Event;
+  let stripeEnv: StripeEnv;
+  let stripeClient: Stripe;
+  const body = await req.text();
 
+  // Try LIVE secret first, then TEST. The environment is *derived* from
+  // which signing secret validates the payload — never from client input.
   try {
-    const body = await req.text();
-    // In the Edge runtime, Stripe's webhook verification must use the async variant
-    // because WebCrypto providers (SubtleCrypto) cannot be used synchronously.
-    event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
-    console.log("Webhook event received:", event.type);
-  } catch (err: unknown) {
-    const errMessage = err instanceof Error ? err.message : "Unknown error";
-    console.error("Webhook signature verification failed:", errMessage);
-    return new Response(`Webhook Error: ${errMessage}`, { status: 400 });
+    if (STRIPE_LIVE_WEBHOOK_SECRET) {
+      event = await stripeLive.webhooks.constructEventAsync(
+        body, signature, STRIPE_LIVE_WEBHOOK_SECRET
+      );
+      stripeEnv = "live";
+      stripeClient = stripeLive;
+    } else {
+      throw new Error("no live secret");
+    }
+  } catch (_liveErr) {
+    try {
+      if (!STRIPE_TEST_WEBHOOK_SECRET || !stripeTest) throw _liveErr;
+      event = await stripeTest.webhooks.constructEventAsync(
+        body, signature, STRIPE_TEST_WEBHOOK_SECRET
+      );
+      stripeEnv = "test";
+      stripeClient = stripeTest;
+    } catch (err: unknown) {
+      const errMessage = err instanceof Error ? err.message : "Unknown error";
+      console.error("Webhook signature verification failed:", errMessage);
+      return new Response(`Webhook Error: ${errMessage}`, { status: 400 });
+    }
+  }
+  console.log(`Webhook event received (${stripeEnv}):`, event.type, event.id);
+
+  // ---- Idempotency lifecycle: reserve event row ------------------
+  const eventCreatedAt = new Date(event.created * 1000).toISOString();
+  const { data: reserveStatus, error: reserveErr } = await supabaseAdmin.rpc(
+    "stripe_webhook_reserve_event",
+    {
+      _event_id: event.id,
+      _event_type: event.type,
+      _stripe_environment: stripeEnv,
+      _event_created_at: eventCreatedAt,
+    }
+  );
+  if (reserveErr) {
+    console.error("reserve_event failed:", reserveErr);
+    return new Response("reserve failed", { status: 500 });
+  }
+  if (reserveStatus === "completed") {
+    console.log("Duplicate completed event, skipping:", event.id);
+    return new Response(JSON.stringify({ received: true, duplicate: true }), {
+      headers: { "Content-Type": "application/json" },
+      status: 200,
+    });
   }
 
   try {
-    // ---- Idempotency ledger --------------------------------------
-    // If we have already recorded this event id, short-circuit.
-    const { data: existing } = await supabaseAdmin
-      .from("stripe_webhook_events")
-      .select("event_id")
-      .eq("event_id", event.id)
-      .maybeSingle();
-    if (existing) {
-      console.log("Duplicate event, skipping:", event.id);
-      return new Response(JSON.stringify({ received: true, duplicate: true }), {
-        headers: { "Content-Type": "application/json" },
-        status: 200,
-      });
-    }
-
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
         console.log("Checkout completed:", session.id);
         
         if (session.mode === "subscription" && session.subscription) {
-          // Retrieve full subscription details
-          const subscription = await stripe.subscriptions.retrieve(
+          // Canonical state retrieval uses the matching env's Stripe key.
+          const subscription = await stripeClient.subscriptions.retrieve(
             session.subscription as string
           );
-          await handleSubscriptionChange(subscription, "created");
+          await handleSubscriptionChange(subscription, "created", stripeEnv, event.created);
         }
         break;
       }
 
       case "customer.subscription.created":
       case "customer.subscription.updated": {
-        const subscription = event.data.object as Stripe.Subscription;
-        await handleSubscriptionChange(subscription, event.type.includes("created") ? "created" : "updated");
+        // Re-retrieve to guard against out-of-order deliveries.
+        const raw = event.data.object as Stripe.Subscription;
+        const subscription = await stripeClient.subscriptions.retrieve(raw.id);
+        await handleSubscriptionChange(
+          subscription,
+          event.type.includes("created") ? "created" : "updated",
+          stripeEnv,
+          event.created,
+        );
         if (event.type === "customer.subscription.created") {
-          await handleAffiliateOnSubscription(subscription);
+          if (stripeEnv === "live") {
+            await handleAffiliateOnSubscription(subscription);
+          }
         }
         break;
       }
 
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription;
-        await handleSubscriptionCanceled(subscription);
+        await handleSubscriptionCanceled(subscription, stripeEnv, event.created);
         break;
       }
 
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as Stripe.Invoice;
-        await handleInvoicePaid(invoice);
-        await handleAffiliateOnInvoice(invoice);
+        await handleInvoicePaid(invoice, stripeEnv);
+        if (stripeEnv === "live") {
+          await handleAffiliateOnInvoice(invoice);
+        }
         break;
       }
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        await handleInvoiceFailed(invoice);
+        await handleInvoiceFailed(invoice, stripeEnv);
         break;
       }
 
@@ -105,11 +154,10 @@ serve(async (req) => {
         console.log("Unhandled event type:", event.type);
     }
 
-    // Record processing so retries are idempotent.
-    await supabaseAdmin.from("stripe_webhook_events").insert({
-      event_id: event.id,
-      event_type: event.type,
-      event_created_at: new Date(event.created * 1000).toISOString(),
+    // Mark lifecycle row complete.
+    await supabaseAdmin.rpc("stripe_webhook_complete_event", {
+      _event_id: event.id,
+      _stripe_environment: stripeEnv,
     });
 
     return new Response(JSON.stringify({ received: true }), {
@@ -119,6 +167,11 @@ serve(async (req) => {
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     console.error("Error processing webhook:", errorMessage);
+    await supabaseAdmin.rpc("stripe_webhook_fail_event", {
+      _event_id: event.id,
+      _stripe_environment: stripeEnv,
+      _error: errorMessage,
+    });
     return new Response(
       JSON.stringify({ error: errorMessage }),
       { status: 500 }
@@ -128,7 +181,9 @@ serve(async (req) => {
 
 async function handleSubscriptionChange(
   subscription: Stripe.Subscription,
-  action: "created" | "updated"
+  action: "created" | "updated",
+  stripeEnv: StripeEnv,
+  eventCreatedUnix: number,
 ) {
   const userId = subscription.metadata?.supabase_user_id;
   const planCode = subscription.metadata?.plan_code;
@@ -173,22 +228,30 @@ async function handleSubscriptionChange(
 
   console.log(`Updating subscription for user ${userIdToUse}: tier=${tierCode}, status=${status}, cadence=${cadence}`);
 
-  // Upsert subscription record
-  const { error: subError } = await supabaseAdmin.from("subscriptions").upsert({
-    id: subscription.id,
-    profile_id: userIdToUse,
-    plan_code: planCode || "seeker",
-    price_id: priceId,
-    provider: "stripe",
-    provider_subscription_id: subscription.id,
-    status: status,
-    current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-    current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-    trial_end: subscription.trial_end 
-      ? new Date(subscription.trial_end * 1000).toISOString() 
-      : null,
-    cancel_at_period_end: subscription.cancel_at_period_end,
-  }, { onConflict: "id" });
+  // Upsert subscription record (legacy path). TEST-env events must NOT
+  // touch subscription rows tied to LIVE ids — the canonical
+  // ingest_stripe_subscription RPC below enforces environment-mismatch
+  // rejection, so this legacy upsert is skipped for test.
+  let subError: unknown = null;
+  if (stripeEnv === "live") {
+    const { error } = await supabaseAdmin.from("subscriptions").upsert({
+      id: subscription.id,
+      profile_id: userIdToUse,
+      plan_code: planCode || "seeker",
+      price_id: priceId,
+      provider: "stripe",
+      provider_subscription_id: subscription.id,
+      status: status,
+      current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+      current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+      trial_end: subscription.trial_end
+        ? new Date(subscription.trial_end * 1000).toISOString()
+        : null,
+      cancel_at_period_end: subscription.cancel_at_period_end,
+      stripe_environment: "live",
+    }, { onConflict: "id" });
+    subError = error;
+  }
 
   if (subError) {
     console.error("Error upserting subscription:", subError);
@@ -201,29 +264,34 @@ async function handleSubscriptionChange(
     .eq("id", userIdToUse)
     .single();
 
-  // Update profile with membership info
-  const { error: profileError } = await supabaseAdmin
-    .from("profiles")
-    .update({
-      member_tier_code: tierCode,
-      plan_cadence: cadence,
-      subscription_status: status,
-      current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-    })
-    .eq("id", userIdToUse);
-
-  if (profileError) {
-    console.error("Error updating profile:", profileError);
+  // Update profile with membership info — LIVE only. Under the current
+  // kill-switch-OFF regime, profiles.subscription_status drives access,
+  // so test events MUST NOT write here.
+  if (stripeEnv === "live") {
+    const { error: profileError } = await supabaseAdmin
+      .from("profiles")
+      .update({
+        member_tier_code: tierCode,
+        plan_cadence: cadence,
+        subscription_status: status,
+        current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+      })
+      .eq("id", userIdToUse);
+    if (profileError) {
+      console.error("Error updating profile:", profileError);
+    }
   }
 
-  // Record audit event
-  await supabaseAdmin.from("membership_audit").insert({
-    user_id: userIdToUse,
-    old_tier_code: oldProfile?.member_tier_code,
-    new_tier_code: tierCode,
-    source: "stripe",
-    reason: `Subscription ${action}: ${subscription.id}`,
-  });
+  // Record audit event (live only)
+  if (stripeEnv === "live") {
+    await supabaseAdmin.from("membership_audit").insert({
+      user_id: userIdToUse,
+      old_tier_code: oldProfile?.member_tier_code,
+      new_tier_code: tierCode,
+      source: "stripe",
+      reason: `Subscription ${action}: ${subscription.id}`,
+    });
+  }
 
   // Record subscription event
   await supabaseAdmin.from("subscription_events").insert({
@@ -235,10 +303,9 @@ async function handleSubscriptionChange(
   console.log(`Successfully processed subscription ${action} for user ${userIdToUse}`);
 
   // ---------------------------------------------------------------
-  // Phase 3: additive new-entitlement-model ingestion.
-  // Writes entitlements + founding_members records atomically.
-  // Kill switch stays OFF, so this data does not yet drive access;
-  // it is being maintained so it is correct on flip day.
+  // Phase 3.1: environment-scoped ingestion. TEST rows are tagged
+  // and are ignored by is_active_member(). LIVE rows drive future
+  // entitlement flip.
   // ---------------------------------------------------------------
   try {
     const priceIdForIngest = subscription.items.data[0]?.price?.id ?? null;
@@ -259,7 +326,8 @@ async function handleSubscriptionChange(
         _canceled_at: subscription.canceled_at
           ? new Date(subscription.canceled_at * 1000).toISOString()
           : null,
-        _event_created_at: new Date().toISOString(),
+        _event_created_at: new Date(eventCreatedUnix * 1000).toISOString(),
+        _stripe_environment: stripeEnv,
       }
     );
     if (ingestError) console.error("ingest_stripe_subscription error:", ingestError);
@@ -268,7 +336,11 @@ async function handleSubscriptionChange(
   }
 }
 
-async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
+async function handleSubscriptionCanceled(
+  subscription: Stripe.Subscription,
+  stripeEnv: StripeEnv,
+  eventCreatedUnix: number,
+) {
   const userIdToUse = await getUserIdFromSubscription(subscription);
   
   if (!userIdToUse) {
@@ -283,36 +355,38 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
     .eq("id", userIdToUse)
     .single();
 
-  // Update subscription status
-  await supabaseAdmin
-    .from("subscriptions")
-    .update({
-      status: "canceled",
-      canceled_at: new Date().toISOString(),
-    })
-    .eq("id", subscription.id);
+  if (stripeEnv === "live") {
+    // Update subscription status
+    await supabaseAdmin
+      .from("subscriptions")
+      .update({
+        status: "canceled",
+        canceled_at: new Date().toISOString(),
+      })
+      .eq("id", subscription.id);
 
-  // Remove membership from profile
-  await supabaseAdmin
-    .from("profiles")
-    .update({
-      member_tier_code: null,
-      subscription_status: "canceled",
-    })
-    .eq("id", userIdToUse);
+    // Remove membership from profile (drives legacy access)
+    await supabaseAdmin
+      .from("profiles")
+      .update({
+        member_tier_code: null,
+        subscription_status: "canceled",
+      })
+      .eq("id", userIdToUse);
 
-  // Record audit event
-  await supabaseAdmin.from("membership_audit").insert({
-    user_id: userIdToUse,
-    old_tier_code: oldProfile?.member_tier_code,
-    new_tier_code: null,
-    source: "stripe",
-    reason: `Subscription canceled: ${subscription.id}`,
-  });
+    // Record audit event
+    await supabaseAdmin.from("membership_audit").insert({
+      user_id: userIdToUse,
+      old_tier_code: oldProfile?.member_tier_code,
+      new_tier_code: null,
+      source: "stripe",
+      reason: `Subscription canceled: ${subscription.id}`,
+    });
+  }
 
   console.log(`Subscription canceled for user ${userIdToUse}`);
 
-  // Phase 3 additive: forfeit Founder price + close entitlement.
+  // Phase 3.1: env-scoped forfeit + entitlement close.
   try {
     const priceIdForIngest = subscription.items.data[0]?.price?.id ?? null;
     await supabaseAdmin.rpc("ingest_stripe_subscription", {
@@ -328,15 +402,17 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
         : null,
       _cancel_at_period_end: subscription.cancel_at_period_end ?? false,
       _canceled_at: new Date().toISOString(),
-      _event_created_at: new Date().toISOString(),
+      _event_created_at: new Date(eventCreatedUnix * 1000).toISOString(),
+      _stripe_environment: stripeEnv,
     });
   } catch (e) {
     console.error("ingest terminal error:", e);
   }
 }
 
-async function handleInvoicePaid(invoice: Stripe.Invoice) {
+async function handleInvoicePaid(invoice: Stripe.Invoice, stripeEnv: StripeEnv) {
   if (!invoice.subscription) return;
+  if (stripeEnv !== "live") return; // Test invoices are not mirrored.
 
   const userIdToUse = await getUserIdFromCustomer(invoice.customer as string);
   if (!userIdToUse) return;
@@ -376,8 +452,9 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
   console.log(`Invoice paid for user ${userIdToUse}: ${invoice.id}`);
 }
 
-async function handleInvoiceFailed(invoice: Stripe.Invoice) {
+async function handleInvoiceFailed(invoice: Stripe.Invoice, stripeEnv: StripeEnv) {
   if (!invoice.subscription) return;
+  if (stripeEnv !== "live") return; // Test invoices are not mirrored.
 
   const userIdToUse = await getUserIdFromCustomer(invoice.customer as string);
   if (!userIdToUse) return;
