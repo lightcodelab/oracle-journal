@@ -252,25 +252,6 @@ const Membership = () => {
               becoming — offered by Julie &amp; Tash Lewin.
             </p>
 
-            {state === "pre_launch" && (
-              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-2 text-sm text-foreground/90">
-                <CalendarClock className="w-4 h-4 text-primary" />
-                Doors open {openingDate}
-              </div>
-            )}
-            {state === "founding" && (
-              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-4 py-2 text-sm text-foreground/90">
-                <Sparkles className="w-4 h-4 text-primary" />
-                Founding Membership open — A${priceAud} AUD / month
-              </div>
-            )}
-            {state === "standard" && (
-              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-4 py-2 text-sm text-foreground/80">
-                <DoorOpen className="w-4 h-4 text-primary" />
-                Membership open — A${priceAud} AUD / month
-              </div>
-            )}
-
             <div className="flex flex-wrap justify-center gap-3">
               <HeroCta />
               {!user && (
@@ -378,8 +359,6 @@ const Membership = () => {
               processes, and Julie and Tash's teaching.
             </p>
             <p className="text-base text-foreground/80 max-w-3xl mx-auto leading-relaxed mt-5 italic">
-              AreekeerA<sup>®</sup> was channelled and developed by Julie
-              Lewin through more than forty years of practice and client work.
               Julie has appeared twice on the television program The
               Extraordinary, and her guided meditations have received more
               than 1.1 million listens on Insight Timer.
@@ -714,9 +693,13 @@ const Membership = () => {
                 title: "Personalised Journal Box",
                 price: "A$200 AUD / month",
                 items: [
-                  "Everything in the Journal Box",
+                  "Fourteen double-sided journal pages",
+                  "Month one: handmade hard front and back cover with binder rings; later months arrive as pages",
+                  "One double-sided artwork unique to that month's archetype",
+                  "Three random stickers from the monthly artwork",
+                  "A letter from Julie & Tash",
                   "A personal three-card reading based on your submitted question",
-                  "Three stickers for each personal reading card",
+                  "Three stickers for each card in their personal reading",
                   "App access for the month paid",
                 ],
               },
