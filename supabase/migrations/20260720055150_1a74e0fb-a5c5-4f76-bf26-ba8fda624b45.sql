@@ -1,0 +1,1 @@
+UPDATE public.app_settings SET value = to_jsonb(15) WHERE key = 'failed_payment_grace_days';
