@@ -35,7 +35,12 @@ interface MembershipOffer {
   server_time: string;
 }
 
-const SHOPIFY_URL = "https://thetemple.lightcodelab.com";
+// External Shopify storefront URL is not yet configured. When the real
+// URL is available, set it here (e.g. https://<store>.myshopify.com or
+// a custom shop domain). While null, the "Visit the Temple Shop" link is
+// disabled and clearly marked as coming soon — we do not link back to
+// the app itself.
+const SHOPIFY_URL: string | null = null;
 
 const formatAudDate = (iso: string | null) => {
   if (!iso) return "";
@@ -145,11 +150,20 @@ const Membership = () => {
 
   const HeroCta = () => {
     if (state === "pre_launch") {
+      // Pre-launch: intentional launch-state chip (informational, not a
+      // disabled control). Sign In remains available alongside via the
+      // parent layout.
       return (
-        <Button size="lg" variant="outline" disabled>
-          <CalendarClock className="w-4 h-4 mr-2" />
-          Opening {openingDate}
-        </Button>
+        <div
+          className="inline-flex items-center gap-2 rounded-full border border-primary/50 bg-primary/10 px-5 py-2.5 text-sm md:text-base text-foreground"
+          role="status"
+          aria-label={`Doors open ${openingDate}`}
+        >
+          <CalendarClock className="w-4 h-4 text-primary" aria-hidden />
+          <span className="font-serif tracking-wide">
+            Doors open {openingDate}
+          </span>
+        </div>
       );
     }
     const label =
