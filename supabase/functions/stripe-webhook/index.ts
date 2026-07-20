@@ -469,8 +469,26 @@ async function handleSubscriptionCanceled(
   }
 }
 
-async function handleInvoicePaid(invoice: Stripe.Invoice, stripeEnv: StripeEnv) {
+async function handleInvoicePaid(
+  invoice: Stripe.Invoice,
+  stripeEnv: StripeEnv,
+  stripeClient: Stripe,
+  eventCreatedUnix: number,
+) {
   if (!invoice.subscription) return;
+
+  // Re-retrieve canonical subscription state and drive the same recovery
+  // path used by customer.subscription.updated. Applies to both
+  // invoice.paid and invoice.payment_succeeded.
+  try {
+    const subscription = await stripeClient.subscriptions.retrieve(
+      invoice.subscription as string
+    );
+    await handleSubscriptionChange(subscription, "updated", stripeEnv, eventCreatedUnix);
+  } catch (e) {
+    console.error("invoice.paid canonical retrieve failed:", e);
+  }
+
   if (stripeEnv !== "live") return; // Test invoices are not mirrored.
 
   const userIdToUse = await getUserIdFromCustomer(invoice.customer as string);
@@ -511,14 +529,35 @@ async function handleInvoicePaid(invoice: Stripe.Invoice, stripeEnv: StripeEnv) 
   console.log(`Invoice paid for user ${userIdToUse}: ${invoice.id}`);
 }
 
-async function handleInvoiceFailed(invoice: Stripe.Invoice, stripeEnv: StripeEnv) {
+async function handleInvoiceFailed(
+  invoice: Stripe.Invoice,
+  stripeEnv: StripeEnv,
+  stripeClient: Stripe,
+  eventCreatedUnix: number,
+) {
   if (!invoice.subscription) return;
+
+  // Re-retrieve canonical subscription state. If Stripe has canonically
+  // canceled/unpaid the subscription, that state flows through
+  // handleSubscriptionChange → ingest_stripe_subscription, which revokes
+  // access rather than extending grace. Repeated payment_failed events
+  // are idempotent because ingest_stripe_subscription only sets the
+  // failed_payment grace deadline on the first transition into past_due
+  // (out-of-order protection uses _event_created_at).
+  try {
+    const subscription = await stripeClient.subscriptions.retrieve(
+      invoice.subscription as string
+    );
+    await handleSubscriptionChange(subscription, "updated", stripeEnv, eventCreatedUnix);
+  } catch (e) {
+    console.error("invoice.payment_failed canonical retrieve failed:", e);
+  }
+
   if (stripeEnv !== "live") return; // Test invoices are not mirrored.
 
   const userIdToUse = await getUserIdFromCustomer(invoice.customer as string);
   if (!userIdToUse) return;
 
-  // Record failed invoice
   await supabaseAdmin.from("invoices").upsert({
     id: invoice.id,
     profile_id: userIdToUse,
