@@ -14,10 +14,14 @@ import {
   Mail,
   BookHeart,
   CalendarClock,
+  HeartPulse,
+  Layers,
+  Compass,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import templeBanner from "@/assets/temple-banner.png";
 import guidesPhoto from "@/assets/julie-tash-guides.jpg";
+import areekeeraThumbnail from "@/assets/areekeera-thumbnail.png.asset.json";
 import ProfileDropdown from "@/components/ProfileDropdown";
 
 type OfferState = "pre_launch" | "founding" | "standard";
@@ -336,6 +340,209 @@ const Membership = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AreekeerA® The Method — the philosophy beneath the Temple */}
+      <section className="relative py-24 px-4 overflow-hidden">
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-primary/10 via-background to-primary/5"
+        />
+        <div className="relative max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 text-primary mb-4">
+              <Sparkles className="w-4 h-4" />
+              <span className="uppercase text-xs tracking-[0.25em]">
+                The philosophy beneath The Temple
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-serif mb-5 text-foreground leading-tight">
+              AreekeerA<sup className="text-xl align-super">®</sup> The Method
+            </h2>
+            <p className="text-lg text-foreground/85 max-w-3xl mx-auto leading-relaxed">
+              AreekeerA<sup>®</sup> The Method is Julie Lewin's trauma-informed
+              healing modality, channelled through more than four decades of
+              clinical practice. It listens to the body as an intelligent,
+              communicative system — treating symptoms as messages, survival
+              responses as wisdom, and identity as something the nervous system
+              is quietly organised around. It is the philosophy that shapes
+              every practice, deck, course and live gathering inside The
+              Temple.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-5 gap-10 items-center mb-16">
+            <div className="lg:col-span-2">
+              <div className="relative rounded-2xl overflow-hidden border border-primary/30 shadow-[0_20px_60px_-20px_hsl(var(--primary)/0.4)]">
+                <img
+                  src={areekeeraThumbnail.url}
+                  alt="AreekeerA® — Energy Medicine Codes"
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+              </div>
+            </div>
+            <div className="lg:col-span-3 space-y-6">
+              <div>
+                <h3 className="font-serif text-2xl text-foreground mb-2">
+                  A different way of listening to the body
+                </h3>
+                <p className="text-foreground/85 leading-relaxed">
+                  Most wellness content is delivered as material to consume.
+                  The Method is different: it is a way of relating to your own
+                  physiology, emotions and identity so that what you already
+                  carry — memory, protection, adaptation — can be met, softened
+                  and re-organised. Practices are chosen to meet your capacity,
+                  not to override it.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-serif text-2xl text-foreground mb-2">
+                  Symptoms as messages, not problems to override
+                </h3>
+                <p className="text-foreground/85 leading-relaxed">
+                  The Method treats symptoms — physical, mental, emotional and
+                  energetic — as communication from a system that has adapted
+                  to what it lived through. Rather than pushing symptoms away,
+                  it works with grounding, processing and integration in that
+                  order, so the body is not asked to do more than it can hold
+                  in a given moment.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-16">
+            {[
+              {
+                icon: <HeartPulse className="w-5 h-5" />,
+                title: "Trauma-informed by design",
+                body: "Severity, capacity and safety are considered before intensity. When the system is under strain, the Method prioritises grounding and stabilisation — never force, never bypass.",
+              },
+              {
+                icon: <Layers className="w-5 h-5" />,
+                title: "Body, identity and energy together",
+                body: "It works across physical, mental, emotional and energetic layers as one system, and includes the identity and protective patterns that shape how healing is received.",
+              },
+              {
+                icon: <Compass className="w-5 h-5" />,
+                title: "Grounding → processing → integration",
+                body: "Every practice honours a simple sequence: settle the nervous system first, meet what surfaces gently, and give the body time to integrate before moving on.",
+              },
+            ].map((p) => (
+              <div
+                key={p.title}
+                className="rounded-xl border border-primary/25 bg-card/50 p-6"
+              >
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/15 text-primary mb-4">
+                  {p.icon}
+                </div>
+                <h3 className="font-serif text-lg text-foreground mb-2">
+                  {p.title}
+                </h3>
+                <p className="text-sm text-foreground/80 leading-relaxed">
+                  {p.body}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-2xl border border-border/60 bg-card/40 p-6 md:p-8">
+            <h3 className="font-serif text-xl md:text-2xl text-foreground mb-4 text-center">
+              How members experience the Method inside The Temple
+            </h3>
+            <p className="text-foreground/80 leading-relaxed max-w-3xl mx-auto text-center mb-6">
+              The Method is not a single lesson. It is the through-line of the
+              whole environment. You meet it in different forms depending on
+              what you need in the moment.
+            </p>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm text-foreground/85">
+              {[
+                "AreekeerA® Protocol Builder — a personalised, symptom-informed sequence",
+                "Guided meditations & energy hygiene practices",
+                "Courses & learning journeys through Remembrance, Devotion and Communion",
+                "Oracle card decks and Sacred Spreads for reflection",
+                "Healing templates, journal prompts and nervous-system tools",
+                "Live gatherings with Julie & Tash each month",
+              ].map((line) => (
+                <div key={line} className="flex gap-2">
+                  <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span>{line}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How the Protocol Builder applies the Method */}
+      <section className="py-20 px-4 bg-muted/30">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 text-primary mb-3">
+              <Sparkles className="w-4 h-4" />
+              <span className="uppercase text-xs tracking-[0.2em]">
+                One expression of the Method
+              </span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
+              The AreekeerA<sup>®</sup> Protocol Builder
+            </h2>
+            <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto">
+              The Protocol Builder is one practical application of AreekeerA<sup>®</sup> The
+              Method — not the whole Method. You share what you are
+              experiencing across physical, mental, emotional and energetic
+              domains, along with relevant context and the time you have. The
+              Builder then assembles a personalised sequence of practices
+              already inside The Temple — meditations, somatic tools, rituals
+              and reflective processes — sequenced through the Method's
+              grounding → processing → integration flow.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                title: "You describe what's present",
+                body: "Symptoms, severity, and what you have capacity for — held with trauma-informed safety guardrails.",
+              },
+              {
+                title: "The Builder assembles a protocol",
+                body: "A sequence of existing Temple practices, chosen to match your submitted state and the time you have.",
+              },
+              {
+                title: "You practise, at your own pace",
+                body: "Save the protocol, return to it, adjust as your capacity changes. Nothing is prescribed; everything is offered.",
+              },
+            ].map((s, i) => (
+              <div
+                key={s.title}
+                className="rounded-xl border border-border/60 bg-card/40 p-6"
+              >
+                <div className="text-xs uppercase tracking-widest text-primary mb-2">
+                  Step {i + 1}
+                </div>
+                <h3 className="font-serif text-lg text-foreground mb-2">
+                  {s.title}
+                </h3>
+                <p className="text-sm text-foreground/80 leading-relaxed">
+                  {s.body}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="max-w-3xl mx-auto mt-10 rounded-xl border border-border/60 bg-background/60 p-5">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
+              The Protocol Builder does not diagnose conditions, determine a
+              medical cause, or replace professional care. It offers
+              educational, self-directed practice suggestions drawn from the
+              Temple's own library, held within the Method's safety
+              guardrails. If you are in crisis or need medical attention,
+              please contact a qualified healthcare professional.
+            </p>
           </div>
         </div>
       </section>
