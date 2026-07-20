@@ -4354,6 +4354,27 @@ export type Database = {
         }
         Relationships: []
       }
+      stripe_webhook_events: {
+        Row: {
+          event_created_at: string
+          event_id: string
+          event_type: string
+          processed_at: string
+        }
+        Insert: {
+          event_created_at: string
+          event_id: string
+          event_type: string
+          processed_at?: string
+        }
+        Update: {
+          event_created_at?: string
+          event_id?: string
+          event_type?: string
+          processed_at?: string
+        }
+        Relationships: []
+      }
       subscription_events: {
         Row: {
           error_message: string | null
@@ -5271,6 +5292,7 @@ export type Database = {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
       }
+      get_current_membership_offer: { Args: never; Returns: Json }
       get_deck_purchases_admin: {
         Args: never
         Returns: {
@@ -5284,6 +5306,10 @@ export type Database = {
         }[]
       }
       get_member_state: { Args: { _user_id: string }; Returns: Json }
+      get_stripe_price_id_for_current_offer: {
+        Args: { _mode: string }
+        Returns: Json
+      }
       get_user_entitlements: {
         Args: never
         Returns: {
@@ -5312,7 +5338,25 @@ export type Database = {
         }
         Returns: boolean
       }
+      ingest_stripe_subscription: {
+        Args: {
+          _cancel_at_period_end: boolean
+          _canceled_at: string
+          _current_period_end: string
+          _current_period_start: string
+          _event_created_at: string
+          _stripe_price_id: string
+          _stripe_status: string
+          _stripe_subscription_id: string
+          _user_id: string
+        }
+        Returns: Json
+      }
       is_active_member: { Args: { _user_id: string }; Returns: boolean }
+      mark_founder_price_lost: {
+        Args: { _reason: string; _user_id: string }
+        Returns: undefined
+      }
       recompute_profile_active_member: {
         Args: { _user_id: string }
         Returns: undefined
