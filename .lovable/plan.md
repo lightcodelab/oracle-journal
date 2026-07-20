@@ -1,80 +1,118 @@
 
-# AreekeerA® Sales-Page Provenance Audit (read-only)
+# Historical AreekeerA® sales-page recovery (read-only)
 
-No code, copy, database, billing or publishing changes were made. This report inspects the currently published section in `src/pages/Membership.tsx` (lines 347–548) against other in-repo sources.
+No code, copy, database or publishing changes. Repository history is available and was inspected via `git log/show` on all refs. This report is the deliverable — approve to close, or send follow-up direction.
 
-## Legend
+## 1. Relevant historical commits for `src/pages/Membership.tsx`
 
-- **DS** = Directly supported (same claim exists verbatim or near-verbatim elsewhere in repo)
-- **RP** = Reasonable paraphrase (source text present, wording changed but meaning preserved)
-- **INF** = Inferred (assembled from adjacent facts, not explicitly stated anywhere)
-- **NEW** = Newly invented in this Phase 2 pass with no prior in-repo source
-- **Confirm?** = Owner confirmation recommended
+The Phase 2 rewrite that replaced the tiered sales page with the single-membership homepage landed on **2026-07-20**. The immediately preceding version (still tiered, still containing the AreekeerA® Method section) is:
 
-## AreekeerA® The Method — section (Membership.tsx L347–478)
+- **`049c9e5` — 2026-03-01 05:03 UTC** — last commit touching `Membership.tsx` before the July 20 rewrite. This is the "previous sales page" the request is asking for.
+- Earlier same-shape versions on the tiered page: `ea625e2`, `cfe8263`, `4bfb594`, `c3e13c2`, `f3fb54f`, `272d502`, `c961241`, `d5cfd1c`, `6292b77`, `7022b73`, `53a409e`, `46e598c`, `4e5ccc9` (all 2026-03-01), and February 2026 predecessors back to `02eeb2c` (2026-02-02).
+- Phase 2 rewrite commits (2026-07-20): `46d5cb8` 09:44, `2ee128f` 09:44, `b3bf701` 09:45 (single-membership rewrite); `f3af457` 10:28, `d1730ec` 10:29 (Phase 2 remediation); `1e3ff50` 10:43, `a91104f` 10:44 (AreekeerA® Method section that Phase 2 introduced into the new page).
+- `-S` searches for `AreekeerA`, `Modality`, `Maelin` confirm no earlier deleted or renamed sales/landing/pricing component ever carried this copy. `Landing.tsx`, `Pricing.tsx`, `Home.tsx` never existed. All historical public sales copy lived in `src/pages/Membership.tsx`.
+- `Maelin` appears only in Edge Function / bot code and in `docs/DEPRECATED_MAELIN.md` — never on the public sales page.
 
-| # | Published claim | In-repo source | Supporting source text | Class | Confirm? |
-|---|---|---|---|---|---|
-| 1 | "AreekeerA® The Method is Julie Lewin's trauma-informed healing modality" | `src/pages/Membership.tsx` L792 (Julie bio, pre-existing); `supabase/functions/areekeera-bot/index.ts` L234 | "Julie's AreekeerA® Modality was channelled through decades of clinical practice"; "trauma-informed healing protocol guide" | RP | No — consistent with existing bio |
-| 2 | "channelled through more than four decades of clinical practice" | Julie bio L786 + L792 | L786: "over 40 years of experience working with the body as an intelligent, communicative system." L792: "channelled through decades of clinical practice" | RP (arithmetic: 40+ yrs ≈ four decades) | **Yes** — "clinical practice" wording carried forward from bio; see ambiguity note below |
-| 3 | "listens to the body as an intelligent, communicative system" | Julie bio L786–787 | "working with the body as an intelligent, communicative system" | DS | No |
-| 4 | "treating symptoms as messages" | No prior in-repo text uses this phrasing | — | NEW | **Yes** |
-| 5 | "survival responses as wisdom" | Julie bio L788: "release of long-held survival responses" | Original text frames survival responses as things to be *released*, not as "wisdom." Reframing them as "wisdom" is new. | INF/NEW | **Yes** |
-| 6 | "identity as something the nervous system is quietly organised around" | Tash bio L802–804: "works at the intersection of trauma, identity, and nervous system regulation, helping people understand how protective patterns and energetic contracts quietly shape health"; L808 "rewriting of identity at both psychological and energetic levels" | Bio links identity + nervous system, but does not state the nervous system is "organised around" identity. | INF | **Yes** |
-| 7 | "the philosophy that shapes every practice, deck, course and live gathering inside The Temple" | No source asserts the Method underlies every Temple artefact. Existing memory (`mem://features/areekeera-healing-protocol-system`) describes AreekeerA as the *protocol* system, not the through-line of every deck/course. | — | NEW | **Yes** |
-| 8 | "Practices are chosen to meet your capacity, not to override it" | `supabase/functions/areekeera-bot/index.ts` L251–253, L267–268 | "For higher severity symptoms, recommend lower intensity practices first"; "If severity is critical (8-10), prioritize grounding and stabilization practices" | RP | No |
-| 9 | "The Method treats symptoms — physical, mental, emotional and energetic — as communication" | `src/pages/AreekeeraBot.tsx` L27, L480: `'physical' \| 'mental' \| 'emotional' \| 'spiritual'` | Code enumerates four domains, but the fourth is **"spiritual"**, not **"energetic"**. | INF (partial mismatch) | **Yes** — domain label discrepancy |
-| 10 | "works with grounding, processing and integration in that order" | `supabase/functions/areekeera-bot/index.ts` L255, L259 | "Create protocols with 3-5 steps that flow logically (grounding → processing → integration)"; "Place them where they fit best in the protocol flow (grounding → processing → integration)" | DS | No |
-| 11 | "Trauma-informed by design" | Bot L250 "Be warm, empathetic, and trauma-informed"; AreekeeraBot L579 "Trauma-informed safety guardrails"; `mem://design/trauma-informed-safety-guardrails` | Multiple sources confirm trauma-informed framing at the system level. | DS | No |
-| 12 | "Severity, capacity and safety are considered before intensity" | Bot L251–253, L267–268 as above; `mem://…recommendation-engine` step 3 | Severity bands drive intensity gating; escalation → grounding only. "Capacity" as a named concept is not in the bot prompt, but appears in `useNervousAnchoring` and CTA copy elsewhere. | RP | No |
-| 13 | "When the system is under strain, the Method prioritises grounding and stabilisation — never force, never bypass" | Bot L222, L225, L230, L267; Tash bio L809 "without force or bypassing" | Direct match on "grounding and stabilization"; "never force, never bypass" mirrors Tash bio phrase "without force or bypassing." | DS | No |
-| 14 | "It works across physical, mental, emotional and energetic layers as one system" | AreekeeraBot L27/L480 domains as above (fourth is **spiritual**) | Same discrepancy as #9. | INF | **Yes** — domain label |
-| 15 | "and includes the identity and protective patterns that shape how healing is received" | Tash bio L802–804 "protective patterns and energetic contracts quietly shape health" | Bio speaks to shaping *health*, not "how healing is received." Close paraphrase. | RP | No |
-| 16 | "Every practice honours a simple sequence: settle the nervous system first, meet what surfaces gently, and give the body time to integrate before moving on" | Bot L255/L259 grounding→processing→integration | Sequence is confirmed; the narrative gloss ("settle… meet… integrate") is a new plain-language expansion. | RP | No |
-| 17 | Membership experience list: "AreekeerA® Protocol Builder — a personalised, symptom-informed sequence" | `src/pages/AreekeeraBot.tsx` intake UI; recommendation-engine memory | Feature exists and matches. | DS | No |
-| 18 | "Guided meditations & energy hygiene practices" | Bot resource `modality` includes `meditation`, `visualisation`, `ritual`, `somatic`, `process` (edge fn L282) | "Energy hygiene" as a category label is not present in code. | INF | **Yes** (minor) |
-| 19 | "Courses & learning journeys through Remembrance, Devotion and Communion" | Memory: Door of Remembrance, Devotion, Communion pages exist. | DS | DS | No |
-| 20 | "Oracle card decks and Sacred Spreads for reflection" | `DeckSelection.tsx`, `SacredSpreads.tsx` | DS | DS | No |
-| 21 | "Healing templates, journal prompts and nervous-system tools" | Journal + Transformation Tools (Nervous System Anchoring) exist | DS | DS | No |
-| 22 | "Live gatherings with Julie & Tash each month" | Membership.tsx L325 "At least one live class… each month" | DS | DS | No |
+Conclusion: `049c9e5` is the canonical "previous AreekeerA® sales-page copy". No other recoverable source exists.
 
-## Protocol Builder — section (Membership.tsx L480–548)
+## 2. Exact previous AreekeerA® sales copy (verbatim from `049c9e5:src/pages/Membership.tsx`)
 
-| # | Published claim | In-repo source | Supporting source text | Class | Confirm? |
-|---|---|---|---|---|---|
-| 23 | "one practical application of AreekeerA® The Method — not the whole Method" | No prior source frames the Builder as a subset of a larger Method. | — | NEW (framing decision this pass) | **Yes** |
-| 24 | "You share what you are experiencing across physical, mental, emotional and energetic domains" | AreekeeraBot L27/L480 domains (fourth = **spiritual**, not energetic) | Intake collects domain + severity, but 4th domain label differs. | INF | **Yes** — domain label |
-| 25 | "along with relevant context and the time you have" | AreekeeraBot intake collects `goals` and `sessionTimeMinutes` (edge fn L20) | "goals?: string; sessionTimeMinutes: number" | DS | No |
-| 26 | "assembles a personalised sequence of practices already inside The Temple — meditations, somatic tools, rituals and reflective processes" | Bot healing_resources modalities: `meditation \| visualisation \| ritual \| somatic \| process` (edge fn L282) | DS with modality list. | RP | No |
-| 27 | "sequenced through the Method's grounding → processing → integration flow" | Bot L255/L259 | DS | DS | No |
-| 28 | "Symptoms, severity, and what you have capacity for — held with trauma-informed safety guardrails" | AreekeeraBot intake + bot L222/L579; escalation memory | DS on symptoms/severity/guardrails. "Capacity" is a narrative addition (see #12). | RP | No |
-| 29 | Step 2: "sequence of existing Temple practices, chosen to match your submitted state and the time you have" | Recommendation-engine memory (rules-first + semantic + filter by entitlement); intake `sessionTimeMinutes` | DS | RP | No |
-| 30 | Step 3: "Save the protocol, return to it, adjust as your capacity changes. Nothing is prescribed; everything is offered." | Save/return supported by `MyProtocols.tsx`; "Nothing is prescribed; everything is offered" is a new sales-page framing. | Feature: DS. Wording: NEW. | RP + NEW phrasing | **Yes** (phrasing only) |
-| 31 | Disclaimer: "does not diagnose conditions, determine a medical cause, or replace professional care" | `mem://design/trauma-informed-safety-guardrails` "Not medical advice…"; AreekeeraBot L559 "This is a trauma-informed healing protocol guide designed to support your wellbeing journey." | RP | RP | No |
+### Section header (lines 195–213)
 
-## Focus items called out in the request
+> Introducing
+>
+> **The AreekeerA® Method**
+>
+> A revolutionary approach to understanding the energetic language of your body — developed over 40 years of clinical practice by Medical Intuitive Julie Lewin.
 
-- **"channelled through more than four decades of clinical practice"** — Derived from Julie bio "over 40 years of experience" (L786) + "channelled through decades of clinical practice" (L792). Two existing sources, combined. **Owner confirmation recommended on "clinical practice"** (see ambiguity note).
-- **"symptoms as messages"** — NEW phrase; no prior in-repo occurrence.
-- **"survival responses as wisdom"** — Original bio speaks of *releasing* long-held survival responses; reframing them as "wisdom" is new.
-- **Nervous system organised around identity** — INFERRED from Tash bio linking trauma, identity, and nervous system regulation; the specific "organised around" formulation is new.
-- **"grounding → processing → integration"** — DS. Exact sequence appears twice in `supabase/functions/areekeera-bot/index.ts` (L255, L259).
-- **Severity, capacity and safety before intensity** — RP. Severity-bands and intensity gating are explicit in the edge function; "capacity" is a narrative addition consistent with escalation rules.
-- **Physical, mental, emotional and energetic domains** — MISMATCH. The intake schema and UI use `physical | mental | emotional | spiritual` (AreekeeraBot L27, L480). The sales page substitutes "energetic" for "spiritual." **Owner confirmation required** on the intended public label.
-- **Trauma-informed by design** — DS across bot prompt, UI header, and memory.
-- **Every deck / course / practice / live gathering shaped by the Method** — NEW as a global claim. In-repo the Method (via the recommendation engine) governs the Protocol Builder specifically; there is no source stating the decks (Sacred Rewrite, Magic Not Logic, Sacred Spreads, TAoSH), Devotion courses, or live sessions are curricularly shaped by AreekeeraBot logic. **Owner confirmation required.**
-- **Protocol Builder — what it collects and how it sequences** — DS. Intake collects symptoms + severity per domain, `goals`, `sessionTimeMinutes`. Sequencing is rules-first with severity→intensity gating, must-include resources, condition priority boosts, and grounding→processing→integration ordering (`supabase/functions/areekeera-bot/index.ts` L143–265; `mem://architecture/areekeera-recommendation-engine`).
+### Three feature cards (lines 222–255)
 
-## "Clinical practice" — ambiguity flag (identification only, no legal determination)
+> **40+ Years Proven**
+> Trusted by thousands of clients worldwide
 
-The phrase "clinical practice" originates in the existing Julie bio at `src/pages/Membership.tsx` L792 and is carried forward into the new Method section at L366. In common Australian usage "clinical practice" often implies a regulated healthcare setting (e.g. AHPRA-registered practitioner, licensed clinic). Julie is described in the same bio as a "medical intuitive" (L786), a non-regulated modality. A reader could reasonably infer a regulated clinical qualification from "four decades of clinical practice" when combined with "medical intuitive" and "trauma-informed healing modality." Flagging for owner review; no change made.
+> **Guided Creative Visualisations**
+> A body-based healing modality that works with the energy blueprint beneath physical symptoms
 
-## Summary counts
+> **Immediate Tools**
+> Start shifting energy today
 
-- Directly supported (DS): 10
-- Reasonable paraphrase (RP): 11
-- Inferred (INF): 5
-- Newly invented (NEW): 5 (#4, #5 partial, #7, #23, #30 phrasing)
-- Owner confirmation recommended: 10 items (see "Confirm?" column)
+### Julie provenance paragraph (line 266)
 
-No files were modified. Awaiting your direction before any remediation.
+> For over 40 years, Julie Lewin has been a pioneer in Medical Intuition. Her AreekeerA® Modality was channelled through after appearing on the TV Show The Extraordinary twice to international acclaim. With over 1.1 million listens on Insight Timer and a lifetime of clinical practice, she has helped thousands move from chronic pain to extraordinary health. She is excited to finally make her whole body of work available to everyone. It is a paid app because reciprocation is required for true lasting healing to occur.
+
+### Protocol Builder references elsewhere on the same page (lines 345–350, 591)
+
+> Deepen your practice with personalized healing protocols and sacred rituals.
+> — Your symptoms automatically mapped to personalised protocols
+
+> Your AreekeerA® Healing Protocol Builder  *(feature row, tiers T2 and T3)*
+
+### Julie & Tash bios (lines 638, 641, 648, 651) — unchanged and still present in current page
+
+> **Julie Lewin** is a medical intuitive with over 40 years of experience working with the body as an intelligent, communicative system. Her work focuses on identifying how trauma, stress, and unresolved emotional patterns become stored in the physical body and nervous system — often long before symptoms appear.
+>
+> Rather than treating symptoms in isolation, Julie tracks chronic pain and illness patterns through time, using the AreekeerA® approach to read the body's energetic and neurological history. Her work supports the release of long-held survival responses so the system can return to safety, repair, and resilience.
+>
+> **Tash Lewin** works at the intersection of trauma, identity, and nervous system regulation. Her role within AreekeerA® focuses on helping people understand how subconscious beliefs, protective patterns, and energetic contracts form around unresolved trauma — and how these patterns quietly shape health, relationships, and life outcomes.
+>
+> Through structured, trauma-informed processes, Tash supports the rewriting of identity at both psychological and energetic levels, allowing new patterns of safety, capacity, and self-trust to emerge without force or bypassing.
+
+## 3. Original page structure and heading order
+
+```text
+Hero (tiered pricing)
+  ↓
+"AreekeerA Method" section
+  - Kicker: "Introducing"
+  - H2: "The AreekeerA® Method"
+  - Sub: "A revolutionary approach ... 40 years of clinical practice by Medical Intuitive Julie Lewin."
+  - 3-card grid: "40+ Years Proven" | "Guided Creative Visualisations" | "Immediate Tools"
+  - Julie provenance paragraph (Insight Timer, The Extraordinary, reciprocation)
+  ↓
+"Three Doors to Your Transformation"
+  - Door of Remembrance (feature bullets)
+  - Door of Devotion  (protocols, energy hygiene, healing templates)
+  - Door of Communion (live sessions, replays)
+  ↓
+Tier comparison table
+  - Seeker (T1) / Devotee (T2) / Initiate (T3)
+  - Row: "Your AreekeerA® Healing Protocol Builder" (T2, T3 only)
+  ↓
+"Your Guides"
+  - Julie bio (2 paragraphs)
+  - Tash bio (2 paragraphs)
+  ↓
+FAQ (billing / change plan / payment methods)
+```
+
+There was **no separate "Protocol Builder" explainer section** on the historical page — the Builder appeared only as a feature-comparison row and a single Devotion bullet ("symptoms automatically mapped to personalised protocols"). All narrative weight on AreekeerA® was carried by the Method section and the Guides bios.
+
+## 4. Historical statements now outdated
+
+| Historical claim | Outdated because |
+|---|---|
+| Three-tier model (Seeker/Devotee/Initiate) with Protocol Builder gated to T2/T3 | Phase 1 collapsed to a single membership; Protocol Builder is available to all active members. |
+| "Your symptoms automatically mapped to personalised protocols" (Devotion bullet) | Overstates automation; current Builder is intake-driven and safety-gated (severity/capacity/grounding). |
+| Tier-comparison table row "Your AreekeerA® Healing Protocol Builder — T2, T3" | Tier gating removed. |
+| "40+ Years Proven — Trusted by thousands of clients worldwide" as a headline claim | Retained in bios but no longer used as a hero-adjacent trust badge; social-proof claims currently require owner sign-off. |
+| Insight Timer "1.1 million listens" + "The Extraordinary" TV mention as a public sales claim | Currently not on the public homepage; retained only if owner reconfirms figures. |
+| "It is a paid app because reciprocation is required for true lasting healing to occur." | Superseded by Phase 2 single-membership framing and Founding-window messaging. |
+| "Guided Creative Visualisations — A body-based healing modality that works with the energy blueprint beneath physical symptoms" | Not currently used; the Method section now speaks in nervous-system/trauma-informed terms rather than "energy blueprint". |
+| FAQ: "Can I change my plan later? … upgrade or downgrade" | No plans to switch between; single membership. |
+
+`Maelin` never appeared on the public sales page in any recovered commit, so nothing to remove there.
+
+## 5. Historical explanations of AreekeerA® The Method that remain factually current
+
+- Julie Lewin as **Medical Intuitive with 40+ years of clinical practice** — still current (source of the "four decades of clinical practice" line in the new page). Same "clinical practice" ambiguity flagged in the prior provenance audit applies verbatim here.
+- **Body as an intelligent, communicative system** — current; carried straight into the new Method section.
+- **Trauma, stress, and unresolved emotional patterns stored in the body and nervous system before symptoms appear** — current.
+- **Reads the body's energetic and neurological history; supports release of long-held survival responses so the system returns to safety, repair, resilience** — current (this is the source paragraph for the new "survival responses" / "return to safety" framing).
+- **Tash's remit: trauma, identity, and nervous-system regulation; protective patterns / energetic contracts shape health** — current (source for the new "identity as something the nervous system is quietly organised around" paraphrase).
+- **Trauma-informed, no force, no bypassing** — current; matches the Edge Function guardrails.
+
+## 6. Recoverability statement
+
+Repository history **is available**. A recoverable older version of the AreekeerA® sales copy exists in commit `049c9e5` (2026-03-01) and its immediate predecessors. No separate deleted/renamed landing, pricing or sales component contained additional AreekeerA® copy — `Membership.tsx` has been the sole public sales-page host across all history. No further historical material to recover.
+
+No changes made. Awaiting direction on whether to fold any of the recovered copy (e.g. "energy blueprint beneath physical symptoms", Insight Timer / The Extraordinary provenance, "reciprocation" line) back into the current page.
