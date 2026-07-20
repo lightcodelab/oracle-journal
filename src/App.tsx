@@ -67,6 +67,7 @@ import AdminQuizEditor from "./pages/AdminQuizEditor";
 import AdminQuizAnalytics from "./pages/AdminQuizAnalytics";
 import QuizPlayer from "./pages/QuizPlayer";
 import OAuthConsent from "./pages/OAuthConsent";
+import AdminTestCheckout from "./pages/AdminTestCheckout";
 import { captureRefFromQueryString } from "@/lib/affiliateTracking";
 import { useEffect } from "react";
 const queryClient = new QueryClient();
@@ -146,6 +147,7 @@ const App = () => {
             <Route path="/admin/quizzes" element={<AdminQuizzes />} />
             <Route path="/admin/quizzes/:id" element={<AdminQuizEditor />} />
             <Route path="/admin/quizzes/:id/analytics" element={<AdminQuizAnalytics />} />
+            <Route path="/admin/test-checkout" element={<AdminTestCheckout />} />
             <Route path="/quiz/:slug" element={<QuizPlayer />} />
             <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
