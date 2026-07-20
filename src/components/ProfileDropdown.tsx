@@ -56,18 +56,30 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
   }, []);
 
   const handleSignOut = async () => {
-    // Use local scope so we always clear client-side tokens, even if the
-    // server-side session was already invalidated (avoids 403 session_not_found
-    // leaving the user stuck "signed in" locally).
-    const { error } = await supabase.auth.signOut({ scope: 'local' });
-    if (error) {
-      console.warn('signOut warning:', error.message);
+    const clearLocalAuthStorage = () => {
+      Object.keys(window.localStorage)
+        .filter((key) => key.startsWith('sb-') && key.endsWith('-auth-token'))
+        .forEach((key) => window.localStorage.removeItem(key));
+    };
+
+    try {
+      // Try the normal local sign-out first, but don't let a stale backend
+      // session prevent the browser from clearing its persisted auth state.
+      const { error } = await supabase.auth.signOut({ scope: 'local' });
+      if (error) {
+        console.warn('signOut warning:', error.message);
+      }
+    } catch (error) {
+      console.warn('signOut warning:', error instanceof Error ? error.message : error);
+    } finally {
+      clearLocalAuthStorage();
     }
+
     if (onSignOut) {
       onSignOut();
-    } else {
-      navigate('/auth');
     }
+
+    window.location.assign('/auth');
   };
 
   const menuItems = [
