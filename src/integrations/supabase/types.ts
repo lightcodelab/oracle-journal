@@ -354,6 +354,27 @@ export type Database = {
         }
         Relationships: []
       }
+      app_settings: {
+        Row: {
+          is_public: boolean
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          is_public?: boolean
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          is_public?: boolean
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       areekeera_protocol_steps: {
         Row: {
           completed_at: string | null
@@ -1724,6 +1745,51 @@ export type Database = {
         }
         Relationships: []
       }
+      entitlements: {
+        Row: {
+          created_at: string
+          ends_at: string | null
+          grace_until: string | null
+          id: string
+          metadata: Json
+          product_kind: string
+          source: string
+          source_ref: string | null
+          starts_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ends_at?: string | null
+          grace_until?: string | null
+          id?: string
+          metadata?: Json
+          product_kind?: string
+          source: string
+          source_ref?: string | null
+          starts_at?: string | null
+          status: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string | null
+          grace_until?: string | null
+          id?: string
+          metadata?: Json
+          product_kind?: string
+          source?: string
+          source_ref?: string | null
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       entry_categories: {
         Row: {
           added_at: string
@@ -1895,6 +1961,81 @@ export type Database = {
           id?: string
           status?: string
           title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      founder_price_audit: {
+        Row: {
+          action: string
+          actor: string | null
+          at: string
+          from_status: string | null
+          id: string
+          reason: string | null
+          to_status: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          actor?: string | null
+          at?: string
+          from_status?: string | null
+          id?: string
+          reason?: string | null
+          to_status?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          actor?: string | null
+          at?: string
+          from_status?: string | null
+          id?: string
+          reason?: string | null
+          to_status?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      founding_members: {
+        Row: {
+          created_at: string
+          founder_badge_awarded_at: string
+          founding_member_since: string
+          founding_price_eligibility_status: string
+          founding_price_lost_at: string | null
+          founding_price_lost_reason: string | null
+          founding_subscription_id: string | null
+          is_founding_member: boolean
+          notes: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          founder_badge_awarded_at?: string
+          founding_member_since?: string
+          founding_price_eligibility_status?: string
+          founding_price_lost_at?: string | null
+          founding_price_lost_reason?: string | null
+          founding_subscription_id?: string | null
+          is_founding_member?: boolean
+          notes?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          founder_badge_awarded_at?: string
+          founding_member_since?: string
+          founding_price_eligibility_status?: string
+          founding_price_lost_at?: string | null
+          founding_price_lost_reason?: string | null
+          founding_subscription_id?: string | null
+          is_founding_member?: boolean
+          notes?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -3129,12 +3270,14 @@ export type Database = {
       }
       profiles: {
         Row: {
+          active_member_since: string | null
           created_at: string | null
           current_period_end: string | null
           email: string | null
           full_name: string | null
           full_name_encrypted: Json | null
           id: string
+          is_active_member: boolean
           is_encrypted: boolean | null
           member_tier_code: string | null
           must_change_password: boolean | null
@@ -3145,12 +3288,14 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          active_member_since?: string | null
           created_at?: string | null
           current_period_end?: string | null
           email?: string | null
           full_name?: string | null
           full_name_encrypted?: Json | null
           id: string
+          is_active_member?: boolean
           is_encrypted?: boolean | null
           member_tier_code?: string | null
           must_change_password?: boolean | null
@@ -3161,12 +3306,14 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          active_member_since?: string | null
           created_at?: string | null
           current_period_end?: string | null
           email?: string | null
           full_name?: string | null
           full_name_encrypted?: Json | null
           id?: string
+          is_active_member?: boolean
           is_encrypted?: boolean | null
           member_tier_code?: string | null
           must_change_password?: boolean | null
@@ -4283,6 +4430,7 @@ export type Database = {
           current_period_end: string | null
           current_period_start: string | null
           id: string
+          last_event_at: string | null
           plan_code: string
           profile_id: string
           provider: Database["public"]["Enums"]["payment_provider"]
@@ -4300,6 +4448,7 @@ export type Database = {
           current_period_end?: string | null
           current_period_start?: string | null
           id?: string
+          last_event_at?: string | null
           plan_code: string
           profile_id: string
           provider: Database["public"]["Enums"]["payment_provider"]
@@ -4317,6 +4466,7 @@ export type Database = {
           current_period_end?: string | null
           current_period_start?: string | null
           id?: string
+          last_event_at?: string | null
           plan_code?: string
           profile_id?: string
           provider?: Database["public"]["Enums"]["payment_provider"]
@@ -5126,6 +5276,7 @@ export type Database = {
           woocommerce_order_id: string
         }[]
       }
+      get_member_state: { Args: { _user_id: string }; Returns: Json }
       get_user_entitlements: {
         Args: never
         Returns: {
@@ -5154,6 +5305,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_active_member: { Args: { _user_id: string }; Returns: boolean }
       track_affiliate_click: {
         Args: { _code: string }
         Returns: {
