@@ -2273,6 +2273,72 @@ export type Database = {
           },
         ]
       }
+      home_recommendations: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          end_at: string | null
+          id: string
+          image_url: string | null
+          internal_route: string | null
+          is_active: boolean
+          placement: string
+          priority: number
+          resource_id: string | null
+          start_at: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_at?: string | null
+          id?: string
+          image_url?: string | null
+          internal_route?: string | null
+          is_active?: boolean
+          placement: string
+          priority?: number
+          resource_id?: string | null
+          start_at?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_at?: string | null
+          id?: string
+          image_url?: string | null
+          internal_route?: string | null
+          is_active?: boolean
+          placement?: string
+          priority?: number
+          resource_id?: string | null
+          start_at?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "home_recommendations_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "content_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "home_recommendations_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "v_content_resources_published"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intake_symptoms: {
         Row: {
           created_at: string | null
