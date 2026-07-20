@@ -14,10 +14,14 @@ import {
   Mail,
   BookHeart,
   CalendarClock,
+  HeartPulse,
+  Layers,
+  Compass,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import templeBanner from "@/assets/temple-banner.png";
 import guidesPhoto from "@/assets/julie-tash-guides.jpg";
+import areekeeraThumbnail from "@/assets/areekeera-thumbnail.png.asset.json";
 import ProfileDropdown from "@/components/ProfileDropdown";
 
 type OfferState = "pre_launch" | "founding" | "standard";
