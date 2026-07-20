@@ -233,6 +233,39 @@ async function handleSubscriptionChange(
   });
 
   console.log(`Successfully processed subscription ${action} for user ${userIdToUse}`);
+
+  // ---------------------------------------------------------------
+  // Phase 3: additive new-entitlement-model ingestion.
+  // Writes entitlements + founding_members records atomically.
+  // Kill switch stays OFF, so this data does not yet drive access;
+  // it is being maintained so it is correct on flip day.
+  // ---------------------------------------------------------------
+  try {
+    const priceIdForIngest = subscription.items.data[0]?.price?.id ?? null;
+    const { error: ingestError } = await supabaseAdmin.rpc(
+      "ingest_stripe_subscription",
+      {
+        _user_id: userIdToUse,
+        _stripe_subscription_id: subscription.id,
+        _stripe_price_id: priceIdForIngest,
+        _stripe_status: subscription.status,
+        _current_period_start: subscription.current_period_start
+          ? new Date(subscription.current_period_start * 1000).toISOString()
+          : null,
+        _current_period_end: subscription.current_period_end
+          ? new Date(subscription.current_period_end * 1000).toISOString()
+          : null,
+        _cancel_at_period_end: subscription.cancel_at_period_end ?? false,
+        _canceled_at: subscription.canceled_at
+          ? new Date(subscription.canceled_at * 1000).toISOString()
+          : null,
+        _event_created_at: new Date().toISOString(),
+      }
+    );
+    if (ingestError) console.error("ingest_stripe_subscription error:", ingestError);
+  } catch (e) {
+    console.error("ingest_stripe_subscription threw:", e);
+  }
 }
 
 async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
@@ -278,6 +311,28 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
   });
 
   console.log(`Subscription canceled for user ${userIdToUse}`);
+
+  // Phase 3 additive: forfeit Founder price + close entitlement.
+  try {
+    const priceIdForIngest = subscription.items.data[0]?.price?.id ?? null;
+    await supabaseAdmin.rpc("ingest_stripe_subscription", {
+      _user_id: userIdToUse,
+      _stripe_subscription_id: subscription.id,
+      _stripe_price_id: priceIdForIngest,
+      _stripe_status: "canceled",
+      _current_period_start: subscription.current_period_start
+        ? new Date(subscription.current_period_start * 1000).toISOString()
+        : null,
+      _current_period_end: subscription.current_period_end
+        ? new Date(subscription.current_period_end * 1000).toISOString()
+        : null,
+      _cancel_at_period_end: subscription.cancel_at_period_end ?? false,
+      _canceled_at: new Date().toISOString(),
+      _event_created_at: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.error("ingest terminal error:", e);
+  }
 }
 
 async function handleInvoicePaid(invoice: Stripe.Invoice) {
