@@ -5255,7 +5255,6 @@ export type Database = {
         Args: never
         Returns: {
           label: string
-          note: string
           passed: boolean
         }[]
       }
