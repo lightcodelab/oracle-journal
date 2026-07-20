@@ -56,22 +56,27 @@ export function useTierAccess(): TierAccess {
         return;
       }
 
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("member_tier_code, subscription_status, is_active_member")
-        .eq("id", session.user.id)
-        .single();
+      // Canonical read: go through get_member_state(), which consults the
+      // entitlement ledger (and admin role and manual grants) via SECURITY
+      // DEFINER. NEVER trust `profiles.is_active_member` for access — it is
+      // a denormalised mirror and may lag. See useMemberState.
+      const [{ data: profile }, { data: memberState }] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("member_tier_code, subscription_status")
+          .eq("id", session.user.id)
+          .maybeSingle(),
+        supabase.rpc("get_member_state", { _user_id: session.user.id }),
+      ]);
 
-      if (profileError) {
-        console.error("Error fetching profile:", profileError);
-        setLoading(false);
-        return;
-      }
+      const canonicalActive = Boolean(
+        (memberState as Record<string, unknown> | null)?.is_active_member,
+      );
 
       setMemberTierCode(profile?.member_tier_code || null);
       setSubscriptionStatus(profile?.subscription_status || null);
-      setIsActiveMember(Boolean(profile?.is_active_member));
-      setTierName(profile?.is_active_member ? "Member" : null);
+      setIsActiveMember(canonicalActive);
+      setTierName(canonicalActive ? "Member" : null);
     } catch (error) {
       console.error("Error in useTierAccess:", error);
     } finally {
