@@ -35,9 +35,3 @@ verify_jwt = false
 
 [functions.quiz-submit]
 verify_jwt = false
-
-[functions.phase3-test-runner]
-verify_jwt = false
-
-[functions.stripe-replay-events]
-verify_jwt = false
