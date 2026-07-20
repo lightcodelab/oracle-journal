@@ -5251,6 +5251,14 @@ export type Database = {
       }
     }
     Functions: {
+      _phase1_run_access_tests: {
+        Args: never
+        Returns: {
+          label: string
+          note: string
+          passed: boolean
+        }[]
+      }
       attribute_affiliate_referral: {
         Args: { _code: string; _commission_model?: string; _link_code?: string }
         Returns: string
