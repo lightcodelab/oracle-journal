@@ -232,7 +232,7 @@ serve(async (req) => {
       _error: errorMessage,
     });
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: "webhook processing failed" }),
       { status: 500 }
     );
   }

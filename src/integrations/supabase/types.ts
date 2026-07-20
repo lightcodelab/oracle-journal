@@ -5347,6 +5347,13 @@ export type Database = {
           passed: boolean
         }[]
       }
+      _phase3_2c_run_tests: {
+        Args: never
+        Returns: {
+          label: string
+          passed: boolean
+        }[]
+      }
       _phase3_run_isolation_tests: {
         Args: never
         Returns: {
@@ -5358,6 +5365,10 @@ export type Database = {
       _stripe_webhook_stale_after: { Args: never; Returns: string }
       admin_inspect_test_entitlements: {
         Args: { _user_id: string }
+        Returns: Json
+      }
+      admin_reset_test_webhook_event: {
+        Args: { _event_id: string }
         Returns: Json
       }
       admin_test_get_membership_offer_at: {
