@@ -19,6 +19,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useTierAccess, TIER_NAMES } from "@/hooks/useTierAccess";
 import { useMembership } from "@/hooks/useMembership";
+import { useMemberState } from "@/hooks/useMemberState";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { motion } from "framer-motion";
@@ -70,6 +71,7 @@ const MyAccount = () => {
   const { toast } = useToast();
   const { memberTierCode, subscriptionStatus, tierName, loading: tierLoading, isAdmin, bucketAccess, refetch } = useTierAccess();
   const { tiers, loading: tiersLoading, startCheckout, checkoutLoading } = useMembership();
+  const { isFoundingMember, foundingPriceStatus } = useMemberState();
   const [portalLoading, setPortalLoading] = useState(false);
   const [pauseLoading, setPauseLoading] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
@@ -624,25 +626,68 @@ const MyAccount = () => {
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="flex items-center gap-2">
-                            <AlertTriangle className="w-5 h-5 text-destructive" />
-                            Cancel your membership?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will cancel your membership immediately. You'll lose access to all Temple content. 
-                            Your account will remain active so you can rejoin anytime.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Keep Membership</AlertDialogCancel>
-                          <AlertDialogAction 
-                            onClick={handleCancel}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                          >
-                            Yes, Cancel Membership
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
+                        {isFoundingMember && foundingPriceStatus !== "lost" ? (
+                          <>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle className="flex items-center gap-2">
+                                <AlertTriangle className="w-5 h-5 text-amber-500" />
+                                You are a Founding Member
+                              </AlertDialogTitle>
+                              <AlertDialogDescription asChild>
+                                <div className="space-y-3 text-left">
+                                  <p>
+                                    You currently have the Founding Member price of{" "}
+                                    <strong>$35 AUD per month</strong>.
+                                  </p>
+                                  <p>
+                                    If your membership ends, your Founding price will be
+                                    <strong> permanently forfeited</strong>. If you return
+                                    later, you will rejoin at the standard membership price
+                                    available at that time, currently{" "}
+                                    <strong>$50 AUD per month</strong>.
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    A short grace period applies to recoverable failed
+                                    payments, but it does not apply when you permanently
+                                    cancel your membership.
+                                  </p>
+                                </div>
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Keep my Founding Membership</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={handleCancel}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                Continue to cancellation
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </>
+                        ) : (
+                          <>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle className="flex items-center gap-2">
+                                <AlertTriangle className="w-5 h-5 text-destructive" />
+                                Cancel your membership?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This will cancel your membership immediately. You'll lose
+                                access to all Temple content. Your account will remain
+                                active so you can rejoin anytime.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Keep Membership</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={handleCancel}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                Yes, Cancel Membership
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </>
+                        )}
                       </AlertDialogContent>
                     </AlertDialog>
                   </div>
