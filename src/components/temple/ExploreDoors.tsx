@@ -47,7 +47,7 @@ export function ExploreDoors() {
                   className="w-full h-auto transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               </div>
-              <p className="mt-2 font-serif text-lg text-foreground">
+              <p className="mt-2 font-serif text-lg text-foreground text-center">
                 {door.name}
               </p>
             </Link>
