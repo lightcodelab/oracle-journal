@@ -102,6 +102,14 @@ async function cleanup(admin: SupabaseClient, runId: string): Promise<Record<str
     .select("id");
   counts.home_recommendations = recs?.length ?? 0;
 
+  // 1a. Fixture areekeera_protocols tagged with the run marker in title.
+  const { data: protos } = await admin
+    .from("areekeera_protocols")
+    .delete()
+    .like("title", `%${marker}%`)
+    .select("id");
+  counts.areekeera_protocols = protos?.length ?? 0;
+
   // 2. Look up fixture users for this run.
   const emailPrefix = `phase4e-${runId}-`;
   const { data: usersPage } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
@@ -149,15 +157,21 @@ async function suiteRls(
   // we use nullable/unenforced FK fields where possible. lesson_journal_entries.lesson_id is not FK-enforced
   // to lessons here (checked below). Use synthetic UUIDs and rely on soft references.
 
-  // Fetch a real lesson_id, protocol_id, card_id, deck_id to satisfy any FK constraints.
+  // Fetch a real lesson_id and card_id; create a disposable protocol tagged with the run marker.
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
   const { data: lessonRow } = await admin.from("lessons").select("id").limit(1).maybeSingle();
-  const { data: protocolRow } = await admin.from("areekeera_protocols").select("id").limit(1).maybeSingle();
   const { data: cardRow } = await admin.from("cards").select("id, deck_id").limit(1).maybeSingle();
   const anyLesson = lessonRow?.id ?? crypto.randomUUID();
-  const anyProtocol = protocolRow?.id ?? crypto.randomUUID();
   const anyCard = cardRow?.id ?? crypto.randomUUID();
   const anyDeck = cardRow?.deck_id ?? crypto.randomUUID();
+
+  // Disposable protocol to satisfy user_areekeera_protocols.protocol_id FK.
+  const runMarker = (globalThis as any).__phase4e_run_marker as string;
+  const { data: fixtureProto } = await admin
+    .from("areekeera_protocols")
+    .insert({ title: `[phase4e-run:${runMarker}] fixture protocol` })
+    .select("id").single();
+  const anyProtocol = fixtureProto?.id ?? crypto.randomUUID();
 
   // --- lesson_journal_entries ---
   const { data: lje, error: ljeErr } = await a.client
