@@ -27,6 +27,7 @@ function markerEmail(runId: string, tag: string) {
 async function requireAdmin(req: Request): Promise<{ userId: string } | Response> {
   const authHeader = req.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
+    console.log("no auth header");
     return new Response(JSON.stringify({ error: "unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -38,6 +39,7 @@ async function requireAdmin(req: Request): Promise<{ userId: string } | Response
   });
   const { data: claims, error } = await admin.auth.getClaims(token);
   if (error || !claims?.claims?.sub) {
+    console.log("getClaims failed", error?.message, "token_len", token.length);
     return new Response(JSON.stringify({ error: "unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
