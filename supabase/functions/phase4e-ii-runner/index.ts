@@ -57,19 +57,17 @@ serve(async (req) => {
     const authHeader = req.headers.get("Authorization");
     const expectedToken = Deno.env.get("PHASE4E_II_RUNNER_TOKEN");
 
-    // Authorize via shared secret AND admin-role check when a JWT is
-    // supplied. At minimum the shared secret is required.
-    if (!expectedToken || phaseToken !== expectedToken) {
-      return json({ error: "unauthorized" }, 401);
-    }
-
     const admin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
       { auth: { autoRefreshToken: false, persistSession: false } },
     );
 
-    // If a caller JWT is provided, verify server-side that it is an admin.
+    // Two acceptable authorization paths:
+    //   1. Verified admin JWT (Authorization: Bearer <access_token>).
+    //   2. Shared secret (x-phase-token) matching PHASE4E_II_RUNNER_TOKEN.
+    // Either is sufficient; both are checked server-side.
+    let authorized = false;
     if (authHeader) {
       const anon = createClient(
         Deno.env.get("SUPABASE_URL") ?? "",
@@ -77,15 +75,20 @@ serve(async (req) => {
         { global: { headers: { Authorization: authHeader } } },
       );
       const { data: userRes } = await anon.auth.getUser();
-      if (!userRes.user) return json({ error: "not_authenticated" }, 401);
-      const { data: roleRow } = await admin
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", userRes.user.id)
-        .eq("role", "admin")
-        .maybeSingle();
-      if (!roleRow) return json({ error: "not_admin" }, 403);
+      if (userRes.user) {
+        const { data: roleRow } = await admin
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", userRes.user.id)
+          .eq("role", "admin")
+          .maybeSingle();
+        if (roleRow) authorized = true;
+      }
     }
+    if (!authorized && expectedToken && phaseToken === expectedToken) {
+      authorized = true;
+    }
+    if (!authorized) return json({ error: "unauthorized" }, 401);
 
     if (action === "create") return await handleCreate(admin, runId);
     if (action === "cleanup") return await handleCleanup(admin, runId);
