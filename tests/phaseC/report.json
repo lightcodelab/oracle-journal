@@ -1,0 +1,1214 @@
+{
+  "started_at": "2026-07-21T08:14:50.543372+00:00",
+  "cells": [
+    {
+      "state": "admin",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "canceled",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_active",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "admin",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "canceled",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_active",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "admin",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "canceled",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_active",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": "expired_state",
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "actual": "temple_home",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "actual": "door_devotion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "actual": "door_communion",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "actual": "door_remembrance",
+      "expected": [
+        "redirect_public",
+        "redirect_auth"
+      ],
+      "pass": false
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "refresh_temple",
+      "state": "manual_active",
+      "pass": true
+    },
+    {
+      "name": "nested_devotion",
+      "state": "manual_active",
+      "pass": true
+    },
+    {
+      "name": "back_forward",
+      "state": "manual_active",
+      "pass": true
+    }
+  ],
+  "finished_at": "2026-07-21T08:20:23.661305+00:00",
+  "total": 120,
+  "passed": 60,
+  "failed": 60
+}

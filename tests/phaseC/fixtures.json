@@ -1,0 +1,62 @@
+[
+  {
+    "state": "admin",
+    "user_id": "e71f5c63-f595-4672-9768-32ae41908fcd",
+    "email": "phasec-admin-ab7b6f18@fixture.test",
+    "password": "Ph4seC!m2VVY6l6yp0Woxh9LZoI"
+  },
+  {
+    "state": "active_member",
+    "user_id": "c580781d-d02f-480c-8379-888a749fed4b",
+    "email": "phasec-active-member-ab7b6f18@fixture.test",
+    "password": "Ph4seC!j9reMmp5WjTwWxsTZnIr"
+  },
+  {
+    "state": "founding_member",
+    "user_id": "f156650b-e0a3-4580-a857-5f0494299713",
+    "email": "phasec-founding-member-ab7b6f18@fixture.test",
+    "password": "Ph4seC!k2SAK5wO9mjeQW2Kfmk3"
+  },
+  {
+    "state": "grace",
+    "user_id": "bcd55437-28db-4b21-84b2-5bd2d91200b6",
+    "email": "phasec-grace-ab7b6f18@fixture.test",
+    "password": "Ph4seC!FD9DuIWT5YZMFQDk0kaX"
+  },
+  {
+    "state": "canceled",
+    "user_id": "f7f2859d-e5a9-4837-bf88-9232384dfb16",
+    "email": "phasec-canceled-ab7b6f18@fixture.test",
+    "password": "Ph4seC!0QyvEypKQRpvZyThtmA1"
+  },
+  {
+    "state": "manual_active",
+    "user_id": "f6480a23-91ac-423f-bddb-28b29b343ffe",
+    "email": "phasec-manual-active-ab7b6f18@fixture.test",
+    "password": "Ph4seC!8EJ698iuiHwsRXrJBVQo"
+  },
+  {
+    "state": "manual_scheduled",
+    "user_id": "e7864f3a-aa8d-4afd-bf52-21a303322c3c",
+    "email": "phasec-manual-scheduled-ab7b6f18@fixture.test",
+    "password": "Ph4seC!0oQPWfDRBEPff7s9HS6H"
+  },
+  {
+    "state": "manual_expired",
+    "user_id": "6997d7ea-f818-4a4e-8613-93dad40c96e5",
+    "email": "phasec-manual-expired-ab7b6f18@fixture.test",
+    "password": "Ph4seC!r7S0AbmdTQvg4124C5Tq"
+  },
+  {
+    "state": "manual_revoked_only",
+    "user_id": "8c0753ec-8c40-47f1-9f1a-83a88b6b3ab6",
+    "email": "phasec-manual-revoked-only-ab7b6f18@fixture.test",
+    "password": "Ph4seC!1F07botvzRX5ITG3Kz1n"
+  },
+  {
+    "state": "no_access",
+    "user_id": "2b81ca59-3497-49fd-a2c0-ef5f738e745e",
+    "email": "phasec-no-access-ab7b6f18@fixture.test",
+    "password": "Ph4seC!7du7eMHAuPCIMyxpGHEh"
+  }
+]
