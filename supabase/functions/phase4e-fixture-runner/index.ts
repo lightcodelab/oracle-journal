@@ -150,6 +150,7 @@ async function suiteRls(
   a: { id: string; client: SupabaseClient },
   b: { id: string; client: SupabaseClient },
   anon: SupabaseClient,
+  runId: string,
   results: AssertionResult[],
 ) {
   // Seed one row per table for user A.
@@ -165,11 +166,10 @@ async function suiteRls(
   const anyCard = cardRow?.id ?? crypto.randomUUID();
   const anyDeck = cardRow?.deck_id ?? crypto.randomUUID();
 
-  // Disposable protocol to satisfy user_areekeera_protocols.protocol_id FK.
-  const runMarker = (globalThis as any).__phase4e_run_marker as string;
+  // Disposable protocol to satisfy user_areekeera_protocols.protocol_id FK. Marker in title enables cleanup.
   const { data: fixtureProto } = await admin
     .from("areekeera_protocols")
-    .insert({ title: `[phase4e-run:${runMarker}] fixture protocol` })
+    .insert({ title: `[phase4e-run:${runId}] fixture protocol` })
     .select("id").single();
   const anyProtocol = fixtureProto?.id ?? crypto.randomUUID();
 
@@ -313,20 +313,31 @@ async function suiteContinuation(
   )[0][0];
   results.push({ name: "cont.newest_wins.lesson", pass: winner === "lesson", detail: `winner=${winner}` });
 
-  // Deterministic tie-break: force lesson & reading to identical ts; lesson (kind_order=4) must win over reading (2).
+  // Deterministic tie-break: force lesson & reading to identical timestamps and verify lesson wins.
+  // Note: lesson_journal_entries has a BEFORE UPDATE trigger that overwrites updated_at = now(),
+  // so we set the tie via a fresh INSERT (insert path is untriggered) instead of UPDATE.
   const tie = t(5 * 60_000);
-  await admin.from("lesson_journal_entries").update({ updated_at: tie }).eq("user_id", a.id);
+  await admin.from("lesson_journal_entries").delete().eq("user_id", a.id);
+  await admin.from("lesson_journal_entries").insert({
+    user_id: a.id, lesson_id: seeded.anyLesson, updated_at: tie, created_at: tie,
+  });
+  // saved_at has no trigger; UPDATE is fine.
   await admin.from("saved_readings").update({ saved_at: tie }).eq("user_id", a.id);
   const [lTie, rTie] = await Promise.all([
     a.client.from("lesson_journal_entries").select("updated_at, completed_at")
       .eq("user_id", a.id).is("completed_at", null).order("updated_at", { ascending: false }).limit(1).maybeSingle(),
     a.client.from("saved_readings").select("saved_at").eq("user_id", a.id).order("saved_at", { ascending: false }).limit(1).maybeSingle(),
   ]);
-  const tieWinner =
-    lTie.data && rTie.data && Date.parse(lTie.data.updated_at) === Date.parse(rTie.data.saved_at)
-      ? (kindOrder.lesson > kindOrder.reading ? "lesson" : "reading")
-      : "unresolved";
-  results.push({ name: "cont.deterministic_tiebreak", pass: tieWinner === "lesson", detail: `tieWinner=${tieWinner}` });
+  const lTs = lTie.data ? Date.parse(lTie.data.updated_at) : NaN;
+  const rTs = rTie.data ? Date.parse(rTie.data.saved_at) : NaN;
+  const equal = Number.isFinite(lTs) && Number.isFinite(rTs) && lTs === rTs;
+  // Apply the ranker's tiebreak logic to this exact equal case.
+  const tieWinner = equal ? (kindOrder.lesson > kindOrder.reading ? "lesson" : "reading") : "unresolved";
+  results.push({
+    name: "cont.deterministic_tiebreak",
+    pass: equal && tieWinner === "lesson",
+    detail: `lTs=${lTs} rTs=${rTs} tieWinner=${tieWinner}`,
+  });
 
   // Completed-lesson exclusion: mark lesson completed → ranker's .is("completed_at", null) filter excludes it.
   await admin.from("lesson_journal_entries").update({ completed_at: new Date().toISOString() }).eq("user_id", a.id);
@@ -614,7 +625,7 @@ Deno.serve(async (req) => {
     const anon = newAnonClient();
 
     // Suite 1: RLS
-    const seeded = await suiteRls(userA, userB, anon, results);
+    const seeded = await suiteRls(userA, userB, anon, runId, results);
     // Suite 2: Continuation
     await suiteContinuation(userA, userB, seeded, results);
     // Suite 3: Recommendations
