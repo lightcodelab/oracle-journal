@@ -45,6 +45,11 @@ interface ResourceOption {
   slug: string;
 }
 
+// Only Devotion-hosted resources currently have a per-resource canonical
+// route (/devotion/resources/:slug or /devotion/courses/:slug). Remembrance
+// content is browsed via section pages, so remembrance resources cannot be
+// linked directly. Admins must use an internal_route for those.
+
 const EMPTY: Omit<Row, "id"> = {
   placement: "recommended",
   resource_id: null,
@@ -103,12 +108,19 @@ export default function AdminHomeRecommendations() {
         .order("created_at", { ascending: false }),
       supabase
         .from("content_resources")
-        .select("id, title, slug")
+        .select(
+          "id, title, slug, location:content_categories!location_id(page)",
+        )
         .eq("status", "published")
         .order("title"),
     ]);
     setRows((recs as Row[]) || []);
-    setResources((res as ResourceOption[]) || []);
+    const eligible = ((res || []) as Array<
+      ResourceOption & { location?: { page?: string } | null }
+    >)
+      .filter((r) => r.location?.page === "devotion")
+      .map(({ id, title, slug }) => ({ id, title, slug }));
+    setResources(eligible);
     setLoading(false);
   };
 
@@ -376,6 +388,12 @@ export default function AdminHomeRecommendations() {
                 <p className="text-xs text-muted-foreground mt-1">
                   Must start with a single “/”. External URLs are not allowed.
                   Cannot be combined with a linked resource.
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Only Devotion-hosted resources are selectable above. To link a
+                  Remembrance section or any other destination, use an internal
+                  route (e.g. <code>/decks</code> or
+                  <code>/devotion/section/guided-meditations</code>).
                 </p>
               </div>
 
