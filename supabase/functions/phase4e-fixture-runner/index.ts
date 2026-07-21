@@ -644,6 +644,14 @@ Deno.serve(async (req) => {
   const passed = results.filter((r) => r.pass).length;
   const failed = results.filter((r) => !r.pass);
 
+  console.log(JSON.stringify({
+    summary: { total: results.length, passed, failed_count: failed.length, hard_error: hardError },
+    failed_names: failed.map((f) => f.name),
+    all_names: results.map((r) => r.name),
+    cleanup_counts: cleanupCounts,
+  }));
+
+  const verbose = body.verbose === true;
   return new Response(JSON.stringify({
     ok: hardError == null && failed.length === 0,
     run_id: runId,
@@ -652,7 +660,7 @@ Deno.serve(async (req) => {
     failed_count: failed.length,
     hard_error: hardError,
     failed,
-    all_results: results,
+    all_results: verbose ? results : results.map((r) => ({ name: r.name, pass: r.pass })),
     cleanup_counts: cleanupCounts,
   }, null, 2), {
     status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
