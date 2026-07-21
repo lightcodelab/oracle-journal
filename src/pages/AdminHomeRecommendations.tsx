@@ -130,18 +130,25 @@ export default function AdminHomeRecommendations() {
       toast.error("Title is required");
       return;
     }
-    if (!form.resource_id && !form.internal_route) {
+    const hasResource = !!form.resource_id;
+    const hasRoute = !!(form.internal_route && form.internal_route.trim());
+    if (!hasResource && !hasRoute) {
       toast.error("Pick a resource or provide an internal route");
       return;
     }
-    if (form.internal_route) {
+    if (hasResource && hasRoute) {
+      toast.error("Choose either a linked resource OR an internal route, not both");
+      return;
+    }
+    if (hasRoute) {
       const r = form.internal_route.trim();
       if (
         !r.startsWith("/") ||
         r.startsWith("//") ||
         r.includes("://") ||
         r.toLowerCase().startsWith("javascript:") ||
-        r.toLowerCase().startsWith("data:")
+        r.toLowerCase().startsWith("data:") ||
+        !/^\/[A-Za-z0-9/_\-\.\?\=\&\%\:]*$/.test(r)
       ) {
         toast.error("Route must be a single internal path like /decks");
         return;
@@ -151,8 +158,9 @@ export default function AdminHomeRecommendations() {
     setSaving(true);
     const payload = {
       placement: form.placement,
-      resource_id: form.resource_id || null,
-      internal_route: form.internal_route?.trim() || null,
+      // Enforce XOR at write-time as well as at the DB check constraint.
+      resource_id: hasResource ? form.resource_id : null,
+      internal_route: hasResource ? null : form.internal_route?.trim() || null,
       title: form.title.trim(),
       description: form.description?.trim() || null,
       image_url: form.image_url?.trim() || null,
