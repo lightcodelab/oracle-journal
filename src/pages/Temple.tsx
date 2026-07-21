@@ -12,6 +12,8 @@ import { ExploreDoors } from "@/components/temple/ExploreDoors";
 import { LiveAndSupport } from "@/components/temple/LiveAndSupport";
 import { RecommendationGrid } from "@/components/temple/RecommendationGrid";
 import { useHomeRecommendations } from "@/hooks/useHomeRecommendations";
+import { useBucketGrants } from "@/hooks/useBucketGrants";
+import { ExistingAccess } from "@/components/temple/ExistingAccess";
 
 /** Wrapper that only mounts recommendation queries once member access is resolved. */
 function RecommendedSection({ enabled }: { enabled: boolean }) {
@@ -95,7 +97,11 @@ const Temple = () => {
   const accessResolved = !authLoading && !memberLoading && !!user;
   const hasFullAccess = accessResolved && (isActiveMember || isAdmin);
 
-  if (authLoading || memberLoading || !user) {
+  // Only read historical bucket grants when the user is authenticated but
+  // does NOT have full access. Do not run these calls for full members.
+  const grants = useBucketGrants(accessResolved && !hasFullAccess);
+
+  if (authLoading || memberLoading || !user || (!hasFullAccess && grants.loading)) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
@@ -105,9 +111,14 @@ const Temple = () => {
     );
   }
 
-  // Authenticated but inactive: calm membership-required state. No personal
-  // queries, no doors, no tier language, no locked grids.
+  // Authenticated but not a full member. If the user still holds one or more
+  // valid historical bucket-scoped manual grants, surface a restrained
+  // "Your existing access" state showing only the granted Door(s). Otherwise
+  // preserve the ordinary "The Temple awaits" state.
   if (!hasFullAccess) {
+    if (grants.any) {
+      return <ExistingAccess grants={grants} />;
+    }
     return (
       <div className="min-h-screen bg-background relative">
         <div className="absolute top-4 right-4 z-20">
