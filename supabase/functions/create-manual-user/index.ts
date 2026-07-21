@@ -11,8 +11,7 @@ interface ManualUserRequest {
   fullName: string;
   tempPassword: string;
   startsAt: string;
-  endsAt: string;
-  buckets: string[]; // e.g. ["remembrance", "devotion", "communion"]
+  endsAt: string;   // canonical: single full-access window
   notes?: string;
 }
 
@@ -50,10 +49,13 @@ serve(async (req) => {
 
     if (!callerRole) throw new Error("Only admins can create manual users");
 
-    const { email, fullName, tempPassword, startsAt, endsAt, buckets, notes }: ManualUserRequest = await req.json();
+    const { email, fullName, tempPassword, startsAt, endsAt, notes }: ManualUserRequest = await req.json();
 
-    if (!email || !tempPassword || !startsAt || !endsAt || !buckets?.length) {
-      throw new Error("Email, password, dates, and at least one content area are required");
+    if (!email || !tempPassword || !startsAt || !endsAt) {
+      throw new Error("Email, password and access window are required");
+    }
+    if (new Date(endsAt) <= new Date(startsAt)) {
+      throw new Error("End date must be after start date");
     }
 
     // Create the user — reject if email already exists
@@ -79,26 +81,26 @@ serve(async (req) => {
       .update({ must_change_password: true, full_name: fullName })
       .eq("id", userId);
 
-    // Insert access grants for each bucket
-    const grants = buckets.map((bucket_key) => ({
-      user_id: userId,
-      bucket_key,
-      granted_by: callingUser.id,
-      starts_at: startsAt,
-      ends_at: endsAt,
-      notes: notes || null,
-    }));
+    // Create the canonical full-access grant via the transactional RPC.
+    // The RPC uses `assert_caller_is_admin()` which reads `auth.uid()` — so we
+    // MUST invoke it via the caller-authenticated client (JWT of the calling
+    // admin), not the service-role client (which has NULL auth.uid()).
+    const { data: grantId, error: grantError } = await supabaseClient.rpc(
+      "admin_create_manual_full_access",
+      {
+        _user_id: userId,
+        _starts_at: startsAt,
+        _expires_at: endsAt,
+        _notes: notes ?? null,
+      },
+    );
 
-    const { error: grantsError } = await supabaseAdmin
-      .from("manual_access_grants")
-      .insert(grants);
-
-    if (grantsError) {
+    if (grantError) {
       await supabaseAdmin.auth.admin.deleteUser(userId);
-      throw grantsError;
+      throw grantError;
     }
 
-    console.log(`Manual user created: ${email} (${userId}) with access to [${buckets.join(", ")}] until ${endsAt}`);
+    console.log(`Manual user created: ${email} (${userId}) full access until ${endsAt}, grant ${grantId}`);
 
     return new Response(
       JSON.stringify({
