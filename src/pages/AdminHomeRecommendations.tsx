@@ -130,18 +130,25 @@ export default function AdminHomeRecommendations() {
       toast.error("Title is required");
       return;
     }
-    if (!form.resource_id && !form.internal_route) {
+    const hasResource = !!form.resource_id;
+    const hasRoute = !!(form.internal_route && form.internal_route.trim());
+    if (!hasResource && !hasRoute) {
       toast.error("Pick a resource or provide an internal route");
       return;
     }
-    if (form.internal_route) {
+    if (hasResource && hasRoute) {
+      toast.error("Choose either a linked resource OR an internal route, not both");
+      return;
+    }
+    if (hasRoute) {
       const r = form.internal_route.trim();
       if (
         !r.startsWith("/") ||
         r.startsWith("//") ||
         r.includes("://") ||
         r.toLowerCase().startsWith("javascript:") ||
-        r.toLowerCase().startsWith("data:")
+        r.toLowerCase().startsWith("data:") ||
+        !/^\/[A-Za-z0-9/_\-\.\?\=\&\%\:]*$/.test(r)
       ) {
         toast.error("Route must be a single internal path like /decks");
         return;
@@ -151,8 +158,9 @@ export default function AdminHomeRecommendations() {
     setSaving(true);
     const payload = {
       placement: form.placement,
-      resource_id: form.resource_id || null,
-      internal_route: form.internal_route?.trim() || null,
+      // Enforce XOR at write-time as well as at the DB check constraint.
+      resource_id: hasResource ? form.resource_id : null,
+      internal_route: hasResource ? null : form.internal_route?.trim() || null,
       title: form.title.trim(),
       description: form.description?.trim() || null,
       image_url: form.image_url?.trim() || null,
@@ -332,6 +340,8 @@ export default function AdminHomeRecommendations() {
                     setForm((f) => ({
                       ...f,
                       resource_id: v === "__none__" ? null : v,
+                      // XOR: clear the other target so we never save both.
+                      internal_route: v === "__none__" ? f.internal_route : null,
                     }))
                   }
                 >
@@ -352,14 +362,20 @@ export default function AdminHomeRecommendations() {
               <div>
                 <Label>Or internal route</Label>
                 <Input
+                  disabled={!!form.resource_id}
                   placeholder="/decks or /devotion/section/…"
                   value={form.internal_route ?? ""}
                   onChange={(e) =>
-                    setForm((f) => ({ ...f, internal_route: e.target.value }))
+                    setForm((f) => ({
+                      ...f,
+                      internal_route: e.target.value,
+                      resource_id: e.target.value ? null : f.resource_id,
+                    }))
                   }
                 />
                 <p className="text-xs text-muted-foreground mt-1">
                   Must start with a single “/”. External URLs are not allowed.
+                  Cannot be combined with a linked resource.
                 </p>
               </div>
 

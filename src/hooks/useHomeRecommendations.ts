@@ -52,23 +52,33 @@ export function useHomeRecommendations(placement: Placement, enabled: boolean) {
       const resourceIds = Array.from(
         new Set(rows.map((r) => r.resource_id).filter(Boolean) as string[]),
       );
+      // Map resource id -> canonical href. Only published resources are eligible.
+      // Course resources route to /devotion/courses/:slug; ordinary resources
+      // route to /devotion/resources/:slug. Anything without a resolvable slug
+      // is dropped instead of rendered as a dead card.
+      let hrefMap: Record<string, string> = {};
       let slugMap: Record<string, string> = {};
       if (resourceIds.length) {
         const { data: res } = await supabase
           .from("content_resources")
-          .select("id, slug, status")
+          .select("id, slug, status, is_course")
           .in("id", resourceIds)
           .eq("status", "published");
-        slugMap = Object.fromEntries(
-          (res || []).map((r) => [r.id as string, r.slug as string]),
-        );
+        for (const r of res || []) {
+          const slug = r.slug as string | null;
+          if (!slug) continue;
+          slugMap[r.id as string] = slug;
+          hrefMap[r.id as string] = (r as { is_course?: boolean }).is_course
+            ? `/devotion/courses/${slug}`
+            : `/devotion/resources/${slug}`;
+        }
       }
 
       return rows
         .map((r) => {
           let href: string | null = null;
-          if (r.resource_id && slugMap[r.resource_id]) {
-            href = `/devotion/resources/${slugMap[r.resource_id]}`;
+          if (r.resource_id && hrefMap[r.resource_id]) {
+            href = hrefMap[r.resource_id];
           } else if (isSafeInternalRoute(r.internal_route)) {
             href = r.internal_route!;
           }
