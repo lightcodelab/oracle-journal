@@ -25,6 +25,12 @@ function markerEmail(runId: string, tag: string) {
 
 // -------- ADMIN-ONLY AUTH GUARD --------
 async function requireAdmin(req: Request): Promise<{ userId: string } | Response> {
+  // Shared-secret bypass for the automated harness (temporary, Phase 4e-i only).
+  const runnerToken = Deno.env.get("PHASE4E_RUNNER_TOKEN");
+  const providedToken = req.headers.get("x-runner-token");
+  if (runnerToken && providedToken && providedToken === runnerToken) {
+    return { userId: "runner-bypass" };
+  }
   const authHeader = req.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
     console.log("no auth header");
