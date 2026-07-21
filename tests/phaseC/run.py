@@ -69,15 +69,26 @@ def clear_marker():
         "# Active phaseC fixture markers\n\nactive_marker: (none)\n"
         f"active_run_id: (none)\nlast_updated: {datetime.now(timezone.utc).isoformat()}\n")
 
-def classify(url, body):
+def classify(url, body, h1_text):
+    """Classify by rendered content (heading) first, then by URL path."""
     p = url.split("://",1)[-1].split("/",1)[-1]
     p = "/" + p.split("?",1)[0].split("#",1)[0]
     if p.startswith("//"): p = p[1:]
+    h = (h1_text or "").strip().lower()
     t = (body or "").lower()
+    # Content-driven states take priority
+    if "your temple access is scheduled" in t:  return "scheduled_state"
+    if "your temple access period has ended" in t: return "expired_state"
+    if "the temple awaits" in t: return "denied_no_access"
+    if "we couldn't confirm your access" in t: return "error_state"
+    # Door pages have "Upgrade Membership" / "View Memberships" CTAs when denied
+    if p.startswith("/devotion") and ("view memberships" in t and "return to the temple" in t):
+        return "door_devotion_denied"
+    if p.startswith("/communion") and ("view memberships" in t and "return to the temple" in t):
+        return "door_communion_denied"
+    # Path-driven fallbacks
     if p.startswith("/auth"): return "redirect_auth"
     if p in ("/","/membership","/membership/"): return "redirect_public"
-    if "scheduled" in t and "manual" not in t[:200]: return "scheduled_state"
-    if "expired" in t and "join" in t: return "expired_state"
     if p.startswith("/temple"): return "temple_home"
     if p.startswith("/devotion"): return "door_devotion"
     if p.startswith("/communion"): return "door_communion"
@@ -85,12 +96,24 @@ def classify(url, body):
     return f"other:{p}"
 
 def expected(state, route):
+    """Expected outcome per (state, route) reflecting canonical rule:
+       hasFullTempleAccess = admin OR active membership OR active manual.
+       /decks is intentionally open to all authenticated users (Remembrance)."""
     e = EXPECT[state]
-    if e == "granted":
+    granted = (e == "granted")
+    if route == "remembrance":
+        # Open to any authenticated user regardless of membership.
+        return "door_remembrance"
+    if granted:
         return "temple_home" if route == "temple" else f"door_{route}"
-    if e == "denied":
-        return ["redirect_public","redirect_auth"]
-    return e
+    # Denied classes:
+    if route == "temple":
+        if e == "scheduled_state": return "scheduled_state"
+        if e == "expired_state":   return "expired_state"
+        return "denied_no_access"
+    # Door routes for denied users
+    denied_door = f"door_{route}_denied"
+    return [denied_door, "redirect_auth", "redirect_public"]
 
 def matches(actual, exp):
     return actual in exp if isinstance(exp, list) else actual == exp
@@ -127,11 +150,14 @@ async def run_matrix(fixtures):
                         cell = {"state":fx["state"],"route":r_name,"viewport":vp_name}
                         try:
                             await page.goto(APP_URL + r_path, wait_until="networkidle", timeout=15000)
-                            await page.wait_for_timeout(400)
+                            await page.wait_for_timeout(500)
                             final = page.url
                             body = await page.evaluate("() => document.body.innerText || ''")
+                            h1_text = await page.evaluate("() => { const h=document.querySelector('h1'); return h?h.innerText:''; }")
                             cell["final_url"] = final
-                            cell["actual"] = classify(final, body)
+                            cell["h1"] = h1_text[:120]
+                            cell["body_excerpt"] = body[:200]
+                            cell["actual"] = classify(final, body, h1_text)
                         except Exception as e:
                             cell["error"] = str(e)[:200]
                             cell["actual"] = "error"
