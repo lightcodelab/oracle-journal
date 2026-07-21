@@ -67,6 +67,7 @@ import AdminQuizEditor from "./pages/AdminQuizEditor";
 import AdminQuizAnalytics from "./pages/AdminQuizAnalytics";
 import QuizPlayer from "./pages/QuizPlayer";
 import OAuthConsent from "./pages/OAuthConsent";
+import AdminHomeRecommendations from "./pages/AdminHomeRecommendations";
 import { captureRefFromQueryString } from "@/lib/affiliateTracking";
 import { useEffect } from "react";
 const queryClient = new QueryClient();
