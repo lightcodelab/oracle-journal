@@ -2893,6 +2893,54 @@ export type Database = {
         }
         Relationships: []
       }
+      manual_access_grant_audit: {
+        Row: {
+          acted_at: string
+          action_type: string
+          actor: string | null
+          grant_id: string
+          id: string
+          new_expires_at: string | null
+          new_revoked_at: string | null
+          new_starts_at: string | null
+          notes: string | null
+          previous_expires_at: string | null
+          previous_revoked_at: string | null
+          previous_starts_at: string | null
+          user_id: string
+        }
+        Insert: {
+          acted_at?: string
+          action_type: string
+          actor?: string | null
+          grant_id: string
+          id?: string
+          new_expires_at?: string | null
+          new_revoked_at?: string | null
+          new_starts_at?: string | null
+          notes?: string | null
+          previous_expires_at?: string | null
+          previous_revoked_at?: string | null
+          previous_starts_at?: string | null
+          user_id: string
+        }
+        Update: {
+          acted_at?: string
+          action_type?: string
+          actor?: string | null
+          grant_id?: string
+          id?: string
+          new_expires_at?: string | null
+          new_revoked_at?: string | null
+          new_starts_at?: string | null
+          notes?: string | null
+          previous_expires_at?: string | null
+          previous_revoked_at?: string | null
+          previous_starts_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       manual_access_grants: {
         Row: {
           bucket_key: string
@@ -2923,6 +2971,84 @@ export type Database = {
           granted_by?: string | null
           id?: string
           notes?: string | null
+          starts_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      manual_access_legacy_bucket_history: {
+        Row: {
+          archived_at: string
+          bucket_key: string
+          ends_at: string
+          granted_by: string | null
+          id: string
+          notes: string | null
+          original_created_at: string
+          original_grant_id: string
+          starts_at: string
+          user_id: string
+        }
+        Insert: {
+          archived_at?: string
+          bucket_key: string
+          ends_at: string
+          granted_by?: string | null
+          id?: string
+          notes?: string | null
+          original_created_at: string
+          original_grant_id: string
+          starts_at: string
+          user_id: string
+        }
+        Update: {
+          archived_at?: string
+          bucket_key?: string
+          ends_at?: string
+          granted_by?: string | null
+          id?: string
+          notes?: string | null
+          original_created_at?: string
+          original_grant_id?: string
+          starts_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      manual_full_access_grants: {
+        Row: {
+          access_scope: string
+          created_at: string
+          expires_at: string
+          granted_by: string | null
+          id: string
+          notes: string | null
+          revoked_at: string | null
+          starts_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_scope?: string
+          created_at?: string
+          expires_at: string
+          granted_by?: string | null
+          id?: string
+          notes?: string | null
+          revoked_at?: string | null
+          starts_at: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_scope?: string
+          created_at?: string
+          expires_at?: string
+          granted_by?: string | null
+          id?: string
+          notes?: string | null
+          revoked_at?: string | null
           starts_at?: string
           updated_at?: string
           user_id?: string
@@ -5429,6 +5555,19 @@ export type Database = {
         }[]
       }
       _stripe_webhook_stale_after: { Args: never; Returns: string }
+      admin_create_manual_full_access: {
+        Args: {
+          _expires_at: string
+          _notes?: string
+          _starts_at: string
+          _user_id: string
+        }
+        Returns: string
+      }
+      admin_extend_manual_full_access: {
+        Args: { _grant_id: string; _new_expires_at: string; _notes?: string }
+        Returns: undefined
+      }
       admin_inspect_test_entitlements: {
         Args: { _user_id: string }
         Returns: Json
@@ -5436,6 +5575,10 @@ export type Database = {
       admin_reset_test_webhook_event: {
         Args: { _event_id: string }
         Returns: Json
+      }
+      admin_revoke_manual_full_access: {
+        Args: { _grant_id: string; _notes?: string }
+        Returns: undefined
       }
       admin_test_get_membership_offer_at: {
         Args: { _as_of: string; _mode: string }
@@ -5445,6 +5588,7 @@ export type Database = {
         Args: { _user_id: string }
         Returns: Json
       }
+      assert_caller_is_admin: { Args: never; Returns: string }
       attribute_affiliate_referral: {
         Args: { _code: string; _commission_model?: string; _link_code?: string }
         Returns: string
@@ -5486,6 +5630,10 @@ export type Database = {
           tier_code: string
           tier_name: string
         }[]
+      }
+      has_active_manual_full_access: {
+        Args: { _user_id: string }
+        Returns: boolean
       }
       has_active_membership: { Args: { _user_id: string }; Returns: boolean }
       has_any_manual_access: { Args: { _user_id: string }; Returns: boolean }
