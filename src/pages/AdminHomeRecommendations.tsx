@@ -389,6 +389,12 @@ export default function AdminHomeRecommendations() {
                   Must start with a single “/”. External URLs are not allowed.
                   Cannot be combined with a linked resource.
                 </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Only Devotion-hosted resources are selectable above. To link a
+                  Remembrance section or any other destination, use an internal
+                  route (e.g. <code>/decks</code> or
+                  <code>/devotion/section/guided-meditations</code>).
+                </p>
               </div>
 
               <div>
