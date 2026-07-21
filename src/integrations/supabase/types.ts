@@ -5493,9 +5493,10 @@ export type Database = {
         Args: { bucket_key_param: string }
         Returns: boolean
       }
-      has_manual_access:
-        | { Args: { _bucket_key: string; _user_id: string }; Returns: boolean }
-        | { Args: { _bucket_key: string; _user_id: string }; Returns: boolean }
+      has_manual_access: {
+        Args: { _bucket_key: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
