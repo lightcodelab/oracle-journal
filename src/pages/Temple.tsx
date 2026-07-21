@@ -116,6 +116,33 @@ const Temple = () => {
   // "Your existing access" state showing only the granted Door(s). Otherwise
   // preserve the ordinary "The Temple awaits" state.
   if (!hasFullAccess) {
+    // Fail-closed: an access-check RPC failure must be distinguishable from
+    // a confirmed no-access result. Never render the full homepage, any
+    // Door, or Founder recognition on failure.
+    if (grants.error) {
+      return (
+        <div className="min-h-screen bg-background relative">
+          <div className="absolute top-4 right-4 z-20">
+            <NavActions />
+          </div>
+          <div
+            role="alert"
+            className="max-w-xl mx-auto px-4 pt-24 pb-16 text-center"
+          >
+            <h1 className="font-serif text-3xl sm:text-4xl text-foreground mb-4">
+              We couldn't confirm your access
+            </h1>
+            <p className="text-muted-foreground mb-8">
+              Something went wrong while checking your access to The Temple.
+              Please try again in a moment.
+            </p>
+            <Button onClick={() => window.location.reload()} size="lg">
+              Try again
+            </Button>
+          </div>
+        </div>
+      );
+    }
     if (grants.any) {
       return <ExistingAccess grants={grants} />;
     }

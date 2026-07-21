@@ -18,6 +18,7 @@ export interface BucketGrants {
   communion: boolean;
   any: boolean;
   loading: boolean;
+  error: boolean;
 }
 
 const EMPTY: BucketGrants = {
@@ -26,6 +27,7 @@ const EMPTY: BucketGrants = {
   communion: false,
   any: false,
   loading: true,
+  error: false,
 };
 
 export function useBucketGrants(enabled: boolean): BucketGrants {
@@ -49,6 +51,21 @@ export function useBucketGrants(enabled: boolean): BucketGrants {
         ),
       );
       if (cancelled) return;
+      // Fail closed: if any bucket RPC returned an error, do NOT silently
+      // report "no grants" — that is indistinguishable from a confirmed
+      // no-access result and would misrepresent the user's true access.
+      const anyError = results.some((r) => r.error);
+      if (anyError) {
+        setState({
+          remembrance: false,
+          devotion: false,
+          communion: false,
+          any: false,
+          loading: false,
+          error: true,
+        });
+        return;
+      }
       const [rem, dev, com] = results.map((r) => Boolean(r.data));
       setState({
         remembrance: rem,
@@ -56,6 +73,7 @@ export function useBucketGrants(enabled: boolean): BucketGrants {
         communion: com,
         any: rem || dev || com,
         loading: false,
+        error: false,
       });
     })();
     return () => {
