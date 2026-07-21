@@ -340,6 +340,8 @@ export default function AdminHomeRecommendations() {
                     setForm((f) => ({
                       ...f,
                       resource_id: v === "__none__" ? null : v,
+                      // XOR: clear the other target so we never save both.
+                      internal_route: v === "__none__" ? f.internal_route : null,
                     }))
                   }
                 >
@@ -360,14 +362,20 @@ export default function AdminHomeRecommendations() {
               <div>
                 <Label>Or internal route</Label>
                 <Input
+                  disabled={!!form.resource_id}
                   placeholder="/decks or /devotion/section/…"
                   value={form.internal_route ?? ""}
                   onChange={(e) =>
-                    setForm((f) => ({ ...f, internal_route: e.target.value }))
+                    setForm((f) => ({
+                      ...f,
+                      internal_route: e.target.value,
+                      resource_id: e.target.value ? null : f.resource_id,
+                    }))
                   }
                 />
                 <p className="text-xs text-muted-foreground mt-1">
                   Must start with a single “/”. External URLs are not allowed.
+                  Cannot be combined with a linked resource.
                 </p>
               </div>
 
