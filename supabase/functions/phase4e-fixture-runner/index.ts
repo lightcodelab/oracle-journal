@@ -518,13 +518,9 @@ async function suiteRecommendations(
   results.push({ name: "rec.window.admin_sees_all", pass: titlesAdmin.has(`[${runId}] active`) && titlesAdmin.has(`[${runId}] future`) && titlesAdmin.has(`[${runId}] expired`) && titlesAdmin.has(`[${runId}] inactive`) });
 
   // Grant regularUser an active membership so the member OR branch of the SELECT policy applies.
-  await admin.from("subscriptions").insert({
-    user_id: regularUser.id,
-    status: "active",
-    current_period_end: new Date(now + 30 * 86400_000).toISOString(),
-    plan_code: "test_fixture",
-    tier_id: null,
-  }).select();
+  // use_new_entitlement_model is OFF, so is_active_member reads profiles.subscription_status.
+  // profiles is auto-created by the handle_new_user trigger; update it.
+  await admin.from("profiles").update({ subscription_status: "active" }).eq("id", regularUser.id);
   const { data: visibleToMember } = await regularUser.client
     .from("home_recommendations").select("title, description")
     .like("description", `${marker}%`);
