@@ -35,3 +35,6 @@ verify_jwt = false
 
 [functions.quiz-submit]
 verify_jwt = false
+
+[functions.phase4e-ii-runner]
+verify_jwt = false
