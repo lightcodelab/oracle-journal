@@ -19,6 +19,17 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import {
+  addCalendarMonthsMelbourne,
+  formatMelbourneLong,
+  formatMelbourneShort,
+  isValidWindow,
+  shortActor,
+  formatAuditTimestamp,
+  TEMPLE_TIMEZONE,
+} from "@/lib/manualAccessDates";
+import { ChevronDown } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 /**
  * Admin surface for the canonical manual full-access model.
@@ -44,6 +55,20 @@ interface ManualUser {
   state: GrantState;
 }
 
+interface AuditRow {
+  id: string;
+  action_type: string;
+  acted_at: string;
+  actor: string | null;
+  previous_starts_at: string | null;
+  previous_expires_at: string | null;
+  new_starts_at: string | null;
+  new_expires_at: string | null;
+  previous_revoked_at: string | null;
+  new_revoked_at: string | null;
+  notes: string | null;
+}
+
 const DURATION_PRESETS: { label: string; months: number }[] = [
   { label: "1 month", months: 1 },
   { label: "3 months", months: 3 },
@@ -51,11 +76,8 @@ const DURATION_PRESETS: { label: string; months: number }[] = [
   { label: "12 months", months: 12 },
 ];
 
-function addMonths(d: Date, m: number): Date {
-  const r = new Date(d);
-  r.setMonth(r.getMonth() + m);
-  return r;
-}
+// Timezone-aware month math is imported from @/lib/manualAccessDates.
+const addMonths = addCalendarMonthsMelbourne;
 
 function deriveState(g: { starts_at: string; expires_at: string; revoked_at: string | null }): GrantState {
   if (g.revoked_at) return "revoked";
@@ -84,7 +106,7 @@ function generatePassword(): string {
 }
 
 function formatWindow(g: ManualUser): string {
-  return `${format(new Date(g.starts_at), "MMM d, yyyy")} → ${format(new Date(g.expires_at), "MMM d, yyyy")}`;
+  return `${formatMelbourneShort(g.starts_at)}  →  ${formatMelbourneShort(g.expires_at)}`;
 }
 
 const UserManagement = () => {
@@ -128,6 +150,30 @@ const UserManagement = () => {
 
   const [copiedUserId, setCopiedUserId] = useState<string | null>(null);
   const [revokingId, setRevokingId] = useState<string | null>(null);
+
+  // Audit-history disclosure per grant (administrator-only). Rows are
+  // fetched lazily on first expand from `manual_access_grant_audit`,
+  // which is RLS-restricted to admins and never included in
+  // `get_member_state` — grant recipients cannot see this data.
+  const [openAuditFor, setOpenAuditFor] = useState<string | null>(null);
+  const [auditRows, setAuditRows] = useState<Record<string, AuditRow[] | "loading" | "error">>({});
+
+  const loadAudit = useCallback(async (grantId: string) => {
+    setAuditRows((prev) => ({ ...prev, [grantId]: "loading" }));
+    try {
+      const { data, error } = await supabase
+        .from("manual_access_grant_audit")
+        .select(
+          "id, action_type, acted_at, actor, previous_starts_at, previous_expires_at, previous_revoked_at, new_starts_at, new_expires_at, new_revoked_at, notes"
+        )
+        .eq("grant_id", grantId)
+        .order("acted_at", { ascending: true });
+      if (error) throw error;
+      setAuditRows((prev) => ({ ...prev, [grantId]: (data as AuditRow[]) ?? [] }));
+    } catch {
+      setAuditRows((prev) => ({ ...prev, [grantId]: "error" }));
+    }
+  }, []);
 
   const fetchUsers = useCallback(async () => {
     setLoadingUsers(true);
@@ -201,7 +247,7 @@ const UserManagement = () => {
       toast({ title: "Missing fields", description: "Email, password and both dates are required.", variant: "destructive" });
       return;
     }
-    if (endsAt <= startsAt) {
+    if (!isValidWindow(startsAt, endsAt)) {
       toast({ title: "Invalid dates", description: "End date must be after start date.", variant: "destructive" });
       return;
     }
@@ -224,7 +270,7 @@ const UserManagement = () => {
         email,
         password: tempPassword,
         name: fullName,
-        endsAt: endsAt.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }),
+        endsAt: formatMelbourneLong(endsAt),
       });
       toast({ title: "User created", description: `${email} has been granted full Temple access.` });
       fetchUsers();
@@ -246,7 +292,7 @@ const UserManagement = () => {
 
   const handleExtend = async () => {
     if (!extendUser || !extendNewExpiry) return;
-    if (new Date(extendNewExpiry) <= new Date(extendUser.starts_at)) {
+    if (!isValidWindow(new Date(extendUser.starts_at), extendNewExpiry)) {
       toast({ title: "Invalid date", description: "New expiry must be after the original start date.", variant: "destructive" });
       return;
     }
@@ -258,7 +304,10 @@ const UserManagement = () => {
         _notes: extendNotes || null,
       });
       if (error) throw error;
-      toast({ title: "Access extended", description: `${extendUser.email} now has access until ${format(extendNewExpiry, "PPP")}.` });
+      toast({
+        title: "Access extended",
+        description: `${extendUser.email} now has access until ${formatMelbourneLong(extendNewExpiry)}.`,
+      });
       setExtendOpen(false);
       fetchUsers();
     } catch (err: unknown) {
@@ -509,6 +558,24 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
                   <Input id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="e.g. 1:1 client, 3-month program" />
                 </div>
 
+                {startsAt && endsAt && isValidWindow(startsAt, endsAt) && !createdDetails && (
+                  <div
+                    className="p-3 rounded-md border border-primary/25 bg-primary/5 text-xs space-y-1"
+                    data-testid="create-preview"
+                  >
+                    <p className="font-medium text-foreground">Access window preview</p>
+                    <p className="text-muted-foreground">
+                      Starts: <span className="text-foreground">{formatMelbourneLong(startsAt)}</span>
+                    </p>
+                    <p className="text-muted-foreground">
+                      Ends: <span className="text-foreground">{formatMelbourneLong(endsAt)}</span>
+                    </p>
+                    <p className="text-muted-foreground pt-1">
+                      Access ends at this exact moment. Stored in UTC; displayed in {TEMPLE_TIMEZONE}.
+                    </p>
+                  </div>
+                )}
+
                 {createdDetails ? (
                   <div className="space-y-3">
                     <div className="p-4 rounded-lg border border-primary/30 bg-primary/5 space-y-2">
@@ -602,10 +669,102 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                         <span>{formatWindow(u)}</span>
                         {u.revoked_at && (
-                          <span className="text-destructive">Revoked {format(new Date(u.revoked_at), "MMM d, yyyy")}</span>
+                          <span className="text-destructive">Revoked {formatMelbourneShort(u.revoked_at)}</span>
                         )}
                       </div>
                       {u.notes && <p className="text-xs text-muted-foreground mt-2">{u.notes}</p>}
+
+                      <Collapsible
+                        open={openAuditFor === u.grant_id}
+                        onOpenChange={(open) => {
+                          setOpenAuditFor(open ? u.grant_id : null);
+                          if (open && !auditRows[u.grant_id]) loadAudit(u.grant_id);
+                        }}
+                      >
+                        <CollapsibleTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="mt-2 h-auto py-1 px-2 text-xs text-muted-foreground"
+                            data-testid={`audit-toggle-${u.grant_id}`}
+                          >
+                            <ChevronDown
+                              className={cn(
+                                "w-3 h-3 mr-1 transition-transform",
+                                openAuditFor === u.grant_id && "rotate-180",
+                              )}
+                            />
+                            History
+                          </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-2">
+                          <div
+                            className="rounded-md border border-border/60 bg-muted/30 p-3 space-y-2 text-xs"
+                            data-testid={`audit-panel-${u.grant_id}`}
+                          >
+                            {auditRows[u.grant_id] === "loading" && (
+                              <p className="text-muted-foreground flex items-center gap-2">
+                                <Loader2 className="w-3 h-3 animate-spin" />Loading history…
+                              </p>
+                            )}
+                            {auditRows[u.grant_id] === "error" && (
+                              <div className="flex items-center justify-between">
+                                <p className="text-destructive">Failed to load history.</p>
+                                <Button size="sm" variant="ghost" onClick={() => loadAudit(u.grant_id)}>
+                                  Retry
+                                </Button>
+                              </div>
+                            )}
+                            {Array.isArray(auditRows[u.grant_id]) && (auditRows[u.grant_id] as AuditRow[]).length === 0 && (
+                              <p className="text-muted-foreground">No audit entries recorded.</p>
+                            )}
+                            {Array.isArray(auditRows[u.grant_id]) && (auditRows[u.grant_id] as AuditRow[]).length > 0 && (
+                              <ul className="space-y-2">
+                                {(auditRows[u.grant_id] as AuditRow[]).map((row) => (
+                                  <li key={row.id} className="border-l-2 border-primary/40 pl-2">
+                                    <div className="flex items-baseline justify-between gap-2">
+                                      <span className="font-medium text-foreground capitalize">
+                                        {row.action_type.replace(/_/g, " ")}
+                                      </span>
+                                      <span className="text-muted-foreground">
+                                        {formatAuditTimestamp(row.acted_at)}
+                                      </span>
+                                    </div>
+                                    <div className="text-muted-foreground mt-0.5">
+                                      by {shortActor(row.actor)}
+                                    </div>
+                                    {(row.action_type === "extend" || row.action_type === "revoke") &&
+                                      row.previous_expires_at && (
+                                      <div className="text-muted-foreground">
+                                        Previous expiry:{" "}
+                                        <span className="text-foreground">
+                                          {formatMelbourneShort(row.previous_expires_at)}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {row.new_expires_at && row.action_type !== "revoke" && (
+                                      <div className="text-muted-foreground">
+                                        Resulting expiry:{" "}
+                                        <span className="text-foreground">
+                                          {formatMelbourneShort(row.new_expires_at)}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {row.new_revoked_at && (
+                                      <div className="text-destructive">
+                                        Revoked at {formatMelbourneShort(row.new_revoked_at)}
+                                      </div>
+                                    )}
+                                    {row.notes && (
+                                      <div className="text-muted-foreground italic mt-0.5">“{row.notes}”</div>
+                                    )}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -627,7 +786,9 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
           <div className="space-y-4 pt-2">
             {extendUser && (
               <p className="text-sm text-muted-foreground">
-                Current window: {format(new Date(extendUser.starts_at), "PPP")} → {format(new Date(extendUser.expires_at), "PPP")}
+                Current window:<br/>
+                <span className="text-foreground">{formatMelbourneLong(extendUser.starts_at)}</span>
+                <br/>→ <span className="text-foreground">{formatMelbourneLong(extendUser.expires_at)}</span>
               </p>
             )}
             <div className="space-y-2">
@@ -664,6 +825,15 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
               <Label>Notes (optional)</Label>
               <Input value={extendNotes} onChange={(e) => setExtendNotes(e.target.value)} placeholder="e.g. Renewed after 1:1 session" />
             </div>
+            {extendUser && extendNewExpiry && isValidWindow(new Date(extendUser.starts_at), extendNewExpiry) && (
+              <div className="p-3 rounded-md border border-primary/25 bg-primary/5 text-xs" data-testid="extend-preview">
+                <p className="font-medium text-foreground">New window preview</p>
+                <p className="text-muted-foreground pt-1">
+                  Ends: <span className="text-foreground">{formatMelbourneLong(extendNewExpiry)}</span>
+                </p>
+                <p className="text-muted-foreground">Access ends at this exact moment.</p>
+              </div>
+            )}
             <Button onClick={handleExtend} disabled={extending || !extendNewExpiry} className="w-full">
               {extending ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Updating…</> : "Update Expiry"}
             </Button>
