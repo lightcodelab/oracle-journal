@@ -1,0 +1,1466 @@
+{
+  "started_at": "2026-07-21T08:22:32.094673+00:00",
+  "cells": [
+    {
+      "state": "admin",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMember\nMy Profile\nThe Door of Devotion\n\nR",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMember\nMy Profile\nThe Door of Communion\n\nCon",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMember\nMy Profile\nThe Door of Devotion\n\nR",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMember\nMy Profile\nThe Door of Communion\n\nCon",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMember\nMy Profile\nThe Door of Devotion\n\nR",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMember\nMy Profile\nThe Door of Communion\n\nCon",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "temple_home",
+      "pass": false
+    },
+    {
+      "state": "grace",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "canceled",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "denied_no_access",
+      "pass": true
+    },
+    {
+      "state": "canceled",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nResource",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nConnect wi",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "",
+      "body_excerpt": "",
+      "actual": "temple_home",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_expired",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Your Temple access period has ended",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nYour Temple access period has ended\n\nYour time-limited acc",
+      "actual": "expired_state",
+      "expected": "expired_state",
+      "pass": true
+    },
+    {
+      "state": "manual_expired",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "denied_no_access",
+      "pass": true
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "no_access",
+      "route": "temple",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "denied_no_access",
+      "pass": true
+    },
+    {
+      "state": "no_access",
+      "route": "devotion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "communion",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "remembrance",
+      "viewport": "desktop",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMember\nMy Profile\nThe Door of Devotion\n\nR",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMember\nMy Profile\nThe Door of Communion\n\nCon",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMember\nMy Profile\nThe Door of Devotion\n\nR",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMember\nMy Profile\nThe Door of Communion\n\nCon",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMember\nMy Profile\nThe Door of Devotion\n\nR",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMember\nMy Profile\nThe Door of Communion\n\nCon",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "temple_home",
+      "pass": false
+    },
+    {
+      "state": "grace",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "canceled",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "denied_no_access",
+      "pass": true
+    },
+    {
+      "state": "canceled",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nResource",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nConnect wi",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "",
+      "body_excerpt": "",
+      "actual": "temple_home",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_expired",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Your Temple access period has ended",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nYour Temple access period has ended\n\nYour time-limited acc",
+      "actual": "expired_state",
+      "expected": "expired_state",
+      "pass": true
+    },
+    {
+      "state": "manual_expired",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "denied_no_access",
+      "pass": true
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "no_access",
+      "route": "temple",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "denied_no_access",
+      "pass": true
+    },
+    {
+      "state": "no_access",
+      "route": "devotion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis doo",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "communion",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door ",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "remembrance",
+      "viewport": "tablet",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nTemple\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need a",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nResources for n",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nConnect with our ",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "admin",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA space t",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nResources for n",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nConnect with our ",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "active_member",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA space t",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nResources for n",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nConnect with our ",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "founding_member",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA space t",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "temple_home",
+      "pass": false
+    },
+    {
+      "state": "grace",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis door requi",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door require",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "grace",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need an activ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "canceled",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "denied_no_access",
+      "pass": true
+    },
+    {
+      "state": "canceled",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis door requi",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door require",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "canceled",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need an activ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Welcome back to The Temple",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nWelcome back to The Temple\n\nPhaseC\n\nContinue your journey\n",
+      "actual": "temple_home",
+      "expected": "temple_home",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nResources for n",
+      "actual": "door_devotion",
+      "expected": "door_devotion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nConnect with our ",
+      "actual": "door_communion",
+      "expected": "door_communion",
+      "pass": true
+    },
+    {
+      "state": "manual_active",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "The Door of Remembrance",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Remembrance\nMy Profile\nThe Door of Remembrance\n\nA space t",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "",
+      "body_excerpt": "",
+      "actual": "temple_home",
+      "expected": "scheduled_state",
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis door requi",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door require",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_scheduled",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need an activ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_expired",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "Your Temple access period has ended",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nYour Temple access period has ended\n\nYour time-limited acc",
+      "actual": "expired_state",
+      "expected": "expired_state",
+      "pass": true
+    },
+    {
+      "state": "manual_expired",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis door requi",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door require",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_expired",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need an activ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "denied_no_access",
+      "pass": true
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis door requi",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door require",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "manual_revoked_only",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need an activ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    },
+    {
+      "state": "no_access",
+      "route": "temple",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/temple",
+      "h1": "The Temple awaits",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nMy Profile\nThe Temple awaits\n\nAn active membership opens the whole Te",
+      "actual": "denied_no_access",
+      "expected": "denied_no_access",
+      "pass": true
+    },
+    {
+      "state": "no_access",
+      "route": "devotion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/devotion",
+      "h1": "The Door of Devotion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Devotion\nMy Profile\nThe Door of Devotion\n\nThis door requi",
+      "actual": "door_devotion",
+      "expected": [
+        "door_devotion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "communion",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/communion",
+      "h1": "The Door of Communion",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nDoor of Communion\nMy Profile\nThe Door of Communion\n\nThis door require",
+      "actual": "door_communion",
+      "expected": [
+        "door_communion_denied",
+        "redirect_auth",
+        "redirect_public"
+      ],
+      "pass": false
+    },
+    {
+      "state": "no_access",
+      "route": "remembrance",
+      "viewport": "mobile",
+      "final_url": "http://localhost:8080/decks",
+      "h1": "Access Required",
+      "body_excerpt": "Stay in the loop\n\nGet notified when new features or content drops. You can always change this in your Profile settings.\n\nSubscribe\nThe Door of Remembrance\nMy Profile\nAccess Required\n\nYou need an activ",
+      "actual": "door_remembrance",
+      "expected": "door_remembrance",
+      "pass": true
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "refresh_temple",
+      "state": "manual_active",
+      "pass": true
+    },
+    {
+      "name": "nested_devotion",
+      "state": "manual_active",
+      "pass": true
+    },
+    {
+      "name": "back_forward",
+      "state": "manual_active",
+      "pass": true
+    }
+  ],
+  "finished_at": "2026-07-21T08:28:08.689104+00:00",
+  "total": 120,
+  "passed": 84,
+  "failed": 36
+}
