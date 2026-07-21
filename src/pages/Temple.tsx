@@ -12,8 +12,8 @@ import { ExploreDoors } from "@/components/temple/ExploreDoors";
 import { LiveAndSupport } from "@/components/temple/LiveAndSupport";
 import { RecommendationGrid } from "@/components/temple/RecommendationGrid";
 import { useHomeRecommendations } from "@/hooks/useHomeRecommendations";
-import { useBucketGrants } from "@/hooks/useBucketGrants";
-import { ExistingAccess } from "@/components/temple/ExistingAccess";
+import { ExpiredAccess } from "@/components/temple/ExpiredAccess";
+import { ScheduledAccess } from "@/components/temple/ScheduledAccess";
 
 /** Wrapper that only mounts recommendation queries once member access is resolved. */
 function RecommendedSection({ enabled }: { enabled: boolean }) {
@@ -52,10 +52,12 @@ const Temple = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const {
-    isActiveMember,
     isAdmin,
     founderBadge,
     foundingMemberSince,
+    manualFullAccess,
+    error: memberError,
+    hasFullTempleAccess,
     loading: memberLoading,
   } = useMemberState();
 
@@ -95,13 +97,9 @@ const Temple = () => {
 
   // Access resolution gate. Personal queries do NOT run until this is true.
   const accessResolved = !authLoading && !memberLoading && !!user;
-  const hasFullAccess = accessResolved && (isActiveMember || isAdmin);
+  const hasFullAccess = accessResolved && hasFullTempleAccess;
 
-  // Only read historical bucket grants when the user is authenticated but
-  // does NOT have full access. Do not run these calls for full members.
-  const grants = useBucketGrants(accessResolved && !hasFullAccess);
-
-  if (authLoading || memberLoading || !user || (!hasFullAccess && grants.loading)) {
+  if (authLoading || memberLoading || !user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
@@ -111,15 +109,16 @@ const Temple = () => {
     );
   }
 
-  // Authenticated but not a full member. If the user still holds one or more
-  // valid historical bucket-scoped manual grants, surface a restrained
-  // "Your existing access" state showing only the granted Door(s). Otherwise
-  // preserve the ordinary "The Temple awaits" state.
+  // Authenticated but not currently entitled. State precedence:
+  //   error → scheduled → expired → (revoked_only | none) general no-access.
+  //
+  // Never show expired copy for revoked-only history, lookup failure, or a
+  // user who never held access. Manual access alone does NOT grant Founder,
+  // subscriber or billing wording.
   if (!hasFullAccess) {
-    // Fail-closed: an access-check RPC failure must be distinguishable from
-    // a confirmed no-access result. Never render the full homepage, any
-    // Door, or Founder recognition on failure.
-    if (grants.error) {
+    // Fail-closed: an access-check RPC failure must be distinguishable
+    // from a confirmed no-access result.
+    if (memberError) {
       return (
         <div className="min-h-screen bg-background relative">
           <div className="absolute top-4 right-4 z-20">
@@ -143,9 +142,18 @@ const Temple = () => {
         </div>
       );
     }
-    if (grants.any) {
-      return <ExistingAccess grants={grants} />;
+    // Scheduled access takes precedence over expired history for a user
+    // who has both an old expired grant and a future scheduled grant —
+    // `manualFullAccess.state` is already ordered that way in the RPC.
+    if (manualFullAccess.state === "scheduled") {
+      return <ScheduledAccess startsAt={manualFullAccess.startsAt} />;
     }
+    if (manualFullAccess.state === "expired") {
+      return <ExpiredAccess expiresAt={manualFullAccess.expiresAt} />;
+    }
+    // 'revoked_only' and 'none' both fall through to the general
+    // no-access state below. Revoked history never renders the
+    // expired/join CTA copy.
     return (
       <div className="min-h-screen bg-background relative">
         <div className="absolute top-4 right-4 z-20">

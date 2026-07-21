@@ -60,24 +60,18 @@ const TIER_FEATURES: Record<string, string[]> = {
   ],
 };
 
-const BUCKET_LABELS: Record<string, string> = {
-  remembrance: "Door of Remembrance",
-  devotion: "Door of Devotion",
-  communion: "Door of Communion",
-};
-
 const MyAccount = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { memberTierCode, subscriptionStatus, tierName, loading: tierLoading, isAdmin, bucketAccess, refetch } = useTierAccess();
   const { tiers, loading: tiersLoading, startCheckout, checkoutLoading } = useMembership();
-  const { isFoundingMember, foundingPriceStatus } = useMemberState();
+  const { isFoundingMember, foundingPriceStatus, manualFullAccess } =
+    useMemberState();
   const [portalLoading, setPortalLoading] = useState(false);
   const [pauseLoading, setPauseLoading] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [billingCadence, setBillingCadence] = useState<"monthly" | "yearly">("monthly");
-  const [manualGrants, setManualGrants] = useState<{ bucket_key: string; ends_at: string }[]>([]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -99,22 +93,6 @@ const MyAccount = () => {
 
     return () => subscription.unsubscribe();
   }, [navigate]);
-
-  // Fetch manual access grants
-  useEffect(() => {
-    const fetchManualGrants = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-      const now = new Date().toISOString();
-      const { data } = await supabase
-        .from("manual_access_grants")
-        .select("bucket_key, ends_at")
-        .eq("user_id", session.user.id)
-        .gte("ends_at", now);
-      if (data) setManualGrants(data);
-    };
-    fetchManualGrants();
-  }, []);
 
   const handleManageBilling = async () => {
     setPortalLoading(true);
@@ -204,7 +182,7 @@ const MyAccount = () => {
 
   const isActiveMember = subscriptionStatus === "active" || subscriptionStatus === "trialing";
   const isPaused = subscriptionStatus === "paused";
-  const hasManualAccess = manualGrants.length > 0;
+  const hasManualAccess = manualFullAccess.state === "active";
   const hasSubscription = isActiveMember || isPaused;
 
   if (loading || tierLoading || tiersLoading) {
@@ -335,17 +313,13 @@ const MyAccount = () => {
             {!hasSubscription && hasManualAccess && !isAdmin && (
               <div className="p-4 rounded-lg border bg-primary/5 border-primary/20">
                 <h3 className="font-medium mb-2">Your Access</h3>
-                <ul className="space-y-1">
-                  {manualGrants.map((grant) => (
-                    <li key={grant.bucket_key} className="text-sm flex items-center gap-2 text-muted-foreground">
-                      <Check className="w-4 h-4 text-primary" />
-                      {BUCKET_LABELS[grant.bucket_key] || grant.bucket_key}
-                      <span className="text-xs text-muted-foreground/60 ml-auto">
-                        until {new Date(grant.ends_at).toLocaleDateString()}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                <p className="text-sm text-muted-foreground">
+                  You have full access to The Temple
+                  {manualFullAccess.expiresAt
+                    ? ` until ${new Date(manualFullAccess.expiresAt).toLocaleString(undefined, { dateStyle: "long", timeStyle: "short" })}`
+                    : ""}
+                  .
+                </p>
               </div>
             )}
             {!hasSubscription && !hasManualAccess && !isAdmin && (

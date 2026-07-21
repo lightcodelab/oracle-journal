@@ -57,9 +57,9 @@ export function useTierAccess(): TierAccess {
       }
 
       // Canonical read: go through get_member_state(), which consults the
-      // entitlement ledger (and admin role and manual grants) via SECURITY
-      // DEFINER. NEVER trust `profiles.is_active_member` for access — it is
-      // a denormalised mirror and may lag. See useMemberState.
+      // entitlement ledger, admin role AND canonical manual full-access
+      // grants via SECURITY DEFINER. NEVER trust `profiles.is_active_member`
+      // for access — it is a denormalised mirror and may lag.
       const [{ data: profile }, { data: memberState }] = await Promise.all([
         supabase
           .from("profiles")
@@ -69,13 +69,19 @@ export function useTierAccess(): TierAccess {
         supabase.rpc("get_member_state", { _user_id: session.user.id }),
       ]);
 
-      const canonicalActive = Boolean(
-        (memberState as Record<string, unknown> | null)?.is_active_member,
-      );
+      const ms = (memberState as Record<string, unknown> | null) ?? {};
+      const canonicalActive = Boolean(ms.is_active_member);
+      const manual =
+        (ms.manual_full_access as { state?: string } | null | undefined) ?? {};
+      const manualActive = manual?.state === "active";
+      // Under the shared authorization rule: admin OR active membership
+      // OR active manual full access. Admin handling is via useAuth().isAdmin.
+      const hasFull = canonicalActive || manualActive;
 
       setMemberTierCode(profile?.member_tier_code || null);
       setSubscriptionStatus(profile?.subscription_status || null);
-      setIsActiveMember(canonicalActive);
+      setIsActiveMember(hasFull);
+      // Identity-scoped label: manual access is NOT a membership tier.
       setTierName(canonicalActive ? "Member" : null);
     } catch (error) {
       console.error("Error in useTierAccess:", error);
