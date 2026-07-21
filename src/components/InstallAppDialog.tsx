@@ -26,23 +26,10 @@ export const useInstallApp = () => useContext(InstallAppContext);
 export const InstallAppProvider = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    // Only auto-prompt authenticated members — never interrupt anonymous
-    // visitors on the public sales page.
-    const dismissed = localStorage.getItem(INSTALL_DIALOG_KEY);
-    if (dismissed) return;
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    let cancelled = false;
-    (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (cancelled || !data.session) return;
-      timer = setTimeout(() => setOpen(true), 2000);
-    })();
-    return () => {
-      cancelled = true;
-      if (timer) clearTimeout(timer);
-    };
-  }, []);
+  // The install dialog is now strictly member-initiated. It never auto-opens
+  // on sign-in or on `/temple` — it obscured the redesigned member home on
+  // first authenticated visit. Users open it explicitly from the profile
+  // dropdown ("Add App Icon to Phone"). Anonymous visitors are unaffected.
 
   const handleDismiss = () => {
     localStorage.setItem(INSTALL_DIALOG_KEY, "true");
