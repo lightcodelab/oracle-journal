@@ -5554,6 +5554,14 @@ export type Database = {
           passed: boolean
         }[]
       }
+      _phasec_run_tests: {
+        Args: never
+        Returns: {
+          detail: string
+          passed: boolean
+          test_name: string
+        }[]
+      }
       _stripe_webhook_stale_after: { Args: never; Returns: string }
       admin_create_manual_full_access: {
         Args: {
