@@ -54,34 +54,32 @@ export function ExploreDoors() {
         ))}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="flex-1 rounded-lg border border-border/50 bg-card/50 p-4">
-          <h3 className="font-serif text-lg text-foreground mb-0.5">
-            Tools for Your Return
-          </h3>
-          <p className="text-sm text-muted-foreground mb-3">
-            Gentle places to reflect, listen, and notice what is changing.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {tools.map(({ label, href, icon: Icon }) => (
-              <Link
-                key={href}
-                to={href}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm text-muted-foreground hover:text-foreground hover:bg-card border border-border/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                <Icon className="h-4 w-4" aria-hidden /> {label}
-              </Link>
-            ))}
-          </div>
+      <div className="rounded-lg border border-border/50 bg-card/50 p-4 mb-3">
+        <h3 className="font-serif text-lg text-foreground mb-0.5">
+          Tools for Your Return
+        </h3>
+        <p className="text-sm text-muted-foreground mb-3">
+          Gentle places to reflect, listen, and notice what is changing.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {tools.map(({ label, href, icon: Icon }) => (
+            <Link
+              key={href}
+              to={href}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm text-muted-foreground hover:text-foreground hover:bg-card border border-border/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <Icon className="h-4 w-4" aria-hidden /> {label}
+            </Link>
+          ))}
         </div>
-
-        <Link
-          to="/search"
-          className="inline-flex items-center self-start sm:self-center gap-1.5 px-3 py-1.5 rounded-full text-sm text-muted-foreground hover:text-foreground hover:bg-card border border-border/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        >
-          <Search className="h-4 w-4" aria-hidden /> Search
-        </Link>
       </div>
+
+      <Link
+        to="/search"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm text-muted-foreground hover:text-foreground hover:bg-card border border-border/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      >
+        <Search className="h-4 w-4" aria-hidden /> Search
+      </Link>
     </section>
   );
 }
