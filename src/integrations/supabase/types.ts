@@ -5524,10 +5524,11 @@ export type Database = {
       }
     }
     Functions: {
-      _phase1_run_access_tests: {
+      _oracle_access_run_tests: {
         Args: never
         Returns: {
-          label: string
+          detail: string
+          name: string
           passed: boolean
         }[]
       }
@@ -5552,14 +5553,6 @@ export type Database = {
           label: string
           note: string
           passed: boolean
-        }[]
-      }
-      _phasec_run_tests: {
-        Args: never
-        Returns: {
-          detail: string
-          passed: boolean
-          test_name: string
         }[]
       }
       _stripe_webhook_stale_after: { Args: never; Returns: string }
@@ -5645,10 +5638,10 @@ export type Database = {
       }
       has_active_membership: { Args: { _user_id: string }; Returns: boolean }
       has_any_manual_access: { Args: { _user_id: string }; Returns: boolean }
-      has_bucket_access: {
-        Args: { bucket_key_param: string }
-        Returns: boolean
-      }
+      has_bucket_access:
+        | { Args: { _bucket_key: string; _user_id: string }; Returns: boolean }
+        | { Args: { bucket_key_param: string }; Returns: boolean }
+      has_full_temple_access: { Args: { _user_id: string }; Returns: boolean }
       has_manual_access: {
         Args: { _bucket_key: string; _user_id: string }
         Returns: boolean
@@ -5769,7 +5762,6 @@ export type Database = {
           isSetofReturn: false
         }
       }
-      use_new_entitlement_model: { Args: never; Returns: boolean }
       user_has_deck_access: {
         Args: { _deck_id: string; _user_id: string }
         Returns: boolean
