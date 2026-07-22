@@ -7,11 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, Video, Play, Clock, Sparkles, GraduationCap, Users, Flower2, Lock, ArrowUpRight } from 'lucide-react';
+import { Loader2, Video, Play, Clock, Sparkles, GraduationCap, Users, Flower2 } from 'lucide-react';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import { useTierAccess } from '@/hooks/useTierAccess';
+import { TempleAccessGate } from '@/components/temple/TempleAccessGate';
 import {
   Dialog,
   DialogContent,
@@ -66,10 +67,7 @@ export default function LiveReplays() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState<'all' | 'reading' | 'class' | 'workshop' | 'meditation'>('all');
   const [selectedReplay, setSelectedReplay] = useState<SessionReplay | null>(null);
-  const { hasAccess, tierName, subscriptionStatus, loading: tierLoading, isAdmin } = useTierAccess();
-
-  const canAccessReplays = hasAccess('communion');
-  const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
+  const { loading: tierLoading, isAdmin } = useTierAccess();
 
   const { data: replays, isLoading } = useQuery({
     queryKey: ['session-replays'],
@@ -83,7 +81,7 @@ export default function LiveReplays() {
       if (error) throw error;
       return data as SessionReplay[];
     },
-    enabled: canAccessReplays || isAdmin,
+    enabled: true,
   });
 
   const filteredReplays = replays?.filter(replay => 
@@ -111,54 +109,8 @@ export default function LiveReplays() {
     );
   }
 
-  // Show access denied if user doesn't have communion (T3) access
-  if (!canAccessReplays) {
-    return (
-      <div className="min-h-screen bg-background py-12 px-4 relative">
-        <div className="flex items-center justify-between p-4 border-b border-border absolute top-0 left-0 right-0">
-          <PageBreadcrumb items={[
-            { label: 'Communion', href: '/communion' },
-            { label: 'Live Replays' }
-          ]} />
-          <ProfileDropdown />
-        </div>
-
-        <div className="max-w-lg mx-auto pt-24 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto">
-              <Lock className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <h1 className="font-serif text-3xl text-foreground">
-              Live Session Replays
-            </h1>
-            <p className="text-muted-foreground">
-              Access to live session replays requires The Initiate membership tier.
-            </p>
-            {tierName && (
-              <p className="text-sm text-muted-foreground">
-                Your current tier: <Badge variant="outline">{tierName}</Badge>
-              </p>
-            )}
-            <div className="flex flex-col gap-3 pt-4">
-              <Button onClick={() => navigate('/membership')} size="lg">
-                {isActiveMember ? 'Upgrade to The Initiate' : 'View Memberships'}
-                <ArrowUpRight className="w-4 h-4 ml-2" />
-              </Button>
-              <Button variant="ghost" onClick={() => navigate('/communion')}>
-                Return to Communion
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
-
   return (
+   <TempleAccessGate>
     <div className="min-h-screen bg-background">
       <div className="flex items-center justify-between p-4 border-b border-border">
         <PageBreadcrumb items={[
@@ -345,5 +297,6 @@ export default function LiveReplays() {
         </DialogContent>
       </Dialog>
     </div>
+   </TempleAccessGate>
   );
 }
