@@ -31,6 +31,7 @@ import RichTextEditorToolbar from './RichTextEditorToolbar';
 import { useResourceEditLock } from '@/hooks/useResourceEditLock';
 import ResourceEditLockWarning from './ResourceEditLockWarning';
 import { createStorageFileName, displayStorageFileName } from '@/lib/storageFileNames';
+import CourseTagPicker from './CourseTagPicker';
 
 const resourceSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
@@ -71,6 +72,7 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
   const [courseId, setCourseId] = useState<string | null>(null);
   const [scheduledPublishAt, setScheduledPublishAt] = useState<Date | undefined>(undefined);
   const [scheduledTime, setScheduledTime] = useState('12:00');
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
 
   // Resource edit lock - prevents simultaneous editing by multiple admins
   const { isLocked, lockedBy, isLoading: lockLoading, acquireLock } = useResourceEditLock({
@@ -135,8 +137,25 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
     fetchCategories();
     if (resourceId) {
       fetchResource();
+      fetchResourceTags(resourceId);
     }
   }, [resourceId]);
+
+  const fetchResourceTags = async (id: string) => {
+    const { data } = await (supabase as any)
+      .from('content_resource_tag_assignments')
+      .select('tag_id')
+      .eq('resource_id', id);
+    if (data) setSelectedTagIds(data.map((r: any) => r.tag_id));
+  };
+
+  const syncResourceTags = async (id: string) => {
+    await (supabase as any).from('content_resource_tag_assignments').delete().eq('resource_id', id);
+    if (selectedTagIds.length > 0) {
+      const rows = selectedTagIds.map((tag_id) => ({ resource_id: id, tag_id }));
+      await (supabase as any).from('content_resource_tag_assignments').insert(rows);
+    }
+  };
 
   const fetchCategories = async () => {
     const { data, error } = await supabase
