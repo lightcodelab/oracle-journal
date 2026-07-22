@@ -9,6 +9,6 @@
     "name": "invalid_window_rejected",
     "status": 400,
     "pass": true,
-    "body": "{\"error\":\"Email, password, dates, and at least one content area are required\"}"
+    "body": "{\"error\":\"End date must be after start date\"}"
   }
 ]
