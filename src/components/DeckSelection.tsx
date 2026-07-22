@@ -16,6 +16,7 @@ interface Deck {
   description: string | null;
   theme: string;
   image_color: string;
+  thumbnail_url?: string | null;
   is_free: boolean;
   is_starter: boolean;
   woocommerce_product_id: string | null;
@@ -161,7 +162,8 @@ export const DeckSelection = ({
             </motion.div>
 
             {decks.filter(d => !d.is_starter).map((deck, index) => {
-              const bannerSrc = deck.name === "The Sacred Rewrite" ? tsrBanner.url
+              const bannerSrc = deck.thumbnail_url
+                || (deck.name === "The Sacred Rewrite" ? tsrBanner.url
                 : deck.name === "Magic not Logic" ? mnlBanner.url
                 : deck.name === "AreekeerA" ? areekeeraBanner.url
                 : deck.name === "The Art of Self-Healing" ? taoshBanner.url
