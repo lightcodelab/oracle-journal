@@ -161,6 +161,17 @@ const CardDeckAdmin = () => {
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   const [draft, setDraft] = useState<CardRow | null>(null);
 
+  // Deck settings draft
+  const [deckDraft, setDeckDraft] = useState<{
+    name: string;
+    description: string;
+    theme: string;
+    thumbnail_url: string | null;
+  } | null>(null);
+  const [deckTagIds, setDeckTagIds] = useState<string[]>([]);
+  const [savingDeck, setSavingDeck] = useState(false);
+  const [uploadingDeckThumb, setUploadingDeckThumb] = useState(false);
+
   // New-deck dialog state
   const [newDeckOpen, setNewDeckOpen] = useState(false);
   const [creatingDeck, setCreatingDeck] = useState(false);
@@ -186,7 +197,9 @@ const CardDeckAdmin = () => {
       if (!roles) { navigate('/devotion'); return; }
 
       const { data: deckData, error } = await supabase
-        .from('decks').select('id, name').order('display_order', { ascending: true });
+        .from('decks')
+        .select('id, name, description, theme, thumbnail_url, image_color')
+        .order('display_order', { ascending: true });
       if (error) {
         toast({ title: 'Failed to load decks', description: error.message, variant: 'destructive' });
       } else {
@@ -198,7 +211,11 @@ const CardDeckAdmin = () => {
 
   // Load cards when deck changes
   useEffect(() => {
-    if (!selectedDeckId) { setCards([]); setSelectedCardId(''); setDraft(null); return; }
+    if (!selectedDeckId) {
+      setCards([]); setSelectedCardId(''); setDraft(null);
+      setDeckDraft(null); setDeckTagIds([]);
+      return;
+    }
     (async () => {
       const { data, error } = await supabase
         .from('cards')
@@ -212,8 +229,24 @@ const CardDeckAdmin = () => {
       setCards((data || []) as CardRow[]);
       setSelectedCardId('');
       setDraft(null);
+
+      // Load current deck values into settings draft
+      const d = decks.find((x) => x.id === selectedDeckId);
+      if (d) {
+        setDeckDraft({
+          name: d.name || '',
+          description: d.description || '',
+          theme: d.theme || '',
+          thumbnail_url: d.thumbnail_url || null,
+        });
+      }
+      const { data: tagRows } = await (supabase as any)
+        .from('deck_tag_assignments')
+        .select('tag_id')
+        .eq('deck_id', selectedDeckId);
+      setDeckTagIds((tagRows || []).map((r: any) => r.tag_id));
     })();
-  }, [selectedDeckId, toast]);
+  }, [selectedDeckId, toast, decks]);
 
   // Load draft when card changes
   useEffect(() => {
