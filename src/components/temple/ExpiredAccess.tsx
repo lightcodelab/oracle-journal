@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import NavActions from "@/components/NavActions";
 import { Button } from "@/components/ui/button";
+import { formatMelbourneLong } from "@/lib/manualAccessDates";
 
 /**
  * Dedicated state shown ONLY when the sole remaining canonical manual
@@ -11,12 +12,17 @@ import { Button } from "@/components/ui/button";
  * never held access.
  */
 export function ExpiredAccess({ expiresAt }: { expiresAt: string | null }) {
-  const when = expiresAt
-    ? new Date(expiresAt).toLocaleString(undefined, {
-        dateStyle: "long",
-        timeStyle: "short",
-      })
-    : null;
+  let when: string | null = null;
+  if (expiresAt) {
+    const d = new Date(expiresAt);
+    if (!Number.isNaN(d.getTime())) {
+      try {
+        when = formatMelbourneLong(d);
+      } catch {
+        when = null;
+      }
+    }
+  }
   return (
     <div className="min-h-screen bg-background relative">
       <div className="absolute top-4 right-4 z-20">
