@@ -117,7 +117,8 @@ const Auth = () => {
           // Redirect to home/temple - the useMembership hook will pick up the pending checkout
           navigate("/");
         } else {
-          navigate(redirectTo);
+          sessionStorage.removeItem("postLoginRedirect");
+          navigate(redirectTo, { replace: true });
         }
       }
     });
@@ -134,7 +135,8 @@ const Auth = () => {
           // Redirect to home - the Membership page's useMembership hook will initiate checkout
           navigate("/");
         } else {
-          navigate(redirectTo);
+          sessionStorage.removeItem("postLoginRedirect");
+          navigate(redirectTo, { replace: true });
         }
       }
     });
