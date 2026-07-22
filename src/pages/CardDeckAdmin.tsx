@@ -13,6 +13,8 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { compressImage } from '@/lib/imageCompression';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import CourseTagPicker from '@/components/admin/CourseTagPicker';
+import { Image as ImageIcon, X as XIcon } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -26,6 +28,10 @@ import {
 interface DeckRow {
   id: string;
   name: string;
+  description?: string | null;
+  theme?: string | null;
+  thumbnail_url?: string | null;
+  image_color?: string | null;
 }
 
 interface CardRow {
