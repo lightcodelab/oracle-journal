@@ -194,7 +194,7 @@ const SearchResults = () => {
       const healingResults: SearchResult[] = allHealingData.map((r: any) => ({
         id: r.id,
         title: r.title,
-        slug: r.slug || r.id,
+        slug: `healing-${r.slug || r.id}`,
         summary: r.summary,
         thumbnail_url: getPublicUrl('healing-resource-images', r.display_image_url),
         main_media_kind: r.vimeo_embed_url ? 'video_embed' : r.audio_file_url ? 'file' : 'none',
@@ -225,7 +225,10 @@ const SearchResults = () => {
         doorBucket: r.location?.page || r.door_type || null,
       }));
 
-      setResults([...contentResults, ...courseResults, ...healingResults]);
+      const allResults = [...contentResults, ...courseResults, ...healingResults].filter(
+        (r) => !!r.slug
+      );
+      setResults(allResults);
       setLoading(false);
     };
 
