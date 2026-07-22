@@ -29,6 +29,7 @@ interface CourseTag {
 interface CourseTagPickerProps {
   selectedTagIds: string[];
   onChange: (tagIds: string[]) => void;
+  label?: string;
 }
 
 const TAG_COLORS = [
@@ -36,7 +37,7 @@ const TAG_COLORS = [
   '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899',
 ];
 
-const CourseTagPicker = ({ selectedTagIds, onChange }: CourseTagPickerProps) => {
+const CourseTagPicker = ({ selectedTagIds, onChange, label = 'Tags' }: CourseTagPickerProps) => {
   const { toast } = useToast();
   const [tags, setTags] = useState<CourseTag[]>([]);
   const [loading, setLoading] = useState(true);
@@ -136,7 +137,7 @@ const CourseTagPicker = ({ selectedTagIds, onChange }: CourseTagPickerProps) => 
 
   return (
     <div className="space-y-2">
-      <Label>Tags</Label>
+      <Label>{label}</Label>
       <div className="flex flex-wrap items-center gap-2">
         {selectedTags.map((tag) => (
           <Badge

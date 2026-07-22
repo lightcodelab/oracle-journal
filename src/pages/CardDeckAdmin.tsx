@@ -13,6 +13,8 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { compressImage } from '@/lib/imageCompression';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import CourseTagPicker from '@/components/admin/CourseTagPicker';
+import { Image as ImageIcon, X as XIcon } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -26,6 +28,10 @@ import {
 interface DeckRow {
   id: string;
   name: string;
+  description?: string | null;
+  theme?: string | null;
+  thumbnail_url?: string | null;
+  image_color?: string | null;
 }
 
 interface CardRow {
@@ -155,6 +161,17 @@ const CardDeckAdmin = () => {
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   const [draft, setDraft] = useState<CardRow | null>(null);
 
+  // Deck settings draft
+  const [deckDraft, setDeckDraft] = useState<{
+    name: string;
+    description: string;
+    theme: string;
+    thumbnail_url: string | null;
+  } | null>(null);
+  const [deckTagIds, setDeckTagIds] = useState<string[]>([]);
+  const [savingDeck, setSavingDeck] = useState(false);
+  const [uploadingDeckThumb, setUploadingDeckThumb] = useState(false);
+
   // New-deck dialog state
   const [newDeckOpen, setNewDeckOpen] = useState(false);
   const [creatingDeck, setCreatingDeck] = useState(false);
@@ -180,7 +197,9 @@ const CardDeckAdmin = () => {
       if (!roles) { navigate('/devotion'); return; }
 
       const { data: deckData, error } = await supabase
-        .from('decks').select('id, name').order('display_order', { ascending: true });
+        .from('decks')
+        .select('id, name, description, theme, thumbnail_url, image_color')
+        .order('display_order', { ascending: true });
       if (error) {
         toast({ title: 'Failed to load decks', description: error.message, variant: 'destructive' });
       } else {
@@ -192,7 +211,11 @@ const CardDeckAdmin = () => {
 
   // Load cards when deck changes
   useEffect(() => {
-    if (!selectedDeckId) { setCards([]); setSelectedCardId(''); setDraft(null); return; }
+    if (!selectedDeckId) {
+      setCards([]); setSelectedCardId(''); setDraft(null);
+      setDeckDraft(null); setDeckTagIds([]);
+      return;
+    }
     (async () => {
       const { data, error } = await supabase
         .from('cards')
@@ -206,8 +229,24 @@ const CardDeckAdmin = () => {
       setCards((data || []) as CardRow[]);
       setSelectedCardId('');
       setDraft(null);
+
+      // Load current deck values into settings draft
+      const d = decks.find((x) => x.id === selectedDeckId);
+      if (d) {
+        setDeckDraft({
+          name: d.name || '',
+          description: d.description || '',
+          theme: d.theme || '',
+          thumbnail_url: d.thumbnail_url || null,
+        });
+      }
+      const { data: tagRows } = await (supabase as any)
+        .from('deck_tag_assignments')
+        .select('tag_id')
+        .eq('deck_id', selectedDeckId);
+      setDeckTagIds((tagRows || []).map((r: any) => r.tag_id));
     })();
-  }, [selectedDeckId, toast]);
+  }, [selectedDeckId, toast, decks]);
 
   // Load draft when card changes
   useEffect(() => {
@@ -371,6 +410,74 @@ const CardDeckAdmin = () => {
       toast({ title: 'Card added', description: `Card ${nextNumber} created. Edit and save below.` });
     } catch (err: any) {
       toast({ title: 'Failed to add card', description: err.message, variant: 'destructive' });
+    }
+  };
+
+  const handleDeckThumbnailUpload = async (file: File) => {
+    setUploadingDeckThumb(true);
+    try {
+      const compressed = await compressImage(file);
+      const ext = compressed.name.split('.').pop() || 'webp';
+      const path = `deck-thumbnails/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from('content-images')
+        .upload(path, compressed, { contentType: compressed.type, upsert: false });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from('content-images').getPublicUrl(path);
+      setDeckDraft((d) => (d ? { ...d, thumbnail_url: pub.publicUrl } : d));
+      toast({ title: 'Thumbnail uploaded' });
+    } catch (err: any) {
+      toast({ title: 'Upload failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setUploadingDeckThumb(false);
+    }
+  };
+
+  const handleSaveDeckSettings = async () => {
+    if (!selectedDeckId || !deckDraft) return;
+    if (!deckDraft.name.trim()) {
+      toast({ title: 'Name is required', variant: 'destructive' });
+      return;
+    }
+    setSavingDeck(true);
+    try {
+      const { error } = await supabase
+        .from('decks')
+        .update({
+          name: deckDraft.name.trim(),
+          description: deckDraft.description.trim() || null,
+          theme: deckDraft.theme.trim() || null,
+          thumbnail_url: deckDraft.thumbnail_url,
+        })
+        .eq('id', selectedDeckId);
+      if (error) throw error;
+
+      // Sync deck tags
+      await (supabase as any).from('deck_tag_assignments').delete().eq('deck_id', selectedDeckId);
+      if (deckTagIds.length > 0) {
+        const rows = deckTagIds.map((tag_id) => ({ deck_id: selectedDeckId, tag_id }));
+        await (supabase as any).from('deck_tag_assignments').insert(rows);
+      }
+
+      // Refresh local decks list
+      setDecks((prev) =>
+        prev.map((d) =>
+          d.id === selectedDeckId
+            ? {
+                ...d,
+                name: deckDraft.name.trim(),
+                description: deckDraft.description.trim() || null,
+                theme: deckDraft.theme.trim() || null,
+                thumbnail_url: deckDraft.thumbnail_url,
+              }
+            : d,
+        ),
+      );
+      toast({ title: 'Deck saved', description: 'Deck settings updated.' });
+    } catch (err: any) {
+      toast({ title: 'Save failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setSavingDeck(false);
     }
   };
 
@@ -547,6 +654,95 @@ const CardDeckAdmin = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Deck Settings — parent-deck metadata */}
+        {selectedDeckId && deckDraft && (
+          <Card className="border-primary/30 bg-muted/20">
+            <CardHeader>
+              <CardTitle className="font-serif text-lg">Deck Settings</CardTitle>
+              <p className="text-xs text-muted-foreground">
+                These fields control how the deck appears on the Door of Remembrance. They are separate from individual card content.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Deck Name</Label>
+                  <Input
+                    value={deckDraft.name}
+                    onChange={(e) => setDeckDraft({ ...deckDraft, name: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Theme</Label>
+                  <Input
+                    value={deckDraft.theme}
+                    onChange={(e) => setDeckDraft({ ...deckDraft, theme: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Description</Label>
+                <Textarea
+                  rows={3}
+                  value={deckDraft.description}
+                  onChange={(e) => setDeckDraft({ ...deckDraft, description: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Thumbnail (Door of Remembrance card image)</Label>
+                {deckDraft.thumbnail_url ? (
+                  <div className="flex items-center gap-3 p-3 bg-background rounded-md border">
+                    <img
+                      src={deckDraft.thumbnail_url}
+                      alt="Deck thumbnail"
+                      className="w-24 aspect-video object-cover rounded"
+                    />
+                    <span className="flex-1 text-xs truncate text-muted-foreground">{deckDraft.thumbnail_url}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setDeckDraft({ ...deckDraft, thumbnail_url: null })}
+                    >
+                      <XIcon className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      disabled={uploadingDeckThumb}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleDeckThumbnailUpload(file);
+                      }}
+                    />
+                    {uploadingDeckThumb && <Loader2 className="w-4 h-4 animate-spin" />}
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  Displayed on the Door of Remembrance deck grid. JPG/PNG/WebP, auto-compressed.
+                </p>
+              </div>
+              <CourseTagPicker
+                selectedTagIds={deckTagIds}
+                onChange={setDeckTagIds}
+                label="Deck Tags"
+              />
+              <div className="flex justify-end pt-2 border-t border-border/60">
+                <Button onClick={handleSaveDeckSettings} disabled={savingDeck}>
+                  {savingDeck ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Saving…</>
+                  ) : (
+                    <><Save className="w-4 h-4 mr-2" />Save Deck Settings</>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Editor */}
         {draft && (

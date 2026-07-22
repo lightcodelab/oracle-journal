@@ -1141,6 +1141,49 @@ export type Database = {
           },
         ]
       }
+      content_resource_tag_assignments: {
+        Row: {
+          created_at: string
+          id: string
+          resource_id: string
+          tag_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          resource_id: string
+          tag_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          resource_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_resource_tag_assignments_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "content_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_resource_tag_assignments_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "v_content_resources_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_resource_tag_assignments_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "course_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_resources: {
         Row: {
           body_richtext: Json | null
@@ -1454,6 +1497,42 @@ export type Database = {
           },
         ]
       }
+      deck_tag_assignments: {
+        Row: {
+          created_at: string
+          deck_id: string
+          id: string
+          tag_id: string
+        }
+        Insert: {
+          created_at?: string
+          deck_id: string
+          id?: string
+          tag_id: string
+        }
+        Update: {
+          created_at?: string
+          deck_id?: string
+          id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deck_tag_assignments_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "decks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deck_tag_assignments_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "course_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       decks: {
         Row: {
           created_at: string | null
@@ -1465,6 +1544,7 @@ export type Database = {
           is_starter: boolean | null
           name: string
           theme: string
+          thumbnail_url: string | null
           updated_at: string | null
           woocommerce_product_id: string | null
           woocommerce_product_id_premium: string | null
@@ -1479,6 +1559,7 @@ export type Database = {
           is_starter?: boolean | null
           name: string
           theme: string
+          thumbnail_url?: string | null
           updated_at?: string | null
           woocommerce_product_id?: string | null
           woocommerce_product_id_premium?: string | null
@@ -1493,6 +1574,7 @@ export type Database = {
           is_starter?: boolean | null
           name?: string
           theme?: string
+          thumbnail_url?: string | null
           updated_at?: string | null
           woocommerce_product_id?: string | null
           woocommerce_product_id_premium?: string | null
