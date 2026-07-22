@@ -22,8 +22,21 @@ const Auth = () => {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
   
-  // Get redirect URL and mode from query params
-  const redirectTo = searchParams.get("redirect") || "/temple";
+  // Get redirect URL and mode from query params. Preference order:
+  //   1. explicit ?redirect=/some/path (user tried to open a protected route)
+  //   2. sessionStorage.postLoginRedirect (saved intended destination)
+  //   3. /temple (default for signed-in users)
+  const queryRedirect = searchParams.get("redirect");
+  const savedRedirect =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("postLoginRedirect")
+      : null;
+  const rawRedirectCandidate =
+    (queryRedirect && queryRedirect.startsWith("/") ? queryRedirect : null) ||
+    (savedRedirect && savedRedirect.startsWith("/") && savedRedirect !== "/"
+      ? savedRedirect
+      : null);
+  const redirectTo = rawRedirectCandidate || "/temple";
   const mode = searchParams.get("mode"); // 'signup' for trial flow, otherwise login-only
   const priceId = searchParams.get("priceId"); // For trial checkout
   
@@ -37,11 +50,9 @@ const Auth = () => {
         sessionStorage.setItem("pendingTrialPriceId", priceId);
       }
       
-      const rawRedirect = searchParams.get("redirect");
-      const oauthRedirect =
-        rawRedirect && rawRedirect.startsWith("/")
-          ? `${window.location.origin}${rawRedirect}`
-          : window.location.origin;
+      // OAuth redirect must land the user inside the app, not on the public
+      // sales page. Default to /temple when no explicit destination is set.
+      const oauthRedirect = `${window.location.origin}${redirectTo}`;
       const { error } = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: oauthRedirect,
       });
@@ -71,11 +82,7 @@ const Auth = () => {
         sessionStorage.setItem("pendingTrialPriceId", priceId);
       }
       
-      const rawRedirect = searchParams.get("redirect");
-      const oauthRedirect =
-        rawRedirect && rawRedirect.startsWith("/")
-          ? `${window.location.origin}${rawRedirect}`
-          : window.location.origin;
+      const oauthRedirect = `${window.location.origin}${redirectTo}`;
       const { error } = await lovable.auth.signInWithOAuth("apple", {
         redirect_uri: oauthRedirect,
       });
@@ -182,11 +189,11 @@ const Auth = () => {
         sessionStorage.setItem("pendingTrialPriceId", priceId);
       }
       
-      const { error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
+          emailRedirectTo: `${window.location.origin}${redirectTo}`,
           data: {
             full_name: fullName,
           },
