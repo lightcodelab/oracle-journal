@@ -655,6 +655,95 @@ const CardDeckAdmin = () => {
           </CardContent>
         </Card>
 
+        {/* Deck Settings — parent-deck metadata */}
+        {selectedDeckId && deckDraft && (
+          <Card className="border-primary/30 bg-muted/20">
+            <CardHeader>
+              <CardTitle className="font-serif text-lg">Deck Settings</CardTitle>
+              <p className="text-xs text-muted-foreground">
+                These fields control how the deck appears on the Door of Remembrance. They are separate from individual card content.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Deck Name</Label>
+                  <Input
+                    value={deckDraft.name}
+                    onChange={(e) => setDeckDraft({ ...deckDraft, name: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Theme</Label>
+                  <Input
+                    value={deckDraft.theme}
+                    onChange={(e) => setDeckDraft({ ...deckDraft, theme: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Description</Label>
+                <Textarea
+                  rows={3}
+                  value={deckDraft.description}
+                  onChange={(e) => setDeckDraft({ ...deckDraft, description: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Thumbnail (Door of Remembrance card image)</Label>
+                {deckDraft.thumbnail_url ? (
+                  <div className="flex items-center gap-3 p-3 bg-background rounded-md border">
+                    <img
+                      src={deckDraft.thumbnail_url}
+                      alt="Deck thumbnail"
+                      className="w-24 aspect-video object-cover rounded"
+                    />
+                    <span className="flex-1 text-xs truncate text-muted-foreground">{deckDraft.thumbnail_url}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setDeckDraft({ ...deckDraft, thumbnail_url: null })}
+                    >
+                      <XIcon className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      disabled={uploadingDeckThumb}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleDeckThumbnailUpload(file);
+                      }}
+                    />
+                    {uploadingDeckThumb && <Loader2 className="w-4 h-4 animate-spin" />}
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  Displayed on the Door of Remembrance deck grid. JPG/PNG/WebP, auto-compressed.
+                </p>
+              </div>
+              <CourseTagPicker
+                selectedTagIds={deckTagIds}
+                onChange={setDeckTagIds}
+                label="Deck Tags"
+              />
+              <div className="flex justify-end pt-2 border-t border-border/60">
+                <Button onClick={handleSaveDeckSettings} disabled={savingDeck}>
+                  {savingDeck ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Saving…</>
+                  ) : (
+                    <><Save className="w-4 h-4 mr-2" />Save Deck Settings</>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Editor */}
         {draft && (
           <Card>
