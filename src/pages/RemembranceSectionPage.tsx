@@ -6,8 +6,9 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Lock, ArrowUpRight, ArrowLeft, DoorOpen } from 'lucide-react';
+import { Sparkles, ArrowLeft, DoorOpen } from 'lucide-react';
 import { useTierAccess } from '@/hooks/useTierAccess';
+import { TempleAccessGate } from '@/components/temple/TempleAccessGate';
 import { useContentByLocation } from '@/hooks/useContentByLocation';
 import ResourceCard from '@/components/devotion/ResourceCard';
 
@@ -23,10 +24,7 @@ const RemembranceSectionPage = () => {
   const [loading, setLoading] = useState(true);
   const [locationInfo, setLocationInfo] = useState<LocationInfo | null>(null);
   const [locationLoading, setLocationLoading] = useState(true);
-  const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
-
-  const canAccessRemembrance = hasAccess('remembrance');
-  const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
+  const { tierName, loading: tierLoading } = useTierAccess();
 
   // Fetch the location info from database based on URL section
   useEffect(() => {
@@ -105,54 +103,8 @@ const RemembranceSectionPage = () => {
   const sectionTitle = locationInfo.name;
   const sectionDescription = `Explore ${locationInfo.name.toLowerCase()} to deepen your journey of remembrance.`;
 
-  // Show access denied if user doesn't have remembrance access
-  if (!canAccessRemembrance) {
-    return (
-      <div className="min-h-screen bg-background py-12 px-4 relative">
-        <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-          <PageBreadcrumb items={[
-            { label: 'The Door of Remembrance', href: '/decks', icon: DoorOpen },
-            { label: sectionTitle }
-          ]} />
-          <ProfileDropdown />
-        </div>
-
-        <div className="max-w-lg mx-auto pt-24 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto">
-              <Lock className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <h1 className="font-serif text-3xl text-foreground">
-              {sectionTitle}
-            </h1>
-            <p className="text-muted-foreground">
-              This content requires a membership to access.
-            </p>
-            {tierName && (
-              <p className="text-sm text-muted-foreground">
-                Your current tier: <Badge variant="outline">{tierName}</Badge>
-              </p>
-            )}
-            <div className="flex flex-col gap-3 pt-4">
-              <Button onClick={() => navigate('/membership')} size="lg">
-                {isActiveMember ? 'Upgrade Membership' : 'View Memberships'}
-                <ArrowUpRight className="w-4 h-4 ml-2" />
-              </Button>
-              <Button variant="ghost" onClick={() => navigate('/decks')}>
-                Return to Door of Remembrance
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
-
   return (
+   <TempleAccessGate>
     <div className="min-h-screen bg-background py-12 px-4 relative">
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
@@ -231,6 +183,7 @@ const RemembranceSectionPage = () => {
         )}
       </div>
     </div>
+   </TempleAccessGate>
   );
 };
 

@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
-import { Sparkles, GraduationCap, Users, CalendarDays, Video, Flower2, Lock, ArrowUpRight } from 'lucide-react';
+import { Sparkles, GraduationCap, Users, CalendarDays, Video, Flower2 } from 'lucide-react';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import NavActions from '@/components/NavActions';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useTierAccess } from '@/hooks/useTierAccess';
+import { TempleAccessGate } from '@/components/temple/TempleAccessGate';
 
 interface CommunionCategory {
   id: string;
@@ -80,10 +81,7 @@ const categories: CommunionCategory[] = [
 export default function DoorOfCommunion() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
-
-  const canAccessCommunion = hasAccess('communion');
-  const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
+  const { tierName, loading: tierLoading } = useTierAccess();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -116,51 +114,8 @@ export default function DoorOfCommunion() {
     );
   }
 
-  // Show access denied if user doesn't have communion access
-  if (!canAccessCommunion) {
-    return (
-      <div className="min-h-screen bg-background py-12 px-4 relative">
-        <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-          <PageBreadcrumb items={[{ label: 'Door of Communion' }]} />
-          <NavActions />
-        </div>
-
-        <div className="max-w-lg mx-auto pt-24 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto">
-              <Lock className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <h1 className="font-serif text-3xl text-foreground">
-              The Door of Communion
-            </h1>
-            <p className="text-muted-foreground">
-              This door requires The Initiate membership tier to access.
-            </p>
-            {tierName && (
-              <p className="text-sm text-muted-foreground">
-                Your current tier: <Badge variant="outline">{tierName}</Badge>
-              </p>
-            )}
-            <div className="flex flex-col gap-3 pt-4">
-              <Button onClick={() => navigate('/membership')} size="lg">
-                {isActiveMember ? 'Upgrade Membership' : 'View Memberships'}
-                <ArrowUpRight className="w-4 h-4 ml-2" />
-              </Button>
-              <Button variant="ghost" onClick={() => navigate('/temple')}>
-                Return to Temple
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
-
   return (
+   <TempleAccessGate>
     <div className="min-h-screen bg-background py-12 px-4 relative">
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
@@ -229,5 +184,6 @@ export default function DoorOfCommunion() {
         </div>
       </div>
     </div>
+   </TempleAccessGate>
   );
 }
