@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import NavActions from "@/components/NavActions";
 import { Button } from "@/components/ui/button";
+import { formatMelbourneLong } from "@/lib/manualAccessDates";
 
 /**
  * Distinct state for a user whose manual full-access window has not yet
@@ -8,13 +9,17 @@ import { Button } from "@/components/ui/button";
  * no early access to protected content.
  */
 export function ScheduledAccess({ startsAt }: { startsAt: string | null }) {
-  const when = startsAt
-    ? new Date(startsAt).toLocaleString(undefined, {
-        dateStyle: "long",
-        timeStyle: "short",
-        timeZoneName: "short",
-      })
-    : null;
+  let when: string | null = null;
+  if (startsAt) {
+    const d = new Date(startsAt);
+    if (!Number.isNaN(d.getTime())) {
+      try {
+        when = formatMelbourneLong(d);
+      } catch {
+        when = null;
+      }
+    }
+  }
   return (
     <div className="min-h-screen bg-background relative">
       <div className="absolute top-4 right-4 z-20">
