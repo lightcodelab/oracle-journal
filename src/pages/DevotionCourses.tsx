@@ -7,9 +7,8 @@ import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Sparkles, ArrowLeft, DoorOpen } from 'lucide-react';
+import { Sparkles, Lock, ArrowUpRight, ArrowLeft, DoorOpen } from 'lucide-react';
 import { useTierAccess } from '@/hooks/useTierAccess';
-import { TempleAccessGate } from '@/components/temple/TempleAccessGate';
 import { useContentByLocation } from '@/hooks/useContentByLocation';
 import ResourceCard from '@/components/devotion/ResourceCard';
 
@@ -25,7 +24,10 @@ const LOCATION_SLUG = 'loc-energy-hygiene-practices';
 const DevotionCourses = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const { tierName, loading: tierLoading } = useTierAccess();
+  const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
+
+  const canAccessDevotion = hasAccess('devotion');
+  const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
 
   // Fetch resources via the unified hook
   const { resources, loading: contentLoading, error, isAdmin } = useContentByLocation(LOCATION_SLUG);
@@ -94,12 +96,58 @@ const DevotionCourses = () => {
     );
   }
 
+  // Show access denied if user doesn't have devotion access
+  if (!canAccessDevotion) {
+    return (
+      <div className="min-h-screen bg-background py-12 px-4 relative">
+        <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
+          <PageBreadcrumb items={[
+             { label: 'The Door of Devotion', href: '/devotion', icon: DoorOpen },
+            { label: 'Energy Hygiene Practices' }
+          ]} />
+          <ProfileDropdown />
+        </div>
+
+        <div className="max-w-lg mx-auto pt-24 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto">
+              <Lock className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h1 className="font-serif text-3xl text-foreground">
+              Energy Hygiene Practices
+            </h1>
+            <p className="text-muted-foreground">
+              This content requires The Devotee membership tier or higher to access.
+            </p>
+            {tierName && (
+              <p className="text-sm text-muted-foreground">
+                Your current tier: <Badge variant="outline">{tierName}</Badge>
+              </p>
+            )}
+            <div className="flex flex-col gap-3 pt-4">
+              <Button onClick={() => navigate('/membership')} size="lg">
+                {isActiveMember ? 'Upgrade Membership' : 'View Memberships'}
+                <ArrowUpRight className="w-4 h-4 ml-2" />
+              </Button>
+              <Button variant="ghost" onClick={() => navigate('/devotion')}>
+                Return to Door of Devotion
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
   const hasLegacyCourses = legacyCourses && legacyCourses.length > 0;
   const hasResources = resources.length > 0;
   const isPageLoading = contentLoading || coursesLoading;
 
   return (
-   <TempleAccessGate>
     <div className="min-h-screen bg-background py-12 px-4 relative">
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
@@ -234,7 +282,6 @@ const DevotionCourses = () => {
         )}
       </div>
     </div>
-   </TempleAccessGate>
   );
 };
 

@@ -6,10 +6,9 @@ import NavActions from '@/components/NavActions';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Folder, LayoutGrid, Grid3X3, DoorOpen } from 'lucide-react';
+import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Lock, ArrowUpRight, Folder, LayoutGrid, Grid3X3, DoorOpen } from 'lucide-react';
 import AllResourcesSection from '@/components/devotion/AllResourcesSection';
 import { useTierAccess } from '@/hooks/useTierAccess';
-import { TempleAccessGate } from '@/components/temple/TempleAccessGate';
 
 interface LocationCategory {
   id: string;
@@ -55,7 +54,10 @@ const DoorOfDevotion = () => {
   const [loading, setLoading] = useState(true);
   const [locationCategories, setLocationCategories] = useState<LocationCategory[]>([]);
   const [view, setView] = useState<'categories' | 'all'>('all');
-  const { tierName, loading: tierLoading } = useTierAccess();
+  const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
+
+  const canAccessDevotion = hasAccess('devotion');
+  const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -111,7 +113,9 @@ const DoorOfDevotion = () => {
   const categories = [...STATIC_CATEGORIES, ...dynamicCategories];
 
   const handleCategoryClick = (category: typeof categories[0]) => {
-    if (category.route) navigate(category.route);
+    if (category.route && canAccessDevotion) {
+      navigate(category.route);
+    }
   };
 
   if (loading || tierLoading) {
@@ -124,8 +128,51 @@ const DoorOfDevotion = () => {
     );
   }
 
+  // Show access denied if user doesn't have devotion access
+  if (!canAccessDevotion) {
+    return (
+      <div className="min-h-screen bg-background py-12 px-4 relative">
+        <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
+          <PageBreadcrumb items={[{ label: 'The Door of Devotion', icon: DoorOpen }]} />
+          <NavActions />
+        </div>
+
+        <div className="max-w-lg mx-auto pt-24 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto">
+              <Lock className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h1 className="font-serif text-3xl text-foreground">
+              The Door of Devotion
+            </h1>
+            <p className="text-muted-foreground">
+              This door requires The Devotee membership tier or higher to access.
+            </p>
+            {tierName && (
+              <p className="text-sm text-muted-foreground">
+                Your current tier: <Badge variant="outline">{tierName}</Badge>
+              </p>
+            )}
+            <div className="flex flex-col gap-3 pt-4">
+              <Button onClick={() => navigate('/membership')} size="lg">
+                {isActiveMember ? 'Upgrade Membership' : 'View Memberships'}
+                <ArrowUpRight className="w-4 h-4 ml-2" />
+              </Button>
+              <Button variant="ghost" onClick={() => navigate('/temple')}>
+                Return to Temple
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-   <TempleAccessGate>
     <div className="min-h-screen bg-background py-12 px-4 relative">
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
@@ -211,7 +258,6 @@ const DoorOfDevotion = () => {
          )}
       </div>
     </div>
-   </TempleAccessGate>
   );
 };
 
