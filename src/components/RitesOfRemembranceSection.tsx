@@ -3,13 +3,6 @@ import { useRitesCourses } from "@/hooks/useRitesCourses";
 import ResourceCard from "@/components/devotion/ResourceCard";
 import type { ContentResource } from "@/hooks/useContentByLocation";
 
-const COMING_SOON_RITE_IDS = new Set([
-  '36df1ff9-1ac3-445d-b834-6b6ce8b3a02d', // Rite I
-  'f5510d55-c142-4272-9358-4e7be13e608b', // Rite II
-  '41d04a99-17bb-4122-9339-0cb728b03ba9', // Rite III
-  '3a18f8ca-b1af-470f-9d34-65f0db06bf9c', // Rite IV
-  '66980be1-4fe9-4eee-9546-074938cf6aa5', // Rite V
-]);
 
 const RitesOfRemembranceSection = () => {
   const { courses, loading, error, isAdmin } = useRitesCourses();
@@ -65,7 +58,6 @@ const RitesOfRemembranceSection = () => {
               index={index} 
               showDraftBadge={isAdmin}
               basePath="/decks"
-              comingSoon={COMING_SOON_RITE_IDS.has(course.id)}
             />
           ))}
         </div>
