@@ -90,10 +90,21 @@ const Membership = () => {
   }, []);
 
   useEffect(() => {
-    if (!authLoading && !memberLoading && user && isActiveMember) {
-      navigate("/temple", { replace: true });
+    // Any authenticated user landing on the public sales page should be
+    // sent into the app. Preserve an explicitly saved intended destination
+    // (e.g. a protected route the user tried to open before signing in).
+    // The sales page remains reachable to unauthenticated visitors via
+    // direct navigation to `/`.
+    if (!authLoading && user) {
+      const saved = sessionStorage.getItem("postLoginRedirect");
+      if (saved && saved.startsWith("/") && saved !== "/") {
+        sessionStorage.removeItem("postLoginRedirect");
+        navigate(saved, { replace: true });
+      } else if (!memberLoading) {
+        navigate("/temple", { replace: true });
+      }
     }
-  }, [authLoading, memberLoading, user, isActiveMember, navigate]);
+  }, [authLoading, memberLoading, user, navigate]);
 
   const startCheckout = async () => {
     if (!offer?.checkout_available) return;
