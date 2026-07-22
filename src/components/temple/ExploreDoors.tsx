@@ -57,7 +57,7 @@ export function ExploreDoors() {
       </div>
 
       <div className="rounded-lg border border-border/50 bg-card/50 p-4 mb-3">
-        <h3 className="font-serif text-lg text-foreground mb-0.5">
+        <h3 className="font-serif text-2xl text-foreground mb-1">
           Tools for Your Return
         </h3>
         <p className="text-sm text-muted-foreground mb-3">
