@@ -27,6 +27,7 @@ import {
   Share2
 } from 'lucide-react';
 import { useInstallApp } from '@/components/InstallAppDialog';
+import GlobalSearch from '@/components/GlobalSearch';
 
 interface ProfileDropdownProps {
   onSignOut?: () => void;
@@ -144,7 +145,9 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
   ];
 
   return (
-    <DropdownMenu>
+    <div className="flex items-center gap-1">
+      <GlobalSearch />
+      <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -209,7 +212,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
-    </DropdownMenu>
+      </DropdownMenu>
+    </div>
   );
 };
 
