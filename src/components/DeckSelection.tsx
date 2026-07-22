@@ -167,7 +167,7 @@ export const DeckSelection = ({
                 : deck.name === "Magic not Logic" ? mnlBanner.url
                 : deck.name === "AreekeerA" ? areekeeraBanner.url
                 : deck.name === "The Art of Self-Healing" ? taoshBanner.url
-                : null;
+                : null);
 
               return (
                 <motion.div
