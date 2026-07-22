@@ -413,6 +413,74 @@ const CardDeckAdmin = () => {
     }
   };
 
+  const handleDeckThumbnailUpload = async (file: File) => {
+    setUploadingDeckThumb(true);
+    try {
+      const compressed = await compressImage(file);
+      const ext = compressed.name.split('.').pop() || 'webp';
+      const path = `deck-thumbnails/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from('content-images')
+        .upload(path, compressed, { contentType: compressed.type, upsert: false });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from('content-images').getPublicUrl(path);
+      setDeckDraft((d) => (d ? { ...d, thumbnail_url: pub.publicUrl } : d));
+      toast({ title: 'Thumbnail uploaded' });
+    } catch (err: any) {
+      toast({ title: 'Upload failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setUploadingDeckThumb(false);
+    }
+  };
+
+  const handleSaveDeckSettings = async () => {
+    if (!selectedDeckId || !deckDraft) return;
+    if (!deckDraft.name.trim()) {
+      toast({ title: 'Name is required', variant: 'destructive' });
+      return;
+    }
+    setSavingDeck(true);
+    try {
+      const { error } = await supabase
+        .from('decks')
+        .update({
+          name: deckDraft.name.trim(),
+          description: deckDraft.description.trim() || null,
+          theme: deckDraft.theme.trim() || null,
+          thumbnail_url: deckDraft.thumbnail_url,
+        })
+        .eq('id', selectedDeckId);
+      if (error) throw error;
+
+      // Sync deck tags
+      await (supabase as any).from('deck_tag_assignments').delete().eq('deck_id', selectedDeckId);
+      if (deckTagIds.length > 0) {
+        const rows = deckTagIds.map((tag_id) => ({ deck_id: selectedDeckId, tag_id }));
+        await (supabase as any).from('deck_tag_assignments').insert(rows);
+      }
+
+      // Refresh local decks list
+      setDecks((prev) =>
+        prev.map((d) =>
+          d.id === selectedDeckId
+            ? {
+                ...d,
+                name: deckDraft.name.trim(),
+                description: deckDraft.description.trim() || null,
+                theme: deckDraft.theme.trim() || null,
+                thumbnail_url: deckDraft.thumbnail_url,
+              }
+            : d,
+        ),
+      );
+      toast({ title: 'Deck saved', description: 'Deck settings updated.' });
+    } catch (err: any) {
+      toast({ title: 'Save failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setSavingDeck(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
