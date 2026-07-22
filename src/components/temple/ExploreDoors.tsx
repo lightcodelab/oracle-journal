@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import doorRemembrance from "@/assets/door-remembrance.png";
 import doorDevotion from "@/assets/door-devotion.png";
 import doorCommunion from "@/assets/door-communion.png";
-import { BookHeart, Search, ListMusic, LineChart } from "lucide-react";
+import { BookHeart, Search, ListMusic, LineChart, Sparkles, HeartPulse } from "lucide-react";
 
 const doors = [
   { name: "Remembrance", href: "/decks", image: doorRemembrance },
@@ -15,6 +15,8 @@ const tools = [
   { label: "Journal", href: "/journal", icon: BookHeart },
   { label: "Playlists", href: "/playlists", icon: ListMusic },
   { label: "Tracking", href: "/tracking", icon: LineChart },
+  { label: "Readings", href: "/readings", icon: Sparkles },
+  { label: "Protocols", href: "/devotion/protocols", icon: HeartPulse },
 ];
 
 export function ExploreDoors() {
