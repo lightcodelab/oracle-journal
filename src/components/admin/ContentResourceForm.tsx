@@ -350,6 +350,10 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
         savedResourceId = newResource.id;
       }
 
+      if (savedResourceId) {
+        await syncResourceTags(savedResourceId);
+      }
+
       // Handle course record creation/deletion
       if (data.is_course && savedResourceId) {
         const { data: existingCourse } = await supabase
