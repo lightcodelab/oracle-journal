@@ -67,7 +67,7 @@ export default function LiveReplays() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState<'all' | 'reading' | 'class' | 'workshop' | 'meditation'>('all');
   const [selectedReplay, setSelectedReplay] = useState<SessionReplay | null>(null);
-  const { loading: tierLoading, isAdmin } = useTierAccess();
+  const { loading: tierLoading } = useTierAccess();
 
   const { data: replays, isLoading } = useQuery({
     queryKey: ['session-replays'],
