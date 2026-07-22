@@ -567,6 +567,11 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
                 </div>
               )}
             </div>
+
+            <CourseTagPicker
+              selectedTagIds={selectedTagIds}
+              onChange={setSelectedTagIds}
+            />
           </TabsContent>
 
           <TabsContent value="content" className="space-y-4 mt-4">
