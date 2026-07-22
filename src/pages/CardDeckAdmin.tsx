@@ -389,11 +389,6 @@ const CardDeckAdmin = () => {
   };
 
   const handleAddCard = async () => {
-    // (see below)
-    return _handleAddCardImpl();
-  };
-
-  const _handleAddCardImpl = async () => {
     if (!selectedDeckId || !selectedDeck) return;
     const nextNumber = (cards.reduce((max, c) => Math.max(max, c.card_number), 0) || 0) + 1;
     try {
