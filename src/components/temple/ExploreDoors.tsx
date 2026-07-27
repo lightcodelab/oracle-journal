@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import doorRemembrance from "@/assets/door-remembrance.png";
 import doorDevotion from "@/assets/door-devotion.png";
 import doorCommunion from "@/assets/door-communion.png";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { BookHeart, Search, ListMusic, LineChart, Sparkles, HeartPulse } from "lucide-react";
 
 const doors = [
