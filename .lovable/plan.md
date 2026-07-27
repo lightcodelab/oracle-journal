@@ -1,118 +1,192 @@
+# The Mirror Exchange — Read-Only Architecture & Feasibility Audit
 
-# Historical AreekeerA® sales-page recovery (read-only)
+Scope: assessment only. No code, migrations, schema, config, or UI changes are proposed for this pass. Findings below are grounded in the current codebase and live database (`information_schema` + `public` inspection performed this turn).
 
-No code, copy, database or publishing changes. Repository history is available and was inspected via `git log/show` on all refs. This report is the deliverable — approve to close, or send follow-up direction.
+---
 
-## 1. Relevant historical commits for `src/pages/Membership.tsx`
+## 1. Current relevant architecture
 
-The Phase 2 rewrite that replaced the tiered sales page with the single-membership homepage landed on **2026-07-20**. The immediately preceding version (still tiered, still containing the AreekeerA® Method section) is:
+### 1.1 Door of Communion (entry point candidate)
 
-- **`049c9e5` — 2026-03-01 05:03 UTC** — last commit touching `Membership.tsx` before the July 20 rewrite. This is the "previous sales page" the request is asking for.
-- Earlier same-shape versions on the tiered page: `ea625e2`, `cfe8263`, `4bfb594`, `c3e13c2`, `f3fb54f`, `272d502`, `c961241`, `d5cfd1c`, `6292b77`, `7022b73`, `53a409e`, `46e598c`, `4e5ccc9` (all 2026-03-01), and February 2026 predecessors back to `02eeb2c` (2026-02-02).
-- Phase 2 rewrite commits (2026-07-20): `46d5cb8` 09:44, `2ee128f` 09:44, `b3bf701` 09:45 (single-membership rewrite); `f3af457` 10:28, `d1730ec` 10:29 (Phase 2 remediation); `1e3ff50` 10:43, `a91104f` 10:44 (AreekeerA® Method section that Phase 2 introduced into the new page).
-- `-S` searches for `AreekeerA`, `Modality`, `Maelin` confirm no earlier deleted or renamed sales/landing/pricing component ever carried this copy. `Landing.tsx`, `Pricing.tsx`, `Home.tsx` never existed. All historical public sales copy lived in `src/pages/Membership.tsx`.
-- `Maelin` appears only in Edge Function / bot code and in `docs/DEPRECATED_MAELIN.md` — never on the public sales page.
+- Route: `/communion` → `src/pages/DoorOfCommunion.tsx`.
+- Categories currently rendered as cards (hard-coded array `categories` in that file): Live Readings, Live Classes, Live Workshops, Live Meditation Classes, All Sessions, Live Replays. There is no CMS backing this list — it is a static array.
+- Sub-routes registered in `src/App.tsx`:
+  - `/communion/live-readings`, `/communion/live-classes`, `/communion/live-workshops`, `/communion/live-meditations`, `/communion/live-replays`, `/all-live-sessions`, `/all-live-sessions/:sessionId/join`.
+- Access enforcement inside `DoorOfCommunion.tsx`:
+  - Auth check via `supabase.auth.getSession()` + `onAuthStateChange` redirect to `/auth`.
+  - Content gate via `useTierAccess().hasAccess('communion')`, which in the current one-membership model is equivalent to “admin OR active member OR active manual full-access grant.”
+- Safest entry point: a new card in the existing `categories` array pointing at `/communion/mirror-exchange`. It naturally inherits the Door’s access gate and NavActions header. No changes to `DoorOfCommunion.tsx`’s access logic are required.
 
-Conclusion: `049c9e5` is the canonical "previous AreekeerA® sales-page copy". No other recoverable source exists.
+### 1.2 Membership & authentication (reuse unchanged)
 
-## 2. Exact previous AreekeerA® sales copy (verbatim from `049c9e5:src/pages/Membership.tsx`)
+- Canonical entitlement decision lives in `public.get_member_state(uuid)` and `public.has_full_temple_access(uuid)` (confirmed in DB routines list).
+- Frontend hooks: `src/hooks/useAuth.tsx` (user/session/admin), `src/hooks/useMemberState.ts` (canonical `hasFullTempleAccess`, `entitlementSource`, `error`, manual-grant state machine), `src/hooks/useTierAccess.ts` (compat shim already routed through `get_member_state`).
+- Route guard pattern in use across Temple pages: session check → `useMemberState` / `useTierAccess`. `ExpiredAccess.tsx` and `ScheduledAccess.tsx` already cover the grace/expiry/scheduled transitions.
+- No age or adult-participation attestation exists anywhere in the codebase or DB. This is a gap for a member-to-member feature.
 
-### Section header (lines 195–213)
+### 1.3 Existing profiles (partial reuse only)
 
-> Introducing
->
-> **The AreekeerA® Method**
->
-> A revolutionary approach to understanding the energetic language of your body — developed over 40 years of clinical practice by Medical Intuitive Julie Lewin.
+`public.profiles` columns confirmed via information_schema:
+`id, email, full_name, full_name_encrypted, is_encrypted, must_change_password, member_tier_code, plan_cadence, subscription_status, current_period_end, stripe_customer_id, newsletter_opt_in, is_active_member, active_member_since, created_at, updated_at`.
 
-### Three feature cards (lines 222–255)
+- Reusable: `id`, `full_name` (as display fallback), auth linkage.
+- Absent and required later: avatar/photo, chosen community name, pronouns, country/region/city, IANA time zone, languages, bio/intro, community-profile visibility flag, adult-attestation flag, community-agreement acceptance record.
+- `profiles` is currently a private/self-service table (based on `Profile.tsx` reads only `.eq("id", session.user.id)`). There is no public/community-visible profile surface anywhere.
 
-> **40+ Years Proven**
-> Trusted by thousands of clients worldwide
+### 1.4 Database & security conventions (reuse patterns)
 
-> **Guided Creative Visualisations**
-> A body-based healing modality that works with the energy blueprint beneath physical symptoms
+- RLS + explicit GRANTs are the house pattern; `service_role` and `authenticated` grants on every public table.
+- SECURITY DEFINER + `set search_path = public` functions are used for cross-table authorization (`has_role`, `has_full_temple_access`, `is_active_member`, `has_any_manual_access`). Appropriate reuse pattern for Mirror Exchange gating helpers.
+- Soft-delete / audit patterns present: `manual_access_grant_audit`, `manual_access_legacy_bucket_history`, `founder_price_audit`, `stripe_webhook_events` — all use immutable-append triggers (`*_immutable`). Good template for Mirror Exchange moderation and message-deletion audit trails.
+- Existing admin-review UI: `src/pages/BugReports.tsx`, `src/pages/FeatureSuggestions.tsx`, `src/pages/UserManagement.tsx` — provide the layout/idiom for a future admin moderation queue.
 
-> **Immediate Tools**
-> Start shifting energy today
+### 1.5 Messaging, realtime & notifications
 
-### Julie provenance paragraph (line 266)
+- No member-to-member messaging table exists. `healing_conversations` is user↔bot only.
+- Supabase Realtime is used exactly once (`src/hooks/useResourceEditLock.ts`) for CMS edit-lock presence. No `postgres_changes` subscriptions anywhere. No realtime infrastructure to reuse for chat.
+- No in-app notifications table, no unread-count pattern, no email-notification edge function (`ls supabase/functions/` shows none matching `notif|email|invite|reminder`). MailerLite sync (`mailerlite-sync`) is for newsletter opt-in only, not transactional.
+- No rate limiting or abuse protection at the data layer.
 
-> For over 40 years, Julie Lewin has been a pioneer in Medical Intuition. Her AreekeerA® Modality was channelled through after appearing on the TV Show The Extraordinary twice to international acclaim. With over 1.1 million listens on Insight Timer and a lifetime of clinical practice, she has helped thousands move from chronic pain to extraordinary health. She is excited to finally make her whole body of work available to everyone. It is a paid app because reciprocation is required for true lasting healing to occur.
+### 1.6 Scheduling
 
-### Protocol Builder references elsewhere on the same page (lines 345–350, 591)
+- `LiveSessions.tsx`, `SessionCalendar.tsx`, `useLiveSessions.ts` handle admin-scheduled Zoom sessions with fixed date/time columns.
+- No availability windows, recurring appointments, per-user time-zone conversion, or reminder jobs exist. `pg_cron` runs only for `publish-scheduled-content` (content release).
+- Date formatting uses `date-fns` (implied by other files); no timezone library confirmed. `src/lib/manualAccessDates.ts` demonstrates the project’s Melbourne-timezone convention with `Intl.DateTimeFormat`.
 
-> Deepen your practice with personalized healing protocols and sacred rituals.
-> — Your symptoms automatically mapped to personalised protocols
+### 1.7 Safety & moderation
 
-> Your AreekeerA® Healing Protocol Builder  *(feature row, tiers T2 and T3)*
+- No block, report, mute, or community-agreement tables exist.
+- No adult / age attestation. No consent record.
+- Admin review UI exists in idiom but not scoped to member-to-member content.
+- Data-retention conventions: audit tables are append-only; content-lifecycle is soft-delete via status columns (e.g. resource `status`).
 
-### Julie & Tash bios (lines 638, 641, 648, 651) — unchanged and still present in current page
+### 1.8 Interface & design system
 
-> **Julie Lewin** is a medical intuitive with over 40 years of experience working with the body as an intelligent, communicative system. Her work focuses on identifying how trauma, stress, and unresolved emotional patterns become stored in the physical body and nervous system — often long before symptoms appear.
->
-> Rather than treating symptoms in isolation, Julie tracks chronic pain and illness patterns through time, using the AreekeerA® approach to read the body's energetic and neurological history. Her work supports the release of long-held survival responses so the system can return to safety, repair, and resilience.
->
-> **Tash Lewin** works at the intersection of trauma, identity, and nervous system regulation. Her role within AreekeerA® focuses on helping people understand how subconscious beliefs, protective patterns, and energetic contracts form around unresolved trauma — and how these patterns quietly shape health, relationships, and life outcomes.
->
-> Through structured, trauma-informed processes, Tash supports the rewriting of identity at both psychological and energetic levels, allowing new patterns of safety, capacity, and self-trust to emerge without force or bypassing.
+Reusable primitives found: shadcn `Card`, `Dialog`, `Input`, `Textarea`, `Select`, `Badge`, `Button`, `Switch`; framer-motion for entry animation; `PageBreadcrumb`, `NavActions`, `ProfileDropdown` for header consistency; `useToast` for feedback. Mobile-responsive `md:` / `lg:` grid patterns and DoorOpen-icon idiom are established in `ExploreDoors.tsx` and `DoorOfCommunion.tsx`. Empty-state and access-denied patterns are demonstrated on `DoorOfCommunion.tsx` and `ExpiredAccess.tsx`.
 
-## 3. Original page structure and heading order
+### 1.9 External call links
+
+- No URL sanitization / allow-list utility exists. `src/lib/utils.ts` is a `cn()` helper only.
+- Vimeo embed handling (`VimeoEmbed.tsx`) is the closest analogue but assumes a trusted single provider.
+- No pattern exists for revealing sensitive fields (like a call URL) only to two specific participants — this must be created.
+
+---
+
+## 2. What can be reused unchanged
+
+- Auth + session listener idiom (`useAuth`, `onAuthStateChange`).
+- Canonical entitlement gate (`useMemberState.hasFullTempleAccess`, `has_full_temple_access(uuid)` SQL).
+- Door layout, header, breadcrumb, motion, and card idiom (`DoorOfCommunion.tsx`).
+- shadcn UI primitives and toast.
+- SECURITY DEFINER + audit-trigger pattern for moderation records.
+- `manualAccessDates.ts` timezone conventions.
+
+## 3. What should be extended
+
+- `profiles` — either extended with community fields (avatar_url, chosen_name, pronouns, country/region/city, iana_timezone, languages[], bio, community_visible, adult_attested_at, agreement_accepted_at) or a parallel `community_profiles` table keyed 1:1 to `profiles.id`. A parallel table is safer because it keeps identity/billing separate from community disclosure and simplifies RLS visibility rules.
+- `DoorOfCommunion.tsx` `categories` array — add one entry pointing at the new route. No logic changes.
+- `useMemberState` remains the single gate; no fork.
+
+## 4. What must be created
+
+- Mirror Exchange schema (Stage 1 skeleton only for this feature): community profile, community agreement acceptance ledger, orientation-completion record.
+- Later stages: capacity/availability, invitations, conversations, messages, scheduled calls (with external call-link column), post-call safety checks, reports, blocks, admin moderation queue.
+- URL validation utility with a strict provider allow-list (zoom.us, facetime, meet.google.com, wa.me/whatsapp, plus a generic https allow rule with warning).
+- In-app notifications table + unread badge hook, and a reminder edge function driven by `pg_cron`.
+- Realtime subscription pattern for 1:1 message threads (new territory — only one existing user of Realtime).
+- Admin moderation UI (new page, follows BugReports.tsx idiom).
+- Adult / age attestation and community-agreement UI + audit records.
+
+## 5. Security, privacy, moderation & access-control gaps (before any implementation)
+
+1. No adult attestation exists — member-to-member connection cannot be safely offered without one.
+2. No community agreement / consent record — the scope statement and Mirror “may / may not” rules are policy that must be logged per user acceptance.
+3. No block/report/mute primitives — RLS on future messaging must join to a blocks table from day one to prevent contact after a block.
+4. No moderation queue or admin-review workflow for member-authored content.
+5. No rate limiting — invitations and messages must be rate-limited at DB/edge to prevent spam.
+6. No PII visibility policy — phone numbers, emails and external call links must be RLS-restricted to the two accepted participants; profile visibility must be opt-in and revocable.
+7. No notification/preferences infrastructure — must be built before email or in-app pings can fire.
+8. No URL sanitization — malicious call-link risk.
+9. Access on grace/cancellation/expiry: existing `useMemberState` already returns `hasFullTempleAccess=false` in those states, but Mirror-specific side effects (existing invitations, upcoming calls, active companion connection) will need explicit lifecycle rules (auto-pause vs. auto-cancel).
+10. Deletion / retention — no policy yet for message history retention, right-to-erasure vs. audit-preservation for reports.
+
+## 6. Recommended data model (high level, not to be created yet)
+
+- `community_profiles` (1:1 with `profiles.id`): display_name, pronouns, avatar_url, country, region, city_approx, iana_timezone, languages[], bio, is_visible, adult_attested_at, agreement_version_accepted, agreement_accepted_at.
+- `community_agreements`: versioned agreement text; append-only.
+- `mirror_orientation_completions`: per-user completion of the orientation module.
+- Stage 2+: `mirror_capacity` (current state enum), `mirror_preferences` (audio/video/either, in-person openness, call length, cadence, topics_can_hold[], topics_cannot_hold[], perspective_preference), `mirror_availability_windows`.
+- Stage 3: `mirror_invitations` (from_user, to_user, kind: call|companion, status, expires_at).
+- Stage 4: `mirror_connections` (accepted pair, kind, started_at, ended_at); `mirror_threads` + `mirror_messages` (RLS: participant-only, with join to `mirror_blocks`); `mirror_scheduled_calls` (start_at UTC, duration_minutes, call_link, provider, revealed_at).
+- Stage 5: `mirror_call_safety_checks` (private per-participant).
+- Stage 6: `mirror_blocks`, `mirror_reports` (with `mirror_report_audit` append-only).
+- Every table paired with GRANTs, RLS enabled, participant-scoped policies, and a SECURITY DEFINER helper (e.g. `is_mirror_participant(user_id, thread_id)`) to avoid RLS recursion.
+
+## 7. Dependency-aware staged plan
 
 ```text
-Hero (tiered pricing)
-  ↓
-"AreekeerA Method" section
-  - Kicker: "Introducing"
-  - H2: "The AreekeerA® Method"
-  - Sub: "A revolutionary approach ... 40 years of clinical practice by Medical Intuitive Julie Lewin."
-  - 3-card grid: "40+ Years Proven" | "Guided Creative Visualisations" | "Immediate Tools"
-  - Julie provenance paragraph (Insight Timer, The Extraordinary, reciprocation)
-  ↓
-"Three Doors to Your Transformation"
-  - Door of Remembrance (feature bullets)
-  - Door of Devotion  (protocols, energy hygiene, healing templates)
-  - Door of Communion (live sessions, replays)
-  ↓
-Tier comparison table
-  - Seeker (T1) / Devotee (T2) / Initiate (T3)
-  - Row: "Your AreekeerA® Healing Protocol Builder" (T2, T3 only)
-  ↓
-"Your Guides"
-  - Julie bio (2 paragraphs)
-  - Tash bio (2 paragraphs)
-  ↓
-FAQ (billing / change plan / payment methods)
+Stage 1  Foundations
+  community_profiles + agreement + orientation + adult attestation
+  RLS: owner-only write, community-visible read only when is_visible
+  Door of Communion entry card (locked behind orientation+agreement+adult)
+  No matching, no messaging yet
+Stage 2  Mirror profile detail
+  Capacity, availability, preferences, topics can/cannot hold
+  Read-only "preview my Mirror card" view
+Stage 3  Matching & invitations
+  Server-side suggestion RPC (SECURITY DEFINER), rate-limited
+  Mutual invitation lifecycle (pending/accepted/declined/expired)
+Stage 4  Messaging + scheduling + external call links
+  Threads/messages with Realtime, blocks-aware RLS
+  Scheduling with IANA tz conversion
+  External call-link storage with provider allow-list, revealed only to 2 participants
+Stage 5  Guided Mirror Call page + private post-call check
+Stage 6  Blocks, reports, admin moderation, rate limits hardened, controlled release
 ```
 
-There was **no separate "Protocol Builder" explainer section** on the historical page — the Builder appeared only as a feature-comparison row and a single Devotion bullet ("symptoms automatically mapped to personalised protocols"). All narrative weight on AreekeerA® was carried by the Method section and the Guides bios.
+## 8. Testing requirements per stage
 
-## 4. Historical statements now outdated
+- Stage 1: RLS tests — non-owner cannot read hidden profile; visible profile readable only to active members; agreement acceptance is immutable; orientation gate blocks Stage-2 UI. Access-lifecycle: grace/expired/scheduled/revoked all deny.
+- Stage 2: preference and capacity updates round-trip; visibility toggle removes profile from any listing RPC in same transaction.
+- Stage 3: suggestion RPC never returns blocked users, non-visible users, expired members, or self; invitation state machine transitions cannot be forged from either side; rate limit enforced at DB.
+- Stage 4: message insert RLS denies non-participants and blocked participants; call-link column masked to non-participants; timezone conversion tests around DST boundaries in Australia/Melbourne + one Northern-Hemisphere zone.
+- Stage 5: safety check writes are private to author only, even from paired participant.
+- Stage 6: report creation append-only; admin queue visible only to `has_role(auth.uid(),'admin')`; block prevents any subsequent invitation, message, or scheduled call.
+- Regression: existing 67+ access tests (`_phase1_run_access_tests`, `_oracle_access_run_tests`, etc.) continue to pass after each stage.
 
-| Historical claim | Outdated because |
-|---|---|
-| Three-tier model (Seeker/Devotee/Initiate) with Protocol Builder gated to T2/T3 | Phase 1 collapsed to a single membership; Protocol Builder is available to all active members. |
-| "Your symptoms automatically mapped to personalised protocols" (Devotion bullet) | Overstates automation; current Builder is intake-driven and safety-gated (severity/capacity/grounding). |
-| Tier-comparison table row "Your AreekeerA® Healing Protocol Builder — T2, T3" | Tier gating removed. |
-| "40+ Years Proven — Trusted by thousands of clients worldwide" as a headline claim | Retained in bios but no longer used as a hero-adjacent trust badge; social-proof claims currently require owner sign-off. |
-| Insight Timer "1.1 million listens" + "The Extraordinary" TV mention as a public sales claim | Currently not on the public homepage; retained only if owner reconfirms figures. |
-| "It is a paid app because reciprocation is required for true lasting healing to occur." | Superseded by Phase 2 single-membership framing and Founding-window messaging. |
-| "Guided Creative Visualisations — A body-based healing modality that works with the energy blueprint beneath physical symptoms" | Not currently used; the Method section now speaks in nervous-system/trauma-informed terms rather than "energy blueprint". |
-| FAQ: "Can I change my plan later? … upgrade or downgrade" | No plans to switch between; single membership. |
+## 9. Decisions / unknowns to clarify before Stage 1 implementation
 
-`Maelin` never appeared on the public sales page in any recovered commit, so nothing to remove there.
+1. Parallel `community_profiles` table vs. extending `profiles` — recommendation: parallel table.
+2. Age threshold policy: 18+ globally, or configurable per region?
+3. Agreement versioning behaviour: on version bump, do existing members lose access to Mirror Exchange until re-accepting?
+4. Community-profile visibility default: opt-in (recommended) or opt-out?
+5. Chosen community name — display-only, or replaces `full_name` throughout Temple? Recommendation: display-only, scoped to Mirror Exchange surfaces.
+6. Retention: message history retention window and behaviour on member exit / block / report.
+7. Notification channel priorities: in-app only for Stage 4, or email from Stage 4? Email requires new transactional infra (none exists).
+8. Whether the Door of Communion access gate is sufficient, or Mirror Exchange requires a stricter gate (e.g. minimum tenure in the Temple before participation).
 
-## 5. Historical explanations of AreekeerA® The Method that remain factually current
+## 10. Risks of regression to existing systems
 
-- Julie Lewin as **Medical Intuitive with 40+ years of clinical practice** — still current (source of the "four decades of clinical practice" line in the new page). Same "clinical practice" ambiguity flagged in the prior provenance audit applies verbatim here.
-- **Body as an intelligent, communicative system** — current; carried straight into the new Method section.
-- **Trauma, stress, and unresolved emotional patterns stored in the body and nervous system before symptoms appear** — current.
-- **Reads the body's energetic and neurological history; supports release of long-held survival responses so the system returns to safety, repair, resilience** — current (this is the source paragraph for the new "survival responses" / "return to safety" framing).
-- **Tash's remit: trauma, identity, and nervous-system regulation; protective patterns / energetic contracts shape health** — current (source for the new "identity as something the nervous system is quietly organised around" paraphrase).
-- **Trauma-informed, no force, no bypassing** — current; matches the Edge Function guardrails.
+- Membership: extending `profiles` risks breaking `Profile.tsx` and `useAuth`/`useMemberState` reads. Mitigation: parallel table.
+- Door of Communion: adding a card is low risk; changing the access predicate is not needed.
+- Notifications: no existing pattern to preserve — greenfield.
+- Newsletter/MailerLite: unaffected as long as new tables do not overload `newsletter_opt_in`.
+- Live Sessions calendar: unaffected — Mirror Exchange must not reuse `live_sessions` (different lifecycle, different participants, different privacy).
+- Auth flow: unaffected as long as new gates are additive (orientation + agreement + adult attestation) and share `useMemberState` as the outer gate.
 
-## 6. Recoverability statement
+---
 
-Repository history **is available**. A recoverable older version of the AreekeerA® sales copy exists in commit `049c9e5` (2026-03-01) and its immediate predecessors. No separate deleted/renamed landing, pricing or sales component contained additional AreekeerA® copy — `Membership.tsx` has been the sole public sales-page host across all history. No further historical material to recover.
+## Recommended safest scope for Stage 1
 
-No changes made. Awaiting direction on whether to fold any of the recovered copy (e.g. "energy blueprint beneath physical symptoms", Insight Timer / The Extraordinary provenance, "reciprocation" line) back into the current page.
+Given zero existing infra for member-to-member interaction, Stage 1 should deliberately ship **no interpersonal surface**. It should install only the non-interactive foundations:
+
+1. `community_profiles` (parallel to `profiles`), owner-only write, is_visible defaulted false, RLS in place from the first migration with GRANTs.
+2. `community_agreements` (versioned, read-all-authenticated) and `community_agreement_acceptances` (append-only per user).
+3. `mirror_orientation_completions` (append-only per user).
+4. An `adult_attested_at` field on `community_profiles`.
+5. A new page at `/communion/mirror-exchange` that: gates on `useMemberState.hasFullTempleAccess`, then walks the user through **read-only orientation → agreement acceptance → adult attestation → private community-profile creation** and stops there. No matching, no invitations, no messaging.
+6. One new card in the existing `DoorOfCommunion.tsx` `categories` array.
+7. A SECURITY DEFINER helper `public.mirror_exchange_ready(uuid)` returning true only when (a) `has_full_temple_access`, (b) adult attested, (c) current agreement accepted, (d) orientation completed. All later stages gate on this single function so the policy stays in one place.
+8. Regression: existing access test suites re-run and expected to remain green.
+
+This lands the entire safety/consent/identity substrate before any code exists that could allow two members to reach each other, which is the correct order for a peer-processing feature.
