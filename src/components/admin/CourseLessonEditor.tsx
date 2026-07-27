@@ -152,6 +152,22 @@ const LessonEditorPanel = ({
     return supabase.storage.from('content-main-media').getPublicUrl(path).data.publicUrl;
   };
 
+  // Build initial editor content. Prefer stored rich-text JSON; otherwise
+  // convert the plain-text `content` mirror into paragraph HTML so newline
+  // structure isn't collapsed into a single paragraph on first save.
+  const buildInitialContent = () => {
+    if (lesson.body_richtext) return lesson.body_richtext;
+    const raw = lesson.content || '';
+    if (!raw.trim()) return '';
+    const escape = (s: string) =>
+      s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // Split on blank lines into paragraphs; single newlines become <br />.
+    return raw
+      .split(/\n{2,}/)
+      .map((block) => `<p>${escape(block).replace(/\n/g, '<br />')}</p>`)
+      .join('');
+  };
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -168,8 +184,21 @@ const LessonEditorPanel = ({
         class: 'prose prose-sm dark:prose-invert max-w-none min-h-[200px] focus:outline-none p-4',
       },
     },
-    content: lesson.body_richtext || (lesson.content ? `<p>${lesson.content}</p>` : ''),
-  });
+    content: buildInitialContent(),
+  }, [lesson.id]);
+
+  // If the lesson prop's rich-text changes externally (e.g. after a save
+  // triggers a parent refetch) sync it into the editor so what's on screen
+  // matches what's actually persisted.
+  useEffect(() => {
+    if (!editor) return;
+    const next = lesson.body_richtext;
+    if (!next) return;
+    const current = editor.getJSON();
+    if (JSON.stringify(current) === JSON.stringify(next)) return;
+    editor.commands.setContent(next, { emitUpdate: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editor, lesson.body_richtext]);
 
   const handleSave = async () => {
     setSaving(true);
