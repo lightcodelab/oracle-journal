@@ -196,7 +196,7 @@ const LessonEditorPanel = ({
     if (!next) return;
     const current = editor.getJSON();
     if (JSON.stringify(current) === JSON.stringify(next)) return;
-    editor.commands.setContent(next, false);
+    editor.commands.setContent(next, { emitUpdate: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editor, lesson.body_richtext]);
 
