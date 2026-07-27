@@ -89,7 +89,12 @@ const ResourceAudioPlayers = ({
                 </div>
                 {renderActions?.(af, idx)}
               </div>
-              <audio controls className="w-full">
+              <audio
+                controls
+                controlsList="nodownload noplaybackrate"
+                onContextMenu={(e) => e.preventDefault()}
+                className="w-full"
+              >
                 <source src={getPublicUrl(af.file_url)} type="audio/mpeg" />
                 Your browser does not support the audio element.
               </audio>
@@ -122,7 +127,12 @@ const ResourceAudioPlayers = ({
             </div>
             {renderActions?.({ id: '', file_url: legacyAudioUrl, file_name: 'Audio', display_order: 0 }, 0)}
           </div>
-          <audio controls className="w-full">
+          <audio
+            controls
+            controlsList="nodownload noplaybackrate"
+            onContextMenu={(e) => e.preventDefault()}
+            className="w-full"
+          >
             <source src={getPublicUrl(legacyAudioUrl)} type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>

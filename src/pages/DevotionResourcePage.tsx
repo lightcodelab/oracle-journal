@@ -687,7 +687,7 @@ const DevotionResourcePage = () => {
                     Add to Playlist
                   </Button>
                 </div>
-                <audio controls className="w-full">
+                <audio controls controlsList="nodownload noplaybackrate" onContextMenu={(e) => e.preventDefault()} className="w-full">
                   <source src={getPublicUrl('healing-resource-images', af.file_url) || ''} type="audio/mpeg" />
                   Your browser does not support the audio element.
                 </audio>
@@ -724,7 +724,7 @@ const DevotionResourcePage = () => {
                   Add to Playlist
                 </Button>
               </div>
-              <audio controls className="w-full">
+              <audio controls controlsList="nodownload noplaybackrate" onContextMenu={(e) => e.preventDefault()} className="w-full">
                 <source src={resource.secondary_audio_url} type="audio/mpeg" />
                 Your browser does not support the audio element.
               </audio>
@@ -767,7 +767,7 @@ const DevotionResourcePage = () => {
                         Add to Playlist
                       </Button>
                     </div>
-                    <audio controls className="w-full">
+                    <audio controls controlsList="nodownload noplaybackrate" onContextMenu={(e) => e.preventDefault()} className="w-full">
                       <source src={fileUrl} type="audio/mpeg" />
                       Your browser does not support the audio element.
                     </audio>
@@ -778,7 +778,7 @@ const DevotionResourcePage = () => {
               if (isVideo) {
                 return (
                   <div className="aspect-video w-full rounded-lg overflow-hidden bg-muted">
-                    <video controls className="w-full h-full">
+                    <video controls controlsList="nodownload noplaybackrate" onContextMenu={(e) => e.preventDefault()} className="w-full h-full">
                       <source src={fileUrl} type="video/mp4" />
                       Your browser does not support the video element.
                     </video>
