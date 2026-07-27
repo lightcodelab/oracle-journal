@@ -1,192 +1,167 @@
-# The Mirror Exchange — Read-Only Architecture & Feasibility Audit
+# Mirror Exchange — Correction Addendum (read-only verification pass)
 
-Scope: assessment only. No code, migrations, schema, config, or UI changes are proposed for this pass. Findings below are grounded in the current codebase and live database (`information_schema` + `public` inspection performed this turn).
-
----
-
-## 1. Current relevant architecture
-
-### 1.1 Door of Communion (entry point candidate)
-
-- Route: `/communion` → `src/pages/DoorOfCommunion.tsx`.
-- Categories currently rendered as cards (hard-coded array `categories` in that file): Live Readings, Live Classes, Live Workshops, Live Meditation Classes, All Sessions, Live Replays. There is no CMS backing this list — it is a static array.
-- Sub-routes registered in `src/App.tsx`:
-  - `/communion/live-readings`, `/communion/live-classes`, `/communion/live-workshops`, `/communion/live-meditations`, `/communion/live-replays`, `/all-live-sessions`, `/all-live-sessions/:sessionId/join`.
-- Access enforcement inside `DoorOfCommunion.tsx`:
-  - Auth check via `supabase.auth.getSession()` + `onAuthStateChange` redirect to `/auth`.
-  - Content gate via `useTierAccess().hasAccess('communion')`, which in the current one-membership model is equivalent to “admin OR active member OR active manual full-access grant.”
-- Safest entry point: a new card in the existing `categories` array pointing at `/communion/mirror-exchange`. It naturally inherits the Door’s access gate and NavActions header. No changes to `DoorOfCommunion.tsx`’s access logic are required.
-
-### 1.2 Membership & authentication (reuse unchanged)
-
-- Canonical entitlement decision lives in `public.get_member_state(uuid)` and `public.has_full_temple_access(uuid)` (confirmed in DB routines list).
-- Frontend hooks: `src/hooks/useAuth.tsx` (user/session/admin), `src/hooks/useMemberState.ts` (canonical `hasFullTempleAccess`, `entitlementSource`, `error`, manual-grant state machine), `src/hooks/useTierAccess.ts` (compat shim already routed through `get_member_state`).
-- Route guard pattern in use across Temple pages: session check → `useMemberState` / `useTierAccess`. `ExpiredAccess.tsx` and `ScheduledAccess.tsx` already cover the grace/expiry/scheduled transitions.
-- No age or adult-participation attestation exists anywhere in the codebase or DB. This is a gap for a member-to-member feature.
-
-### 1.3 Existing profiles (partial reuse only)
-
-`public.profiles` columns confirmed via information_schema:
-`id, email, full_name, full_name_encrypted, is_encrypted, must_change_password, member_tier_code, plan_cadence, subscription_status, current_period_end, stripe_customer_id, newsletter_opt_in, is_active_member, active_member_since, created_at, updated_at`.
-
-- Reusable: `id`, `full_name` (as display fallback), auth linkage.
-- Absent and required later: avatar/photo, chosen community name, pronouns, country/region/city, IANA time zone, languages, bio/intro, community-profile visibility flag, adult-attestation flag, community-agreement acceptance record.
-- `profiles` is currently a private/self-service table (based on `Profile.tsx` reads only `.eq("id", session.user.id)`). There is no public/community-visible profile surface anywhere.
-
-### 1.4 Database & security conventions (reuse patterns)
-
-- RLS + explicit GRANTs are the house pattern; `service_role` and `authenticated` grants on every public table.
-- SECURITY DEFINER + `set search_path = public` functions are used for cross-table authorization (`has_role`, `has_full_temple_access`, `is_active_member`, `has_any_manual_access`). Appropriate reuse pattern for Mirror Exchange gating helpers.
-- Soft-delete / audit patterns present: `manual_access_grant_audit`, `manual_access_legacy_bucket_history`, `founder_price_audit`, `stripe_webhook_events` — all use immutable-append triggers (`*_immutable`). Good template for Mirror Exchange moderation and message-deletion audit trails.
-- Existing admin-review UI: `src/pages/BugReports.tsx`, `src/pages/FeatureSuggestions.tsx`, `src/pages/UserManagement.tsx` — provide the layout/idiom for a future admin moderation queue.
-
-### 1.5 Messaging, realtime & notifications
-
-- No member-to-member messaging table exists. `healing_conversations` is user↔bot only.
-- Supabase Realtime is used exactly once (`src/hooks/useResourceEditLock.ts`) for CMS edit-lock presence. No `postgres_changes` subscriptions anywhere. No realtime infrastructure to reuse for chat.
-- No in-app notifications table, no unread-count pattern, no email-notification edge function (`ls supabase/functions/` shows none matching `notif|email|invite|reminder`). MailerLite sync (`mailerlite-sync`) is for newsletter opt-in only, not transactional.
-- No rate limiting or abuse protection at the data layer.
-
-### 1.6 Scheduling
-
-- `LiveSessions.tsx`, `SessionCalendar.tsx`, `useLiveSessions.ts` handle admin-scheduled Zoom sessions with fixed date/time columns.
-- No availability windows, recurring appointments, per-user time-zone conversion, or reminder jobs exist. `pg_cron` runs only for `publish-scheduled-content` (content release).
-- Date formatting uses `date-fns` (implied by other files); no timezone library confirmed. `src/lib/manualAccessDates.ts` demonstrates the project’s Melbourne-timezone convention with `Intl.DateTimeFormat`.
-
-### 1.7 Safety & moderation
-
-- No block, report, mute, or community-agreement tables exist.
-- No adult / age attestation. No consent record.
-- Admin review UI exists in idiom but not scoped to member-to-member content.
-- Data-retention conventions: audit tables are append-only; content-lifecycle is soft-delete via status columns (e.g. resource `status`).
-
-### 1.8 Interface & design system
-
-Reusable primitives found: shadcn `Card`, `Dialog`, `Input`, `Textarea`, `Select`, `Badge`, `Button`, `Switch`; framer-motion for entry animation; `PageBreadcrumb`, `NavActions`, `ProfileDropdown` for header consistency; `useToast` for feedback. Mobile-responsive `md:` / `lg:` grid patterns and DoorOpen-icon idiom are established in `ExploreDoors.tsx` and `DoorOfCommunion.tsx`. Empty-state and access-denied patterns are demonstrated on `DoorOfCommunion.tsx` and `ExpiredAccess.tsx`.
-
-### 1.9 External call links
-
-- No URL sanitization / allow-list utility exists. `src/lib/utils.ts` is a `cn()` helper only.
-- Vimeo embed handling (`VimeoEmbed.tsx`) is the closest analogue but assumes a trusted single provider.
-- No pattern exists for revealing sensitive fields (like a call URL) only to two specific participants — this must be created.
+No code, schema, RLS or config was changed. All findings verified against `public.get_member_state`, `public.has_full_temple_access`, `public.is_active_member`, `useMemberState.ts`, `useTierAccess.ts`, and `_oracle_access_run_tests()`.
 
 ---
 
-## 2. What can be reused unchanged
+## 1. Canonical access matrix (verified)
 
-- Auth + session listener idiom (`useAuth`, `onAuthStateChange`).
-- Canonical entitlement gate (`useMemberState.hasFullTempleAccess`, `has_full_temple_access(uuid)` SQL).
-- Door layout, header, breadcrumb, motion, and card idiom (`DoorOfCommunion.tsx`).
-- shadcn UI primitives and toast.
-- SECURITY DEFINER + audit-trigger pattern for moderation records.
-- `manualAccessDates.ts` timezone conventions.
+The canonical decision for gating Mirror Exchange is `public.has_full_temple_access(uuid)` (mirrored in TypeScript by `useMemberState.hasFullTempleAccess`, which derives from `is_admin OR is_active_member OR manual_full_access.state='active'`). Manual state is computed in `get_member_state` in the order: active canonical grant → active dated legacy window → scheduled → expired → revoked_only → none.
 
-## 3. What should be extended
+`is_active_member(_user_id)` returns TRUE if ANY of:
+- `user_roles.role = 'admin'`, OR
+- `profiles.subscription_status IN ('active','trialing')`, OR
+- `entitlements` row with `product_kind = 'app_membership'`, non-test environment, `(ends_at IS NULL OR ends_at > now())`, AND `(status='active' OR (status='in_grace' AND grace_until > now()))`.
 
-- `profiles` — either extended with community fields (avatar_url, chosen_name, pronouns, country/region/city, iana_timezone, languages[], bio, community_visible, adult_attested_at, agreement_accepted_at) or a parallel `community_profiles` table keyed 1:1 to `profiles.id`. A parallel table is safer because it keeps identity/billing separate from community disclosure and simplifies RLS visibility rules.
-- `DoorOfCommunion.tsx` `categories` array — add one entry pointing at the new route. No logic changes.
-- `useMemberState` remains the single gate; no fork.
+| # | State | `has_full_temple_access` | Supporting branch |
+|---|---|---|---|
+| 1 | Active paid member | TRUE | `is_active_member` → `profiles.subscription_status='active'` and/or `entitlements.status='active'`. Test: `active_member_has_full`. |
+| 2 | Failed renewal within 15-day grace | **TRUE** | `is_active_member` → `entitlements.status='in_grace' AND grace_until > now()`. Preserves access exactly as intended. |
+| 3 | Failed renewal after grace | FALSE | `entitlements` no longer matches (grace expired, ends_at passed, or status flipped to `past_due`/`canceled`); no other source. |
+| 4 | Cancellation scheduled at period end, paid period still active | TRUE | Stripe leaves `subscription_status='active'` until period end (webhook sets `cancel_at_period_end`, not status). `is_active_member` remains TRUE. |
+| 5 | Cancellation after paid period ends | FALSE | `subscription_status` becomes `canceled`; entitlement window closed. |
+| 6 | Active manual full-access grant | TRUE | Direct branch in `has_full_temple_access` (`starts_at <= now() < expires_at AND revoked_at IS NULL`). Test: `active_manual_has_full`. |
+| 7 | Manual grant scheduled, not started | FALSE for gating | `get_member_state` classifies as `scheduled`; `has_full_temple_access` returns FALSE. UI shows `ScheduledAccess`. Test: `scheduled_denied`. |
+| 8 | Manual grant expired | FALSE | Test: `expired_denied`. UI shows `ExpiredAccess`. |
+| 9 | Manual grant revoked (revoked-only history) | FALSE | Test: `revoked_denied`. |
+| 10 | Permanent/grandfathered legacy full access | TRUE while dated legacy window is live (`manual_access_legacy_bucket_history.starts_at <= now() < ends_at`). Any still-live row on pre-canonical `manual_access_grants` also counts. Test: `legacy_during_has_full`. There is **no truly permanent, undated** grandfathered path — permanence is expressed as a long-dated window. |
+| 11 | No access | FALSE. Test: `nobody_denied`. |
 
-## 4. What must be created
+**Contradiction with prior audit:** Section 1.2 / 5 / 8 of the previous audit said "grace/expired/scheduled/revoked all deny." That is wrong for grace. Valid failed-payment grace (row 2) **preserves** full Temple access via the `entitlements.in_grace` branch of `is_active_member`. Rows 3, 7, 8, 9 do deny. No regression found; the audit statement is corrected, not the system.
 
-- Mirror Exchange schema (Stage 1 skeleton only for this feature): community profile, community agreement acceptance ledger, orientation-completion record.
-- Later stages: capacity/availability, invitations, conversations, messages, scheduled calls (with external call-link column), post-call safety checks, reports, blocks, admin moderation queue.
-- URL validation utility with a strict provider allow-list (zoom.us, facetime, meet.google.com, wa.me/whatsapp, plus a generic https allow rule with warning).
-- In-app notifications table + unread badge hook, and a reminder edge function driven by `pg_cron`.
-- Realtime subscription pattern for 1:1 message threads (new territory — only one existing user of Realtime).
-- Admin moderation UI (new page, follows BugReports.tsx idiom).
-- Adult / age attestation and community-agreement UI + audit records.
+**Directive for Mirror Exchange:** reuse `has_full_temple_access(auth.uid())` / `useMemberState.hasFullTempleAccess` verbatim. Do not re-interpret grace, cancel-at-period-end, or manual states.
 
-## 5. Security, privacy, moderation & access-control gaps (before any implementation)
+---
 
-1. No adult attestation exists — member-to-member connection cannot be safely offered without one.
-2. No community agreement / consent record — the scope statement and Mirror “may / may not” rules are policy that must be logged per user acceptance.
-3. No block/report/mute primitives — RLS on future messaging must join to a blocks table from day one to prevent contact after a block.
-4. No moderation queue or admin-review workflow for member-authored content.
-5. No rate limiting — invitations and messages must be rate-limited at DB/edge to prevent spam.
-6. No PII visibility policy — phone numbers, emails and external call links must be RLS-restricted to the two accepted participants; profile visibility must be opt-in and revocable.
-7. No notification/preferences infrastructure — must be built before email or in-app pings can fire.
-8. No URL sanitization — malicious call-link risk.
-9. Access on grace/cancellation/expiry: existing `useMemberState` already returns `hasFullTempleAccess=false` in those states, but Mirror-specific side effects (existing invitations, upcoming calls, active companion connection) will need explicit lifecycle rules (auto-pause vs. auto-cancel).
-10. Deletion / retention — no policy yet for message history retention, right-to-erasure vs. audit-preservation for reports.
+## 2. Corrected safety dependency order
 
-## 6. Recommended data model (high level, not to be created yet)
+Blocks must exist before any interpersonal surface. Reports must exist no later than the first surface that could be reported.
 
-- `community_profiles` (1:1 with `profiles.id`): display_name, pronouns, avatar_url, country, region, city_approx, iana_timezone, languages[], bio, is_visible, adult_attested_at, agreement_version_accepted, agreement_accepted_at.
-- `community_agreements`: versioned agreement text; append-only.
-- `mirror_orientation_completions`: per-user completion of the orientation module.
-- Stage 2+: `mirror_capacity` (current state enum), `mirror_preferences` (audio/video/either, in-person openness, call length, cadence, topics_can_hold[], topics_cannot_hold[], perspective_preference), `mirror_availability_windows`.
-- Stage 3: `mirror_invitations` (from_user, to_user, kind: call|companion, status, expires_at).
-- Stage 4: `mirror_connections` (accepted pair, kind, started_at, ended_at); `mirror_threads` + `mirror_messages` (RLS: participant-only, with join to `mirror_blocks`); `mirror_scheduled_calls` (start_at UTC, duration_minutes, call_link, provider, revealed_at).
-- Stage 5: `mirror_call_safety_checks` (private per-participant).
-- Stage 6: `mirror_blocks`, `mirror_reports` (with `mirror_report_audit` append-only).
-- Every table paired with GRANTs, RLS enabled, participant-scoped policies, and a SECURITY DEFINER helper (e.g. `is_mirror_participant(user_id, thread_id)`) to avoid RLS recursion.
-
-## 7. Dependency-aware staged plan
+Revised staging:
 
 ```text
-Stage 1  Foundations
-  community_profiles + agreement + orientation + adult attestation
-  RLS: owner-only write, community-visible read only when is_visible
-  Door of Communion entry card (locked behind orientation+agreement+adult)
-  No matching, no messaging yet
-Stage 2  Mirror profile detail
+Stage 1  Foundations (non-interactive)
+  community_profiles (owner-only, is_visible default FALSE)
+  community_agreements + community_agreement_acceptances (append-only)
+  mirror_adult_attestations (append-only)
+  mirror_orientation_completions (append-only)
+  mirror_participation_status (active | withdrawn | suspended)
+  mirror_blocks  ← created here, no discovery surface yet
+  mirror_exchange_ready() readiness helper (self-scoped)
+  Door of Communion entry card, orientation → agreement → attestation → private profile only
+Stage 2  Mirror profile detail (still private)
   Capacity, availability, preferences, topics can/cannot hold
-  Read-only "preview my Mirror card" view
+  "Preview my Mirror card" (owner-only)
 Stage 3  Matching & invitations
-  Server-side suggestion RPC (SECURITY DEFINER), rate-limited
-  Mutual invitation lifecycle (pending/accepted/declined/expired)
+  Discovery RPC + invitation lifecycle — MUST join mirror_blocks bidirectionally
+  mirror_reports created here (first reportable surface: invitations)
+  Rate limiting at DB/edge
 Stage 4  Messaging + scheduling + external call links
-  Threads/messages with Realtime, blocks-aware RLS
-  Scheduling with IANA tz conversion
-  External call-link storage with provider allow-list, revealed only to 2 participants
-Stage 5  Guided Mirror Call page + private post-call check
-Stage 6  Blocks, reports, admin moderation, rate limits hardened, controlled release
+  Threads/messages with Realtime, block-aware RLS
+  Scheduling with IANA tz; call-link storage with categorised allow-list
+  Message retention policy decided immediately before this stage
+Stage 5  Guided Mirror Call + private post-call safety check
+Stage 6  Admin moderation queue, hardened rate limits, controlled release
 ```
 
-## 8. Testing requirements per stage
-
-- Stage 1: RLS tests — non-owner cannot read hidden profile; visible profile readable only to active members; agreement acceptance is immutable; orientation gate blocks Stage-2 UI. Access-lifecycle: grace/expired/scheduled/revoked all deny.
-- Stage 2: preference and capacity updates round-trip; visibility toggle removes profile from any listing RPC in same transaction.
-- Stage 3: suggestion RPC never returns blocked users, non-visible users, expired members, or self; invitation state machine transitions cannot be forged from either side; rate limit enforced at DB.
-- Stage 4: message insert RLS denies non-participants and blocked participants; call-link column masked to non-participants; timezone conversion tests around DST boundaries in Australia/Melbourne + one Northern-Hemisphere zone.
-- Stage 5: safety check writes are private to author only, even from paired participant.
-- Stage 6: report creation append-only; admin queue visible only to `has_role(auth.uid(),'admin')`; block prevents any subsequent invitation, message, or scheduled call.
-- Regression: existing 67+ access tests (`_phase1_run_access_tests`, `_oracle_access_run_tests`, etc.) continue to pass after each stage.
-
-## 9. Decisions / unknowns to clarify before Stage 1 implementation
-
-1. Parallel `community_profiles` table vs. extending `profiles` — recommendation: parallel table.
-2. Age threshold policy: 18+ globally, or configurable per region?
-3. Agreement versioning behaviour: on version bump, do existing members lose access to Mirror Exchange until re-accepting?
-4. Community-profile visibility default: opt-in (recommended) or opt-out?
-5. Chosen community name — display-only, or replaces `full_name` throughout Temple? Recommendation: display-only, scoped to Mirror Exchange surfaces.
-6. Retention: message history retention window and behaviour on member exit / block / report.
-7. Notification channel priorities: in-app only for Stage 4, or email from Stage 4? Email requires new transactional infra (none exists).
-8. Whether the Door of Communion access gate is sufficient, or Mirror Exchange requires a stricter gate (e.g. minimum tenure in the Temple before participation).
-
-## 10. Risks of regression to existing systems
-
-- Membership: extending `profiles` risks breaking `Profile.tsx` and `useAuth`/`useMemberState` reads. Mitigation: parallel table.
-- Door of Communion: adding a card is low risk; changing the access predicate is not needed.
-- Notifications: no existing pattern to preserve — greenfield.
-- Newsletter/MailerLite: unaffected as long as new tables do not overload `newsletter_opt_in`.
-- Live Sessions calendar: unaffected — Mirror Exchange must not reuse `live_sessions` (different lifecycle, different participants, different privacy).
-- Auth flow: unaffected as long as new gates are additive (orientation + agreement + adult attestation) and share `useMemberState` as the outer gate.
+**Recommendation:** Put the `mirror_blocks` foundation in Stage 1, not Stage 3. Trade-off: adds one table + RLS + a `SECURITY DEFINER` helper `public.mirror_is_blocked(a uuid, b uuid)` with zero user-visible surface, but guarantees that when Stage 3 opens discovery there is no window in which a block table is being added *concurrently* with the first query that must consult it. This is the safer default; the cost is one extra table in Stage 1.
 
 ---
 
-## Recommended safest scope for Stage 1
+## 3. Corrected community-profile privacy architecture
 
-Given zero existing infra for member-to-member interaction, Stage 1 should deliberately ship **no interpersonal surface**. It should install only the non-interactive foundations:
+Full-row `SELECT` to all active members is rejected. Column-level minimisation is enforced via **projections**, not RLS.
 
-1. `community_profiles` (parallel to `profiles`), owner-only write, is_visible defaulted false, RLS in place from the first migration with GRANTs.
-2. `community_agreements` (versioned, read-all-authenticated) and `community_agreement_acceptances` (append-only per user).
-3. `mirror_orientation_completions` (append-only per user).
-4. An `adult_attested_at` field on `community_profiles`.
-5. A new page at `/communion/mirror-exchange` that: gates on `useMemberState.hasFullTempleAccess`, then walks the user through **read-only orientation → agreement acceptance → adult attestation → private community-profile creation** and stops there. No matching, no invitations, no messaging.
-6. One new card in the existing `DoorOfCommunion.tsx` `categories` array.
-7. A SECURITY DEFINER helper `public.mirror_exchange_ready(uuid)` returning true only when (a) `has_full_temple_access`, (b) adult attested, (c) current agreement accepted, (d) orientation completed. All later stages gate on this single function so the policy stays in one place.
-8. Regression: existing access test suites re-run and expected to remain green.
+Layered access model (design only, not implemented):
 
-This lands the entire safety/consent/identity substrate before any code exists that could allow two members to reach each other, which is the correct order for a peer-processing feature.
+- **Owner** — full read/write on own `community_profiles` row.
+- **Admin** — full read via `has_role(auth.uid(),'admin')`, write only through audited helpers.
+- **Peer discovery (Stage 3+)** — restricted view or `SECURITY DEFINER` RPC returning only: `display_name`, `pronouns`, `avatar_url`, coarse `country`/`region`, `iana_timezone`, `languages`, short `bio_preview`. Never approximate town/city, never full topic lists in discovery.
+- **Accepted pair (Stage 4+)** — expanded projection (topics can/cannot hold, in-person openness, city_approx) via a participant-gated RPC that verifies an accepted `mirror_connection` and no active block in either direction.
+- **Call/contact fields (Stage 4+)** — separate table `mirror_scheduled_calls` with per-participant RLS; never joined into any profile projection.
+
+**Safest Stage 1 posture (confirmed, not implemented):**
+- `community_profiles.is_visible` default FALSE and effectively unused in Stage 1.
+- RLS: `SELECT/UPDATE` only where `user_id = auth.uid()`; admin `SELECT` via `has_role`. **No** community-wide read policy.
+- No view, RPC, or listing surface that returns other members' rows.
+- GRANTs: `authenticated` SELECT/INSERT/UPDATE (rows self-scoped by RLS); `service_role` ALL. No `anon`.
+
+---
+
+## 4. Append-only consent & attestation model
+
+Accepted. Consent evidence lives in dedicated append-only tables, not on `community_profiles`.
+
+- `community_profiles` — editable identity/visibility only. No `adult_attested_at`, no `agreement_accepted_at`.
+- `community_agreements(version, effective_at, body, is_current)` — versioned definitions; admin write only.
+- `community_agreement_acceptances(user_id, agreement_version, accepted_at, policy_metadata jsonb)` — append-only, per-version. Immutability enforced by `BEFORE UPDATE/DELETE` trigger following the `*_immutable` pattern already used by `manual_access_grant_audit`.
+- `mirror_adult_attestations(user_id, attested_at, policy_version)` — append-only 18+ attestation. No DOB collected.
+- `mirror_orientation_completions(user_id, orientation_version, completed_at)` — append-only.
+- `mirror_participation_status(user_id, status, updated_at)` — mutable state: `active | withdrawn | suspended`. Withdrawal flips this and sets `community_profiles.is_visible = false`. Historical acceptance rows are **never** deleted or updated. Re-participation appends new attestation/orientation/agreement rows against the then-current versions.
+
+Correction/withdrawal semantics: a member corrects display data by updating `community_profiles`; she withdraws by setting `mirror_participation_status='withdrawn'` (owner-writable), which causes `mirror_exchange_ready` to return FALSE and hides visibility. She may withdraw the *forward-looking permission* freely; she cannot rewrite the *historical evidence* that at time T she attested/accepted. On material agreement version bump, `is_current` flips; readiness becomes FALSE until a new acceptance row is appended.
+
+---
+
+## 5. Locked product decisions — acknowledged
+
+Applied verbatim to the revised Stage 1 scope: 18+ globally; visibility opt-in default off; chosen name display-only; agreement re-acceptance on material version change; in-app notifications only (deferred past Stage 1 since no interpersonal surface exists yet); no minimum tenure; grace preserves access per §1; retention decision deferred until immediately before Stage 4; no professional/matching-signal fields; no discovery/matching/messaging/scheduling/call links in Stage 1.
+
+---
+
+## 6. Readiness helper — safe design
+
+Reject a single `public.mirror_exchange_ready(_user_id uuid)` callable with an arbitrary UUID by any authenticated user. Split into two:
+
+- `public.mirror_exchange_ready_self()` — `SECURITY DEFINER`, `STABLE`, no argument. Uses `auth.uid()` internally, returns FALSE when `auth.uid() IS NULL`. This is the only helper the client (`useMemberState`-style hook) may call.
+- `public.mirror_exchange_ready_for(_user_id uuid)` — `SECURITY DEFINER`, requires `has_role(auth.uid(),'admin')` OR `auth.uid() = _user_id`; otherwise returns FALSE (never raises, to avoid an oracle). Used by future admin surfaces and by trusted server-side callers (RPCs already running as `SECURITY DEFINER` under a verified identity).
+
+Both return TRUE only when ALL hold:
+1. `has_full_temple_access(user)` — canonical gate (row 1/2/4/6/10 of §1 matrix; grace preserved).
+2. Latest `mirror_adult_attestations` row exists.
+3. Latest `mirror_orientation_completions.orientation_version` matches the current required version.
+4. Latest `community_agreement_acceptances.agreement_version` matches the current `is_current` agreement.
+5. `mirror_participation_status.status = 'active'` (not withdrawn, not suspended).
+
+**Visibility is NOT required for readiness.** A member may be oriented, attested, agreement-accepted, and participation-active while keeping `community_profiles.is_visible = false`. Discovery listings will additionally filter on visibility; readiness does not.
+
+Spoofing surface eliminated: no client caller can inspect another member's readiness, no error path leaks existence, and admin checks go through `has_role`.
+
+---
+
+## 7. External-link correction (design note only, not authorised this pass)
+
+- Split link categories: **video/audio call** vs **messaging/contact** vs **generic external**. Each has its own allow-list and its own UX warning.
+- Do not treat `wa.me` as a call link. It typically opens a WhatsApp text conversation and can reveal phone numbers; if WhatsApp calls are supported at all, they require a distinct scheme/host set, and phone numbers remain private unless a member explicitly shares them post-acceptance.
+- No arbitrary custom URI schemes.
+- No blanket "HTTPS is fine" rule. HTTPS-but-unlisted links receive an explicit warning surface, never silent acceptance.
+- Concrete host patterns for Zoom / FaceTime / Google Meet / WhatsApp will be enumerated at Stage 4 planning, not now.
+- Phone numbers, personal emails, and other contact data remain private by default; disclosure is a pair-only, opt-in action.
+
+---
+
+## Corrected Stage 1 scope (non-interactive foundations)
+
+Ship only:
+1. `community_profiles` — owner/admin only, `is_visible` default FALSE, no discovery surface.
+2. `community_agreements` (versioned, admin-managed) + `community_agreement_acceptances` (append-only, immutable trigger).
+3. `mirror_adult_attestations` (append-only, immutable trigger).
+4. `mirror_orientation_completions` (append-only, immutable trigger).
+5. `mirror_participation_status` (active | withdrawn | suspended; owner may withdraw, admin may suspend).
+6. `mirror_blocks` + `public.mirror_is_blocked(a,b)` helper. No surface consumes it yet, but the primitive is in place for Stage 3.
+7. `public.mirror_exchange_ready_self()` and `public.mirror_exchange_ready_for(uuid)` per §6.
+8. Route `/communion/mirror-exchange` gated by `useMemberState.hasFullTempleAccess`, walking orientation → agreement acceptance → adult attestation → private profile creation, and stopping. No matching, no invitations, no messaging, no scheduling, no call links, no notifications, no discovery listing.
+9. One new card in `DoorOfCommunion.tsx` `categories` array. No changes to the Door's access predicate.
+10. Regression: `_oracle_access_run_tests()` (13/13) plus any earlier canonical suites remain green after Stage 1 migration; add Stage-1-specific RLS tests covering owner-only reads, append-only immutability, and `mirror_exchange_ready_*` correctness across the §1 access matrix (including the grace row).
+
+---
+
+## Remaining blockers before writing the Stage 1 Build instruction
+
+None. The corrections above are self-contained decisions. The following are **implementation choices** to make at Build time, not verification blockers:
+
+- Exact column list for `community_profiles` (safe to draft in the Build instruction).
+- Whether `mirror_participation_status` is a single-row-per-user table (recommended) or a history table plus a materialised current-status view.
+- Wording of the initial `community_agreements` v1 body and orientation content (product copy, not architecture).
+
+**Verdict: the codebase is ready for a precise Stage 1 Build instruction on the corrected scope.**
