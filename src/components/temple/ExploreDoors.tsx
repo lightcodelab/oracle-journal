@@ -22,6 +22,17 @@ const tools = [
 ];
 
 export function ExploreDoors() {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) {
+      navigate(`/search?q=${encodeURIComponent(q)}`);
+    }
+  };
+
   return (
     <section aria-labelledby="explore-heading" className="mb-12">
       <h2 id="explore-heading" className="font-serif text-2xl text-foreground mb-1">
@@ -78,12 +89,30 @@ export function ExploreDoors() {
         </div>
       </div>
 
-      <Link
-        to="/search"
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm text-muted-foreground hover:text-foreground hover:bg-card border border-border/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-      >
-        <Search className="h-4 w-4" aria-hidden /> Search
-      </Link>
+      <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+        <h3 className="font-serif text-2xl text-foreground mb-1">
+          Search The Temple
+        </h3>
+        <p className="text-sm text-muted-foreground mb-3">
+          Find teachings, resources, and pathways by name or keyword.
+        </p>
+        <form onSubmit={handleSearch} className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden />
+            <Input
+              type="search"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9"
+              aria-label="Search The Temple"
+            />
+          </div>
+          <Button type="submit" variant="secondary" disabled={!searchQuery.trim()}>
+            Search
+          </Button>
+        </form>
+      </div>
     </section>
   );
 }
