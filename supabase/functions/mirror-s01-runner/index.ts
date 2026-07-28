@@ -2876,6 +2876,77 @@ serve(async (req) => {
         return json(500, { ok: false, error: "supabase url or anon key missing" });
       }
 
+      // ---- Task 12E: exact-equality preflight (stop-before-provisioning) ----
+      // Expected authenticated privilege set on public.mirror_blocks after the
+      // Task 12D least-privilege repair: exactly SELECT + INSERT + DELETE.
+      // Anonymous and PUBLIC must have zero privileges.
+      //
+      // The authoritative privilege inventory is captured out-of-band from
+      // pg_class.relacl / has_table_privilege via psql immediately before this
+      // action is invoked (see Task 12E report). The caller supplies that exact
+      // observed grant set through the request body; the runner enforces exact
+      // equality against the expected set and stops before creating any fixture
+      // if the two disagree.
+      //
+      // In addition, the runner exercises an unauthenticated PostgREST
+      // boundary probe (SELECT/INSERT/DELETE) to prove anonymous has no
+      // privileges. If any probe succeeds, the runner stops.
+      const bodyIn: any = (typeof (globalThis as any).__lastParsedBody === "object" && (globalThis as any).__lastParsedBody) || {};
+      const observedAuthPrivs = Array.isArray(bodyIn?.preflight_authenticated_privileges)
+        ? bodyIn.preflight_authenticated_privileges.map((s: string) => String(s).toUpperCase()).sort()
+        : null;
+      const expectedAuthPrivs = ["DELETE", "INSERT", "SELECT"];
+      const preflightGrantsMatch = observedAuthPrivs !== null
+        && observedAuthPrivs.length === expectedAuthPrivs.length
+        && observedAuthPrivs.every((p: string, i: number) => p === expectedAuthPrivs[i]);
+
+      const anonProbe = {
+        select: 0, insert: 0, delete: 0,
+      };
+      {
+        const s = await fetch(`${supabaseUrl}/rest/v1/mirror_blocks?select=id`, {
+          method: "GET", headers: { apikey: anonKey },
+        });
+        anonProbe.select = s.status;
+        const i = await fetch(`${supabaseUrl}/rest/v1/mirror_blocks`, {
+          method: "POST",
+          headers: { apikey: anonKey, "Content-Type": "application/json" },
+          body: JSON.stringify({ blocker_id: crypto.randomUUID(), blocked_id: crypto.randomUUID() }),
+        });
+        anonProbe.insert = i.status;
+        const d = await fetch(`${supabaseUrl}/rest/v1/mirror_blocks?blocker_id=eq.${crypto.randomUUID()}`, {
+          method: "DELETE", headers: { apikey: anonKey },
+        });
+        anonProbe.delete = d.status;
+      }
+      const anonBoundaryOk = (anonProbe.select === 401 || anonProbe.select === 403)
+        && (anonProbe.insert === 401 || anonProbe.insert === 403)
+        && (anonProbe.delete === 401 || anonProbe.delete === 403);
+
+      if (!preflightGrantsMatch || !anonBoundaryOk) {
+        return json(200, {
+          ok: false,
+          action: "run_task12_block_lifecycle",
+          stopped_before_provisioning: true,
+          reason: !preflightGrantsMatch
+            ? "authenticated privilege set on public.mirror_blocks differs from expected exact set {SELECT, INSERT, DELETE}"
+            : "anonymous boundary probe against public.mirror_blocks did not reject one or more of SELECT/INSERT/DELETE",
+          preflight: {
+            table: "public.mirror_blocks",
+            expected_authenticated_privileges: expectedAuthPrivs,
+            observed_authenticated_privileges: observedAuthPrivs,
+            anonymous_probe: anonProbe,
+          },
+        });
+      }
+      const preflightArmed = {
+        exact_equality_check: true,
+        observed_authenticated_privileges: observedAuthPrivs,
+        expected_authenticated_privileges: expectedAuthPrivs,
+        anonymous_probe: anonProbe,
+        stopped_before_provisioning: false,
+      };
+
       type Fx = { user: any; email: string; password: string; token?: string };
       const fixtures: Record<string, Fx> = {};
       const results: Array<{ id: string; name: string; expected: string; actual: string; pass: boolean }> = [];
@@ -3033,15 +3104,21 @@ serve(async (req) => {
       let seededVersions: Record<string, string> = {};
       let beforeCount = 0;
       let afterCount = 0;
+      let afterProvisioningCount: number | "not recorded" = "not recorded";
+      let beforeCleanupCount: number | "not recorded" = "not recorded";
       let hftaResults: Record<string, boolean> = {};
 
       try {
         const usersBefore = await listAllUsers(admin);
         beforeCount = usersBefore.filter(u => String(u.user_metadata?.fixture_marker ?? "") === marker).length;
 
-        fixtures.a = await createOne("task12b-block-owner-a");
-        fixtures.b = await createOne("task12b-block-owner-b");
+        fixtures.a = await createOne("task12e-block-owner-a");
+        fixtures.b = await createOne("task12e-block-owner-b");
         const A = fixtures.a, B = fixtures.b;
+        {
+          const uAfterProv = await listAllUsers(admin);
+          afterProvisioningCount = uAfterProv.filter(u => String(u.user_metadata?.fixture_marker ?? "") === marker).length;
+        }
 
         // Canonical temporary access via manual_full_access_grants.
         const grantStarts = new Date(Date.now() - 3600 * 1000).toISOString();
@@ -3520,6 +3597,10 @@ serve(async (req) => {
       } catch (e) {
         error = e instanceof Error ? e.message : String(e);
       } finally {
+        try {
+          const uBeforeCleanup = await listAllUsers(admin);
+          beforeCleanupCount = uBeforeCleanup.filter(u => String(u.user_metadata?.fixture_marker ?? "") === marker).length;
+        } catch (_) { beforeCleanupCount = "not recorded"; }
         await cleanup();
         try {
           const usersAfter = await listAllUsers(admin);
@@ -3573,9 +3654,9 @@ serve(async (req) => {
           consumed_by: "readiness helper does not consume block state",
         },
         fixtures: [
-          { id: fixtures.a?.user?.id, purpose: "task12b-block-owner-a", role_inventory: "baseline user only",
+          { id: fixtures.a?.user?.id, purpose: "task12e-block-owner-a", role_inventory: "baseline user only",
             access: "canonical manual_full_access_grants" },
-          { id: fixtures.b?.user?.id, purpose: "task12b-block-owner-b", role_inventory: "baseline user only",
+          { id: fixtures.b?.user?.id, purpose: "task12e-block-owner-b", role_inventory: "baseline user only",
             access: "canonical manual_full_access_grants" },
         ],
         hfta: hftaResults,
@@ -3585,7 +3666,10 @@ serve(async (req) => {
         readiness_timeline: readinessTimeline,
         pathway_accounting: pathwayAccounting,
         block_operation_inventory: blockOperationInventory,
+        preflight_armed: preflightArmed,
         marker_auth_users_before: beforeCount,
+        marker_auth_users_after_provisioning: afterProvisioningCount,
+        marker_auth_users_before_cleanup: beforeCleanupCount,
         marker_auth_users_after: afterCount,
         isolation: {
           mirror_admin_suspend_invoked: false,
