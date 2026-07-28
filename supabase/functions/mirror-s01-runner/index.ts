@@ -226,6 +226,93 @@ serve(async (req) => {
       });
     }
 
+    // ---- Task 6 two-role smoke: create one admin + one ordinary fixture. ----
+    // Never accepts caller-supplied email, UUID, role or marker. Emails and
+    // passwords are generated internally and never returned. The only DB
+    // writes are marker-scoped auth-user creation, the trigger-installed
+    // baseline 'user' role, and one canonical 'admin' role row on the
+    // reverified admin fixture.
+    if (action === "provision_two_role_smoke") {
+      const runId = crypto.randomUUID();
+      const marker = `${MARKER_PREFIX}${runId}`;
+      assertMarkerScoped(marker);
+
+      const createOne = async (purpose: string) => {
+        const localId = crypto.randomUUID();
+        const email = `mirror-s01+${runId}-${localId}@fixtures.invalid`;
+        const password = crypto.randomUUID() + crypto.randomUUID();
+        const { data, error } = await admin.auth.admin.createUser({
+          email,
+          password,
+          email_confirm: true,
+          user_metadata: {
+            fixture_marker: marker,
+            fixture_purpose: purpose,
+          },
+        });
+        if (error || !data?.user) {
+          throw new Error(error?.message ?? "user creation failed");
+        }
+        return data.user;
+      };
+
+      let adminUser: any = null;
+      let ordinaryUser: any = null;
+      try {
+        adminUser = await createOne(
+          "mirror-exchange-stage1-task6-canonical-admin",
+        );
+        ordinaryUser = await createOne(
+          "mirror-exchange-stage1-task6-ordinary-user",
+        );
+
+        // Reread admin fixture and re-verify marker before role elevation.
+        const { data: reread, error: rereadErr } =
+          await admin.auth.admin.getUserById(adminUser.id);
+        if (rereadErr || !reread?.user) {
+          throw new Error("failed to reread admin fixture");
+        }
+        const rereadMarker = String(
+          reread.user.user_metadata?.fixture_marker ?? "",
+        );
+        if (rereadMarker !== marker) {
+          throw new Error("admin fixture marker mismatch on reread");
+        }
+
+        // Assign canonical admin role via existing user_roles table +
+        // app_role enum. The trigger already inserted the baseline 'user'
+        // role for both fixtures.
+        const { error: roleErr } = await admin
+          .from("user_roles")
+          .insert({ user_id: reread.user.id, role: "admin" });
+        if (roleErr) {
+          throw new Error(`admin role insert failed: ${roleErr.message}`);
+        }
+      } catch (e) {
+        // Best-effort marker-scoped cleanup on any failure.
+        try { await cleanupByMarker(admin, marker); } catch (_) {}
+        const msg = e instanceof Error ? e.message : String(e);
+        return json(500, { ok: false, error: msg, marker });
+      }
+
+      return json(200, {
+        ok: true,
+        action: "provision_two_role_smoke",
+        marker,
+        fixture_count: 2,
+        fixtures: [
+          {
+            id: adminUser.id,
+            fixture_purpose: "mirror-exchange-stage1-task6-canonical-admin",
+          },
+          {
+            id: ordinaryUser.id,
+            fixture_purpose: "mirror-exchange-stage1-task6-ordinary-user",
+          },
+        ],
+      });
+    }
+
     // NOTE: fixture provisioning is intentionally omitted from this
     // deployment. It will be added in a separately authorised Stage 1
     // fixture task. Every future provisioning path MUST stamp
