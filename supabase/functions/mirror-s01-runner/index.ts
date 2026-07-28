@@ -2977,8 +2977,8 @@ serve(async (req) => {
         const usersBefore = await listAllUsers(admin);
         beforeCount = usersBefore.filter(u => String(u.user_metadata?.fixture_marker ?? "") === marker).length;
 
-        fixtures.a = await createOne("task12-block-owner-a");
-        fixtures.b = await createOne("task12-block-owner-b");
+        fixtures.a = await createOne("task12b-block-owner-a");
+        fixtures.b = await createOne("task12b-block-owner-b");
         const A = fixtures.a, B = fixtures.b;
 
         // Canonical temporary access via manual_full_access_grants.
@@ -2986,7 +2986,7 @@ serve(async (req) => {
         const grantExpires = new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString();
         for (const id of [A.user.id, B.user.id]) {
           const { error: gErr } = await admin.from("manual_full_access_grants")
-            .insert({ user_id: id, starts_at: grantStarts, expires_at: grantExpires, notes: `mirror-s01 task12 ${marker}` });
+            .insert({ user_id: id, starts_at: grantStarts, expires_at: grantExpires, notes: `mirror-s01 task12b ${marker}` });
           if (gErr) throw new Error("grant insert failed: " + gErr.message);
         }
 
@@ -3428,10 +3428,27 @@ serve(async (req) => {
               bDeleteA: deniedEvidence.b_delete_a_row?.rows, aDeleteB: deniedEvidence.a_delete_b_row?.rows }),
             ok);
         }
-        // B47: forbidden pathways not exercised
+        // B47: amended-contract pathway accounting.
+        // Permitted member-bearer PostgREST table writes are the deployed canonical
+        // pathway and are NOT forbidden. Forbidden pathways are service-role
+        // lifecycle writes, direct SQL lifecycle writes, RLS-bypassed lifecycle
+        // writes, and any suspension / lifting / withdrawal / access transition.
         {
-          record("B47", "no suspension/lifting/withdrawal/direct-block-write invoked",
-            "all false", "all false", true);
+          const ok =
+            pathwayAccounting.forbidden_service_role_lifecycle_writes === 0 &&
+            pathwayAccounting.forbidden_direct_sql_lifecycle_writes === 0 &&
+            pathwayAccounting.forbidden_rls_bypassed_lifecycle_writes === 0 &&
+            pathwayAccounting.mirror_admin_suspend_invoked === false &&
+            pathwayAccounting.mirror_admin_lift_suspension_invoked === false &&
+            pathwayAccounting.mirror_withdraw_participation_invoked === false &&
+            pathwayAccounting.access_transition_invoked === false;
+          record(
+            "B47",
+            "no forbidden pathway occurred (permitted member-bearer PostgREST writes reported separately)",
+            "forbidden service_role/direct_sql/rls_bypass lifecycle writes = 0; no suspension/lifting/withdrawal/access transition",
+            JSON.stringify(pathwayAccounting),
+            ok,
+          );
         }
         // B48: untouched wider surfaces
         {
