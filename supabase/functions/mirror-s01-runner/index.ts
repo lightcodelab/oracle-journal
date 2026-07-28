@@ -2891,9 +2891,9 @@ serve(async (req) => {
       // In addition, the runner exercises an unauthenticated PostgREST
       // boundary probe (SELECT/INSERT/DELETE) to prove anonymous has no
       // privileges. If any probe succeeds, the runner stops.
-      const bodyIn: any = (typeof (globalThis as any).__lastParsedBody === "object" && (globalThis as any).__lastParsedBody) || {};
-      const observedAuthPrivs = Array.isArray(bodyIn?.preflight_authenticated_privileges)
-        ? bodyIn.preflight_authenticated_privileges.map((s: string) => String(s).toUpperCase()).sort()
+      const bodyIn: any = (typeof body === "object" && body) ? body : {};
+      const observedAuthPrivs = Array.isArray((bodyIn as any)?.preflight_authenticated_privileges)
+        ? ((bodyIn as any).preflight_authenticated_privileges as unknown[]).map((s) => String(s).toUpperCase()).sort()
         : null;
       const expectedAuthPrivs = ["DELETE", "INSERT", "SELECT"];
       const preflightGrantsMatch = observedAuthPrivs !== null
