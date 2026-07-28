@@ -2876,29 +2876,96 @@ serve(async (req) => {
         return json(500, { ok: false, error: "supabase url or anon key missing" });
       }
 
-      // ---- Task 12E: exact-equality preflight (stop-before-provisioning) ----
-      // Expected authenticated privilege set on public.mirror_blocks after the
-      // Task 12D least-privilege repair: exactly SELECT + INSERT + DELETE.
-      // Anonymous and PUBLIC must have zero privileges.
+      // ---- Task 12G: authoritative live-ACL preflight (stop-before-provisioning) ----
+      // The runner obtains the effective privilege inventory for
+      // public.mirror_blocks directly from PostgreSQL via the
+      // service_role-only RPC public._mirror_blocks_privilege_inventory().
+      // Request-body input can NOT satisfy or bypass this gate. Any
+      // caller-supplied `preflight_authenticated_privileges` field is
+      // recorded as non-authoritative and ignored for the provisioning
+      // decision.
       //
-      // The authoritative privilege inventory is captured out-of-band from
-      // pg_class.relacl / has_table_privilege via psql immediately before this
-      // action is invoked (see Task 12E report). The caller supplies that exact
-      // observed grant set through the request body; the runner enforces exact
-      // equality against the expected set and stops before creating any fixture
-      // if the two disagree.
+      // Expected inventory (per Task 12D least-privilege repair):
+      //   authenticated: exactly { SELECT, INSERT, DELETE }
+      //   anon:          none
+      //   PUBLIC:        none
+      //   service_role:  { SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER }
+      //                  (MAINTAIN also granted where supported by server version)
       //
-      // In addition, the runner exercises an unauthenticated PostgREST
-      // boundary probe (SELECT/INSERT/DELETE) to prove anonymous has no
-      // privileges. If any probe succeeds, the runner stops.
+      // Fail-closed on: RPC error, missing/malformed response, any privilege
+      // mismatch, unknown role/privilege, or anonymous PostgREST boundary
+      // probe that does not reject SELECT/INSERT/DELETE.
       const bodyIn: any = (typeof body === "object" && body) ? body : {};
-      const observedAuthPrivs = Array.isArray((bodyIn as any)?.preflight_authenticated_privileges)
-        ? ((bodyIn as any).preflight_authenticated_privileges as unknown[]).map((s) => String(s).toUpperCase()).sort()
-        : null;
-      const expectedAuthPrivs = ["DELETE", "INSERT", "SELECT"];
-      const preflightGrantsMatch = observedAuthPrivs !== null
-        && observedAuthPrivs.length === expectedAuthPrivs.length
-        && observedAuthPrivs.every((p: string, i: number) => p === expectedAuthPrivs[i]);
+      const preflightMode: string = String((bodyIn as any)?.preflight_mode ?? "");
+      const callerSuppliedPrivilegesIgnored: unknown =
+        (bodyIn as any)?.preflight_authenticated_privileges ?? null;
+
+      const EXPECTED: Record<string, { grant: string[]; deny: string[] }> = {
+        authenticated: {
+          grant: ["SELECT", "INSERT", "DELETE"],
+          deny: ["UPDATE", "TRUNCATE", "REFERENCES", "TRIGGER", "MAINTAIN"],
+        },
+        anon: {
+          grant: [],
+          deny: ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER", "MAINTAIN"],
+        },
+        PUBLIC: {
+          grant: [],
+          deny: ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER", "MAINTAIN"],
+        },
+        service_role: {
+          grant: ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER", "MAINTAIN"],
+          deny: [],
+        },
+      };
+
+      // ---- Call authoritative inspection RPC via service_role admin client ----
+      let inventory: any = null;
+      let rpcError: string | null = null;
+      try {
+        const { data, error } = await admin.rpc("_mirror_blocks_privilege_inventory");
+        if (error) rpcError = String(error.message ?? error);
+        else inventory = data;
+      } catch (e: any) {
+        rpcError = String(e?.message ?? e);
+      }
+
+      const mismatches: Array<{ role: string; privilege: string; expected: boolean; observed: unknown }> = [];
+      let inventoryOk = false;
+      if (!rpcError && inventory && typeof inventory === "object" && inventory.ok === true
+          && inventory.table === "public.mirror_blocks"
+          && inventory.roles && typeof inventory.roles === "object") {
+        inventoryOk = true;
+        for (const role of Object.keys(EXPECTED)) {
+          const roleMap = (inventory.roles as any)[role];
+          if (!roleMap || typeof roleMap !== "object") {
+            mismatches.push({ role, privilege: "*", expected: true, observed: "role missing from inventory" });
+            continue;
+          }
+          const check = (priv: string, expected: boolean) => {
+            const cell = roleMap[priv];
+            if (!cell || typeof cell !== "object") {
+              mismatches.push({ role, privilege: priv, expected, observed: "missing" });
+              return;
+            }
+            if (cell.supported === false) {
+              // Unsupported on this server version. If we expected a grant, that's a mismatch;
+              // if we expected a deny, unsupported means the privilege cannot exist -> ok.
+              if (expected) mismatches.push({ role, privilege: priv, expected, observed: "unsupported" });
+              return;
+            }
+            if (typeof cell.granted !== "boolean") {
+              mismatches.push({ role, privilege: priv, expected, observed: "granted-not-boolean" });
+              return;
+            }
+            if (cell.granted !== expected) {
+              mismatches.push({ role, privilege: priv, expected, observed: cell.granted });
+            }
+          };
+          for (const p of EXPECTED[role].grant) check(p, true);
+          for (const p of EXPECTED[role].deny) check(p, false);
+        }
+      }
 
       const anonProbe = {
         select: 0, insert: 0, delete: 0,
@@ -2923,27 +2990,69 @@ serve(async (req) => {
         && (anonProbe.insert === 401 || anonProbe.insert === 403)
         && (anonProbe.delete === 401 || anonProbe.delete === 403);
 
+      const preflightGrantsMatch = inventoryOk && mismatches.length === 0;
+
+      // Sanitised evidence: strip relacl/oid/inspected_at from surfaced report.
+      const sanitisedInventory = inventory && typeof inventory === "object"
+        ? {
+            ok: (inventory as any).ok,
+            table: (inventory as any).table,
+            owner: (inventory as any).owner,
+            rls_enabled: (inventory as any).rls_enabled,
+            rls_forced: (inventory as any).rls_forced,
+            pg_version_num: (inventory as any).pg_version_num,
+            roles: (inventory as any).roles,
+          }
+        : null;
+
+      const preflightReport = {
+        table: "public.mirror_blocks",
+        source: "public._mirror_blocks_privilege_inventory() via service_role",
+        rpc_error: rpcError,
+        inventory_ok: inventoryOk,
+        expected: EXPECTED,
+        live_inventory: sanitisedInventory,
+        mismatches,
+        anonymous_probe: anonProbe,
+        caller_supplied_field_present: callerSuppliedPrivilegesIgnored !== null,
+        caller_supplied_field_authority: "ignored (non-authoritative)",
+      };
+
+      // ---- Preflight-only mode: report and stop, never provision ----
+      if (preflightMode === "inspect_only") {
+        return json(200, {
+          ok: preflightGrantsMatch && anonBoundaryOk,
+          action: "run_task12_block_lifecycle",
+          mode: "preflight_only",
+          stopped_before_provisioning: true,
+          preflight: preflightReport,
+        });
+      }
+
       if (!preflightGrantsMatch || !anonBoundaryOk) {
         return json(200, {
           ok: false,
           action: "run_task12_block_lifecycle",
           stopped_before_provisioning: true,
-          reason: !preflightGrantsMatch
-            ? "authenticated privilege set on public.mirror_blocks differs from expected exact set {SELECT, INSERT, DELETE}"
-            : "anonymous boundary probe against public.mirror_blocks did not reject one or more of SELECT/INSERT/DELETE",
-          preflight: {
-            table: "public.mirror_blocks",
-            expected_authenticated_privileges: expectedAuthPrivs,
-            observed_authenticated_privileges: observedAuthPrivs,
-            anonymous_probe: anonProbe,
-          },
+              reason: !inventoryOk
+                ? (rpcError
+                    ? `authoritative preflight RPC failed: ${rpcError}`
+                    : "authoritative preflight RPC returned missing/malformed inventory")
+                : (mismatches.length > 0
+                    ? "live privilege inventory on public.mirror_blocks differs from expected"
+                    : "anonymous boundary probe against public.mirror_blocks did not reject one or more of SELECT/INSERT/DELETE"),
+              preflight: preflightReport,
         });
       }
       const preflightArmed = {
         exact_equality_check: true,
-        observed_authenticated_privileges: observedAuthPrivs,
-        expected_authenticated_privileges: expectedAuthPrivs,
+            source: "public._mirror_blocks_privilege_inventory() via service_role",
+            live_inventory: sanitisedInventory,
+            expected: EXPECTED,
+            mismatches,
         anonymous_probe: anonProbe,
+            caller_supplied_field_present: callerSuppliedPrivilegesIgnored !== null,
+            caller_supplied_field_authority: "ignored (non-authoritative)",
         stopped_before_provisioning: false,
       };
 

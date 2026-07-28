@@ -5898,6 +5898,7 @@ export type Database = {
         Args: { _a: string; _b: string }
         Returns: boolean
       }
+      _mirror_blocks_privilege_inventory: { Args: never; Returns: Json }
       _mirror_exchange_run_tests: {
         Args: never
         Returns: {
