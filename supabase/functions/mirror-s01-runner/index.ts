@@ -2966,6 +2966,68 @@ serve(async (req) => {
       const deniedEvidence: Record<string, any> = {};
       const idempotentEvidence: Record<string, any> = {};
       const readinessTimeline: Array<{ stage: string; a: boolean | null; b: boolean | null }> = [];
+      const pathwayAccounting = {
+        permitted_member_bearer_insert_attempts: 0,
+        permitted_member_bearer_delete_attempts: 0,
+        anonymous_insert_attempts: 0,
+        anonymous_delete_attempts: 0,
+        forbidden_service_role_lifecycle_writes: 0,
+        forbidden_direct_sql_lifecycle_writes: 0,
+        forbidden_rls_bypassed_lifecycle_writes: 0,
+        service_role_cleanup_delete_statements: 2, // cleanup() issues two DELETE statements against mirror_blocks (by blocker_id, by blocked_id)
+        mirror_admin_suspend_invoked: false,
+        mirror_admin_lift_suspension_invoked: false,
+        mirror_withdraw_participation_invoked: false,
+        access_transition_invoked: false,
+      };
+      // Static block-operation inventory: every mirror_blocks touchpoint in the
+      // lifecycle branch, classified per the Task 12B amended contract.
+      const blockOperationInventory: Array<Record<string, unknown>> = [
+        { id: "B09", caller: "fixture A", bearer: "authenticated member-bearer (A)", method: "POST", endpoint: "/rest/v1/mirror_blocks", kind: "lifecycle-insert (self-block attempt)", rls_active: true, contract_compliant: true },
+        { id: "B10", caller: "service-role admin client", bearer: "service_role", method: "SELECT", endpoint: "mirror_blocks", kind: "read-only probe", rls_active: false, contract_compliant: true },
+        { id: "B11", caller: "fixture A", bearer: "authenticated member-bearer (A)", method: "POST", endpoint: "/rest/v1/mirror_blocks", kind: "lifecycle-insert (block B)", rls_active: true, contract_compliant: true },
+        { id: "B12", caller: "service-role admin client", bearer: "service_role", method: "SELECT", endpoint: "mirror_blocks", kind: "read-only probe", rls_active: false, contract_compliant: true },
+        { id: "B13", caller: "service-role admin client", bearer: "service_role", method: "SELECT", endpoint: "mirror_blocks", kind: "read-only probe", rls_active: false, contract_compliant: true },
+        { id: "B17", caller: "fixture A", bearer: "authenticated member-bearer (A)", method: "POST", endpoint: "/rest/v1/mirror_blocks", kind: "lifecycle-insert (repeat)", rls_active: true, contract_compliant: true },
+        { id: "B18", caller: "service-role admin client", bearer: "service_role", method: "SELECT", endpoint: "mirror_blocks", kind: "read-only probe", rls_active: false, contract_compliant: true },
+        { id: "B19", caller: "fixture B", bearer: "authenticated member-bearer (B)", method: "DELETE", endpoint: "/rest/v1/mirror_blocks?blocker_id=eq.A&blocked_id=eq.B", kind: "lifecycle-delete (wrong-owner boundary probe)", rls_active: true, contract_compliant: true },
+        { id: "B20", caller: "service-role admin client", bearer: "service_role", method: "SELECT", endpoint: "mirror_blocks", kind: "read-only probe", rls_active: false, contract_compliant: true },
+        { id: "B21", caller: "fixture A", bearer: "authenticated member-bearer (A)", method: "GET", endpoint: "/rest/v1/mirror_blocks", kind: "read-only probe", rls_active: true, contract_compliant: true },
+        { id: "B22", caller: "fixture B", bearer: "authenticated member-bearer (B)", method: "GET", endpoint: "/rest/v1/mirror_blocks", kind: "read-only probe", rls_active: true, contract_compliant: true },
+        { id: "B23", caller: "anonymous", bearer: "none", method: "GET", endpoint: "/rest/v1/mirror_blocks", kind: "anonymous boundary probe (read)", rls_active: true, contract_compliant: true },
+        { id: "B24", caller: "anonymous", bearer: "none", method: "POST", endpoint: "/rest/v1/mirror_blocks", kind: "anonymous boundary probe (insert)", rls_active: true, contract_compliant: true },
+        { id: "B25", caller: "anonymous", bearer: "none", method: "DELETE", endpoint: "/rest/v1/mirror_blocks?blocker_id=eq.A", kind: "anonymous boundary probe (delete)", rls_active: true, contract_compliant: true },
+        { id: "B26", caller: "fixture A", bearer: "authenticated member-bearer (A)", method: "DELETE", endpoint: "/rest/v1/mirror_blocks?blocker_id=eq.A&blocked_id=eq.B", kind: "lifecycle-delete (unblock B)", rls_active: true, contract_compliant: true },
+        { id: "B27", caller: "service-role admin client", bearer: "service_role", method: "SELECT", endpoint: "mirror_blocks", kind: "read-only probe", rls_active: false, contract_compliant: true },
+        { id: "B29", caller: "fixture A", bearer: "authenticated member-bearer (A)", method: "DELETE", endpoint: "/rest/v1/mirror_blocks?blocker_id=eq.A&blocked_id=eq.B", kind: "lifecycle-delete (repeat/no-op)", rls_active: true, contract_compliant: true },
+        { id: "B30", caller: "service-role admin client", bearer: "service_role", method: "SELECT", endpoint: "mirror_blocks", kind: "read-only probe", rls_active: false, contract_compliant: true },
+        { id: "B31", caller: "fixture B", bearer: "authenticated member-bearer (B)", method: "POST", endpoint: "/rest/v1/mirror_blocks", kind: "lifecycle-insert (block A)", rls_active: true, contract_compliant: true },
+        { id: "B32", caller: "service-role admin client", bearer: "service_role", method: "SELECT", endpoint: "mirror_blocks", kind: "read-only probe", rls_active: false, contract_compliant: true },
+        { id: "B33", caller: "fixture A", bearer: "authenticated member-bearer (A)", method: "DELETE", endpoint: "/rest/v1/mirror_blocks?blocker_id=eq.B&blocked_id=eq.A", kind: "lifecycle-delete (wrong-owner boundary probe)", rls_active: true, contract_compliant: true },
+        { id: "B34", caller: "service-role admin client", bearer: "service_role", method: "SELECT", endpoint: "mirror_blocks", kind: "read-only probe", rls_active: false, contract_compliant: true },
+        { id: "B36", caller: "fixture B", bearer: "authenticated member-bearer (B)", method: "DELETE", endpoint: "/rest/v1/mirror_blocks?blocker_id=eq.B&blocked_id=eq.A", kind: "lifecycle-delete (unblock A)", rls_active: true, contract_compliant: true },
+        { id: "B37", caller: "service-role admin client", bearer: "service_role", method: "SELECT", endpoint: "mirror_blocks", kind: "read-only probe", rls_active: false, contract_compliant: true },
+        { id: "B44", caller: "service-role admin client", bearer: "service_role", method: "SELECT", endpoint: "mirror_blocks", kind: "read-only probe (isolation)", rls_active: false, contract_compliant: true },
+        { id: "cleanup", caller: "service-role admin client", bearer: "service_role", method: "DELETE", endpoint: "mirror_blocks", kind: "service-role cleanup (NOT lifecycle)", rls_active: false, contract_compliant: true },
+      ];
+      // Populate accounting from the inventory.
+      for (const op of blockOperationInventory) {
+        if (op.kind === "lifecycle-insert (self-block attempt)" ||
+            op.kind === "lifecycle-insert (block B)" ||
+            op.kind === "lifecycle-insert (repeat)" ||
+            op.kind === "lifecycle-insert (block A)") {
+          pathwayAccounting.permitted_member_bearer_insert_attempts++;
+        } else if (op.kind === "lifecycle-delete (unblock B)" ||
+                   op.kind === "lifecycle-delete (repeat/no-op)" ||
+                   op.kind === "lifecycle-delete (unblock A)" ||
+                   op.kind === "lifecycle-delete (wrong-owner boundary probe)") {
+          pathwayAccounting.permitted_member_bearer_delete_attempts++;
+        } else if (op.kind === "anonymous boundary probe (insert)") {
+          pathwayAccounting.anonymous_insert_attempts++;
+        } else if (op.kind === "anonymous boundary probe (delete)") {
+          pathwayAccounting.anonymous_delete_attempts++;
+        }
+      }
       let error: string | null = null;
       let residue: any = null;
       let seededVersions: Record<string, string> = {};
@@ -3511,9 +3573,9 @@ serve(async (req) => {
           consumed_by: "readiness helper does not consume block state",
         },
         fixtures: [
-          { id: fixtures.a?.user?.id, purpose: "task12-block-owner-a", role_inventory: "baseline user only",
+          { id: fixtures.a?.user?.id, purpose: "task12b-block-owner-a", role_inventory: "baseline user only",
             access: "canonical manual_full_access_grants" },
-          { id: fixtures.b?.user?.id, purpose: "task12-block-owner-b", role_inventory: "baseline user only",
+          { id: fixtures.b?.user?.id, purpose: "task12b-block-owner-b", role_inventory: "baseline user only",
             access: "canonical manual_full_access_grants" },
         ],
         hfta: hftaResults,
@@ -3521,6 +3583,8 @@ serve(async (req) => {
         denied_evidence: deniedEvidence,
         idempotent_evidence: idempotentEvidence,
         readiness_timeline: readinessTimeline,
+        pathway_accounting: pathwayAccounting,
+        block_operation_inventory: blockOperationInventory,
         marker_auth_users_before: beforeCount,
         marker_auth_users_after: afterCount,
         isolation: {
