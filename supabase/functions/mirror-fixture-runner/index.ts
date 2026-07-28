@@ -105,6 +105,20 @@ serve(async (req) => {
   const admin = createClient(SB_URL, SB_SRV, { auth: { persistSession: false } });
   const runId = crypto.randomUUID();
   const marker = "mirror-fx:" + runId;
+
+  // Pre-run cleanup of any orphaned mirror-fx fixtures from earlier failed runs
+  try {
+    const { data: allUsers } = await admin.auth.admin.listUsers({ perPage: 200 });
+    for (const u of (allUsers?.users ?? [])) {
+      const fm = String(u.user_metadata?.fixture_marker ?? "");
+      if (fm.startsWith("mirror-fx:")) {
+        await admin.auth.admin.deleteUser(u.id);
+      }
+    }
+    await admin.from("manual_full_access_grants").delete().like("notes", "mirror-fx:%");
+    await admin.from("entitlements").delete().like("source_ref", "mirror-fx:%");
+  } catch { /* best-effort */ }
+
   const reporter = makeReporter();
   const createdUserIds: string[] = [];
   const createdVersionIds: string[] = [];
@@ -181,11 +195,11 @@ serve(async (req) => {
     await admin.from("entitlements").insert({
       user_id: fixtures.grace.id, source: "admin", source_ref: `${marker}:grace`,
       product_kind: "app_membership", status: "in_grace",
-      starts_at: iso(addDays(-30)), ends_at: iso(addDays(-2)), grace_until: iso(addDays(5)),
+      starts_at: iso(addDays(-30)), ends_at: iso(addDays(5)), grace_until: iso(addDays(10)),
       metadata: { fixture: marker },
     });
-    await admin.from("profiles").update({ is_active_member: true, subscription_status: "in_grace",
-      current_period_end: iso(addDays(-2)) }).eq("id", fixtures.grace.id);
+    // Note: profile subscription_status left NULL so is_active_member exercises
+    // the entitlements path (not the profiles.subscription_status shortcut).
 
     // Grace expired (past grace window → no access)
     await admin.from("entitlements").insert({
@@ -534,9 +548,11 @@ serve(async (req) => {
     // E13 evidence for obsolete version does not satisfy — controlled version rollover
     await reporter.run("E13 obsolete version does not satisfy requirements", async () => {
       // Insert v2 as new current
-      const { data: v2 } = await admin.from("mirror_agreement_versions").insert({
-        version: 9999, title: `MFX v2 ${runId.slice(0,8)}`, body: "test", is_current: false,
+      const { data: v2, error: v2err } = await admin.from("mirror_agreement_versions").insert({
+        version: `mfx-${runId.slice(0,8)}`, body: "MFX test body", effective_at: iso(now),
+        is_current: false,
       }).select("id").single();
+      if (v2err) throw new Error(`v2 insert: ${v2err.message}`);
       if (!v2) throw new Error("v2 not created");
       createdVersionIds.push(v2.id);
       // Flip current: set old to false, new to true
@@ -604,7 +620,9 @@ serve(async (req) => {
       // Temporarily deactivate memberB's entitlement
       await admin.from("entitlements").update({ status: "canceled", ends_at: iso(addDays(-1)) })
         .eq("source_ref", `${marker}:memberB`);
-      await admin.from("profiles").update({ is_active_member: false }).eq("id", fixtures.memberB.id);
+      await admin.from("profiles").update({
+        is_active_member: false, subscription_status: "canceled",
+      }).eq("id", fixtures.memberB.id);
       try {
         const { data } = await B.rpc("mirror_exchange_ready_self");
         assert(data === false, `ready=${data}`);
@@ -614,7 +632,9 @@ serve(async (req) => {
       } finally {
         await admin.from("entitlements").update({ status: "active", ends_at: iso(addDays(20)) })
           .eq("source_ref", `${marker}:memberB`);
-        await admin.from("profiles").update({ is_active_member: true }).eq("id", fixtures.memberB.id);
+        await admin.from("profiles").update({
+          is_active_member: true, subscription_status: "active",
+        }).eq("id", fixtures.memberB.id);
       }
     });
     // R08 non-admin cannot suspend
@@ -717,8 +737,10 @@ serve(async (req) => {
     });
 
     // ============ STRUCTURAL HARNESS ============
-    await reporter.run("S01 _mirror_exchange_run_tests (admin)", async () => {
-      const { data, error } = await AdminC.rpc("_mirror_exchange_run_tests");
+    // The harness function is granted only to service_role; call via the
+    // service-role admin client to exercise it without weakening grants.
+    await reporter.run("S01 _mirror_exchange_run_tests (service_role)", async () => {
+      const { data, error } = await admin.rpc("_mirror_exchange_run_tests");
       if (error) throw new Error(error.message);
       const rows = (data as Array<{ passed: boolean; name: string; detail?: string }>) ?? [];
       const failed = rows.filter((r) => !r.passed);
