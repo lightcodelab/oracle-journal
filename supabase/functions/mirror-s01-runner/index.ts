@@ -806,13 +806,36 @@ serve(async (req) => {
         try {
           // Post-cleanup zero-residue inventory
           const ids = Object.values(fixtures).map(f => f?.user?.id).filter(Boolean);
-          const tables = ["user_roles","profiles","subscriptions","subscription_events","entitlements","manual_full_access_grants","manual_access_grants","founding_members","community_profiles","mirror_agreement_acceptances","mirror_orientation_completions","mirror_adult_attestations","mirror_participations","mirror_suspensions","mirror_blocks"];
+          const specs: Array<[string, string]> = [
+            ["user_roles","user_id"],
+            ["profiles","id"],
+            ["subscriptions","profile_id"],
+            ["subscription_events","profile_id"],
+            ["entitlements","user_id"],
+            ["manual_full_access_grants","user_id"],
+            ["manual_access_grants","user_id"],
+            ["founding_members","user_id"],
+            ["community_profiles","user_id"],
+            ["mirror_agreement_acceptances","user_id"],
+            ["mirror_orientation_completions","user_id"],
+            ["mirror_adult_attestations","user_id"],
+            ["mirror_participations","user_id"],
+            ["mirror_suspensions","user_id"],
+          ];
           const counts: Record<string, number> = {};
-          for (const t of tables) {
+          for (const [t, col] of specs) {
             if (!ids.length) { counts[t] = 0; continue; }
-            const { data } = await admin.from(t).select("id", { count: "exact", head: false }).in("user_id", ids);
-            counts[t] = data?.length ?? 0;
+            try {
+              const { data } = await admin.from(t).select("*").in(col, ids);
+              counts[t] = data?.length ?? 0;
+            } catch (_) { counts[t] = -1; }
           }
+          // mirror_blocks uses two columns.
+          try {
+            const a = ids.length ? (await admin.from("mirror_blocks").select("*").in("blocker_id", ids)).data?.length ?? 0 : 0;
+            const b = ids.length ? (await admin.from("mirror_blocks").select("*").in("blocked_id", ids)).data?.length ?? 0 : 0;
+            counts["mirror_blocks"] = a + b;
+          } catch (_) { counts["mirror_blocks"] = -1; }
           const usersAfter = await listAllUsers(admin);
           afterCount = usersAfter.filter(u => String(u.user_metadata?.fixture_marker ?? "") === marker).length;
           residue = { post_cleanup_counts_by_table: counts, marker_auth_users_after: afterCount };
