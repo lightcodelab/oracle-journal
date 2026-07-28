@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
-import { Sparkles, GraduationCap, Users, CalendarDays, Video, Flower2, Lock, ArrowUpRight } from 'lucide-react';
+import { Sparkles, GraduationCap, Users, CalendarDays, Video, Flower2, Lock, ArrowUpRight, Eye } from 'lucide-react';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import NavActions from '@/components/NavActions';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,15 @@ interface CommunionCategory {
 }
 
 const categories: CommunionCategory[] = [
+  {
+    id: 'mirror-exchange',
+    title: 'The Mirror Exchange',
+    description: 'A peer-held space where another member can hold the mirror while you listen for your own revelation.',
+    icon: Eye,
+    route: '/communion/mirror-exchange',
+    colorClass: 'text-primary',
+    borderColor: 'border-primary/30 group-hover:border-primary/50',
+  },
   {
     id: 'live-readings',
     title: 'Live Readings',
