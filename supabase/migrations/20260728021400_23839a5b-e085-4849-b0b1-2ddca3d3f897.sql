@@ -1,0 +1,1 @@
+GRANT EXECUTE ON FUNCTION public._mirror_exchange_run_tests() TO authenticated;
