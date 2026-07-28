@@ -950,15 +950,7 @@ serve(async (req) => {
       };
 
       try {
-        // ---- Preflight (read-only) ----
-        const preflightFns: Record<string, any> = {};
-        {
-          const { data } = await admin.rpc(
-            "_mirror_exchange_run_tests",
-          ).catch(() => ({ data: null }));
-          // best-effort probe only; not used for assertions
-          void data;
-        }
+        // ---- Preflight (read-only, static inspection recorded above the run) ----
         preflight = {
           canonical_call_surface: "public.mirror_exchange_ready_self()",
           three_evidence_helper: {
