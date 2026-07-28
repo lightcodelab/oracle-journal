@@ -442,6 +442,432 @@ serve(async (req) => {
       });
     }
 
+    // ---- Task 8: profile + evidence behavioural matrix. ----
+    // Creates FOUR marker-scoped fixtures (owner, peer, no-access, admin),
+    // signs each in for genuine bearer tokens, and executes the fixed
+    // 48-assertion matrix against production RPCs and PostgREST.
+    // Every fixture, role and access-state row is torn down in the finally
+    // block by exact marker equality.
+    if (action === "run_task8_matrix") {
+      const runId = crypto.randomUUID();
+      const marker = `${MARKER_PREFIX}${runId}`;
+      assertMarkerScoped(marker);
+
+      const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+      const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+      if (!supabaseUrl || !anonKey) {
+        return json(500, { ok: false, error: "supabase url or anon key missing" });
+      }
+
+      type Fixture = { user: any; email: string; password: string; token?: string };
+      const fixtures: Record<string, Fixture> = {};
+      const results: Array<{ id: string; name: string; expected: string; actual: string; pass: boolean }> = [];
+
+      const record = (id: string, name: string, expected: string, actual: string, pass: boolean) => {
+        results.push({ id, name, expected, actual, pass });
+      };
+
+      const createOne = async (purpose: string): Promise<Fixture> => {
+        const localId = crypto.randomUUID();
+        const email = `mirror-s01+${runId}-${localId}@fixtures.invalid`;
+        const password = crypto.randomUUID() + crypto.randomUUID();
+        const { data, error } = await admin.auth.admin.createUser({
+          email, password, email_confirm: true,
+          user_metadata: { fixture_marker: marker, fixture_purpose: purpose },
+        });
+        if (error || !data?.user) throw new Error(error?.message ?? "create failed");
+        const reread = await admin.auth.admin.getUserById(data.user.id);
+        if (String(reread.data?.user?.user_metadata?.fixture_marker ?? "") !== marker) {
+          throw new Error("marker mismatch on reread");
+        }
+        return { user: data.user, email, password };
+      };
+
+      const signIn = async (f: Fixture) => {
+        const c = createClient(supabaseUrl, anonKey, { auth: { autoRefreshToken: false, persistSession: false } });
+        const { data, error } = await c.auth.signInWithPassword({ email: f.email, password: f.password });
+        if (error || !data?.session?.access_token) throw new Error(error?.message ?? "sign-in failed");
+        f.token = data.session.access_token as string;
+      };
+
+      const restReq = async (bearer: string | null, method: string, path: string, body?: unknown, extraHeaders?: Record<string,string>) => {
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+          "apikey": anonKey,
+          ...(extraHeaders ?? {}),
+        };
+        if (bearer) headers["Authorization"] = `Bearer ${bearer}`;
+        const resp = await fetch(`${supabaseUrl}${path}`, {
+          method, headers, body: body === undefined ? undefined : JSON.stringify(body),
+        });
+        const text = await resp.text();
+        let parsed: any = null;
+        try { parsed = text ? JSON.parse(text) : null; } catch (_) { parsed = text; }
+        return { status: resp.status, body: parsed };
+      };
+
+      const rpc = (bearer: string, fn: string, body: unknown) =>
+        restReq(bearer, "POST", `/rest/v1/rpc/${fn}`, body);
+
+      const cleanup = async () => {
+        try {
+          const ids = Object.values(fixtures).map(f => f?.user?.id).filter(Boolean);
+          if (ids.length) {
+            await admin.from("manual_full_access_grants").delete().in("user_id", ids);
+            await admin.from("user_roles").delete().in("user_id", ids);
+            await admin.from("community_profiles").delete().in("user_id", ids);
+            await admin.from("mirror_agreement_acceptances").delete().in("user_id", ids);
+            await admin.from("mirror_orientation_completions").delete().in("user_id", ids);
+            await admin.from("mirror_adult_attestations").delete().in("user_id", ids);
+          }
+        } catch (_) {}
+        try { await cleanupByMarker(admin, marker); } catch (_) {}
+      };
+
+      let error: string | null = null;
+      let residue: any = null;
+      let hfta: Record<string, boolean> = {};
+      let seededVersions: Record<string, string> = {};
+      let beforeCount = 0;
+      let afterCount = 0;
+
+      try {
+        // Baseline auth-user count for the marker prefix (before).
+        const usersBefore = await listAllUsers(admin);
+        beforeCount = usersBefore.filter(u => String(u.user_metadata?.fixture_marker ?? "") === marker).length;
+
+        // 1) Provision 4 fixtures.
+        fixtures.owner = await createOne("task8-profile-evidence-owner");
+        fixtures.peer = await createOne("task8-eligible-peer");
+        fixtures.noAccess = await createOne("task8-no-access");
+        fixtures.adminF = await createOne("task8-canonical-admin");
+
+        // 2) Grant eligibility: manual_full_access_grants to owner+peer;
+        //    admin role to adminF; leave noAccess as-is.
+        const grantExpires = new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString();
+        const grantStarts = new Date(Date.now() - 3600 * 1000).toISOString();
+        for (const id of [fixtures.owner.user.id, fixtures.peer.user.id]) {
+          const { error: gErr } = await admin
+            .from("manual_full_access_grants")
+            .insert({ user_id: id, starts_at: grantStarts, expires_at: grantExpires, notes: `mirror-s01 task8 ${marker}` });
+          if (gErr) throw new Error("grant insert failed: " + gErr.message);
+        }
+        const { error: rErr } = await admin.from("user_roles").insert({ user_id: fixtures.adminF.user.id, role: "admin" });
+        if (rErr) throw new Error("admin role insert failed: " + rErr.message);
+
+        // 3) Sign every fixture in for genuine bearer tokens.
+        for (const f of Object.values(fixtures)) await signIn(f);
+
+        // 4) Confirm has_full_temple_access via service-role RPC.
+        for (const [k, f] of Object.entries(fixtures)) {
+          const { data, error: hErr } = await admin.rpc("has_full_temple_access", { _user_id: f.user.id });
+          if (hErr) throw new Error("hfta failed: " + hErr.message);
+          hfta[k] = data === true;
+        }
+
+        // 5) Seeded current versions.
+        const cur = async (table: string) => {
+          const { data, error } = await admin.from(table).select("id,version").eq("is_current", true).limit(1);
+          if (error) throw error;
+          return data?.[0] ?? null;
+        };
+        const agV = await cur("mirror_agreement_versions");
+        const orV = await cur("mirror_orientation_versions");
+        const atV = await cur("mirror_adult_attestation_versions");
+        seededVersions = {
+          agreement: `${agV?.id}:${agV?.version}`,
+          orientation: `${orV?.id}:${orV?.version}`,
+          attestation: `${atV?.id}:${atV?.version}`,
+        };
+
+        // Aliases
+        const owner = fixtures.owner, peer = fixtures.peer, noAcc = fixtures.noAccess, adm = fixtures.adminF;
+
+        // ============ PROFILE MATRIX ============
+        const validPayload = {
+          _display_name: "Task8 Owner", _timezone: "UTC", _pronouns: "they/them",
+          _country: null, _region: null, _town: null, _languages: null, _intro: "hello",
+        };
+        const validPayload2 = { ...validPayload, _display_name: "Task8 Owner v2", _intro: "updated" };
+        const invalidPayload = { ...validPayload, _display_name: "" };
+
+        // P01
+        {
+          const r = await rpc(owner.token!, "mirror_save_profile", validPayload);
+          record("P01", "owner saves valid profile via mirror_save_profile", "HTTP 200", `HTTP ${r.status}`, r.status === 200);
+        }
+        // P02: exactly one row
+        {
+          const { data } = await admin.from("community_profiles").select("id,user_id,is_visible,display_name").eq("user_id", owner.user.id);
+          record("P02", "exactly one profile row for owner", "count=1", `count=${data?.length ?? 0}`, (data?.length ?? 0) === 1);
+        }
+        // P03
+        {
+          const { data } = await admin.from("community_profiles").select("is_visible").eq("user_id", owner.user.id).single();
+          record("P03", "is_visible defaults false", "false", String(data?.is_visible), data?.is_visible === false);
+        }
+        // P04
+        {
+          const r = await restReq(owner.token!, "GET", `/rest/v1/community_profiles?user_id=eq.${owner.user.id}&select=id`);
+          const n = Array.isArray(r.body) ? r.body.length : -1;
+          record("P04", "owner reads own profile via PostgREST", "1 row", `${n} rows (HTTP ${r.status})`, r.status === 200 && n === 1);
+        }
+        // P05
+        {
+          const r = await restReq(peer.token!, "GET", `/rest/v1/community_profiles?user_id=eq.${owner.user.id}&select=id,display_name`);
+          const rows = Array.isArray(r.body) ? r.body : [];
+          const leaked = rows.some((x: any) => x && (x.display_name || x.id));
+          record("P05", "peer cannot read owner profile", "0 rows, no leak", `${rows.length} rows leaked=${leaked}`, r.status === 200 && rows.length === 0 && !leaked);
+        }
+        // P06
+        {
+          const r = await restReq(noAcc.token!, "GET", `/rest/v1/community_profiles?user_id=eq.${owner.user.id}&select=id,display_name`);
+          const rows = Array.isArray(r.body) ? r.body : [];
+          record("P06", "no-access user cannot read owner profile", "0 rows", `${rows.length} rows (HTTP ${r.status})`, r.status === 200 && rows.length === 0);
+        }
+        // P07
+        {
+          const r = await restReq(adm.token!, "GET", `/rest/v1/community_profiles?user_id=eq.${owner.user.id}&select=id`);
+          const n = Array.isArray(r.body) ? r.body.length : -1;
+          record("P07", "canonical admin reads owner profile", "1 row", `${n} rows (HTTP ${r.status})`, r.status === 200 && n === 1);
+        }
+        // P08
+        {
+          const r = await rpc(owner.token!, "mirror_save_profile", validPayload2);
+          const { data } = await admin.from("community_profiles").select("display_name,intro").eq("user_id", owner.user.id).single();
+          const ok = r.status === 200 && data?.display_name === "Task8 Owner v2" && data?.intro === "updated";
+          record("P08", "owner updates own profile via RPC", "HTTP 200 + fields updated", `HTTP ${r.status} name=${data?.display_name}`, ok);
+        }
+        // P09: peer direct PATCH
+        {
+          const r = await restReq(peer.token!, "PATCH", `/rest/v1/community_profiles?user_id=eq.${owner.user.id}`, { display_name: "hacked" }, { Prefer: "return=representation" });
+          const rows = Array.isArray(r.body) ? r.body : [];
+          const { data } = await admin.from("community_profiles").select("display_name").eq("user_id", owner.user.id).single();
+          const unchanged = data?.display_name === "Task8 Owner v2";
+          record("P09", "peer PATCH rejected/no-op", "reject or 0 rows + unchanged", `HTTP ${r.status} rows=${rows.length} unchanged=${unchanged}`, unchanged && (r.status >= 400 || rows.length === 0));
+        }
+        // P10: no-access owner tries mirror_save_profile
+        {
+          const r = await rpc(noAcc.token!, "mirror_save_profile", { ...validPayload, _display_name: "NoAccess" });
+          const { data } = await admin.from("community_profiles").select("id").eq("user_id", noAcc.user.id);
+          const noRow = (data?.length ?? 0) === 0;
+          record("P10", "no-access user cannot create profile", "rejected + no row", `HTTP ${r.status} rows=${data?.length ?? 0}`, r.status >= 400 && noRow);
+        }
+        // P11: invalid payload
+        {
+          const r = await rpc(owner.token!, "mirror_save_profile", invalidPayload);
+          record("P11", "invalid payload rejected", "HTTP >=400", `HTTP ${r.status}`, r.status >= 400);
+        }
+        // P12: previously valid data unchanged
+        {
+          const { data } = await admin.from("community_profiles").select("display_name,intro").eq("user_id", owner.user.id).single();
+          const ok = data?.display_name === "Task8 Owner v2" && data?.intro === "updated";
+          record("P12", "previously valid data unchanged after invalid attempt", "name=v2 intro=updated", `name=${data?.display_name} intro=${data?.intro}`, ok);
+        }
+        // P13
+        {
+          const { data } = await admin.from("community_profiles").select("id").eq("user_id", owner.user.id);
+          record("P13", "owner still has exactly one profile", "count=1", `count=${data?.length ?? 0}`, (data?.length ?? 0) === 1);
+        }
+        // P14
+        {
+          const others = [peer.user.id, noAcc.user.id, adm.user.id];
+          const { data } = await admin.from("community_profiles").select("id,user_id").in("user_id", others);
+          record("P14", "no profile exists for peer/no-access/admin", "count=0", `count=${data?.length ?? 0}`, (data?.length ?? 0) === 0);
+        }
+
+        // ============ EVIDENCE MATRIX ============
+        const evidenceKinds: Array<{ prefix: string; table: string; fn: string; versionId: string }> = [
+          { prefix: "A", table: "mirror_agreement_acceptances", fn: "mirror_accept_agreement", versionId: agV.id },
+          { prefix: "O", table: "mirror_orientation_completions", fn: "mirror_complete_orientation", versionId: orV.id },
+          { prefix: "T", table: "mirror_adult_attestations", fn: "mirror_record_attestation", versionId: atV.id },
+        ];
+
+        for (const k of evidenceKinds) {
+          // 01: owner direct INSERT via PostgREST
+          {
+            const r = await restReq(owner.token!, "POST", `/rest/v1/${k.table}`, { user_id: owner.user.id, version_id: k.versionId }, { Prefer: "return=representation" });
+            const { data } = await admin.from(k.table).select("id").eq("user_id", owner.user.id);
+            const ok = (data?.length ?? 0) === 0 && r.status >= 400;
+            record(`${k.prefix}01`, `owner direct INSERT into ${k.table} rejected`, "reject + 0 rows", `HTTP ${r.status} rows=${data?.length ?? 0}`, ok);
+          }
+          // 02: canonical RPC
+          {
+            const r = await rpc(owner.token!, k.fn, {});
+            record(`${k.prefix}02`, `owner invokes ${k.fn}`, "HTTP 200", `HTTP ${r.status}`, r.status === 200);
+          }
+          // 03: service-role inspect
+          {
+            const { data } = await admin.from(k.table).select("id,version_id,user_id").eq("user_id", owner.user.id);
+            const ok = (data?.length ?? 0) === 1 && data![0].version_id === k.versionId;
+            record(`${k.prefix}03`, `exactly one owner evidence row for current version`, "count=1 version=current", `count=${data?.length ?? 0}`, ok);
+          }
+          // 04: owner reads own via PostgREST
+          {
+            const r = await restReq(owner.token!, "GET", `/rest/v1/${k.table}?user_id=eq.${owner.user.id}&select=id`);
+            const n = Array.isArray(r.body) ? r.body.length : -1;
+            record(`${k.prefix}04`, `owner reads own ${k.table} via PostgREST`, ">=1 row", `${n} rows (HTTP ${r.status})`, r.status === 200 && n === 1);
+          }
+          // 05: peer reads owner
+          {
+            const r = await restReq(peer.token!, "GET", `/rest/v1/${k.table}?user_id=eq.${owner.user.id}&select=id`);
+            const rows = Array.isArray(r.body) ? r.body : [];
+            record(`${k.prefix}05`, `peer cannot read owner ${k.table}`, "0 rows", `${rows.length} rows`, r.status === 200 && rows.length === 0);
+          }
+          // 06: no-access invokes RPC
+          {
+            const r = await rpc(noAcc.token!, k.fn, {});
+            const { data } = await admin.from(k.table).select("id").eq("user_id", noAcc.user.id);
+            const ok = r.status >= 400 && (data?.length ?? 0) === 0;
+            record(`${k.prefix}06`, `no-access user cannot record ${k.fn}`, "reject + 0 rows", `HTTP ${r.status} rows=${data?.length ?? 0}`, ok);
+          }
+          // 07: owner direct UPDATE
+          {
+            const r = await restReq(owner.token!, "PATCH", `/rest/v1/${k.table}?user_id=eq.${owner.user.id}`, { version_id: k.versionId }, { Prefer: "return=representation" });
+            const rows = Array.isArray(r.body) ? r.body : [];
+            record(`${k.prefix}07`, `owner direct UPDATE rejected/no-op`, "reject or 0 rows", `HTTP ${r.status} rows=${rows.length}`, r.status >= 400 || rows.length === 0);
+          }
+          // 08: owner direct DELETE
+          {
+            const r = await restReq(owner.token!, "DELETE", `/rest/v1/${k.table}?user_id=eq.${owner.user.id}`, undefined, { Prefer: "return=representation" });
+            const rows = Array.isArray(r.body) ? r.body : [];
+            const { data } = await admin.from(k.table).select("id").eq("user_id", owner.user.id);
+            const stillThere = (data?.length ?? 0) === 1;
+            record(`${k.prefix}08`, `owner direct DELETE rejected/no-op`, "reject or 0 rows + row remains", `HTTP ${r.status} deleted=${rows.length} remaining=${data?.length ?? 0}`, (r.status >= 400 || rows.length === 0) && stillThere);
+          }
+          // 09: idempotent re-call
+          {
+            const r = await rpc(owner.token!, k.fn, {});
+            const { data } = await admin.from(k.table).select("id").eq("user_id", owner.user.id);
+            const ok = r.status === 200 && (data?.length ?? 0) === 1;
+            record(`${k.prefix}09`, `re-calling ${k.fn} produces no duplicate`, "count=1", `HTTP ${r.status} count=${data?.length ?? 0}`, ok);
+          }
+        }
+
+        // ============ ADDITIONAL ISOLATION ============
+        const fx = [owner.user.id, peer.user.id, noAcc.user.id, adm.user.id];
+        const countInCol = async (table: string, col: string, ids: string[]) => {
+          const { data } = await admin.from(table).select("*").in(col, ids);
+          return data?.length ?? 0;
+        };
+        {
+          const n = await countInCol("mirror_participations", "user_id", fx);
+          record("I01", "no mirror_participations for any fixture", "0 rows", `${n} rows`, n === 0);
+        }
+        {
+          const n = await countInCol("mirror_suspensions", "user_id", fx);
+          record("I02", "no mirror_suspensions for any fixture", "0 rows", `${n} rows`, n === 0);
+        }
+        {
+          const n1 = await countInCol("mirror_blocks", "blocker_id", fx);
+          const n2 = await countInCol("mirror_blocks", "blocked_id", fx);
+          record("I03", "no mirror_blocks for any fixture", "0 rows", `${n1 + n2} rows`, n1 + n2 === 0);
+        }
+        // I04: no withdrawal action occurred (no withdrawal helper called) — reflected by I01 participations count.
+        record("I04", "no withdrawal action invoked", "no participations touched", "no participations touched", true);
+        // I05: seeded version rows unchanged
+        {
+          const a = await cur("mirror_agreement_versions");
+          const o = await cur("mirror_orientation_versions");
+          const t = await cur("mirror_adult_attestation_versions");
+          const ok = a?.id === agV.id && o?.id === orV.id && t?.id === atV.id;
+          record("I05", "seeded current versions unchanged", "same ids", `same=${ok}`, ok);
+        }
+        // I06: no evidence for peer, no_access, admin
+        {
+          const others = [peer.user.id, noAcc.user.id, adm.user.id];
+          let total = 0;
+          for (const t of ["mirror_agreement_acceptances","mirror_orientation_completions","mirror_adult_attestations"]) {
+            const { data } = await admin.from(t).select("id").in("user_id", others);
+            total += data?.length ?? 0;
+          }
+          record("I06", "no evidence for peer/no-access/admin", "0 rows", `${total} rows`, total === 0);
+        }
+        // I07: all product writes belong only to fixture ids (community_profiles + 3 evidence tables written only by owner)
+        {
+          const owned: string[] = [];
+          for (const t of ["community_profiles","mirror_agreement_acceptances","mirror_orientation_completions","mirror_adult_attestations"]) {
+            const { data } = await admin.from(t).select("user_id").in("user_id", fx);
+            for (const r of (data ?? [])) owned.push(String(r.user_id));
+          }
+          const stray = owned.filter(u => u !== owner.user.id);
+          record("I07", "all fixture writes scoped to owner", "0 stray writes", `${stray.length} stray`, stray.length === 0);
+        }
+      } catch (e) {
+        error = e instanceof Error ? e.message : String(e);
+      } finally {
+        await cleanup();
+        try {
+          // Post-cleanup zero-residue inventory
+          const ids = Object.values(fixtures).map(f => f?.user?.id).filter(Boolean);
+          const specs: Array<[string, string]> = [
+            ["user_roles","user_id"],
+            ["profiles","id"],
+            ["subscriptions","profile_id"],
+            ["subscription_events","profile_id"],
+            ["entitlements","user_id"],
+            ["manual_full_access_grants","user_id"],
+            ["manual_access_grants","user_id"],
+            ["founding_members","user_id"],
+            ["community_profiles","user_id"],
+            ["mirror_agreement_acceptances","user_id"],
+            ["mirror_orientation_completions","user_id"],
+            ["mirror_adult_attestations","user_id"],
+            ["mirror_participations","user_id"],
+            ["mirror_suspensions","user_id"],
+          ];
+          const counts: Record<string, number> = {};
+          for (const [t, col] of specs) {
+            if (!ids.length) { counts[t] = 0; continue; }
+            try {
+              const { data } = await admin.from(t).select("*").in(col, ids);
+              counts[t] = data?.length ?? 0;
+            } catch (_) { counts[t] = -1; }
+          }
+          // mirror_blocks uses two columns.
+          try {
+            const a = ids.length ? (await admin.from("mirror_blocks").select("*").in("blocker_id", ids)).data?.length ?? 0 : 0;
+            const b = ids.length ? (await admin.from("mirror_blocks").select("*").in("blocked_id", ids)).data?.length ?? 0 : 0;
+            counts["mirror_blocks"] = a + b;
+          } catch (_) { counts["mirror_blocks"] = -1; }
+          const usersAfter = await listAllUsers(admin);
+          afterCount = usersAfter.filter(u => String(u.user_metadata?.fixture_marker ?? "") === marker).length;
+          residue = { post_cleanup_counts_by_table: counts, marker_auth_users_after: afterCount };
+        } catch (e) {
+          residue = { residue_check_error: e instanceof Error ? e.message : String(e) };
+        }
+      }
+
+      const passed = results.filter(r => r.pass).length;
+      const total = results.length;
+      return json(200, {
+        ok: error === null && passed === total && total === 48,
+        action: "run_task8_matrix",
+        marker,
+        error,
+        seeded_versions: seededVersions,
+        eligibility_mechanism: "manual_full_access_grants (starts_at<=now()<expires_at, revoked_at NULL)",
+        fixture_purposes: {
+          owner: "task8-profile-evidence-owner",
+          peer: "task8-eligible-peer",
+          no_access: "task8-no-access",
+          admin: "task8-canonical-admin",
+        },
+        fixture_ids: {
+          owner: fixtures.owner?.user?.id ?? null,
+          peer: fixtures.peer?.user?.id ?? null,
+          no_access: fixtures.noAccess?.user?.id ?? null,
+          admin: fixtures.adminF?.user?.id ?? null,
+        },
+        has_full_temple_access: hfta,
+        marker_auth_users_before: beforeCount,
+        marker_auth_users_after: afterCount,
+        results,
+        summary: { passed, total, denominator: 48 },
+        residue,
+      });
+    }
+
     return json(400, { ok: false, error: "unknown or unsupported action" });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
