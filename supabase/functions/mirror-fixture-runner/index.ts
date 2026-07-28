@@ -775,6 +775,18 @@ serve(async (req) => {
         if (!error) removed++;
         else deleteErrors.push(`${uid}: ${error.message}`);
       }
+      // Retry pass for any that failed, with hard-delete semantics
+      if (deleteErrors.length) {
+        for (const uid of createdUserIds) {
+          const { data: exists } = await admin.auth.admin.getUserById(uid);
+          if (!exists?.user) continue;
+          try {
+            // hard delete
+            const { error } = await admin.auth.admin.deleteUser(uid, true);
+            if (!error) removed++;
+          } catch { /* swallow */ }
+        }
+      }
       teardown.users_removed = removed;
       teardown.delete_errors = deleteErrors;
 
