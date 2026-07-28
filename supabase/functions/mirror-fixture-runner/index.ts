@@ -244,9 +244,11 @@ serve(async (req) => {
       user_id: fixtures.manualRevoked.id, starts_at: iso(addDays(-20)),
       expires_at: iso(addDays(20)), granted_by: fixtures.admin.id, notes: marker,
     }).select("id").single();
-    if (revokedGrant) await admin.from("manual_full_access_grants").update({
-      revoked_at: iso(now), revoked_by: fixtures.admin.id,
-    }).eq("id", revokedGrant.id);
+    if (revokedGrant) {
+      const { error: rerr } = await admin.from("manual_full_access_grants")
+        .update({ revoked_at: iso(now) }).eq("id", revokedGrant.id);
+      if (rerr) throw new Error(`revoke grant failed: ${rerr.message}`);
+    }
 
     // Sign every fixture in
     for (const tag of Object.keys(fixtures)) {
