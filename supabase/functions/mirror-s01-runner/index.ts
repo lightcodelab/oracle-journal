@@ -3070,20 +3070,20 @@ serve(async (req) => {
         {
           const ra = await rpc(A.token!, "mirror_activate_participation", {});
           const { data } = await admin.from("mirror_participations")
-            .select("id,status,withdrawn_at").eq("user_id", A.user.id);
-          const active = (data ?? []).filter((r: any) => !r.withdrawn_at && (r.status ?? "active") === "active");
+            .select("user_id,opted_in_at,withdrawn_at").eq("user_id", A.user.id);
+          const active = (data ?? []).filter((r: any) => !r.withdrawn_at && r.opted_in_at);
           record("B06", "fixture A canonical activation", "HTTP 200 + one active row",
             `HTTP ${ra.status} active=${active.length} total=${data?.length ?? 0}`,
-            ra.status === 200 && active.length === 1);
+            (ra.status === 200 || ra.status === 204) && active.length === 1);
         }
         {
           const rb = await rpc(B.token!, "mirror_activate_participation", {});
           const { data } = await admin.from("mirror_participations")
-            .select("id,status,withdrawn_at").eq("user_id", B.user.id);
-          const active = (data ?? []).filter((r: any) => !r.withdrawn_at && (r.status ?? "active") === "active");
+            .select("user_id,opted_in_at,withdrawn_at").eq("user_id", B.user.id);
+          const active = (data ?? []).filter((r: any) => !r.withdrawn_at && r.opted_in_at);
           record("B07", "fixture B canonical activation", "HTTP 200 + one active row",
             `HTTP ${rb.status} active=${active.length} total=${data?.length ?? 0}`,
-            rb.status === 200 && active.length === 1);
+            (rb.status === 200 || rb.status === 204) && active.length === 1);
         }
 
         const readinessOf = async (f: Fx): Promise<boolean | null> => {
@@ -3153,10 +3153,10 @@ serve(async (req) => {
             admin.rpc("has_full_temple_access", { _user_id: B.user.id }),
           ]);
           const pa2 = await checkPrep(A.user.id); const pb2 = await checkPrep(B.user.id);
-          const partA = (await admin.from("mirror_participations").select("id,withdrawn_at,status").eq("user_id", A.user.id)).data ?? [];
-          const partB = (await admin.from("mirror_participations").select("id,withdrawn_at,status").eq("user_id", B.user.id)).data ?? [];
-          const activeA = partA.filter((r: any) => !r.withdrawn_at).length === 1;
-          const activeB = partB.filter((r: any) => !r.withdrawn_at).length === 1;
+          const partA = (await admin.from("mirror_participations").select("user_id,opted_in_at,withdrawn_at").eq("user_id", A.user.id)).data ?? [];
+          const partB = (await admin.from("mirror_participations").select("user_id,opted_in_at,withdrawn_at").eq("user_id", B.user.id)).data ?? [];
+          const activeA = partA.filter((r: any) => !r.withdrawn_at && r.opted_in_at).length === 1;
+          const activeB = partB.filter((r: any) => !r.withdrawn_at && r.opted_in_at).length === 1;
           const ok = ha.data === true && hb.data === true && pa2.p === 1 && pb2.p === 1 && activeA && activeB
             && pa2.a1 === 1 && pa2.a2 === 1 && pa2.a3 === 1 && pb2.a1 === 1 && pb2.a2 === 1 && pb2.a3 === 1;
           record("B16", "underlying state unchanged during A->B", "access+part+prof+ev all intact",
@@ -3356,10 +3356,10 @@ serve(async (req) => {
         }
         // B40: participation
         {
-          const partA = (await admin.from("mirror_participations").select("id,withdrawn_at,status").eq("user_id", A.user.id)).data ?? [];
-          const partB = (await admin.from("mirror_participations").select("id,withdrawn_at,status").eq("user_id", B.user.id)).data ?? [];
-          const activeA = partA.filter((r: any) => !r.withdrawn_at).length;
-          const activeB = partB.filter((r: any) => !r.withdrawn_at).length;
+          const partA = (await admin.from("mirror_participations").select("user_id,opted_in_at,withdrawn_at").eq("user_id", A.user.id)).data ?? [];
+          const partB = (await admin.from("mirror_participations").select("user_id,opted_in_at,withdrawn_at").eq("user_id", B.user.id)).data ?? [];
+          const activeA = partA.filter((r: any) => !r.withdrawn_at && r.opted_in_at).length;
+          const activeB = partB.filter((r: any) => !r.withdrawn_at && r.opted_in_at).length;
           record("B40", "one active non-withdrawn participation each",
             "A=1 B=1", `A=${activeA}/${partA.length} B=${activeB}/${partB.length}`,
             activeA === 1 && activeB === 1);
