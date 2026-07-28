@@ -785,6 +785,54 @@ export type Database = {
           },
         ]
       }
+      community_profiles: {
+        Row: {
+          country: string | null
+          created_at: string
+          display_name: string
+          id: string
+          intro: string | null
+          is_visible: boolean
+          languages: string[]
+          pronouns: string | null
+          region: string | null
+          timezone: string
+          town: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          display_name: string
+          id?: string
+          intro?: string | null
+          is_visible?: boolean
+          languages?: string[]
+          pronouns?: string | null
+          region?: string | null
+          timezone: string
+          town?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          intro?: string | null
+          is_visible?: boolean
+          languages?: string[]
+          pronouns?: string | null
+          region?: string | null
+          timezone?: string
+          town?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       condition_resource_mappings: {
         Row: {
           condition_id: string
@@ -3174,6 +3222,246 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      mirror_adult_attestation_versions: {
+        Row: {
+          body: string
+          created_at: string
+          effective_at: string
+          id: string
+          is_current: boolean
+          version: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          effective_at?: string
+          id?: string
+          is_current?: boolean
+          version: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          effective_at?: string
+          id?: string
+          is_current?: boolean
+          version?: string
+        }
+        Relationships: []
+      }
+      mirror_adult_attestations: {
+        Row: {
+          attested_at: string
+          id: string
+          user_id: string
+          version_id: string
+        }
+        Insert: {
+          attested_at?: string
+          id?: string
+          user_id: string
+          version_id: string
+        }
+        Update: {
+          attested_at?: string
+          id?: string
+          user_id?: string
+          version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mirror_adult_attestations_version_id_fkey"
+            columns: ["version_id"]
+            isOneToOne: false
+            referencedRelation: "mirror_adult_attestation_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mirror_agreement_acceptances: {
+        Row: {
+          accepted_at: string
+          id: string
+          user_id: string
+          version_id: string
+        }
+        Insert: {
+          accepted_at?: string
+          id?: string
+          user_id: string
+          version_id: string
+        }
+        Update: {
+          accepted_at?: string
+          id?: string
+          user_id?: string
+          version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mirror_agreement_acceptances_version_id_fkey"
+            columns: ["version_id"]
+            isOneToOne: false
+            referencedRelation: "mirror_agreement_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mirror_agreement_versions: {
+        Row: {
+          body: string
+          created_at: string
+          effective_at: string
+          id: string
+          is_current: boolean
+          version: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          effective_at?: string
+          id?: string
+          is_current?: boolean
+          version: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          effective_at?: string
+          id?: string
+          is_current?: boolean
+          version?: string
+        }
+        Relationships: []
+      }
+      mirror_blocks: {
+        Row: {
+          blocked_id: string
+          blocker_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          blocked_id: string
+          blocker_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          blocked_id?: string
+          blocker_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      mirror_orientation_completions: {
+        Row: {
+          completed_at: string
+          id: string
+          user_id: string
+          version_id: string
+        }
+        Insert: {
+          completed_at?: string
+          id?: string
+          user_id: string
+          version_id: string
+        }
+        Update: {
+          completed_at?: string
+          id?: string
+          user_id?: string
+          version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mirror_orientation_completions_version_id_fkey"
+            columns: ["version_id"]
+            isOneToOne: false
+            referencedRelation: "mirror_orientation_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mirror_orientation_versions: {
+        Row: {
+          body: string
+          created_at: string
+          effective_at: string
+          id: string
+          is_current: boolean
+          version: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          effective_at?: string
+          id?: string
+          is_current?: boolean
+          version: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          effective_at?: string
+          id?: string
+          is_current?: boolean
+          version?: string
+        }
+        Relationships: []
+      }
+      mirror_participations: {
+        Row: {
+          opted_in_at: string | null
+          updated_at: string
+          user_id: string
+          withdrawn_at: string | null
+        }
+        Insert: {
+          opted_in_at?: string | null
+          updated_at?: string
+          user_id: string
+          withdrawn_at?: string | null
+        }
+        Update: {
+          opted_in_at?: string | null
+          updated_at?: string
+          user_id?: string
+          withdrawn_at?: string | null
+        }
+        Relationships: []
+      }
+      mirror_suspensions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          lifted_at: string | null
+          lifted_by: string | null
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          lifted_at?: string | null
+          lifted_by?: string | null
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          lifted_at?: string | null
+          lifted_by?: string | null
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       nervous_anchor_maps: {
         Row: {
@@ -5606,6 +5894,18 @@ export type Database = {
       }
     }
     Functions: {
+      _mirror_blocks_bidirectional: {
+        Args: { _a: string; _b: string }
+        Returns: boolean
+      }
+      _mirror_exchange_run_tests: {
+        Args: never
+        Returns: {
+          detail: string
+          name: string
+          passed: boolean
+        }[]
+      }
       _oracle_access_run_tests: {
         Args: never
         Returns: {
@@ -5761,6 +6061,24 @@ export type Database = {
             }
             Returns: undefined
           }
+      mirror_accept_agreement: { Args: never; Returns: string }
+      mirror_activate_participation: { Args: never; Returns: undefined }
+      mirror_admin_lift_suspension: {
+        Args: { _user_id: string }
+        Returns: undefined
+      }
+      mirror_admin_suspend: {
+        Args: { _reason?: string; _user_id: string }
+        Returns: string
+      }
+      mirror_complete_orientation: { Args: never; Returns: string }
+      mirror_current_requirements_met: {
+        Args: { _uid: string }
+        Returns: boolean
+      }
+      mirror_exchange_ready_self: { Args: never; Returns: boolean }
+      mirror_record_attestation: { Args: never; Returns: string }
+      mirror_withdraw_participation: { Args: never; Returns: undefined }
       recompute_profile_active_member: {
         Args: { _user_id: string }
         Returns: undefined
