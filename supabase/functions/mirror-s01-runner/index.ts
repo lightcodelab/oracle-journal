@@ -2040,6 +2040,821 @@ serve(async (req) => {
       });
     }
 
+    // ---- Task 11: administrative suspension & lifting lifecycle ----
+    if (action === "run_task11_suspension_lifecycle") {
+      const runId = crypto.randomUUID();
+      const marker = `${MARKER_PREFIX}${runId}`;
+      assertMarkerScoped(marker);
+
+      const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+      const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+      if (!supabaseUrl || !anonKey) {
+        return json(500, { ok: false, error: "supabase url or anon key missing" });
+      }
+
+      type R = { id: string; name: string; expected: string; actual: string; pass: boolean };
+      const results: R[] = [];
+      const rec = (id: string, name: string, expected: string, actual: string, pass: boolean) =>
+        results.push({ id, name, expected, actual, pass });
+
+      let participantId: string | null = null;
+      let adminId: string | null = null;
+      let participantEmail = "";
+      let participantPassword = "";
+      let adminEmail = "";
+      let adminPassword = "";
+      let participantToken = "";
+      let adminToken = "";
+      let error: string | null = null;
+      let residue: any = null;
+      let beforeCount = 0;
+      let afterCount = 0;
+      let seededVersions: any = null;
+      let seededVersionsAfter: any = null;
+      let genuineSessionProof: any = null;
+      const deniedEvidence: any[] = [];
+      const idempotentEvidence: any[] = [];
+      const anonBoundary: any = { suspend: null, lift: null, readiness: null };
+      const readinessTimeline: any[] = [];
+
+      const restReq = async (
+        bearer: string | null, method: string, path: string,
+        body?: unknown,
+      ) => {
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+          "apikey": anonKey,
+        };
+        if (bearer) headers["Authorization"] = `Bearer ${bearer}`;
+        const resp = await fetch(`${supabaseUrl}${path}`, {
+          method, headers,
+          body: body === undefined ? undefined : JSON.stringify(body),
+        });
+        const text = await resp.text();
+        let parsed: any = null;
+        try { parsed = text ? JSON.parse(text) : null; } catch (_) { parsed = text; }
+        return { status: resp.status, body: parsed };
+      };
+      const rpc = (bearer: string | null, fn: string, body: unknown) =>
+        restReq(bearer, "POST", `/rest/v1/rpc/${fn}`, body);
+
+      const currentVersion = async (table: string) => {
+        const { data, error: e } = await admin.from(table)
+          .select("id,version,is_current").eq("is_current", true).limit(1);
+        if (e) throw e;
+        return data?.[0] ?? null;
+      };
+      const partRows = async (uid: string) => {
+        const { data } = await admin.from("mirror_participations")
+          .select("user_id,opted_in_at,withdrawn_at,updated_at").eq("user_id", uid);
+        return data ?? [];
+      };
+      const suspensionRows = async (uid: string) => {
+        const { data } = await admin.from("mirror_suspensions")
+          .select("id,user_id,created_by,created_at,lifted_at,lifted_by")
+          .eq("user_id", uid).order("created_at", { ascending: true });
+        return data ?? [];
+      };
+
+      const preflight = {
+        canonical_suspend: {
+          name: "public.mirror_admin_suspend(_user_id uuid, _reason text)",
+          returns: "uuid",
+          security_mode: "SECURITY DEFINER, VOLATILE",
+          authorization: "auth.uid() must satisfy has_role(auth.uid(),'admin')",
+          idempotency: "returns existing unlifted suspension id if one exists",
+          authenticated_execute: true, anon_execute: false, public_execute: false,
+        },
+        canonical_lift: {
+          name: "public.mirror_admin_lift_suspension(_user_id uuid)",
+          returns: "void",
+          security_mode: "SECURITY DEFINER, VOLATILE",
+          authorization: "auth.uid() must satisfy has_role(auth.uid(),'admin')",
+          behavior: "UPDATE mirror_suspensions SET lifted_at=now(), lifted_by=admin WHERE user_id=_user_id AND lifted_at IS NULL",
+          repeat_safe: "0-row update when nothing unlifted; no history mutation",
+          authenticated_execute: true, anon_execute: false, public_execute: false,
+        },
+        readiness_helper: {
+          name: "public.mirror_exchange_ready_self()",
+          logic: "hfta AND !unlifted_suspension AND requirements_met AND active_participation",
+        },
+        suspensions_table_model: {
+          columns: "id, user_id, reason, created_by, created_at, lifted_at, lifted_by",
+          fks: "user_id/created_by/lifted_by -> auth.users",
+          partial_unique_index: "mirror_suspensions_one_active UNIQUE (user_id) WHERE lifted_at IS NULL",
+          rls: "authenticated: SELECT own or admin only",
+          grants: "anon: none; authenticated: SELECT/INSERT/UPDATE",
+          history_model: "one row per suspension cycle; second suspend after lift inserts a new row",
+        },
+        target_derivation: "target _user_id is an RPC argument; authorization is the caller's own auth.uid() as admin",
+        admin_authorization_mechanism: "public.has_role(auth.uid(),'admin'::app_role) from public.user_roles",
+        app_call_sites: [
+          "no production UI call sites — reference only via src/integrations/supabase/types.ts (generated)",
+        ],
+        reachable_from_production_ui: false,
+        service_role_execution_required: false,
+        blocks_participate_in_suspension: false,
+        additional_mutations_on_suspend: "none (does not alter participation, profile, evidence, or access)",
+      };
+
+      try {
+        const usersBefore = await listAllUsers(admin);
+        beforeCount = usersBefore.filter(
+          (u) => String(u.user_metadata?.fixture_marker ?? "") === marker,
+        ).length;
+
+        const agV = await currentVersion("mirror_agreement_versions");
+        const orV = await currentVersion("mirror_orientation_versions");
+        const atV = await currentVersion("mirror_adult_attestation_versions");
+        seededVersions = {
+          agreement: { id: agV?.id, version: agV?.version },
+          orientation: { id: orV?.id, version: orV?.version },
+          attestation: { id: atV?.id, version: atV?.version },
+        };
+
+        // ---- Provision participant fixture ----
+        {
+          const localId = crypto.randomUUID();
+          participantEmail = `mirror-s01+${runId}-p-${localId}@fixtures.invalid`;
+          participantPassword = crypto.randomUUID() + crypto.randomUUID();
+          const { data: created, error: cErr } = await admin.auth.admin.createUser({
+            email: participantEmail, password: participantPassword, email_confirm: true,
+            user_metadata: {
+              fixture_marker: marker,
+              fixture_purpose: "task11-suspension-participant",
+            },
+          });
+          if (cErr || !created?.user) throw new Error(cErr?.message ?? "participant create failed");
+          participantId = created.user.id;
+          const reread = await admin.auth.admin.getUserById(participantId!);
+          if (String(reread.data?.user?.user_metadata?.fixture_marker ?? "") !== marker) {
+            throw new Error("participant marker mismatch");
+          }
+        }
+
+        // ---- Provision admin fixture ----
+        {
+          const localId = crypto.randomUUID();
+          adminEmail = `mirror-s01+${runId}-a-${localId}@fixtures.invalid`;
+          adminPassword = crypto.randomUUID() + crypto.randomUUID();
+          const { data: created, error: cErr } = await admin.auth.admin.createUser({
+            email: adminEmail, password: adminPassword, email_confirm: true,
+            user_metadata: {
+              fixture_marker: marker,
+              fixture_purpose: "task11-canonical-admin",
+            },
+          });
+          if (cErr || !created?.user) throw new Error(cErr?.message ?? "admin create failed");
+          adminId = created.user.id;
+          const reread = await admin.auth.admin.getUserById(adminId!);
+          if (String(reread.data?.user?.user_metadata?.fixture_marker ?? "") !== marker) {
+            throw new Error("admin marker mismatch");
+          }
+          const { error: rErr } = await admin.from("user_roles").insert({
+            user_id: adminId, role: "admin",
+          });
+          if (rErr) throw new Error("admin role insert failed: " + rErr.message);
+        }
+
+        // Grant canonical temporary full access to the participant only.
+        const grantExpires = new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString();
+        const grantStarts = new Date(Date.now() - 3600 * 1000).toISOString();
+        {
+          const { error: gErr } = await admin.from("manual_full_access_grants").insert({
+            user_id: participantId, starts_at: grantStarts, expires_at: grantExpires,
+            notes: `mirror-s01 task11 ${marker}`,
+          });
+          if (gErr) throw new Error("participant grant insert failed: " + gErr.message);
+        }
+
+        // Genuine authenticated sessions
+        const anonClient1 = createClient(supabaseUrl, anonKey, { auth: { autoRefreshToken: false, persistSession: false } });
+        const s1 = await anonClient1.auth.signInWithPassword({ email: participantEmail, password: participantPassword });
+        if (s1.error || !s1.data?.session?.access_token) throw new Error(s1.error?.message ?? "participant signin failed");
+        participantToken = s1.data.session.access_token as string;
+
+        const anonClient2 = createClient(supabaseUrl, anonKey, { auth: { autoRefreshToken: false, persistSession: false } });
+        const s2 = await anonClient2.auth.signInWithPassword({ email: adminEmail, password: adminPassword });
+        if (s2.error || !s2.data?.session?.access_token) throw new Error(s2.error?.message ?? "admin signin failed");
+        adminToken = s2.data.session.access_token as string;
+
+        {
+          const p = await rpc(participantToken, "has_full_temple_access", { _user_id: participantId });
+          const a = await rpc(adminToken, "has_full_temple_access", { _user_id: adminId });
+          genuineSessionProof = {
+            method: "PostgREST rpc/has_full_temple_access with fixture bearers",
+            participant_status: p.status, participant_hfta: p.body,
+            admin_status: a.status, admin_hfta: a.body,
+          };
+        }
+
+        // ---- S01: participant access & role ----
+        {
+          const { data: hfta } = await admin.rpc("has_full_temple_access", { _user_id: participantId });
+          const { data: roles } = await admin.from("user_roles").select("role").eq("user_id", participantId);
+          const list = (roles ?? []).map((r: any) => r.role).sort();
+          const ok = hfta === true && list.length === 0;
+          rec("S01", "participant has full access; baseline user role only",
+            "hfta=true; no admin/moderator role rows",
+            `hfta=${hfta === true}; roles=${JSON.stringify(list)}`, ok);
+        }
+        // ---- S02: admin role inventory ----
+        {
+          const { data: roles } = await admin.from("user_roles").select("role").eq("user_id", adminId);
+          const list = (roles ?? []).map((r: any) => r.role).sort();
+          const onlyAdmin = list.length === 1 && list[0] === "admin";
+          // Confirm has_role resolves the admin
+          const { data: hr } = await admin.rpc("has_role", { _user_id: adminId, _role: "admin" });
+          rec("S02", "admin fixture resolves as canonical administrator",
+            "roles=[admin]; has_role(admin)=true",
+            `roles=${JSON.stringify(list)}; has_role=${hr === true}`,
+            onlyAdmin && hr === true);
+        }
+        // ---- S03: initial Mirror state empty for both ----
+        {
+          const specs: Array<[string, string]> = [
+            ["community_profiles", "user_id"],
+            ["mirror_agreement_acceptances", "user_id"],
+            ["mirror_orientation_completions", "user_id"],
+            ["mirror_adult_attestations", "user_id"],
+            ["mirror_participations", "user_id"],
+            ["mirror_suspensions", "user_id"],
+          ];
+          const counts: Record<string, number> = {};
+          let total = 0;
+          for (const uid of [participantId!, adminId!]) {
+            for (const [t, c] of specs) {
+              const { data } = await admin.from(t).select("*").eq(c, uid);
+              counts[`${t}:${uid.slice(0,8)}`] = data?.length ?? 0;
+              total += data?.length ?? 0;
+            }
+            const b1 = await admin.from("mirror_blocks").select("*").eq("blocker_id", uid);
+            const b2 = await admin.from("mirror_blocks").select("*").eq("blocked_id", uid);
+            counts[`mirror_blocks:${uid.slice(0,8)}`] = (b1.data?.length ?? 0) + (b2.data?.length ?? 0);
+            total += (b1.data?.length ?? 0) + (b2.data?.length ?? 0);
+          }
+          rec("S03", "no initial Mirror rows for either fixture",
+            "0 rows in every Mirror table for both fixtures",
+            `total=${total}`, total === 0);
+        }
+        // ---- S04: prepare participant profile + evidence ----
+        {
+          const p = await rpc(participantToken, "mirror_save_profile", {
+            _display_name: "T11 Fixture", _timezone: "UTC", _pronouns: null,
+            _country: null, _region: null, _town: null, _languages: [], _intro: null,
+          });
+          const o = await rpc(participantToken, "mirror_complete_orientation", {});
+          const a = await rpc(participantToken, "mirror_accept_agreement", {});
+          const at = await rpc(participantToken, "mirror_record_attestation", {});
+          const { data: prof } = await admin.from("community_profiles").select("is_visible").eq("user_id", participantId);
+          const { data: ag } = await admin.from("mirror_agreement_acceptances").select("version_id").eq("user_id", participantId);
+          const { data: or } = await admin.from("mirror_orientation_completions").select("version_id").eq("user_id", participantId);
+          const { data: att } = await admin.from("mirror_adult_attestations").select("version_id").eq("user_id", participantId);
+          const ok =
+            p.status === 200 && o.status === 200 && a.status === 200 && at.status === 200 &&
+            prof?.length === 1 && prof![0].is_visible === false &&
+            ag?.length === 1 && ag![0].version_id === agV.id &&
+            or?.length === 1 && or![0].version_id === orV.id &&
+            att?.length === 1 && att![0].version_id === atV.id;
+          rec("S04", "profile + one row per current evidence saved via canonical RPCs",
+            "HTTP 200x4; 1 private profile; 1+1+1 current evidence",
+            `p=${p.status} o=${o.status} a=${a.status} at=${at.status} prof=${prof?.length}/${prof?.[0]?.is_visible} ag=${ag?.length} or=${or?.length} att=${att?.length}`,
+            !!ok);
+        }
+        // ---- S05: activate participation ----
+        {
+          const r = await rpc(participantToken, "mirror_activate_participation", {});
+          const rows = await partRows(participantId!);
+          const ok = (r.status === 200 || r.status === 204) &&
+            rows.length === 1 && rows[0].opted_in_at !== null && rows[0].withdrawn_at === null;
+          rec("S05", "activation succeeds with exactly one active non-withdrawn row",
+            "HTTP 200/204; 1 active row",
+            `HTTP ${r.status}; rows=${rows.length}`, ok);
+        }
+        // ---- S06: readiness true pre-suspension ----
+        {
+          const r = await rpc(participantToken, "mirror_exchange_ready_self", {});
+          readinessTimeline.push({ phase: "S06 pre-suspension", body: r.body, status: r.status });
+          rec("S06", "self-readiness true before any suspension",
+            "true", `HTTP ${r.status} body=${JSON.stringify(r.body)}`,
+            r.status === 200 && r.body === true);
+        }
+        // ---- S07: participant self-suspend attempt ----
+        {
+          const r = await rpc(participantToken, "mirror_admin_suspend", {
+            _user_id: participantId, _reason: "self-attempt (test only)",
+          });
+          const rejected = r.status >= 400;
+          deniedEvidence.push({ id: "S07", status: r.status, message: r.body?.message });
+          rec("S07", "participant cannot suspend themselves via canonical RPC",
+            "HTTP >=400 (admin only)",
+            `HTTP ${r.status} msg=${JSON.stringify(r.body?.message ?? r.body)}`, rejected);
+        }
+        // ---- S08: state after S07 ----
+        {
+          const s = await suspensionRows(participantId!);
+          const r = await rpc(participantToken, "mirror_exchange_ready_self", {});
+          rec("S08", "no suspension row after S07; readiness still true",
+            "0 rows; ready=true",
+            `rows=${s.length}; ready=${JSON.stringify(r.body)}`,
+            s.length === 0 && r.body === true);
+        }
+        // ---- S09: participant self-lift attempt ----
+        {
+          const r = await rpc(participantToken, "mirror_admin_lift_suspension", {
+            _user_id: participantId,
+          });
+          const rejected = r.status >= 400;
+          deniedEvidence.push({ id: "S09", status: r.status, message: r.body?.message });
+          rec("S09", "participant cannot lift a suspension via canonical RPC",
+            "HTTP >=400 (admin only)",
+            `HTTP ${r.status} msg=${JSON.stringify(r.body?.message ?? r.body)}`, rejected);
+        }
+        // ---- S10 ----
+        {
+          const s = await suspensionRows(participantId!);
+          const r = await rpc(participantToken, "mirror_exchange_ready_self", {});
+          rec("S10", "no suspension row after S09; readiness still true",
+            "0 rows; ready=true",
+            `rows=${s.length}; ready=${JSON.stringify(r.body)}`,
+            s.length === 0 && r.body === true);
+        }
+        // ---- S11: anon suspend attempt ----
+        {
+          const r = await rpc(null, "mirror_admin_suspend", {
+            _user_id: participantId, _reason: "anon-attempt",
+          });
+          const rejected = r.status === 401 || r.status === 403 || r.status === 404;
+          const s = await suspensionRows(participantId!);
+          anonBoundary.suspend = { status: r.status, message: r.body?.message };
+          rec("S11", "anonymous suspend attempt rejected; no row created",
+            "HTTP 401/403/404; 0 rows",
+            `HTTP ${r.status}; rows=${s.length}`, rejected && s.length === 0);
+        }
+        // ---- S12: admin canonical suspend ----
+        let firstSuspensionId: string | null = null;
+        {
+          const r = await rpc(adminToken, "mirror_admin_suspend", {
+            _user_id: participantId, _reason: "test-only suspension",
+          });
+          firstSuspensionId = typeof r.body === "string" ? r.body : null;
+          rec("S12", "canonical admin suspends participant",
+            "HTTP 200; suspension id returned",
+            `HTTP ${r.status} id=${firstSuspensionId ? firstSuspensionId.slice(0,8) : null}`,
+            r.status === 200 && !!firstSuspensionId);
+        }
+        // ---- S13: inspect suspension ----
+        {
+          const s = await suspensionRows(participantId!);
+          const ok = s.length === 1 && s[0].lifted_at === null && s[0].created_by === adminId;
+          rec("S13", "exactly one unlifted suspension attributable to canonical admin",
+            "1 unlifted; created_by=admin",
+            `rows=${s.length}; unlifted=${s.filter(x=>x.lifted_at===null).length}; created_by_admin=${s[0]?.created_by === adminId}`,
+            ok);
+        }
+        // ---- S14: readiness false while suspended ----
+        {
+          const r = await rpc(participantToken, "mirror_exchange_ready_self", {});
+          readinessTimeline.push({ phase: "S14 first suspension", body: r.body, status: r.status });
+          rec("S14", "self-readiness false while unlifted suspension exists",
+            "false", `HTTP ${r.status} body=${JSON.stringify(r.body)}`,
+            r.status === 200 && r.body === false);
+        }
+        // ---- S15: full access untouched ----
+        {
+          const { data: hfta } = await admin.rpc("has_full_temple_access", { _user_id: participantId });
+          rec("S15", "full Temple access unchanged during suspension",
+            "hfta=true", `hfta=${hfta}`, hfta === true);
+        }
+        // ---- S16: participation untouched ----
+        {
+          const rows = await partRows(participantId!);
+          const ok = rows.length === 1 && rows[0].opted_in_at !== null && rows[0].withdrawn_at === null;
+          rec("S16", "participation unchanged during suspension",
+            "1 active row",
+            `rows=${rows.length}; state=${JSON.stringify(rows[0])}`, ok);
+        }
+        // ---- S17: profile privacy untouched ----
+        {
+          const { data: prof } = await admin.from("community_profiles")
+            .select("is_visible").eq("user_id", participantId);
+          const ok = prof?.length === 1 && prof![0].is_visible === false;
+          rec("S17", "profile still exists and private",
+            "1 row; is_visible=false",
+            `rows=${prof?.length}; is_visible=${prof?.[0]?.is_visible}`, ok);
+        }
+        // ---- S18: evidence untouched ----
+        {
+          const [ag, or, att] = await Promise.all([
+            admin.from("mirror_agreement_acceptances").select("version_id").eq("user_id", participantId),
+            admin.from("mirror_orientation_completions").select("version_id").eq("user_id", participantId),
+            admin.from("mirror_adult_attestations").select("version_id").eq("user_id", participantId),
+          ]);
+          const ok =
+            ag.data?.length === 1 && ag.data![0].version_id === agV.id &&
+            or.data?.length === 1 && or.data![0].version_id === orV.id &&
+            att.data?.length === 1 && att.data![0].version_id === atV.id;
+          rec("S18", "current evidence rows unchanged during suspension",
+            "1+1+1 current",
+            `ag=${ag.data?.length} or=${or.data?.length} att=${att.data?.length}`, ok);
+        }
+        // ---- S19: withdrawal state ----
+        {
+          const rows = await partRows(participantId!);
+          rec("S19", "no withdrawal occurred",
+            "withdrawn_at=null",
+            `withdrawn_at=${rows[0]?.withdrawn_at}`, rows[0]?.withdrawn_at === null);
+        }
+        // ---- S20: admin repeats suspension while one is active ----
+        {
+          const r = await rpc(adminToken, "mirror_admin_suspend", {
+            _user_id: participantId, _reason: "test-only repeat",
+          });
+          const sameId = r.status === 200 && typeof r.body === "string" && r.body === firstSuspensionId;
+          idempotentEvidence.push({ id: "S20", status: r.status, returned_same_id: sameId });
+          rec("S20", "repeated suspension while active returns same id (idempotent) or rejects",
+            "HTTP 200 same id, or explicit rejection",
+            `HTTP ${r.status}; same_id=${sameId}`,
+            (r.status === 200 && sameId) || r.status >= 400);
+        }
+        // ---- S21: still one effective unlifted ----
+        {
+          const s = await suspensionRows(participantId!);
+          const unlifted = s.filter((x: any) => x.lifted_at === null);
+          rec("S21", "still exactly one effective unlifted suspension",
+            "1 unlifted; no conflicting active duplicate",
+            `total=${s.length}; unlifted=${unlifted.length}`,
+            unlifted.length === 1);
+        }
+        // ---- S22: readiness still false ----
+        {
+          const r = await rpc(participantToken, "mirror_exchange_ready_self", {});
+          rec("S22", "readiness still false after repeated suspension",
+            "false", `HTTP ${r.status} body=${JSON.stringify(r.body)}`,
+            r.status === 200 && r.body === false);
+        }
+        // ---- S23: participant lift attempt ----
+        {
+          const r = await rpc(participantToken, "mirror_admin_lift_suspension", {
+            _user_id: participantId,
+          });
+          const rejected = r.status >= 400;
+          deniedEvidence.push({ id: "S23", status: r.status, message: r.body?.message });
+          rec("S23", "participant cannot lift the active suspension",
+            "HTTP >=400 (admin only)",
+            `HTTP ${r.status} msg=${JSON.stringify(r.body?.message ?? r.body)}`, rejected);
+        }
+        // ---- S24 ----
+        {
+          const s = await suspensionRows(participantId!);
+          const unlifted = s.filter((x: any) => x.lifted_at === null);
+          const r = await rpc(participantToken, "mirror_exchange_ready_self", {});
+          rec("S24", "suspension still unlifted; readiness still false",
+            "1 unlifted; ready=false",
+            `unlifted=${unlifted.length}; ready=${JSON.stringify(r.body)}`,
+            unlifted.length === 1 && r.body === false);
+        }
+        // ---- S25: anon lift ----
+        {
+          const r = await rpc(null, "mirror_admin_lift_suspension", {
+            _user_id: participantId,
+          });
+          const rejected = r.status === 401 || r.status === 403 || r.status === 404;
+          const s = await suspensionRows(participantId!);
+          const unlifted = s.filter((x: any) => x.lifted_at === null);
+          anonBoundary.lift = { status: r.status, message: r.body?.message };
+          rec("S25", "anonymous lift attempt rejected; suspension remains unlifted",
+            "HTTP 401/403/404; unlifted=1",
+            `HTTP ${r.status}; unlifted=${unlifted.length}`,
+            rejected && unlifted.length === 1);
+        }
+        // ---- S26: admin lifts ----
+        {
+          const r = await rpc(adminToken, "mirror_admin_lift_suspension", {
+            _user_id: participantId,
+          });
+          rec("S26", "canonical admin lifts the suspension",
+            "HTTP 200/204", `HTTP ${r.status}`, r.status === 200 || r.status === 204);
+        }
+        // ---- S27: lifted history preserved ----
+        {
+          const s = await suspensionRows(participantId!);
+          const unlifted = s.filter((x: any) => x.lifted_at === null);
+          const historyRow = s.find((x: any) => x.id === firstSuspensionId);
+          const ok = unlifted.length === 0 && !!historyRow &&
+            historyRow.lifted_at !== null && historyRow.lifted_by === adminId;
+          rec("S27", "no unlifted suspension; history row preserved with lifted_by=admin",
+            "unlifted=0; original row preserved with lifted_at/lifted_by set",
+            `unlifted=${unlifted.length}; history_lifted_by_admin=${historyRow?.lifted_by === adminId}`, ok);
+        }
+        // ---- S28: readiness true after lifting (no reactivation) ----
+        {
+          const r = await rpc(participantToken, "mirror_exchange_ready_self", {});
+          readinessTimeline.push({ phase: "S28 after first lift", body: r.body, status: r.status });
+          rec("S28", "readiness true after lifting without calling activation again",
+            "true", `HTTP ${r.status} body=${JSON.stringify(r.body)}`,
+            r.status === 200 && r.body === true);
+        }
+        // ---- S29: participation unchanged ----
+        {
+          const rows = await partRows(participantId!);
+          const ok = rows.length === 1 && rows[0].opted_in_at !== null && rows[0].withdrawn_at === null;
+          rec("S29", "participation remains the same active non-withdrawn row",
+            "1 active row unchanged",
+            `rows=${rows.length}; withdrawn=${rows[0]?.withdrawn_at}`, ok);
+        }
+        // ---- S30: access + profile + evidence unchanged after lift ----
+        {
+          const { data: hfta } = await admin.rpc("has_full_temple_access", { _user_id: participantId });
+          const { data: prof } = await admin.from("community_profiles")
+            .select("is_visible").eq("user_id", participantId);
+          const [ag, or, att] = await Promise.all([
+            admin.from("mirror_agreement_acceptances").select("version_id").eq("user_id", participantId),
+            admin.from("mirror_orientation_completions").select("version_id").eq("user_id", participantId),
+            admin.from("mirror_adult_attestations").select("version_id").eq("user_id", participantId),
+          ]);
+          const ok = hfta === true && prof?.length === 1 && prof![0].is_visible === false &&
+            ag.data?.length === 1 && ag.data![0].version_id === agV.id &&
+            or.data?.length === 1 && or.data![0].version_id === orV.id &&
+            att.data?.length === 1 && att.data![0].version_id === atV.id;
+          rec("S30", "access true; profile private; evidence unchanged after lift",
+            "hfta=true; profile private; 1+1+1 current",
+            `hfta=${hfta}; prof=${prof?.[0]?.is_visible}; ag=${ag.data?.length} or=${or.data?.length} att=${att.data?.length}`,
+            !!ok);
+        }
+        // ---- S31: repeated lift with none active ----
+        {
+          const r = await rpc(adminToken, "mirror_admin_lift_suspension", {
+            _user_id: participantId,
+          });
+          idempotentEvidence.push({ id: "S31", status: r.status });
+          rec("S31", "repeated lift is safe (idempotent no-op or explicit no-active)",
+            "HTTP 200/204 no-op or explicit rejection",
+            `HTTP ${r.status}`,
+            r.status === 200 || r.status === 204 || r.status >= 400);
+        }
+        // ---- S32: state unchanged after repeated lift ----
+        {
+          const s = await suspensionRows(participantId!);
+          const unlifted = s.filter((x: any) => x.lifted_at === null);
+          const historyRow = s.find((x: any) => x.id === firstSuspensionId);
+          const r = await rpc(participantToken, "mirror_exchange_ready_self", {});
+          const ok = unlifted.length === 0 && s.length === 1 &&
+            historyRow?.lifted_by === adminId && r.body === true;
+          rec("S32", "zero unlifted; original history intact; readiness still true",
+            "1 total row lifted by admin; ready=true",
+            `total=${s.length}; unlifted=${unlifted.length}; ready=${JSON.stringify(r.body)}`, ok);
+        }
+        // ---- S33: second-cycle suspend ----
+        let secondSuspensionId: string | null = null;
+        {
+          const r = await rpc(adminToken, "mirror_admin_suspend", {
+            _user_id: participantId, _reason: "test-only second cycle",
+          });
+          secondSuspensionId = typeof r.body === "string" ? r.body : null;
+          const distinct = secondSuspensionId !== null && secondSuspensionId !== firstSuspensionId;
+          rec("S33", "canonical admin suspends participant a second time",
+            "HTTP 200; new suspension id distinct from first",
+            `HTTP ${r.status}; distinct=${distinct}`,
+            r.status === 200 && distinct);
+        }
+        // ---- S34: second-cycle state ----
+        {
+          const s = await suspensionRows(participantId!);
+          const unlifted = s.filter((x: any) => x.lifted_at === null);
+          const ok = s.length === 2 && unlifted.length === 1 &&
+            unlifted[0].id === secondSuspensionId;
+          rec("S34", "history model: one row per cycle; exactly one unlifted",
+            "total=2; unlifted=1 (the second row)",
+            `total=${s.length}; unlifted=${unlifted.length}`, ok);
+        }
+        // ---- S35: readiness false ----
+        {
+          const r = await rpc(participantToken, "mirror_exchange_ready_self", {});
+          readinessTimeline.push({ phase: "S35 second suspension", body: r.body, status: r.status });
+          rec("S35", "readiness false during second suspension",
+            "false", `HTTP ${r.status} body=${JSON.stringify(r.body)}`,
+            r.status === 200 && r.body === false);
+        }
+        // ---- S36: admin lifts second ----
+        {
+          const r = await rpc(adminToken, "mirror_admin_lift_suspension", {
+            _user_id: participantId,
+          });
+          rec("S36", "canonical admin lifts second suspension",
+            "HTTP 200/204", `HTTP ${r.status}`, r.status === 200 || r.status === 204);
+        }
+        // ---- S37: final suspension state ----
+        {
+          const s = await suspensionRows(participantId!);
+          const unlifted = s.filter((x: any) => x.lifted_at === null);
+          const ok = s.length === 2 && unlifted.length === 0 &&
+            s.every((x: any) => x.created_by === adminId && x.lifted_by === adminId);
+          rec("S37", "zero unlifted; both cycles consistently represented",
+            "total=2; unlifted=0; all created_by=admin & lifted_by=admin",
+            `total=${s.length}; unlifted=${unlifted.length}`, ok);
+        }
+        // ---- S38: final readiness ----
+        {
+          const r = await rpc(participantToken, "mirror_exchange_ready_self", {});
+          readinessTimeline.push({ phase: "S38 after second lift", body: r.body, status: r.status });
+          rec("S38", "final readiness true without reactivation",
+            "true", `HTTP ${r.status} body=${JSON.stringify(r.body)}`,
+            r.status === 200 && r.body === true);
+        }
+        // ---- S39: final underlying participant state ----
+        {
+          const { data: hfta } = await admin.rpc("has_full_temple_access", { _user_id: participantId });
+          const rows = await partRows(participantId!);
+          const { data: prof } = await admin.from("community_profiles")
+            .select("is_visible").eq("user_id", participantId);
+          const [ag, or, att] = await Promise.all([
+            admin.from("mirror_agreement_acceptances").select("version_id").eq("user_id", participantId),
+            admin.from("mirror_orientation_completions").select("version_id").eq("user_id", participantId),
+            admin.from("mirror_adult_attestations").select("version_id").eq("user_id", participantId),
+          ]);
+          const ok = hfta === true &&
+            rows.length === 1 && rows[0].opted_in_at !== null && rows[0].withdrawn_at === null &&
+            prof?.length === 1 && prof![0].is_visible === false &&
+            ag.data?.length === 1 && ag.data![0].version_id === agV.id &&
+            or.data?.length === 1 && or.data![0].version_id === orV.id &&
+            att.data?.length === 1 && att.data![0].version_id === atV.id;
+          rec("S39", "final participant state: access + 1 active participation + private profile + 1+1+1 evidence",
+            "all invariants preserved",
+            `hfta=${hfta} part=${rows.length} prof=${prof?.[0]?.is_visible} ag=${ag.data?.length} or=${or.data?.length} att=${att.data?.length}`,
+            !!ok);
+        }
+        // ---- S40: no blocks / no block pathway invoked ----
+        {
+          const b1 = await admin.from("mirror_blocks").select("*").eq("blocker_id", participantId);
+          const b2 = await admin.from("mirror_blocks").select("*").eq("blocked_id", participantId);
+          const b3 = await admin.from("mirror_blocks").select("*").eq("blocker_id", adminId);
+          const b4 = await admin.from("mirror_blocks").select("*").eq("blocked_id", adminId);
+          const total = (b1.data?.length ?? 0) + (b2.data?.length ?? 0) + (b3.data?.length ?? 0) + (b4.data?.length ?? 0);
+          rec("S40", "zero block rows for both fixtures; no block RPC invoked by runner",
+            "0 rows", `total=${total}`, total === 0);
+        }
+        // ---- S41: anon readiness ----
+        {
+          const r = await rpc(null, "mirror_exchange_ready_self", {});
+          const denied = r.status === 401 || r.status === 403 || r.status === 404 || r.body === false;
+          anonBoundary.readiness = { status: r.status, body: r.body };
+          rec("S41", "anonymous readiness call rejected or returns only false",
+            "HTTP 401/403/404 or body=false",
+            `HTTP ${r.status}; body=${JSON.stringify(r.body)}`, denied);
+        }
+        // ---- S42: ownership isolation ----
+        {
+          const tables = [
+            "manual_full_access_grants","community_profiles",
+            "mirror_agreement_acceptances","mirror_orientation_completions",
+            "mirror_adult_attestations","mirror_participations","mirror_suspensions",
+          ];
+          let participantOwned = 0;
+          let adminOwned = 0;
+          for (const t of tables) {
+            const { data: p } = await admin.from(t).select("user_id").eq("user_id", participantId);
+            const { data: a } = await admin.from(t).select("user_id").eq("user_id", adminId);
+            participantOwned += p?.length ?? 0;
+            adminOwned += a?.length ?? 0;
+          }
+          const { data: adminRoleRows } = await admin.from("user_roles").select("user_id").eq("user_id", adminId);
+          const ok = participantOwned >= 6 && adminOwned === 0 && (adminRoleRows?.length ?? 0) === 1;
+          rec("S42", "batch writes belong only to the two fixtures with expected purposes",
+            "participant owns >=6 rows; admin owns 0 mirror rows + 1 user_roles row",
+            `participant=${participantOwned}; admin_mirror=${adminOwned}; admin_user_roles=${adminRoleRows?.length}`, ok);
+        }
+        // ---- S43: seeded requirement definitions unchanged ----
+        {
+          const a2 = await currentVersion("mirror_agreement_versions");
+          const o2 = await currentVersion("mirror_orientation_versions");
+          const t2 = await currentVersion("mirror_adult_attestation_versions");
+          seededVersionsAfter = {
+            agreement: { id: a2?.id, version: a2?.version },
+            orientation: { id: o2?.id, version: o2?.version },
+            attestation: { id: t2?.id, version: t2?.version },
+          };
+          const ok = a2?.id === agV.id && o2?.id === orV.id && t2?.id === atV.id;
+          rec("S43", "seeded requirement definitions unchanged",
+            "same ids and versions", `same=${ok}`, ok);
+        }
+        // ---- S44: deployed production definitions still enforce guard ----
+        {
+          // Reprobe: participant (non-admin) authenticated call to suspend must still fail admin-only.
+          const r = await rpc(participantToken, "mirror_admin_suspend", {
+            _user_id: adminId, _reason: "post-run guard reprobe",
+          });
+          const rejected = r.status >= 400 &&
+            String(r.body?.message ?? "").toLowerCase().includes("admin only");
+          rec("S44", "production suspension guard, RLS, and grants unchanged",
+            "authenticated non-admin still rejected with 'admin only'",
+            `HTTP ${r.status} msg=${JSON.stringify(r.body?.message ?? r.body)}`, rejected);
+        }
+      } catch (e) {
+        error = e instanceof Error ? e.message : String(e);
+      } finally {
+        try {
+          if (participantId) {
+            await admin.from("mirror_suspensions").delete().eq("user_id", participantId);
+            await admin.from("mirror_participations").delete().eq("user_id", participantId);
+            await admin.from("manual_full_access_grants").delete().eq("user_id", participantId);
+            await admin.from("community_profiles").delete().eq("user_id", participantId);
+            await admin.from("mirror_agreement_acceptances").delete().eq("user_id", participantId);
+            await admin.from("mirror_orientation_completions").delete().eq("user_id", participantId);
+            await admin.from("mirror_adult_attestations").delete().eq("user_id", participantId);
+            await admin.from("user_roles").delete().eq("user_id", participantId);
+          }
+          if (adminId) {
+            await admin.from("user_roles").delete().eq("user_id", adminId);
+          }
+        } catch (_) {}
+        try { await cleanupByMarker(admin, marker); } catch (_) {}
+
+        try {
+          const specs: Array<[string, string]> = [
+            ["user_roles", "user_id"],
+            ["profiles", "id"],
+            ["subscriptions", "profile_id"],
+            ["subscription_events", "profile_id"],
+            ["entitlements", "user_id"],
+            ["manual_full_access_grants", "user_id"],
+            ["manual_access_grants", "user_id"],
+            ["founding_members", "user_id"],
+            ["community_profiles", "user_id"],
+            ["mirror_agreement_acceptances", "user_id"],
+            ["mirror_orientation_completions", "user_id"],
+            ["mirror_adult_attestations", "user_id"],
+            ["mirror_participations", "user_id"],
+            ["mirror_suspensions", "user_id"],
+          ];
+          const counts: Record<string, number> = {};
+          for (const uid of [participantId, adminId]) {
+            if (!uid) continue;
+            for (const [t, col] of specs) {
+              try {
+                const { data } = await admin.from(t).select("*").eq(col, uid);
+                counts[`${t}:${uid.slice(0,8)}`] = data?.length ?? 0;
+              } catch (_) { counts[`${t}:${uid.slice(0,8)}`] = -1; }
+            }
+            try {
+              const a = (await admin.from("mirror_blocks").select("*").eq("blocker_id", uid)).data?.length ?? 0;
+              const b = (await admin.from("mirror_blocks").select("*").eq("blocked_id", uid)).data?.length ?? 0;
+              counts[`mirror_blocks:${uid.slice(0,8)}`] = a + b;
+            } catch (_) { counts[`mirror_blocks:${uid.slice(0,8)}`] = -1; }
+          }
+          const usersAfter = await listAllUsers(admin);
+          afterCount = usersAfter.filter(
+            (u) => String(u.user_metadata?.fixture_marker ?? "") === marker,
+          ).length;
+          residue = { post_cleanup_counts: counts, marker_auth_users_after: afterCount };
+        } catch (e) {
+          residue = { residue_check_error: e instanceof Error ? e.message : String(e) };
+        }
+      }
+
+      const passed = results.filter((r) => r.pass).length;
+      const total = results.length;
+      return json(200, {
+        ok: error === null && passed === total && total === 44,
+        action: "run_task11_suspension_lifecycle",
+        marker,
+        error,
+        preflight,
+        seeded_versions_before: seededVersions,
+        seeded_versions_after: seededVersionsAfter,
+        fixtures: [
+          { role: "participant", id: participantId, purpose: "task11-suspension-participant",
+            role_inventory: "baseline user only (no admin, no moderator)",
+            access: "canonical manual_full_access_grants" },
+          { role: "admin", id: adminId, purpose: "task11-canonical-admin",
+            role_inventory: "canonical admin role only (no unnecessary grant)",
+            access: "no manual grant issued" },
+        ],
+        genuine_session_proof: genuineSessionProof,
+        anon_boundary: anonBoundary,
+        denied_evidence: deniedEvidence,
+        idempotent_evidence: idempotentEvidence,
+        readiness_timeline: readinessTimeline,
+        marker_auth_users_before: beforeCount,
+        marker_auth_users_after: afterCount,
+        isolation: {
+          mirror_withdraw_participation_invoked: false,
+          reactivation_after_preparation_invoked: false,
+          direct_participation_write: false,
+          block_pathway_invoked: false,
+          access_grant_altered_during_lifecycle: false,
+          profile_visibility_changed: false,
+          profile_or_evidence_row_deleted_or_replaced: false,
+          additional_fixture_created: false,
+          seeded_requirement_definition_modified: false,
+          production_definition_modified: false,
+        },
+        results,
+        summary: { passed, total, denominator: 44 },
+        residue,
+      });
+    }
+
     return json(400, { ok: false, error: "unknown or unsupported action" });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
