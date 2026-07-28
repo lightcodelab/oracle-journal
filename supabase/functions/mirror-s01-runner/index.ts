@@ -239,8 +239,3 @@ serve(async (req) => {
     return json(400, { ok: false, error: msg });
   }
 });
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    return json(400, { ok: false, error: msg });
-  }
-});
