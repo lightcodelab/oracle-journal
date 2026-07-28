@@ -42,6 +42,7 @@ import CommunionLiveClasses from "./pages/CommunionLiveClasses";
 import CommunionLiveWorkshops from "./pages/CommunionLiveWorkshops";
 import CommunionLiveMeditations from "./pages/CommunionLiveMeditations";
 import LiveReplays from "./pages/LiveReplays";
+import MirrorExchange from "./pages/MirrorExchange";
 import AdminSessionReplays from "./pages/AdminSessionReplays";
 import UserManagement from "./pages/UserManagement";
 import MyCalendar from "./pages/MyCalendar";
@@ -138,6 +139,7 @@ const App = () => {
             <Route path="/communion/live-workshops" element={<CommunionLiveWorkshops />} />
             <Route path="/communion/live-meditations" element={<CommunionLiveMeditations />} />
             <Route path="/communion/live-replays" element={<LiveReplays />} />
+            <Route path="/communion/mirror-exchange" element={<MirrorExchange />} />
             <Route path="/membership/success" element={<MembershipSuccess />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/suggestions" element={<FeatureSuggestions />} />
