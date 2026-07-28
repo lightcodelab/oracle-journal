@@ -565,8 +565,10 @@ serve(async (req) => {
       try {
         const { data: ready } = await AdminC.rpc("mirror_current_requirements_met", { _user_id: fixtures.memberA.id });
         // Should be false because memberA accepted old version, not v2
-        // BUT mirror_current_requirements_met revoked from authenticated; call as admin service instead
-        const { data: ready2 } = await admin.rpc("mirror_current_requirements_met", { _user_id: fixtures.memberA.id });
+        // Function signature uses _uid; revoked from authenticated so call via service_role
+        const { data: ready2, error: rerr } = await admin.rpc(
+          "mirror_current_requirements_met", { _uid: fixtures.memberA.id });
+        if (rerr) throw new Error(rerr.message);
         assert(ready2 === false, `expected false, got ${ready2}`);
         // Original evidence intact
         const { count } = await admin.from("mirror_agreement_acceptances")
@@ -765,11 +767,16 @@ serve(async (req) => {
       }
       // Cascade from auth.users removes profiles, entitlements, grants, etc via FK
       let removed = 0;
+      const deleteErrors: string[] = [];
       for (const uid of createdUserIds) {
+        // Belt-and-braces: purge dependent rows first that lack ON DELETE CASCADE
+        await admin.from("user_roles").delete().eq("user_id", uid);
         const { error } = await admin.auth.admin.deleteUser(uid);
         if (!error) removed++;
+        else deleteErrors.push(`${uid}: ${error.message}`);
       }
       teardown.users_removed = removed;
+      teardown.delete_errors = deleteErrors;
 
       // Belt-and-braces: any lingering marker-scoped rows
       const cleanTables = ["manual_full_access_grants", "entitlements"];
