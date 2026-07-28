@@ -35,7 +35,3 @@ verify_jwt = false
 
 [functions.quiz-submit]
 verify_jwt = false
-
-
-[functions.mirror-s01-runner]
-verify_jwt = false
