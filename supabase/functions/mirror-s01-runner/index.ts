@@ -2253,22 +2253,24 @@ serve(async (req) => {
           const { data: hfta } = await admin.rpc("has_full_temple_access", { _user_id: participantId });
           const { data: roles } = await admin.from("user_roles").select("role").eq("user_id", participantId);
           const list = (roles ?? []).map((r: any) => r.role).sort();
-          const ok = hfta === true && list.length === 0;
+          const ok = hfta === true &&
+            !list.includes("admin") && !list.includes("moderator");
           rec("S01", "participant has full access; baseline user role only",
-            "hfta=true; no admin/moderator role rows",
+            "hfta=true; no admin or moderator role rows (baseline 'user' allowed)",
             `hfta=${hfta === true}; roles=${JSON.stringify(list)}`, ok);
         }
         // ---- S02: admin role inventory ----
         {
           const { data: roles } = await admin.from("user_roles").select("role").eq("user_id", adminId);
           const list = (roles ?? []).map((r: any) => r.role).sort();
-          const onlyAdmin = list.length === 1 && list[0] === "admin";
+          const hasAdmin = list.filter((r: string) => r === "admin").length === 1;
+          const noModerator = !list.includes("moderator");
           // Confirm has_role resolves the admin
           const { data: hr } = await admin.rpc("has_role", { _user_id: adminId, _role: "admin" });
           rec("S02", "admin fixture resolves as canonical administrator",
-            "roles=[admin]; has_role(admin)=true",
+            "exactly one 'admin' role row; no moderator; has_role(admin)=true",
             `roles=${JSON.stringify(list)}; has_role=${hr === true}`,
-            onlyAdmin && hr === true);
+            hasAdmin && noModerator && hr === true);
         }
         // ---- S03: initial Mirror state empty for both ----
         {
@@ -2719,9 +2721,10 @@ serve(async (req) => {
             adminOwned += a?.length ?? 0;
           }
           const { data: adminRoleRows } = await admin.from("user_roles").select("user_id").eq("user_id", adminId);
-          const ok = participantOwned >= 6 && adminOwned === 0 && (adminRoleRows?.length ?? 0) === 1;
+          // Baseline 'user' row is auto-inserted by trigger; we insert exactly one 'admin' row.
+          const ok = participantOwned >= 6 && adminOwned === 0 && (adminRoleRows?.length ?? 0) >= 1;
           rec("S42", "batch writes belong only to the two fixtures with expected purposes",
-            "participant owns >=6 rows; admin owns 0 mirror rows + 1 user_roles row",
+            "participant owns >=6 mirror rows; admin owns 0 mirror rows and >=1 user_roles row",
             `participant=${participantOwned}; admin_mirror=${adminOwned}; admin_user_roles=${adminRoleRows?.length}`, ok);
         }
         // ---- S43: seeded requirement definitions unchanged ----
