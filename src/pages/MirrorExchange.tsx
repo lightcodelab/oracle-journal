@@ -200,22 +200,16 @@ export default function MirrorExchange() {
     }
     setSaving(true);
     try {
-      const payload = {
-        user_id: user!.id,
-        display_name: displayName.trim(),
-        pronouns: pronouns.trim() || null,
-        country: country.trim() || null,
-        region: region.trim() || null,
-        town: town.trim() || null,
-        timezone: timezone.trim(),
-        languages: languages.split(',').map((s) => s.trim()).filter(Boolean),
-        intro: intro.trim() || null,
-        is_visible: false,
-      };
-      const q = hasProfile
-        ? supabase.from('community_profiles').update(payload).eq('user_id', user!.id)
-        : supabase.from('community_profiles').insert(payload);
-      const { error } = await q;
+      const { error } = await supabase.rpc('mirror_save_profile', {
+        _display_name: displayName.trim(),
+        _timezone: timezone.trim(),
+        _pronouns: pronouns.trim() || null,
+        _country: country.trim() || null,
+        _region: region.trim() || null,
+        _town: town.trim() || null,
+        _languages: languages.split(',').map((s) => s.trim()).filter(Boolean),
+        _intro: intro.trim() || null,
+      });
       if (error) throw error;
       setHasProfile(true);
       await callRpc('mirror_activate_participation');
