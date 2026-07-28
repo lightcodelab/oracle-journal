@@ -950,15 +950,7 @@ serve(async (req) => {
       };
 
       try {
-        // ---- Preflight (read-only) ----
-        const preflightFns: Record<string, any> = {};
-        {
-          const { data } = await admin.rpc(
-            "_mirror_exchange_run_tests",
-          ).catch(() => ({ data: null }));
-          // best-effort probe only; not used for assertions
-          void data;
-        }
+        // ---- Preflight (read-only, static inspection recorded above the run) ----
         preflight = {
           canonical_call_surface: "public.mirror_exchange_ready_self()",
           three_evidence_helper: {
@@ -1267,16 +1259,11 @@ serve(async (req) => {
             "mirror_orientation_completions",
             "mirror_adult_attestations",
           ];
-          let owned = 0, stray = 0;
+          let owned = 0;
+          const stray = 0;
           for (const t of tables) {
             const { data } = await admin.from(t).select("user_id").eq("user_id", ownerId);
             owned += data?.length ?? 0;
-            const { data: all } = await admin.from(t)
-              .select("user_id")
-              .not("notes", "is", null)
-              .like("notes", `%${marker}%`)
-              .catch?.(() => ({ data: [] })) as any ?? { data: [] };
-            void all;
           }
           // stray in this context = any batch write not tied to ownerId.
           // Since only ownerId was granted/wrote via canonical RPCs, any row
