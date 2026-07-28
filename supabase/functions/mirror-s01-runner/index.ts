@@ -320,6 +320,128 @@ serve(async (req) => {
     // MARKER_PREFIX, and MUST NOT accept an arbitrary real-user UUID as a
     // target.
 
+    // ---- Task 7 structural-harness run via genuine authenticated sessions.
+    // Creates one canonical-admin fixture and one ordinary fixture, signs
+    // each in through the standard auth endpoint to obtain a genuine user
+    // JWT, then invokes public._mirror_exchange_run_tests() through
+    // PostgREST with each bearer token, plus once anonymously with only
+    // the anon apikey. Passwords/JWTs never leave this function.
+    if (action === "run_structural_harness") {
+      const runId = crypto.randomUUID();
+      const marker = `${MARKER_PREFIX}${runId}`;
+      assertMarkerScoped(marker);
+
+      const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+      const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+      if (!supabaseUrl || !anonKey) {
+        return json(500, { ok: false, error: "supabase url or anon key missing" });
+      }
+
+      const createOne = async (purpose: string) => {
+        const localId = crypto.randomUUID();
+        const email = `mirror-s01+${runId}-${localId}@fixtures.invalid`;
+        const password = crypto.randomUUID() + crypto.randomUUID();
+        const { data, error } = await admin.auth.admin.createUser({
+          email,
+          password,
+          email_confirm: true,
+          user_metadata: { fixture_marker: marker, fixture_purpose: purpose },
+        });
+        if (error || !data?.user) {
+          throw new Error(error?.message ?? "user creation failed");
+        }
+        return { user: data.user, email, password };
+      };
+
+      const signIn = async (email: string, password: string) => {
+        const anonClient = createClient(supabaseUrl, anonKey, {
+          auth: { autoRefreshToken: false, persistSession: false },
+        });
+        const { data, error } = await anonClient.auth.signInWithPassword({
+          email, password,
+        });
+        if (error || !data?.session?.access_token) {
+          throw new Error(error?.message ?? "sign-in failed");
+        }
+        return data.session.access_token as string;
+      };
+
+      const callHarness = async (bearer: string | null) => {
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+          "apikey": anonKey,
+        };
+        if (bearer) headers["Authorization"] = `Bearer ${bearer}`;
+        const resp = await fetch(
+          `${supabaseUrl}/rest/v1/rpc/_mirror_exchange_run_tests`,
+          { method: "POST", headers, body: "{}" },
+        );
+        const text = await resp.text();
+        let parsed: unknown = null;
+        try { parsed = JSON.parse(text); } catch (_) { parsed = text; }
+        return { status: resp.status, body: parsed };
+      };
+
+      let adminFixture: any = null;
+      let ordinaryFixture: any = null;
+      let adminResult: any = null;
+      let ordinaryResult: any = null;
+      let anonResult: any = null;
+      let error: string | null = null;
+
+      try {
+        adminFixture = await createOne(
+          "mirror-exchange-stage1-task7-canonical-admin",
+        );
+        ordinaryFixture = await createOne(
+          "mirror-exchange-stage1-task7-ordinary-user",
+        );
+
+        // Reread admin fixture marker before role elevation.
+        const { data: reread, error: rereadErr } =
+          await admin.auth.admin.getUserById(adminFixture.user.id);
+        if (rereadErr || !reread?.user) {
+          throw new Error("failed to reread admin fixture");
+        }
+        if (String(reread.user.user_metadata?.fixture_marker ?? "") !== marker) {
+          throw new Error("admin fixture marker mismatch on reread");
+        }
+
+        const { error: roleErr } = await admin
+          .from("user_roles")
+          .insert({ user_id: reread.user.id, role: "admin" });
+        if (roleErr) throw new Error(`admin role insert failed: ${roleErr.message}`);
+
+        // Genuine authenticated sessions via password sign-in.
+        const adminToken = await signIn(adminFixture.email, adminFixture.password);
+        const ordinaryToken = await signIn(
+          ordinaryFixture.email, ordinaryFixture.password,
+        );
+
+        adminResult = await callHarness(adminToken);
+        ordinaryResult = await callHarness(ordinaryToken);
+        anonResult = await callHarness(null);
+      } catch (e) {
+        error = e instanceof Error ? e.message : String(e);
+      } finally {
+        try { await cleanupByMarker(admin, marker); } catch (_) {}
+      }
+
+      return json(200, {
+        ok: error === null,
+        action: "run_structural_harness",
+        marker,
+        error,
+        fixtures: {
+          admin_id: adminFixture?.user?.id ?? null,
+          ordinary_id: ordinaryFixture?.user?.id ?? null,
+        },
+        admin_call: adminResult,
+        ordinary_call: ordinaryResult,
+        anon_call: anonResult,
+      });
+    }
+
     return json(400, { ok: false, error: "unknown or unsupported action" });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
