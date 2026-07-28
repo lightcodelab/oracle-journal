@@ -6078,6 +6078,19 @@ export type Database = {
       }
       mirror_exchange_ready_self: { Args: never; Returns: boolean }
       mirror_record_attestation: { Args: never; Returns: string }
+      mirror_save_profile: {
+        Args: {
+          _country?: string
+          _display_name: string
+          _intro?: string
+          _languages?: string[]
+          _pronouns?: string
+          _region?: string
+          _timezone: string
+          _town?: string
+        }
+        Returns: string
+      }
       mirror_withdraw_participation: { Args: never; Returns: undefined }
       recompute_profile_active_member: {
         Args: { _user_id: string }
