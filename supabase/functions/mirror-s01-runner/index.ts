@@ -509,12 +509,6 @@ serve(async (req) => {
       const rpc = (bearer: string, fn: string, body: unknown) =>
         restReq(bearer, "POST", `/rest/v1/rpc/${fn}`, body);
 
-      const svcSelect = async (table: string, filter: string) => {
-        const { data, error } = await admin.from(table).select("*").filter(...(filter as any));
-        if (error) throw error;
-        return data ?? [];
-      };
-
       const cleanup = async () => {
         try {
           const ids = Object.values(fixtures).map(f => f?.user?.id).filter(Boolean);
