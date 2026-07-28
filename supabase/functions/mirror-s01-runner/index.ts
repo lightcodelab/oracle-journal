@@ -752,14 +752,23 @@ serve(async (req) => {
 
         // ============ ADDITIONAL ISOLATION ============
         const fx = [owner.user.id, peer.user.id, noAcc.user.id, adm.user.id];
-        const iso = async (id: string, name: string, table: string, expected0 = true) => {
-          const { data } = await admin.from(table).select("id").in("user_id", fx);
-          const n = data?.length ?? 0;
-          record(id, name, expected0 ? "0 rows" : "n/a", `${n} rows`, expected0 ? n === 0 : true);
+        const countInCol = async (table: string, col: string, ids: string[]) => {
+          const { data } = await admin.from(table).select("*").in(col, ids);
+          return data?.length ?? 0;
         };
-        await iso("I01", "no mirror_participations for any fixture", "mirror_participations");
-        await iso("I02", "no mirror_suspensions for any fixture", "mirror_suspensions");
-        await iso("I03", "no mirror_blocks for any fixture", "mirror_blocks");
+        {
+          const n = await countInCol("mirror_participations", "user_id", fx);
+          record("I01", "no mirror_participations for any fixture", "0 rows", `${n} rows`, n === 0);
+        }
+        {
+          const n = await countInCol("mirror_suspensions", "user_id", fx);
+          record("I02", "no mirror_suspensions for any fixture", "0 rows", `${n} rows`, n === 0);
+        }
+        {
+          const n1 = await countInCol("mirror_blocks", "blocker_id", fx);
+          const n2 = await countInCol("mirror_blocks", "blocked_id", fx);
+          record("I03", "no mirror_blocks for any fixture", "0 rows", `${n1 + n2} rows`, n1 + n2 === 0);
+        }
         // I04: no withdrawal action occurred (no withdrawal helper called) — reflected by I01 participations count.
         record("I04", "no withdrawal action invoked", "no participations touched", "no participations touched", true);
         // I05: seeded version rows unchanged
