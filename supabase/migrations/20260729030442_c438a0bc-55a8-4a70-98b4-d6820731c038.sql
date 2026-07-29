@@ -1,0 +1,1 @@
+GRANT USAGE ON TYPE public.mirror_topic_axis TO service_role;
