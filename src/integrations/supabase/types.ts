@@ -3335,6 +3335,36 @@ export type Database = {
         }
         Relationships: []
       }
+      mirror_availability_windows: {
+        Row: {
+          created_at: string
+          id: string
+          local_end: string
+          local_start: string
+          updated_at: string
+          user_id: string
+          weekday: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          local_end: string
+          local_start: string
+          updated_at?: string
+          user_id: string
+          weekday: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          local_end?: string
+          local_start?: string
+          updated_at?: string
+          user_id?: string
+          weekday?: number
+        }
+        Relationships: []
+      }
       mirror_blocks: {
         Row: {
           blocked_id: string
