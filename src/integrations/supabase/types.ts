@@ -3460,6 +3460,39 @@ export type Database = {
         }
         Relationships: []
       }
+      mirror_session_preferences: {
+        Row: {
+          advance_notice_hours: number
+          created_at: string
+          durations: number[]
+          open_to_in_person: boolean | null
+          perspective_preference: string | null
+          session_format: Database["public"]["Enums"]["mirror_session_format"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          advance_notice_hours: number
+          created_at?: string
+          durations: number[]
+          open_to_in_person?: boolean | null
+          perspective_preference?: string | null
+          session_format: Database["public"]["Enums"]["mirror_session_format"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          advance_notice_hours?: number
+          created_at?: string
+          durations?: number[]
+          open_to_in_person?: boolean | null
+          perspective_preference?: string | null
+          session_format?: Database["public"]["Enums"]["mirror_session_format"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       mirror_suspensions: {
         Row: {
           created_at: string
@@ -6228,6 +6261,7 @@ export type Database = {
       escalation_trigger_type: "keyword" | "symptom" | "score"
       media_type: "video" | "audio" | "image"
       mirror_capacity_state: "available" | "limited" | "unavailable"
+      mirror_session_format: "audio" | "video" | "either"
       payment_provider: "stripe" | "paypal"
       resource_modality:
         | "meditation"
@@ -6390,6 +6424,7 @@ export const Constants = {
       escalation_trigger_type: ["keyword", "symptom", "score"],
       media_type: ["video", "audio", "image"],
       mirror_capacity_state: ["available", "limited", "unavailable"],
+      mirror_session_format: ["audio", "video", "either"],
       payment_provider: ["stripe", "paypal"],
       resource_modality: [
         "meditation",
