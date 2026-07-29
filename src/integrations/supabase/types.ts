@@ -3356,6 +3356,33 @@ export type Database = {
         }
         Relationships: []
       }
+      mirror_capacity: {
+        Row: {
+          created_at: string
+          current_openings: number | null
+          state: Database["public"]["Enums"]["mirror_capacity_state"]
+          updated_at: string
+          user_id: string
+          weekly_session_max: number
+        }
+        Insert: {
+          created_at?: string
+          current_openings?: number | null
+          state: Database["public"]["Enums"]["mirror_capacity_state"]
+          updated_at?: string
+          user_id: string
+          weekly_session_max: number
+        }
+        Update: {
+          created_at?: string
+          current_openings?: number | null
+          state?: Database["public"]["Enums"]["mirror_capacity_state"]
+          updated_at?: string
+          user_id?: string
+          weekly_session_max?: number
+        }
+        Relationships: []
+      }
       mirror_orientation_completions: {
         Row: {
           completed_at: string
@@ -6200,6 +6227,7 @@ export type Database = {
         | "block"
       escalation_trigger_type: "keyword" | "symptom" | "score"
       media_type: "video" | "audio" | "image"
+      mirror_capacity_state: "available" | "limited" | "unavailable"
       payment_provider: "stripe" | "paypal"
       resource_modality:
         | "meditation"
@@ -6361,6 +6389,7 @@ export const Constants = {
       ],
       escalation_trigger_type: ["keyword", "symptom", "score"],
       media_type: ["video", "audio", "image"],
+      mirror_capacity_state: ["available", "limited", "unavailable"],
       payment_provider: ["stripe", "paypal"],
       resource_modality: [
         "meditation",
