@@ -470,6 +470,541 @@ export type Database = {
           },
         ]
       }
+      arrival_answer_options: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          label: string
+          question_id: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order: number
+          id?: string
+          label: string
+          question_id: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          label?: string
+          question_id?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arrival_answer_options_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arrival_answers: {
+        Row: {
+          answer_option_id: string
+          created_at: string
+          id: string
+          interaction_id: string
+          question_id: string
+          updated_at: string
+        }
+        Insert: {
+          answer_option_id: string
+          created_at?: string
+          id?: string
+          interaction_id: string
+          question_id: string
+          updated_at?: string
+        }
+        Update: {
+          answer_option_id?: string
+          created_at?: string
+          id?: string
+          interaction_id?: string
+          question_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arrival_a_option_belongs_to_question"
+            columns: ["answer_option_id", "question_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_answer_options"
+            referencedColumns: ["id", "question_id"]
+          },
+          {
+            foreignKeyName: "arrival_answers_answer_option_id_fkey"
+            columns: ["answer_option_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_answer_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_answers_interaction_id_fkey"
+            columns: ["interaction_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_interactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arrival_interactions: {
+        Row: {
+          abandoned_at: string | null
+          answers_revision: number
+          completed_at: string | null
+          created_at: string
+          id: string
+          questionnaire_version_id: string
+          restarted_from_interaction_id: string | null
+          rule_version_id: string
+          started_at: string
+          state: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          abandoned_at?: string | null
+          answers_revision?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          questionnaire_version_id: string
+          restarted_from_interaction_id?: string | null
+          rule_version_id: string
+          started_at?: string
+          state?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          abandoned_at?: string | null
+          answers_revision?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          questionnaire_version_id?: string
+          restarted_from_interaction_id?: string | null
+          rule_version_id?: string
+          started_at?: string
+          state?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arrival_i_rule_matches_qv"
+            columns: ["rule_version_id", "questionnaire_version_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_rule_versions"
+            referencedColumns: ["id", "questionnaire_version_id"]
+          },
+          {
+            foreignKeyName: "arrival_interactions_questionnaire_version_id_fkey"
+            columns: ["questionnaire_version_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_questionnaire_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_interactions_restarted_from_interaction_id_fkey"
+            columns: ["restarted_from_interaction_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_interactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_interactions_rule_version_id_fkey"
+            columns: ["rule_version_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_rule_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arrival_questionnaire_versions: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          published_at: string | null
+          status: string
+          updated_at: string
+          version_number: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label: string
+          published_at?: string | null
+          status?: string
+          updated_at?: string
+          version_number: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          published_at?: string | null
+          status?: string
+          updated_at?: string
+          version_number?: number
+        }
+        Relationships: []
+      }
+      arrival_questions: {
+        Row: {
+          created_at: string
+          display_order: number
+          helper_text: string | null
+          id: string
+          prompt: string
+          questionnaire_version_id: string
+          required: boolean
+          select_max: number
+          select_min: number
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order: number
+          helper_text?: string | null
+          id?: string
+          prompt: string
+          questionnaire_version_id: string
+          required?: boolean
+          select_max?: number
+          select_min?: number
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          helper_text?: string | null
+          id?: string
+          prompt?: string
+          questionnaire_version_id?: string
+          required?: boolean
+          select_max?: number
+          select_min?: number
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arrival_questions_questionnaire_version_id_fkey"
+            columns: ["questionnaire_version_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_questionnaire_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arrival_recommendation_runs: {
+        Row: {
+          created_at: string
+          id: string
+          interaction_id: string
+          outcome: string
+          questionnaire_version_id: string
+          rule_version_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          interaction_id: string
+          outcome: string
+          questionnaire_version_id: string
+          rule_version_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          interaction_id?: string
+          outcome?: string
+          questionnaire_version_id?: string
+          rule_version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arrival_recommendation_runs_interaction_id_fkey"
+            columns: ["interaction_id"]
+            isOneToOne: true
+            referencedRelation: "arrival_interactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_recommendation_runs_questionnaire_version_id_fkey"
+            columns: ["questionnaire_version_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_questionnaire_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_recommendation_runs_rule_version_id_fkey"
+            columns: ["rule_version_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_rule_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_rr_rule_matches_qv"
+            columns: ["rule_version_id", "questionnaire_version_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_rule_versions"
+            referencedColumns: ["id", "questionnaire_version_id"]
+          },
+        ]
+      }
+      arrival_recommendations: {
+        Row: {
+          created_at: string
+          id: string
+          rank: number
+          reasons: Json
+          registry_id: string
+          resource_id: string
+          resource_type: string
+          run_id: string
+          score: number
+          summary_snapshot: string | null
+          title_snapshot: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rank: number
+          reasons?: Json
+          registry_id: string
+          resource_id: string
+          resource_type: string
+          run_id: string
+          score: number
+          summary_snapshot?: string | null
+          title_snapshot: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rank?: number
+          reasons?: Json
+          registry_id?: string
+          resource_id?: string
+          resource_type?: string
+          run_id?: string
+          score?: number
+          summary_snapshot?: string | null
+          title_snapshot?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arrival_recommendations_registry_id_fkey"
+            columns: ["registry_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_resource_registry"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_recommendations_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_recommendation_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arrival_resource_match_rules: {
+        Row: {
+          answer_option_id: string
+          created_at: string
+          effect: string
+          id: string
+          reason_template: string | null
+          registry_id: string
+          rule_version_id: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          answer_option_id: string
+          created_at?: string
+          effect: string
+          id?: string
+          reason_template?: string | null
+          registry_id: string
+          rule_version_id: string
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          answer_option_id?: string
+          created_at?: string
+          effect?: string
+          id?: string
+          reason_template?: string | null
+          registry_id?: string
+          rule_version_id?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arrival_resource_match_rules_answer_option_id_fkey"
+            columns: ["answer_option_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_answer_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_resource_match_rules_registry_id_fkey"
+            columns: ["registry_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_resource_registry"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_resource_match_rules_rule_version_id_fkey"
+            columns: ["rule_version_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_rule_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arrival_resource_registry: {
+        Row: {
+          active: boolean
+          admin_notes: string | null
+          content_resource_id: string | null
+          course_id: string | null
+          created_at: string
+          healing_resource_id: string | null
+          id: string
+          lesson_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          admin_notes?: string | null
+          content_resource_id?: string | null
+          course_id?: string | null
+          created_at?: string
+          healing_resource_id?: string | null
+          id?: string
+          lesson_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          admin_notes?: string | null
+          content_resource_id?: string | null
+          course_id?: string | null
+          created_at?: string
+          healing_resource_id?: string | null
+          id?: string
+          lesson_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arrival_resource_registry_content_resource_id_fkey"
+            columns: ["content_resource_id"]
+            isOneToOne: false
+            referencedRelation: "content_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_resource_registry_content_resource_id_fkey"
+            columns: ["content_resource_id"]
+            isOneToOne: false
+            referencedRelation: "v_content_resources_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_resource_registry_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_resource_registry_healing_resource_id_fkey"
+            columns: ["healing_resource_id"]
+            isOneToOne: false
+            referencedRelation: "healing_resources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "arrival_resource_registry_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arrival_rule_versions: {
+        Row: {
+          created_at: string
+          id: string
+          is_current: boolean
+          label: string
+          published_at: string | null
+          questionnaire_version_id: string
+          status: string
+          updated_at: string
+          version_number: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_current?: boolean
+          label: string
+          published_at?: string | null
+          questionnaire_version_id: string
+          status?: string
+          updated_at?: string
+          version_number: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_current?: boolean
+          label?: string
+          published_at?: string | null
+          questionnaire_version_id?: string
+          status?: string
+          updated_at?: string
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arrival_rule_versions_questionnaire_version_id_fkey"
+            columns: ["questionnaire_version_id"]
+            isOneToOne: false
+            referencedRelation: "arrival_questionnaire_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       boundary_audit_entries: {
         Row: {
           abandonment_patterns: Json
