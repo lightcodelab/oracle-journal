@@ -3413,6 +3413,38 @@ export type Database = {
         }
         Relationships: []
       }
+      mirror_member_topics: {
+        Row: {
+          axis: Database["public"]["Enums"]["mirror_topic_axis"]
+          created_at: string
+          topic_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          axis: Database["public"]["Enums"]["mirror_topic_axis"]
+          created_at?: string
+          topic_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          axis?: Database["public"]["Enums"]["mirror_topic_axis"]
+          created_at?: string
+          topic_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mirror_member_topics_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "mirror_topic_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mirror_orientation_completions: {
         Row: {
           completed_at: string
@@ -3549,6 +3581,60 @@ export type Database = {
           lifted_at?: string | null
           lifted_by?: string | null
           reason?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mirror_topic_catalog: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          label: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          label: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          label?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      mirror_topic_notes: {
+        Row: {
+          created_at: string
+          note: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          note: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          note?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -6292,6 +6378,7 @@ export type Database = {
       media_type: "video" | "audio" | "image"
       mirror_capacity_state: "available" | "limited" | "unavailable"
       mirror_session_format: "audio" | "video" | "either"
+      mirror_topic_axis: "hold" | "exclude"
       payment_provider: "stripe" | "paypal"
       resource_modality:
         | "meditation"
@@ -6455,6 +6542,7 @@ export const Constants = {
       media_type: ["video", "audio", "image"],
       mirror_capacity_state: ["available", "limited", "unavailable"],
       mirror_session_format: ["audio", "video", "either"],
+      mirror_topic_axis: ["hold", "exclude"],
       payment_provider: ["stripe", "paypal"],
       resource_modality: [
         "meditation",
