@@ -792,7 +792,7 @@ export type Database = {
           created_at?: string
           id?: string
           rank: number
-          reasons?: Json
+          reasons: Json
           registry_id: string
           resource_id: string
           resource_type: string
@@ -6683,6 +6683,7 @@ export type Database = {
         Args: { _user_id: string }
         Returns: Json
       }
+      arrival_reasons_valid: { Args: { _reasons: Json }; Returns: boolean }
       assert_caller_is_admin: { Args: never; Returns: string }
       attribute_affiliate_referral: {
         Args: { _code: string; _commission_model?: string; _link_code?: string }
