@@ -78,7 +78,7 @@ export default function ContextualJournal({
       <div className="border-t border-border my-8" />
       
       {/* Journal Section with distinct styling */}
-      <div className="bg-white border border-border rounded-lg p-6">
+      <div className="bg-[#e0c8bb] border border-border rounded-lg p-6">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 rounded-full bg-primary/10">
