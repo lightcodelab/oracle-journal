@@ -70,7 +70,6 @@ import QuizPlayer from "./pages/QuizPlayer";
 import OAuthConsent from "./pages/OAuthConsent";
 import AdminHomeRecommendations from "./pages/AdminHomeRecommendations";
 import ThemeScope from "./components/ThemeScope";
-import LetterOpening from "./components/LetterOpening";
 import { captureRefFromQueryString } from "@/lib/affiliateTracking";
 import { useEffect } from "react";
 const queryClient = new QueryClient();
