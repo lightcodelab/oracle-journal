@@ -38,7 +38,7 @@ const GlobalSearch = () => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search resources…"
-        className="h-8 w-40 md:w-56 text-sm"
+        className="h-8 w-40 md:w-56 text-sm bg-card"
         onBlur={() => {
           if (!query.trim()) setIsOpen(false);
         }}
