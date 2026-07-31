@@ -46,6 +46,20 @@ const RitesOfRemembranceSection = () => {
             Check back later for new content.
           </p>
         </motion.div>
+      ) : courses.length === 1 ? (
+        <div className="flex justify-center w-full">
+          <div className="w-full max-w-xl">
+            <ResourceCard
+              resource={{
+                ...courses[0],
+                source: (courses[0].source === 'legacy' ? 'content' : courses[0].source) as ContentResource['source'],
+              }}
+              index={0}
+              showDraftBadge={isAdmin}
+              basePath="/decks"
+            />
+          </div>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {courses.map((course, index) => (
