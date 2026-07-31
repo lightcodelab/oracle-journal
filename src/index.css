@@ -8,6 +8,51 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Aged Parchment — member-facing theme */
+    --background: 39 53% 89%;
+    --foreground: 31 27% 18%;
+
+    --card: 40 55% 93%;
+    --card-foreground: 31 27% 18%;
+
+    --popover: 40 58% 95%;
+    --popover-foreground: 31 27% 18%;
+
+    --primary: 41 47% 45%;
+    --primary-foreground: 40 60% 96%;
+
+    --secondary: 40 45% 84%;
+    --secondary-foreground: 31 27% 20%;
+
+    --muted: 39 38% 85%;
+    --muted-foreground: 33 20% 36%;
+
+    --accent: 41 45% 78%;
+    --accent-foreground: 31 30% 16%;
+
+    --destructive: 0 52% 40%;
+    --destructive-foreground: 40 60% 96%;
+
+    --border: 38 30% 74%;
+    --input: 38 34% 80%;
+    --ring: 41 47% 45%;
+
+    --radius: 1rem;
+
+    /* Brand secondary colors */
+    --brand-dark: 31 27% 18%;
+    --brand-cream: 39 53% 89%;
+    --brand-red-dark: 0 55% 28%;
+    --brand-red-light: 0 37% 46%;
+
+    --gradient-cosmic: linear-gradient(135deg, hsl(41 50% 66%), hsl(38 40% 84%));
+    --gradient-card: linear-gradient(180deg, hsl(40 58% 95%), hsl(39 45% 89%));
+    --glow-mystical: 0 4px 24px hsl(31 27% 18% / 0.14);
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Admin tooling keeps the original dark Temple palette */
+  .admin-theme {
     --background: 34 100% 3%;
     --foreground: 34 12% 88%;
 
@@ -36,12 +81,8 @@ All colors MUST be HSL.
     --input: 34 20% 15%;
     --ring: 40 57% 43%;
 
-    --radius: 1rem;
-
-    /* Brand secondary colors */
     --brand-dark: 34 100% 3%;
     --brand-cream: 34 12% 88%;
-    --brand-red-dark: 0 55% 28%;
     --brand-red-light: 0 37% 66%;
 
     --gradient-cosmic: linear-gradient(135deg, hsl(40 57% 35%), hsl(34 40% 15%));
@@ -58,6 +99,32 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(ellipse at 12% 8%, hsl(38 44% 78% / 0.55), transparent 55%),
+      radial-gradient(ellipse at 88% 92%, hsl(36 40% 74% / 0.5), transparent 55%),
+      radial-gradient(ellipse at 50% 50%, hsl(42 60% 95% / 0.65), transparent 70%);
+    background-attachment: fixed;
+  }
+
+  /* Fibrous paper grain overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23p)' opacity='0.42'/%3E%3C/svg%3E");
+  }
+
+  .admin-theme body,
+  body:has(.admin-theme) {
+    background-image: none;
+  }
+
+  .admin-theme body::before {
+    display: none;
   }
 }
 
