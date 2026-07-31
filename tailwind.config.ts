@@ -59,7 +59,7 @@ export default {
         'smooth': 'var(--transition-smooth)',
       },
       fontFamily: {
-        'serif': ['Playfair Display', 'serif'],
+        'serif': ['"IM Fell English"', 'Georgia', 'serif'],
         'sans': ['Inter', 'sans-serif'],
       },
       borderRadius: {
