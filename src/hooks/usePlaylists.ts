@@ -206,6 +206,10 @@ export const usePlaylists = () => {
       } else if (lesson) {
         title = lesson.title || title;
         audioUrl = lesson.audio_url || null;
+        if (audioUrl && !audioUrl.startsWith('http') && !audioUrl.startsWith('/')) {
+          const { data: urlData } = supabase.storage.from('content-main-media').getPublicUrl(audioUrl);
+          audioUrl = urlData.publicUrl;
+        }
       }
 
       return {
