@@ -155,6 +155,20 @@ export const usePlaylists = () => {
     await fetchPlaylists();
   };
 
+  /** Persist a new ordering. Pass track ids in their desired order. */
+  const reorderTracks = async (orderedTrackIds: string[]) => {
+    const updates = orderedTrackIds.map((id, index) =>
+      supabase.from('playlist_tracks').update({ track_order: index }).eq('id', id)
+    );
+    const results = await Promise.all(updates);
+    const failed = results.find((r) => r.error);
+    if (failed?.error) {
+      toast({ title: 'Error', description: 'Failed to reorder tracks.', variant: 'destructive' });
+      return false;
+    }
+    return true;
+  };
+
   const fetchPlaylistTracks = useCallback(async (playlistId: string): Promise<PlaylistTrack[]> => {
     const { data, error } = await supabase
       .from('playlist_tracks')
@@ -233,6 +247,7 @@ export const usePlaylists = () => {
     renamePlaylist,
     addTrackToPlaylist,
     removeTrackFromPlaylist,
+    reorderTracks,
     fetchPlaylistTracks,
     refetch: fetchPlaylists,
   };
