@@ -169,20 +169,6 @@ export const usePlaylists = () => {
     return true;
   };
 
-  const _unusedRemove = async (trackId: string) => {
-    const { error } = await supabase
-      .from('playlist_tracks')
-      .delete()
-      .eq('id', trackId);
-
-    if (error) {
-      toast({ title: 'Error', description: 'Failed to remove track.', variant: 'destructive' });
-      return;
-    }
-
-    await fetchPlaylists();
-  };
-
   const fetchPlaylistTracks = useCallback(async (playlistId: string): Promise<PlaylistTrack[]> => {
     const { data, error } = await supabase
       .from('playlist_tracks')
