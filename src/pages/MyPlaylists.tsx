@@ -20,6 +20,8 @@ import {
   Check,
   X,
   Headphones,
+  ChevronUp,
+  ChevronDown,
 } from 'lucide-react';
 import { usePlaylists, PlaylistTrack } from '@/hooks/usePlaylists';
 import {
@@ -42,6 +44,7 @@ const MyPlaylists = () => {
     deletePlaylist,
     renamePlaylist,
     removeTrackFromPlaylist,
+    reorderTracks,
     fetchPlaylistTracks,
   } = usePlaylists();
 
@@ -120,6 +123,26 @@ const MyPlaylists = () => {
   const handleRemoveTrack = async (trackId: string) => {
     await removeTrackFromPlaylist(trackId);
     if (selectedPlaylistId) loadTracks(selectedPlaylistId);
+  };
+
+  const moveTrack = async (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= tracks.length) return;
+
+    const reordered = [...tracks];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+    setTracks(reordered);
+
+    // Keep the currently playing track highlighted after the move
+    setCurrentTrackIndex((prev) => {
+      if (prev === null) return prev;
+      if (prev === index) return target;
+      if (prev === target) return index;
+      return prev;
+    });
+
+    const ok = await reorderTracks(reordered.map((t) => t.id));
+    if (!ok && selectedPlaylistId) loadTracks(selectedPlaylistId);
   };
 
   // Audio controls
@@ -354,6 +377,29 @@ const MyPlaylists = () => {
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
+
+                        <div className="flex flex-col shrink-0">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Move track up"
+                            className="h-5 w-7 text-muted-foreground hover:text-foreground"
+                            disabled={idx === 0}
+                            onClick={() => moveTrack(idx, -1)}
+                          >
+                            <ChevronUp className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Move track down"
+                            className="h-5 w-7 text-muted-foreground hover:text-foreground"
+                            disabled={idx === tracks.length - 1}
+                            onClick={() => moveTrack(idx, 1)}
+                          >
+                            <ChevronDown className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
                       </motion.div>
                     ))}
                   </div>
