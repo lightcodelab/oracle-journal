@@ -9,10 +9,10 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Aged Parchment — member-facing theme */
-    --background: 39 53% 89%;
+    --background: 20 50% 85%;
     --foreground: 31 27% 18%;
 
-    --card: 40 55% 93%;
+    --card: 22 45% 89%;
     --card-foreground: 31 27% 18%;
 
     --popover: 40 58% 95%;
@@ -41,7 +41,7 @@ All colors MUST be HSL.
 
     /* Brand secondary colors */
     --brand-dark: 31 27% 18%;
-    --brand-cream: 39 53% 89%;
+    --brand-cream: 20 50% 85%;
     --brand-red-dark: 0 55% 28%;
     --brand-red-light: 0 37% 46%;
 
@@ -100,9 +100,9 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     background-image:
-      radial-gradient(ellipse at 12% 8%, hsl(38 44% 78% / 0.55), transparent 55%),
-      radial-gradient(ellipse at 88% 92%, hsl(36 40% 74% / 0.5), transparent 55%),
-      radial-gradient(ellipse at 50% 50%, hsl(42 60% 95% / 0.65), transparent 70%);
+      radial-gradient(ellipse at 12% 8%, hsl(18 42% 76% / 0.55), transparent 55%),
+      radial-gradient(ellipse at 88% 92%, hsl(16 38% 72% / 0.5), transparent 55%),
+      radial-gradient(ellipse at 50% 50%, hsl(22 60% 92% / 0.65), transparent 70%);
     background-attachment: fixed;
   }
 
