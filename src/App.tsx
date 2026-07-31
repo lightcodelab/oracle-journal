@@ -89,7 +89,6 @@ const App = () => {
           <NewsletterBanner />
         <BrowserRouter>
           <ThemeScope />
-          <LetterOpening />
           <Routes>
             <Route path="/" element={<Membership />} />
             <Route path="/membership" element={<Navigate to="/" replace />} />
