@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { useInstallApp } from '@/components/InstallAppDialog';
 import GlobalSearch from '@/components/GlobalSearch';
+import ThemeModeToggle from '@/components/ThemeModeToggle';
 
 interface ProfileDropdownProps {
   onSignOut?: () => void;
@@ -147,6 +148,7 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
   return (
     <div className="flex items-center gap-1">
       <GlobalSearch />
+      <ThemeModeToggle />
       <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
