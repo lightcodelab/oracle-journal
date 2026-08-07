@@ -265,11 +265,8 @@ const DevotionResourcePage = () => {
       // then fall back to the other form so both route shapes always resolve.
       let { data: resourceData, error: resourceError } = await buildContentQuery(isIdLookup);
 
-      if (!resourceData && !isIdLookup) {
-        const fallback = await buildContentQuery(true);
-        resourceData = fallback.data;
-        resourceError = fallback.error;
-      } else if (!resourceData && isIdLookup) {
+      // Only the UUID form can be retried against `id` (a non-UUID would be a cast error).
+      if (!resourceData && isIdLookup) {
         const fallback = await buildContentQuery(false);
         resourceData = fallback.data;
         resourceError = fallback.error;
