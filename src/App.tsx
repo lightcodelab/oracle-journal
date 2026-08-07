@@ -163,6 +163,7 @@ const App = () => {
         </BrowserRouter>
         </InstallAppProvider>
         </EncryptionProvider>
+       </ThemeModeProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
