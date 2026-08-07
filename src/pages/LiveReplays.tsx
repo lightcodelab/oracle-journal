@@ -111,7 +111,7 @@ export default function LiveReplays() {
     );
   }
 
-  // Show access denied if user doesn't have communion (T3) access
+  // Show access denied unless the member has full Temple access
   if (!canAccessReplays) {
     return (
       <div className="min-h-screen bg-background py-12 px-4 relative">
@@ -136,7 +136,7 @@ export default function LiveReplays() {
               Live Session Replays
             </h1>
             <p className="text-muted-foreground">
-              Access to live session replays requires The Initiate membership tier.
+              Access to live session replays requires an active Temple membership.
             </p>
             {tierName && (
               <p className="text-sm text-muted-foreground">
