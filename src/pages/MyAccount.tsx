@@ -35,29 +35,24 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+// One membership: every member receives full Temple access. The legacy
+// tier codes remain as keys only for older records; they all map to the
+// same full-access feature set.
+const FULL_TEMPLE_FEATURES: string[] = [
+  "Digital Oracle Decks",
+  "Card Readings & Saved Readings",
+  "Digital Journal",
+  "Guided Meditations",
+  "AI AreekeerA® Guide",
+  "Energy Hygiene & Healing Templates",
+  "Live Readings, Classes & Workshops",
+  "Session Replays",
+];
+
 const TIER_FEATURES: Record<string, string[]> = {
-  T1: [
-    "Digital Oracle Decks",
-    "Card Readings",
-    "Saved Readings",
-    "Digital Journal",
-  ],
-  T2: [
-    "All Seeker features",
-    "Guided Meditations",
-    "AI AreekeerA Guide",
-    
-    "Energy Hygiene",
-    "Healing Templates",
-  ],
-  T3: [
-    "All Devotee features",
-    "Live Readings",
-    "Live Classes",
-    "Live Workshops",
-    "Live Meditations",
-    "Session Replays",
-  ],
+  T1: FULL_TEMPLE_FEATURES,
+  T2: FULL_TEMPLE_FEATURES,
+  T3: FULL_TEMPLE_FEATURES,
 };
 
 const MyAccount = () => {
