@@ -893,34 +893,58 @@ export type Database = {
         Row: {
           active: boolean
           admin_notes: string | null
+          bridge_codes: string[]
           content_resource_id: string | null
           course_id: string | null
           created_at: string
+          duration_minutes: number | null
           healing_resource_id: string | null
           id: string
+          intensity_level: number | null
           lesson_id: string | null
+          modality_codes: string[]
+          sequence_stage: number | null
+          suspended_at: string | null
+          suspended_by: string | null
+          suspension_reason: string | null
           updated_at: string
         }
         Insert: {
           active?: boolean
           admin_notes?: string | null
+          bridge_codes?: string[]
           content_resource_id?: string | null
           course_id?: string | null
           created_at?: string
+          duration_minutes?: number | null
           healing_resource_id?: string | null
           id?: string
+          intensity_level?: number | null
           lesson_id?: string | null
+          modality_codes?: string[]
+          sequence_stage?: number | null
+          suspended_at?: string | null
+          suspended_by?: string | null
+          suspension_reason?: string | null
           updated_at?: string
         }
         Update: {
           active?: boolean
           admin_notes?: string | null
+          bridge_codes?: string[]
           content_resource_id?: string | null
           course_id?: string | null
           created_at?: string
+          duration_minutes?: number | null
           healing_resource_id?: string | null
           id?: string
+          intensity_level?: number | null
           lesson_id?: string | null
+          modality_codes?: string[]
+          sequence_stage?: number | null
+          suspended_at?: string | null
+          suspended_by?: string | null
+          suspension_reason?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -6682,6 +6706,18 @@ export type Database = {
       admin_test_reset_user_lifecycle: {
         Args: { _user_id: string }
         Returns: Json
+      }
+      arrival_admin_suspend_resource: {
+        Args: { _reason: string; _registry_id: string }
+        Returns: undefined
+      }
+      arrival_admin_unsuspend_resource: {
+        Args: { _registry_id: string }
+        Returns: undefined
+      }
+      arrival_codes_valid: {
+        Args: { _codes: string[]; _vocab: string[] }
+        Returns: boolean
       }
       arrival_reasons_valid: { Args: { _reasons: Json }; Returns: boolean }
       assert_caller_is_admin: { Args: never; Returns: string }
