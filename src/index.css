@@ -109,7 +109,9 @@ All colors MUST be HSL.
   }
 
   .admin-theme body,
-  body:has(.admin-theme) {
+  body:has(.admin-theme),
+  .dark-theme body,
+  body:has(.dark-theme) {
     background-image: none;
   }
 }
