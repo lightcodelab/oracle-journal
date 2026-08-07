@@ -70,6 +70,7 @@ import QuizPlayer from "./pages/QuizPlayer";
 import OAuthConsent from "./pages/OAuthConsent";
 import AdminHomeRecommendations from "./pages/AdminHomeRecommendations";
 import ThemeScope from "./components/ThemeScope";
+import { ThemeModeProvider } from "./hooks/useThemeMode";
 import { captureRefFromQueryString } from "@/lib/affiliateTracking";
 import { useEffect } from "react";
 const queryClient = new QueryClient();
@@ -82,6 +83,7 @@ const App = () => {
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
+       <ThemeModeProvider>
         <EncryptionProvider>
           <Toaster />
           <Sonner />
@@ -161,6 +163,7 @@ const App = () => {
         </BrowserRouter>
         </InstallAppProvider>
         </EncryptionProvider>
+       </ThemeModeProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
