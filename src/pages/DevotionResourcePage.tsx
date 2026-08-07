@@ -214,10 +214,16 @@ const DevotionResourcePage = () => {
         return;
       }
 
-      // Standard content_resources query
-      let query = supabase
-        .from('content_resources')
-        .select(`
+      // Standard content_resources lookup.
+      // Supports the canonical ID route `/devotion/resources/content-<id>`
+      // as well as the legacy slug route, mirroring healing resources.
+      const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      const contentIdentifier = slug.startsWith('content-')
+        ? slug.replace('content-', '')
+        : slug;
+      const isIdLookup = UUID_RE.test(contentIdentifier);
+
+      const contentSelect = `
           id,
           title,
           slug,
@@ -238,15 +244,36 @@ const DevotionResourcePage = () => {
             name,
             slug
           )
-        `)
-        .eq('slug', slug);
+      `;
 
-      // Non-admins can only see published resources
-      if (!userIsAdmin) {
-        query = query.eq('status', 'published');
+      const buildContentQuery = (byId: boolean) => {
+        let q = supabase
+          .from('content_resources')
+          .select(contentSelect);
+
+        q = byId ? q.eq('id', contentIdentifier) : q.eq('slug', contentIdentifier);
+
+        // Non-admins can only see published resources
+        if (!userIsAdmin) {
+          q = q.eq('status', 'published');
+        }
+
+        return q.maybeSingle();
+      };
+
+      // Prefer the ID lookup when the identifier is a UUID, else resolve by slug,
+      // then fall back to the other form so both route shapes always resolve.
+      let { data: resourceData, error: resourceError } = await buildContentQuery(isIdLookup);
+
+      if (!resourceData && !isIdLookup) {
+        const fallback = await buildContentQuery(true);
+        resourceData = fallback.data;
+        resourceError = fallback.error;
+      } else if (!resourceData && isIdLookup) {
+        const fallback = await buildContentQuery(false);
+        resourceData = fallback.data;
+        resourceError = fallback.error;
       }
-
-      const { data: resourceData, error: resourceError } = await query.single();
 
       if (resourceError || !resourceData) {
         setError('Resource not found');
