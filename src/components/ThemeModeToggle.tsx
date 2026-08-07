@@ -13,9 +13,19 @@ const ThemeModeToggle = () => {
       onClick={toggleMode}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="text-foreground/70 hover:text-foreground"
+      className="text-foreground/70 hover:text-foreground gap-1.5"
     >
-      {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+      {isDark ? (
+        <>
+          <Sun className="w-4 h-4" />
+          <span className="text-xs font-medium">Light</span>
+        </>
+      ) : (
+        <>
+          <Moon className="w-4 h-4" />
+          <span className="text-xs font-medium">Dark</span>
+        </>
+      )}
     </Button>
   );
 };
