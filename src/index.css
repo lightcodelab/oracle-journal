@@ -98,9 +98,10 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     background-image:
       url('/__l5e/assets-v1/cad2aee1-ba12-4567-a526-67695b00a5d0/paper-texture-bg.png');
+    background-color: transparent;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
