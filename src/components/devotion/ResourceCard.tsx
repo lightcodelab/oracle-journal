@@ -11,9 +11,10 @@ interface ResourceCardProps {
   showDraftBadge?: boolean;
   basePath?: string; // e.g., '/devotion' or '/remembrance'
   comingSoon?: boolean;
+  squareThumb?: boolean;
 }
 
-const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/devotion', comingSoon = false }: ResourceCardProps) => {
+const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/devotion', comingSoon = false, squareThumb = false }: ResourceCardProps) => {
   const navigate = useNavigate();
 
   const getMediaIcon = () => {
