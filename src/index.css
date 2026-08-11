@@ -57,42 +57,42 @@ All colors MUST be HSL.
   /* Admin tooling keeps the original dark Temple palette */
   .admin-theme,
   .dark-theme {
-    --background: 34 100% 3%;
+    --background: 25 45% 18%;
     --foreground: 34 12% 88%;
 
     --on-image: 40 45% 96%;
 
-    --card: 34 40% 8%;
+    --card: 25 35% 14%;
     --card-foreground: 34 12% 88%;
 
-    --popover: 34 40% 8%;
+    --popover: 25 35% 14%;
     --popover-foreground: 34 12% 88%;
 
     --primary: 40 57% 43%;
     --primary-foreground: 34 12% 95%;
 
-    --secondary: 34 20% 15%;
+    --secondary: 25 25% 22%;
     --secondary-foreground: 34 12% 88%;
 
-    --muted: 34 15% 18%;
+    --muted: 25 20% 24%;
     --muted-foreground: 34 20% 60%;
 
     --accent: 40 57% 50%;
-    --accent-foreground: 34 100% 3%;
+    --accent-foreground: 25 45% 18%;
 
     --destructive: 0 55% 28%;
     --destructive-foreground: 0 37% 90%;
 
-    --border: 34 20% 20%;
-    --input: 34 20% 15%;
+    --border: 25 20% 26%;
+    --input: 25 25% 20%;
     --ring: 40 57% 43%;
 
-    --brand-dark: 34 100% 3%;
+    --brand-dark: 25 45% 18%;
     --brand-cream: 34 12% 88%;
     --brand-red-light: 0 37% 66%;
 
-    --gradient-cosmic: linear-gradient(135deg, hsl(40 57% 35%), hsl(34 40% 15%));
-    --gradient-card: linear-gradient(180deg, hsl(34 40% 10%), hsl(34 40% 6%));
+    --gradient-cosmic: linear-gradient(135deg, hsl(40 57% 35%), hsl(25 30% 22%));
+    --gradient-card: linear-gradient(180deg, hsl(25 30% 18%), hsl(25 30% 12%));
     --glow-mystical: 0 0 40px hsl(40 57% 43% / 0.3);
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
