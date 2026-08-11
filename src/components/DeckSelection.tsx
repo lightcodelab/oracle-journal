@@ -206,8 +206,13 @@ export const DeckSelection = ({
                         </div>
                       </div>
                       {deck.theme && (
-                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                        <p className="text-sm text-muted-foreground/80 line-clamp-1 mb-1">
                           {deck.theme}
+                        </p>
+                      )}
+                      {deck.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                          {deck.description}
                         </p>
                       )}
                       <Badge variant="secondary" className="text-xs">
