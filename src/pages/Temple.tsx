@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Home } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useMemberState } from "@/hooks/useMemberState";
@@ -121,6 +122,12 @@ const Temple = () => {
     if (memberError) {
       return (
         <div className="min-h-screen bg-background relative">
+          <div className="absolute top-4 left-4 z-20 flex items-center gap-2 text-foreground">
+            <Home className="h-5 w-5" aria-hidden="true" />
+            <span className="font-serif text-sm sm:text-base tracking-wide">
+              The Temple of Sustainment
+            </span>
+          </div>
           <div className="absolute top-4 right-4 z-20">
             <NavActions />
           </div>
@@ -156,6 +163,12 @@ const Temple = () => {
     // expired/join CTA copy.
     return (
       <div className="min-h-screen bg-background relative">
+        <div className="absolute top-4 left-4 z-20 flex items-center gap-2 text-foreground">
+          <Home className="h-5 w-5" aria-hidden="true" />
+          <span className="font-serif text-sm sm:text-base tracking-wide">
+            The Temple of Sustainment
+          </span>
+        </div>
         <div className="absolute top-4 right-4 z-20">
           <NavActions />
         </div>
@@ -180,6 +193,12 @@ const Temple = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <div className="absolute top-4 left-4 z-20 flex items-center gap-2 text-foreground">
+        <Home className="h-5 w-5" aria-hidden="true" />
+        <span className="font-serif text-sm sm:text-base tracking-wide">
+          The Temple of Sustainment
+        </span>
+      </div>
       <div className="absolute top-4 right-4 z-20">
         <NavActions />
       </div>
