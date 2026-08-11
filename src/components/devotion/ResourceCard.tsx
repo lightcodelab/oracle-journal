@@ -60,7 +60,7 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
         isDraft ? 'border-amber-500/50' : 'border-border'
       }`}>
         {/* Thumbnail */}
-        <div className="aspect-video w-full overflow-hidden bg-muted relative">
+        <div className={`${squareThumb ? 'aspect-square' : 'aspect-video'} w-full overflow-hidden bg-muted relative`}>
           {resource.thumbnail_url ? (
             <img
               src={resource.thumbnail_url}
