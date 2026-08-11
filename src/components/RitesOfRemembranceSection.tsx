@@ -56,7 +56,7 @@ const RitesOfRemembranceSection = () => {
               }}
               index={0}
               showDraftBadge={isAdmin}
-              basePath="/decks"
+              basePath="/remembrance"
             />
           </div>
         </div>
@@ -71,7 +71,7 @@ const RitesOfRemembranceSection = () => {
               }} 
               index={index} 
               showDraftBadge={isAdmin}
-              basePath="/decks"
+              basePath="/remembrance"
             />
           ))}
         </div>

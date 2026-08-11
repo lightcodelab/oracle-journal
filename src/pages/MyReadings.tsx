@@ -439,7 +439,7 @@ const MyReadings = () => {
                     : 'Draw cards from the Oracle decks and save your meaningful readings here.'}
                 </p>
                 {!searchQuery && (
-                  <Button onClick={() => navigate('/decks')}>
+                  <Button onClick={() => navigate('/remembrance')}>
                     <Sparkles className="h-4 w-4 mr-2" />
                     Explore Decks
                   </Button>

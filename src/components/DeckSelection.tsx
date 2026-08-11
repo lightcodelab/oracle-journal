@@ -130,7 +130,7 @@ export const DeckSelection = ({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              onClick={() => navigate('/decks/spreads')}
+              onClick={() => navigate('/remembrance/spreads')}
               className="group cursor-pointer"
             >
               <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30">

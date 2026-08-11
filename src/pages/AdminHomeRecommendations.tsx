@@ -162,7 +162,7 @@ export default function AdminHomeRecommendations() {
         r.toLowerCase().startsWith("data:") ||
         !/^\/[A-Za-z0-9/_\-\.\?\=\&\%\:]*$/.test(r)
       ) {
-        toast.error("Route must be a single internal path like /decks");
+        toast.error("Route must be a single internal path like /remembrance");
         return;
       }
     }
@@ -375,7 +375,7 @@ export default function AdminHomeRecommendations() {
                 <Label>Or internal route</Label>
                 <Input
                   disabled={!!form.resource_id}
-                  placeholder="/decks or /devotion/section/…"
+                  placeholder="/remembrance or /devotion/section/…"
                   value={form.internal_route ?? ""}
                   onChange={(e) =>
                     setForm((f) => ({
@@ -392,7 +392,7 @@ export default function AdminHomeRecommendations() {
                 <p className="text-xs text-muted-foreground mt-1">
                   Only Devotion-hosted resources are selectable above. To link a
                   Remembrance section or any other destination, use an internal
-                  route (e.g. <code>/decks</code> or
+                  route (e.g. <code>/remembrance</code> or
                   <code>/devotion/section/guided-meditations</code>).
                 </p>
               </div>

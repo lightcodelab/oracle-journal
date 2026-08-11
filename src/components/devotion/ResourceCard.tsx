@@ -9,7 +9,7 @@ interface ResourceCardProps {
   resource: ContentResource;
   index: number;
   showDraftBadge?: boolean;
-  basePath?: string; // e.g., '/devotion' or '/decks'
+  basePath?: string; // e.g., '/devotion' or '/remembrance'
   comingSoon?: boolean;
 }
 

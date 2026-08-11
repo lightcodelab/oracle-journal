@@ -60,7 +60,7 @@ export interface MemberState {
   error: boolean;
   /** Which authority is currently unlocking full Temple content, if any. */
   entitlementSource: EntitlementSource;
-  /** Shared gate for /temple, /decks, /devotion, /communion. */
+  /** Shared gate for /temple, /remembrance, /devotion, /communion. */
   hasFullTempleAccess: boolean;
 }
 
