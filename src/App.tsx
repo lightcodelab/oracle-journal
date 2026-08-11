@@ -95,12 +95,12 @@ const App = () => {
             <Route path="/" element={<Membership />} />
             <Route path="/membership" element={<Navigate to="/" replace />} />
             <Route path="/temple" element={<Temple />} />
-            <Route path="/decks" element={<Index />} />
-            <Route path="/decks/section/:section" element={<RemembranceSectionPage />} />
-            <Route path="/decks/spreads" element={<SacredSpreads />} />
-            <Route path="/decks/resources/:slug" element={<DevotionResourcePage />} />
-            <Route path="/decks/courses/:slug" element={<DevotionCoursePage />} />
-            <Route path="/decks/course/:courseId" element={<DevotionCoursePage />} />
+            <Route path="/remembrance" element={<Index />} />
+            <Route path="/remembrance/section/:section" element={<RemembranceSectionPage />} />
+            <Route path="/remembrance/spreads" element={<SacredSpreads />} />
+            <Route path="/remembrance/resources/:slug" element={<DevotionResourcePage />} />
+            <Route path="/remembrance/courses/:slug" element={<DevotionCoursePage />} />
+            <Route path="/remembrance/course/:courseId" element={<DevotionCoursePage />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/import-cards" element={<ImportCards />} />
             <Route path="/devotion" element={<DoorOfDevotion />} />

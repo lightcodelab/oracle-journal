@@ -78,7 +78,7 @@ const RemembranceCourseSection = () => {
               resource={course} 
               index={index} 
               showDraftBadge={isAdmin}
-              basePath="/decks"
+              basePath="/remembrance"
             />
           ))}
         </div>

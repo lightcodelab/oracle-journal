@@ -165,12 +165,12 @@ const SacredSpreads = () => {
 
   const breadcrumbItems = activeSpread
     ? [
-        { label: 'The Door of Remembrance', onClick: () => navigate('/decks'), icon: DoorOpen },
+        { label: 'The Door of Remembrance', onClick: () => navigate('/remembrance'), icon: DoorOpen },
         { label: 'Sacred Spreads', onClick: handleBackToSpreads },
         { label: activeSpread.name }
       ]
     : [
-        { label: 'The Door of Remembrance', onClick: () => navigate('/decks'), icon: DoorOpen },
+        { label: 'The Door of Remembrance', onClick: () => navigate('/remembrance'), icon: DoorOpen },
         { label: 'Sacred Spreads' }
       ];
 
