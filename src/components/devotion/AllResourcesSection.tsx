@@ -235,6 +235,7 @@ const AllResourcesSection = () => {
                 index={index}
                 showDraftBadge={isAdmin}
                 basePath="/devotion"
+                squareThumb
               />
             ))}
           </div>

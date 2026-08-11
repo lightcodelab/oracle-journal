@@ -11,9 +11,10 @@ interface ResourceCardProps {
   showDraftBadge?: boolean;
   basePath?: string; // e.g., '/devotion' or '/remembrance'
   comingSoon?: boolean;
+  squareThumb?: boolean;
 }
 
-const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/devotion', comingSoon = false }: ResourceCardProps) => {
+const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/devotion', comingSoon = false, squareThumb = false }: ResourceCardProps) => {
   const navigate = useNavigate();
 
   const getMediaIcon = () => {
@@ -59,7 +60,7 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
         isDraft ? 'border-amber-500/50' : 'border-border'
       }`}>
         {/* Thumbnail */}
-        <div className="aspect-video w-full overflow-hidden bg-muted relative">
+        <div className={`${squareThumb ? 'aspect-square' : 'aspect-video'} w-full overflow-hidden bg-muted relative`}>
           {resource.thumbnail_url ? (
             <img
               src={resource.thumbnail_url}
