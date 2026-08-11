@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import doorRemembrance from "@/assets/door-remembrance.png";
-import doorDevotion from "@/assets/door-devotion.png";
-import doorCommunion from "@/assets/door-communion.png";
+import doorRemembrance from "@/assets/door-of-remembrance-temple-thumbnail.webp.asset.json";
+import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
+import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BookHeart, Search, ListMusic, LineChart, Sparkles, HeartPulse } from "lucide-react";
 
 const doors = [
-  { name: "Remembrance", href: "/decks", image: doorRemembrance },
-  { name: "Devotion", href: "/devotion", image: doorDevotion },
-  { name: "Communion", href: "/communion", image: doorCommunion },
+  { name: "Remembrance", href: "/decks", image: doorRemembrance.url },
+  { name: "Devotion", href: "/devotion", image: doorDevotion.url },
+  { name: "Communion", href: "/communion", image: doorCommunion.url },
 ];
 
 const tools = [
@@ -55,11 +55,11 @@ export function ExploreDoors() {
               className="block group rounded-lg overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-label={`Open the Door of ${door.name}`}
             >
-              <div className="overflow-hidden rounded-lg">
+              <div className="overflow-hidden rounded-lg aspect-square">
                 <img
                   src={door.image}
                   alt={`The Door of ${door.name}`}
-                  className="w-full h-auto transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                  className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               </div>
               <p className="mt-2 font-serif text-lg text-foreground text-center">

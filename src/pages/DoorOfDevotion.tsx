@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Lock, ArrowUpRight, Folder, LayoutGrid, Grid3X3, DoorOpen } from 'lucide-react';
 import AllResourcesSection from '@/components/devotion/AllResourcesSection';
 import { useTierAccess } from '@/hooks/useTierAccess';
+import { DoorHeader } from '@/components/temple/DoorHeader';
+import devotionHeader from '@/assets/door-devotion-header-v1.webp.asset.json';
 
 interface LocationCategory {
   id: string;
@@ -196,10 +198,7 @@ const DoorOfDevotion = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <DoorOpen className="w-10 h-10 text-primary mx-auto mb-4" />
-          <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
-            The Door of Devotion
-          </h1>
+          <DoorHeader image={devotionHeader.url} title="The Door of Devotion" />
            <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto mb-6">
              Resources for nervous system regulation, physical wellbeing restoration, and embodied repair through Energetic Healing.
            </p>

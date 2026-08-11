@@ -12,6 +12,9 @@ All colors MUST be HSL.
     --background: 20 50% 85%;
     --foreground: 31 27% 18%;
 
+    /* Text placed over photographic imagery — theme-independent */
+    --on-image: 40 45% 96%;
+
     --card: 22 45% 89%;
     --card-foreground: 31 27% 18%;
 
@@ -56,6 +59,8 @@ All colors MUST be HSL.
   .dark-theme {
     --background: 34 100% 3%;
     --foreground: 34 12% 88%;
+
+    --on-image: 40 45% 96%;
 
     --card: 34 40% 8%;
     --card-foreground: 34 12% 88%;
