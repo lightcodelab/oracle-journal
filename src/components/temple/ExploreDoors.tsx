@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import doorRemembrance from "@/assets/door-of-remembrance-temple-thumbnail.webp.asset.json";
+import doorRemembrance from "@/assets/door-of-remembrance-4.png.asset.json";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
 import { Input } from "@/components/ui/input";
