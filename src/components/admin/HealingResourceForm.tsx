@@ -1248,7 +1248,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               </div>
             )}
 
-            <ScrollArea className="max-h-[200px] pr-4">
+            <ScrollArea className="h-[60vh] pr-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {filteredConditions.map(condition => (
                   <div
@@ -1359,7 +1359,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               </div>
             )}
 
-            <ScrollArea className="max-h-[240px] pr-4">
+            <ScrollArea className="h-[60vh] pr-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {filteredTags.map(tag => (
                   <div
