@@ -185,8 +185,8 @@ export default function LiveReplays() {
           </div>
 
           {/* Filter Tabs */}
-          <div className="flex justify-center">
-            <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)}>
+          <div className="flex justify-center min-w-0">
+            <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)} className="max-w-full min-w-0">
               <TabsList>
                 <TabsTrigger value="all">All Replays</TabsTrigger>
                 <TabsTrigger value="reading" className="flex items-center gap-1">
