@@ -122,9 +122,9 @@ const Temple = () => {
     if (memberError) {
       return (
         <div className="min-h-screen bg-background relative">
-          <div className="absolute top-4 left-4 z-20 flex items-center gap-2 text-foreground">
-            <Home className="h-5 w-5" aria-hidden="true" />
-            <span className="font-serif text-sm sm:text-base tracking-wide">
+          <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-sm text-muted-foreground">
+            <Home className="h-3.5 w-3.5" aria-hidden="true" />
+            <span className="font-medium hover:text-foreground transition-colors">
               The Temple of Sustainment
             </span>
           </div>
@@ -163,9 +163,9 @@ const Temple = () => {
     // expired/join CTA copy.
     return (
       <div className="min-h-screen bg-background relative">
-        <div className="absolute top-4 left-4 z-20 flex items-center gap-2 text-foreground">
-          <Home className="h-5 w-5" aria-hidden="true" />
-          <span className="font-serif text-sm sm:text-base tracking-wide">
+        <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-sm text-muted-foreground">
+          <Home className="h-3.5 w-3.5" aria-hidden="true" />
+          <span className="font-medium hover:text-foreground transition-colors">
             The Temple of Sustainment
           </span>
         </div>
