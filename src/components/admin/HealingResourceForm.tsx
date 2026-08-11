@@ -742,6 +742,11 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     c.name.toLowerCase().includes(conditionSearch.toLowerCase())
   );
 
+  const filteredTags = tags.filter(t =>
+    t.name.toLowerCase().includes(tagSearch.toLowerCase()) ||
+    (t.category || '').toLowerCase().includes(tagSearch.toLowerCase())
+  );
+
   const groupedSymptoms = filteredSymptoms.reduce((acc, symptom) => {
     if (!acc[symptom.domain]) {
       acc[symptom.domain] = [];
