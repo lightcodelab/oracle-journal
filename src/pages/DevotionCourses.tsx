@@ -250,7 +250,7 @@ const DevotionCourses = () => {
                     >
                       <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30">
                         {course.image_url ? (
-                          <div className="aspect-square overflow-hidden">
+                          <div className="aspect-video overflow-hidden">
                             <img
                               src={course.image_url}
                               alt={course.title}
@@ -258,7 +258,7 @@ const DevotionCourses = () => {
                             />
                           </div>
                         ) : (
-                          <div className="aspect-square bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                          <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
                             <span className="text-primary/50 font-serif text-2xl">✦</span>
                           </div>
                         )}
