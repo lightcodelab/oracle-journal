@@ -1275,6 +1275,121 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               )}
             </ScrollArea>
           </div>
+
+          {/* General Tags Section */}
+          <Separator className="my-4" />
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <TagIcon className="w-5 h-5 text-primary" />
+                <Label className="text-base font-medium">General Tags</Label>
+              </div>
+              <Dialog open={addTagOpen} onOpenChange={setAddTagOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add a new Tag
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add New Tag</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 pt-4">
+                    <div>
+                      <Label htmlFor="tagName">Tag Name *</Label>
+                      <Input
+                        id="tagName"
+                        value={newTagName}
+                        onChange={(e) => setNewTagName(e.target.value)}
+                        placeholder="e.g., Lilac Light, Pyramid, Waterfall"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="tagCategory">Category (optional)</Label>
+                      <Input
+                        id="tagCategory"
+                        value={newTagCategory}
+                        onChange={(e) => setNewTagCategory(e.target.value)}
+                        placeholder="e.g., visual, colour, setting"
+                      />
+                    </div>
+                    <div className="flex justify-end gap-2 pt-2">
+                      <Button variant="outline" onClick={() => setAddTagOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleAddTag} disabled={addingTag}>
+                        {addingTag && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                        Add Tag
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Descriptive tags — including the visual imagery that identifies this resource — used for search and discovery.
+            </p>
+
+            <Input
+              placeholder="Search tags..."
+              value={tagSearch}
+              onChange={(e) => setTagSearch(e.target.value)}
+              className="mb-4"
+            />
+
+            {selectedTagIds.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4 p-3 bg-muted/50 rounded-md">
+                <span className="text-sm text-muted-foreground">Selected:</span>
+                {selectedTagIds.map(id => {
+                  const tag = tags.find(t => t.id === id);
+                  return tag ? (
+                    <Badge
+                      key={id}
+                      variant="secondary"
+                      className="cursor-pointer"
+                      onClick={() => toggleTag(id)}
+                    >
+                      {tag.name}
+                      <X className="w-3 h-3 ml-1" />
+                    </Badge>
+                  ) : null;
+                })}
+              </div>
+            )}
+
+            <ScrollArea className="max-h-[240px] pr-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {filteredTags.map(tag => (
+                  <div
+                    key={tag.id}
+                    className={`flex items-center space-x-3 p-2 rounded-md cursor-pointer transition-colors ${
+                      selectedTagIds.includes(tag.id)
+                        ? 'bg-primary/10 border border-primary/30'
+                        : 'hover:bg-muted'
+                    }`}
+                    onClick={() => toggleTag(tag.id)}
+                  >
+                    <Checkbox
+                      checked={selectedTagIds.includes(tag.id)}
+                      onCheckedChange={() => toggleTag(tag.id)}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <span className="text-sm">{tag.name}</span>
+                    {tag.category && (
+                      <Badge variant="outline" className="text-xs">{tag.category}</Badge>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {filteredTags.length === 0 && (
+                <p className="text-center text-muted-foreground py-8">
+                  No tags found. Click "Add a new Tag" to create one.
+                </p>
+              )}
+            </ScrollArea>
+          </div>
         </TabsContent>
 
         {/* Media Tab */}
