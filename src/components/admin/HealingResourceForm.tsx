@@ -49,6 +49,12 @@ interface Condition {
   description: string | null;
 }
 
+interface ResourceTag {
+  id: string;
+  name: string;
+  category: string | null;
+}
+
 interface HealingResourceFormProps {
   resourceId?: string;
   onSuccess?: () => void;
@@ -120,6 +126,15 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [newConditionDescription, setNewConditionDescription] = useState('');
   const [addingCondition, setAddingCondition] = useState(false);
 
+  // General tags state
+  const [tags, setTags] = useState<ResourceTag[]>([]);
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+  const [tagSearch, setTagSearch] = useState('');
+  const [addTagOpen, setAddTagOpen] = useState(false);
+  const [newTagName, setNewTagName] = useState('');
+  const [newTagCategory, setNewTagCategory] = useState('');
+  const [addingTag, setAddingTag] = useState(false);
+
   // Resource edit lock - prevents simultaneous editing by multiple admins
   const { isLocked, lockedBy, isLoading: lockLoading, acquireLock } = useResourceEditLock({
     resourceType: 'healing',
@@ -156,6 +171,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     loadSymptoms();
     loadConditions();
     loadLocations();
+    loadTags();
     if (resourceId) {
       loadResource();
     }
@@ -197,6 +213,50 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     
     if (data) {
       setConditions(data);
+    }
+  };
+
+  const loadTags = async () => {
+    const { data } = await supabase
+      .from('resource_tags')
+      .select('*')
+      .order('name', { ascending: true });
+
+    if (data) {
+      setTags(data as ResourceTag[]);
+    }
+  };
+
+  const handleAddTag = async () => {
+    if (!newTagName.trim()) {
+      toast({ title: 'Name required', description: 'Please enter a tag name.', variant: 'destructive' });
+      return;
+    }
+    setAddingTag(true);
+    try {
+      const { data, error } = await supabase
+        .from('resource_tags')
+        .insert({ name: newTagName.trim(), category: newTagCategory.trim() || null })
+        .select()
+        .single();
+      if (error) throw error;
+      const created = data as ResourceTag;
+      setTags(prev => [...prev, created].sort((a, b) => a.name.localeCompare(b.name)));
+      setSelectedTagIds(prev => [...prev, created.id]);
+      setNewTagName('');
+      setNewTagCategory('');
+      setAddTagOpen(false);
+      toast({ title: 'Tag added', description: `"${created.name}" is now available.` });
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message?.includes('duplicate')
+          ? 'A tag with that name already exists.'
+          : 'Failed to create tag.',
+        variant: 'destructive',
+      });
+    } finally {
+      setAddingTag(false);
     }
   };
 
