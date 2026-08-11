@@ -17,10 +17,14 @@ export default function ThemeScope() {
     root.classList.toggle("dark-theme", !isAdmin && mode === "dark");
     root.classList.toggle("dark", isAdmin || mode === "dark");
 
-    const dark = isAdmin || mode === "dark";
+    const themeColor = isAdmin
+      ? "#0D0800"
+      : mode === "dark"
+        ? "#2e2608"
+        : "#F2E8D5";
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", dark ? "#0D0800" : "#F2E8D5");
+      ?.setAttribute("content", themeColor);
   }, [pathname, mode]);
 
   return null;
