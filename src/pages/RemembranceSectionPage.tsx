@@ -98,7 +98,7 @@ const RemembranceSectionPage = () => {
 
   // Redirect if location doesn't exist in database
   if (!locationInfo) {
-    navigate('/decks');
+    navigate('/remembrance');
     return null;
   }
 
@@ -111,7 +111,7 @@ const RemembranceSectionPage = () => {
       <div className="min-h-screen bg-background py-12 px-4 relative">
         <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
           <PageBreadcrumb items={[
-            { label: 'The Door of Remembrance', href: '/decks', icon: DoorOpen },
+            { label: 'The Door of Remembrance', href: '/remembrance', icon: DoorOpen },
             { label: sectionTitle }
           ]} />
           <ProfileDropdown />
@@ -142,7 +142,7 @@ const RemembranceSectionPage = () => {
                 {isActiveMember ? 'Upgrade Membership' : 'View Memberships'}
                 <ArrowUpRight className="w-4 h-4 ml-2" />
               </Button>
-              <Button variant="ghost" onClick={() => navigate('/decks')}>
+              <Button variant="ghost" onClick={() => navigate('/remembrance')}>
                 Return to Door of Remembrance
               </Button>
             </div>
@@ -157,7 +157,7 @@ const RemembranceSectionPage = () => {
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <PageBreadcrumb items={[
-          { label: 'The Door of Remembrance', href: '/decks', icon: DoorOpen },
+          { label: 'The Door of Remembrance', href: '/remembrance', icon: DoorOpen },
           { label: sectionTitle }
         ]} />
         <div className="flex items-center gap-3">
@@ -176,7 +176,7 @@ const RemembranceSectionPage = () => {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate('/decks')}
+          onClick={() => navigate('/remembrance')}
           className="mb-6"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -225,7 +225,7 @@ const RemembranceSectionPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {resources.map((resource, index) => (
-              <ResourceCard key={resource.id} resource={resource} index={index} showDraftBadge={isAdmin} basePath="/decks" />
+              <ResourceCard key={resource.id} resource={resource} index={index} showDraftBadge={isAdmin} basePath="/remembrance" />
             ))}
           </div>
         )}
