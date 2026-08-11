@@ -9,6 +9,8 @@ import taoshBanner from "@/assets/taosh-thumbnail.png.asset.json";
 import RemembranceCourseSection from "@/components/RemembranceCourseSection";
 import RitesOfRemembranceSection from "@/components/RitesOfRemembranceSection";
 import sacredSpreadsBanner from "@/assets/sacred-spreads-thumbnail.png.asset.json";
+import remembranceHeader from "@/assets/door-remembrance-header-v1.webp.asset.json";
+import { DoorHeader } from "@/components/temple/DoorHeader";
 
 interface Deck {
   id: string;
@@ -48,10 +50,7 @@ export const DeckSelection = ({
           transition={{ duration: 0.8 }}
           className="text-center"
         >
-          <DoorOpen className="w-10 h-10 text-primary mx-auto mb-4" />
-          <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
-            The Door of Remembrance
-          </h1>
+          <DoorHeader image={remembranceHeader.url} title="The Door of Remembrance" />
           <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
             <span className="font-bold text-primary">A space to remember who you are beneath distortion, protection, and pattern.</span>
             <br />

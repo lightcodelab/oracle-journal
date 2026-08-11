@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useTierAccess } from '@/hooks/useTierAccess';
+import { DoorHeader } from '@/components/temple/DoorHeader';
+import communionHeader from '@/assets/door-communion-header-v1.webp.asset.json';
 
 interface CommunionCategory {
   id: string;
@@ -193,9 +195,7 @@ export default function DoorOfCommunion() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
-            The Door of Communion
-          </h1>
+          <DoorHeader image={communionHeader.url} title="The Door of Communion" />
           <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
             Connect with our community through live sessions, readings, and interactive experiences.
           </p>

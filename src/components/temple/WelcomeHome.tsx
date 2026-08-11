@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { FounderBadge } from "@/components/FounderBadge";
-import templeBanner from "@/assets/temple-banner.png";
+import templeBannerAsset from "@/assets/homepage-banner.webp.asset.json";
 
 interface WelcomeHomeProps {
   displayName: string | null;
@@ -18,12 +18,15 @@ export function WelcomeHome({ displayName, showFounderBadge, foundingSince }: We
       className="mb-8"
       aria-labelledby="temple-welcome-heading"
     >
-      <img
-        src={templeBanner}
-        alt=""
-        aria-hidden="true"
-        className="w-full h-auto rounded-lg mb-6"
-      />
+      <div className="relative w-full overflow-hidden rounded-lg mb-6">
+        <img
+          src={templeBannerAsset.url}
+          alt=""
+          aria-hidden="true"
+          className="w-full h-[140px] sm:h-[180px] md:h-[220px] object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 to-transparent" />
+      </div>
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
         <h1
           id="temple-welcome-heading"
