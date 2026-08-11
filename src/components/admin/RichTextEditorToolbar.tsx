@@ -29,11 +29,13 @@ import {
   Undo,
   Redo,
   Loader2,
+  ImagePlus,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import ImageLibraryDialog from './ImageLibraryDialog';
 
 interface RichTextEditorToolbarProps {
   editor: Editor;
@@ -76,6 +78,7 @@ export default function RichTextEditorToolbar({ editor }: RichTextEditorToolbarP
   const [uploading, setUploading] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
   const [linkOpen, setLinkOpen] = useState(false);
+  const [libraryOpen, setLibraryOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   // TipTap's `editor.isActive()` won't cause React re-renders by itself.
   // We force a re-render on selection/transaction so toolbar active states stay in sync.
@@ -379,7 +382,7 @@ export default function RichTextEditorToolbar({ editor }: RichTextEditorToolbarP
       <ToolbarButton
         onClick={() => fileInputRef.current?.click()}
         disabled={uploading}
-        title="Insert Image"
+        title="Upload new image"
       >
         {uploading ? (
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -387,6 +390,17 @@ export default function RichTextEditorToolbar({ editor }: RichTextEditorToolbarP
           <Image className="h-4 w-4" />
         )}
       </ToolbarButton>
+      <ToolbarButton
+        onClick={() => setLibraryOpen(true)}
+        title="Choose from image library"
+      >
+        <ImagePlus className="h-4 w-4" />
+      </ToolbarButton>
+      <ImageLibraryDialog
+        open={libraryOpen}
+        onOpenChange={setLibraryOpen}
+        onSelect={(url) => editor.chain().focus().setImage({ src: url }).run()}
+      />
       <input
         ref={fileInputRef}
         type="file"
