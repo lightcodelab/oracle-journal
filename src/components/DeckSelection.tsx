@@ -54,7 +54,7 @@ export const DeckSelection = ({
           <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
             <span className="font-bold text-primary">A space to remember who you are beneath distortion, protection, and pattern.</span>
             <br />
-            Begin at the foundation. Return as often as needed.
+            Begin at the foundation. Return whenever you need to.
           </p>
         </motion.div>
       </div>
