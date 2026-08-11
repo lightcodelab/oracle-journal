@@ -17,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus, Music, CalendarIcon, Heart, UtensilsCrossed } from 'lucide-react';
+import { Loader2, Upload, X, ImageIcon, Link as LinkIcon, Sparkles, Eye, BookOpen, Users, AlertTriangle, Plus, Music, CalendarIcon, Heart, UtensilsCrossed, Tag as TagIcon } from 'lucide-react';
 import AudioFileList from './AudioFileList';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
@@ -47,6 +47,12 @@ interface Condition {
   id: string;
   name: string;
   description: string | null;
+}
+
+interface ResourceTag {
+  id: string;
+  name: string;
+  category: string | null;
 }
 
 interface HealingResourceFormProps {
@@ -120,6 +126,15 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
   const [newConditionDescription, setNewConditionDescription] = useState('');
   const [addingCondition, setAddingCondition] = useState(false);
 
+  // General tags state
+  const [tags, setTags] = useState<ResourceTag[]>([]);
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+  const [tagSearch, setTagSearch] = useState('');
+  const [addTagOpen, setAddTagOpen] = useState(false);
+  const [newTagName, setNewTagName] = useState('');
+  const [newTagCategory, setNewTagCategory] = useState('');
+  const [addingTag, setAddingTag] = useState(false);
+
   // Resource edit lock - prevents simultaneous editing by multiple admins
   const { isLocked, lockedBy, isLoading: lockLoading, acquireLock } = useResourceEditLock({
     resourceType: 'healing',
@@ -156,6 +171,7 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     loadSymptoms();
     loadConditions();
     loadLocations();
+    loadTags();
     if (resourceId) {
       loadResource();
     }
@@ -197,6 +213,50 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     
     if (data) {
       setConditions(data);
+    }
+  };
+
+  const loadTags = async () => {
+    const { data } = await supabase
+      .from('resource_tags')
+      .select('*')
+      .order('name', { ascending: true });
+
+    if (data) {
+      setTags(data as ResourceTag[]);
+    }
+  };
+
+  const handleAddTag = async () => {
+    if (!newTagName.trim()) {
+      toast({ title: 'Name required', description: 'Please enter a tag name.', variant: 'destructive' });
+      return;
+    }
+    setAddingTag(true);
+    try {
+      const { data, error } = await supabase
+        .from('resource_tags')
+        .insert({ name: newTagName.trim(), category: newTagCategory.trim() || null })
+        .select()
+        .single();
+      if (error) throw error;
+      const created = data as ResourceTag;
+      setTags(prev => [...prev, created].sort((a, b) => a.name.localeCompare(b.name)));
+      setSelectedTagIds(prev => [...prev, created.id]);
+      setNewTagName('');
+      setNewTagCategory('');
+      setAddTagOpen(false);
+      toast({ title: 'Tag added', description: `"${created.name}" is now available.` });
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message?.includes('duplicate')
+          ? 'A tag with that name already exists.'
+          : 'Failed to create tag.',
+        variant: 'destructive',
+      });
+    } finally {
+      setAddingTag(false);
     }
   };
 
@@ -367,6 +427,16 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       
       if (conditionMappings) {
         setSelectedConditionIds(conditionMappings.map(m => m.condition_id));
+      }
+
+      // Load linked general tags
+      const { data: tagAssignments } = await supabase
+        .from('resource_tag_assignments')
+        .select('tag_id')
+        .eq('resource_id', resourceId);
+
+      if (tagAssignments) {
+        setSelectedTagIds(tagAssignments.map(t => t.tag_id));
       }
     }
 
@@ -603,6 +673,25 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
             console.error('Error saving condition mappings:', conditionMappingError);
           }
         }
+
+        // Update general tag assignments
+        await supabase
+          .from('resource_tag_assignments')
+          .delete()
+          .eq('resource_id', savedResourceId);
+
+        if (selectedTagIds.length > 0) {
+          const { error: tagAssignError } = await supabase
+            .from('resource_tag_assignments')
+            .insert(selectedTagIds.map(tagId => ({
+              resource_id: savedResourceId,
+              tag_id: tagId,
+            })));
+
+          if (tagAssignError) {
+            console.error('Error saving tag assignments:', tagAssignError);
+          }
+        }
       }
 
       toast({
@@ -639,12 +728,23 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
     );
   };
 
+  const toggleTag = (tagId: string) => {
+    setSelectedTagIds(prev =>
+      prev.includes(tagId) ? prev.filter(id => id !== tagId) : [...prev, tagId]
+    );
+  };
+
   const filteredSymptoms = symptoms.filter(s =>
     s.name.toLowerCase().includes(symptomSearch.toLowerCase())
   );
 
   const filteredConditions = conditions.filter(c =>
     c.name.toLowerCase().includes(conditionSearch.toLowerCase())
+  );
+
+  const filteredTags = tags.filter(t =>
+    t.name.toLowerCase().includes(tagSearch.toLowerCase()) ||
+    (t.category || '').toLowerCase().includes(tagSearch.toLowerCase())
   );
 
   const groupedSymptoms = filteredSymptoms.reduce((acc, symptom) => {
@@ -1171,6 +1271,121 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
               {filteredConditions.length === 0 && (
                 <p className="text-center text-muted-foreground py-8">
                   No conditions found. Click "Add a new Condition" to create one.
+                </p>
+              )}
+            </ScrollArea>
+          </div>
+
+          {/* General Tags Section */}
+          <Separator className="my-4" />
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <TagIcon className="w-5 h-5 text-primary" />
+                <Label className="text-base font-medium">General Tags</Label>
+              </div>
+              <Dialog open={addTagOpen} onOpenChange={setAddTagOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add a new Tag
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add New Tag</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 pt-4">
+                    <div>
+                      <Label htmlFor="tagName">Tag Name *</Label>
+                      <Input
+                        id="tagName"
+                        value={newTagName}
+                        onChange={(e) => setNewTagName(e.target.value)}
+                        placeholder="e.g., Lilac Light, Pyramid, Waterfall"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="tagCategory">Category (optional)</Label>
+                      <Input
+                        id="tagCategory"
+                        value={newTagCategory}
+                        onChange={(e) => setNewTagCategory(e.target.value)}
+                        placeholder="e.g., visual, colour, setting"
+                      />
+                    </div>
+                    <div className="flex justify-end gap-2 pt-2">
+                      <Button variant="outline" onClick={() => setAddTagOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleAddTag} disabled={addingTag}>
+                        {addingTag && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                        Add Tag
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Descriptive tags — including the visual imagery that identifies this resource — used for search and discovery.
+            </p>
+
+            <Input
+              placeholder="Search tags..."
+              value={tagSearch}
+              onChange={(e) => setTagSearch(e.target.value)}
+              className="mb-4"
+            />
+
+            {selectedTagIds.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4 p-3 bg-muted/50 rounded-md">
+                <span className="text-sm text-muted-foreground">Selected:</span>
+                {selectedTagIds.map(id => {
+                  const tag = tags.find(t => t.id === id);
+                  return tag ? (
+                    <Badge
+                      key={id}
+                      variant="secondary"
+                      className="cursor-pointer"
+                      onClick={() => toggleTag(id)}
+                    >
+                      {tag.name}
+                      <X className="w-3 h-3 ml-1" />
+                    </Badge>
+                  ) : null;
+                })}
+              </div>
+            )}
+
+            <ScrollArea className="max-h-[240px] pr-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {filteredTags.map(tag => (
+                  <div
+                    key={tag.id}
+                    className={`flex items-center space-x-3 p-2 rounded-md cursor-pointer transition-colors ${
+                      selectedTagIds.includes(tag.id)
+                        ? 'bg-primary/10 border border-primary/30'
+                        : 'hover:bg-muted'
+                    }`}
+                    onClick={() => toggleTag(tag.id)}
+                  >
+                    <Checkbox
+                      checked={selectedTagIds.includes(tag.id)}
+                      onCheckedChange={() => toggleTag(tag.id)}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <span className="text-sm">{tag.name}</span>
+                    {tag.category && (
+                      <Badge variant="outline" className="text-xs">{tag.category}</Badge>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {filteredTags.length === 0 && (
+                <p className="text-center text-muted-foreground py-8">
+                  No tags found. Click "Add a new Tag" to create one.
                 </p>
               )}
             </ScrollArea>
