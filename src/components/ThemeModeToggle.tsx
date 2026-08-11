@@ -18,12 +18,12 @@ const ThemeModeToggle = () => {
       {isDark ? (
         <>
           <Sun className="w-4 h-4" />
-          <span className="text-xs font-medium">Light</span>
+          <span className="hidden sm:inline text-xs font-medium">Light</span>
         </>
       ) : (
         <>
           <Moon className="w-4 h-4" />
-          <span className="text-xs font-medium">Dark</span>
+          <span className="hidden sm:inline text-xs font-medium">Dark</span>
         </>
       )}
     </Button>

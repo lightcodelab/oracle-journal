@@ -146,7 +146,7 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
   ];
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
       <GlobalSearch />
       <ThemeModeToggle />
       <DropdownMenu>
@@ -154,11 +154,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
         <Button
           variant="ghost"
           size="sm"
-          className="text-foreground/70 hover:text-foreground"
+          className="text-foreground/70 hover:text-foreground px-2 sm:px-3"
         >
-          <User className="w-4 h-4 mr-2" />
-          My Profile
-          <ChevronDown className="w-3 h-3 ml-1" />
+          <User className="w-4 h-4 sm:mr-2" />
+          <span className="hidden sm:inline">My Profile</span>
+          <ChevronDown className="hidden sm:inline-block w-3 h-3 ml-1" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
