@@ -19,7 +19,8 @@ import {
   Compass,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import templeBanner from "@/assets/temple-banner.png";
+import templeBannerAsset from "@/assets/homepage-banner.webp.asset.json";
+const templeBanner = templeBannerAsset.url;
 import guidesPhoto from "@/assets/julie-tash-guides.jpg";
 import areekeeraThumbnail from "@/assets/areekeera-thumbnail.png.asset.json";
 import ProfileDropdown from "@/components/ProfileDropdown";
@@ -253,7 +254,7 @@ const Membership = () => {
             <img
               src={templeBanner}
               alt="The Temple of Sustainment"
-              className="w-full max-w-xl mx-auto mb-8"
+              className="w-full h-40 sm:h-56 object-cover object-center rounded-lg mb-8"
             />
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif mb-6 text-foreground leading-tight">
               The Temple of Sustainment
