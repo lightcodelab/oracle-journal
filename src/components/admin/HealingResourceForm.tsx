@@ -428,6 +428,16 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       if (conditionMappings) {
         setSelectedConditionIds(conditionMappings.map(m => m.condition_id));
       }
+
+      // Load linked general tags
+      const { data: tagAssignments } = await supabase
+        .from('resource_tag_assignments')
+        .select('tag_id')
+        .eq('resource_id', resourceId);
+
+      if (tagAssignments) {
+        setSelectedTagIds(tagAssignments.map(t => t.tag_id));
+      }
     }
 
     setLoading(false);
@@ -663,6 +673,25 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
             console.error('Error saving condition mappings:', conditionMappingError);
           }
         }
+
+        // Update general tag assignments
+        await supabase
+          .from('resource_tag_assignments')
+          .delete()
+          .eq('resource_id', savedResourceId);
+
+        if (selectedTagIds.length > 0) {
+          const { error: tagAssignError } = await supabase
+            .from('resource_tag_assignments')
+            .insert(selectedTagIds.map(tagId => ({
+              resource_id: savedResourceId,
+              tag_id: tagId,
+            })));
+
+          if (tagAssignError) {
+            console.error('Error saving tag assignments:', tagAssignError);
+          }
+        }
       }
 
       toast({
@@ -696,6 +725,12 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
       prev.includes(conditionId)
         ? prev.filter(id => id !== conditionId)
         : [...prev, conditionId]
+    );
+  };
+
+  const toggleTag = (tagId: string) => {
+    setSelectedTagIds(prev =>
+      prev.includes(tagId) ? prev.filter(id => id !== tagId) : [...prev, tagId]
     );
   };
 
