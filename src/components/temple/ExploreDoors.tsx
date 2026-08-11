@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button";
 import { BookHeart, Search, ListMusic, LineChart, Sparkles, HeartPulse } from "lucide-react";
 
 const doors = [
-  { name: "Remembrance", href: "/decks", image: doorRemembrance.url },
-  { name: "Devotion", href: "/devotion", image: doorDevotion.url },
-  { name: "Communion", href: "/communion", image: doorCommunion.url },
+  { name: "Remembrance", href: "/decks", image: doorRemembrance.url, description: "Explore the patterns, stories and inheritances shaping you." },
+  { name: "Devotion", href: "/devotion", image: doorDevotion.url, description: "Return to yourself through guided meditation and restorative practice." },
+  { name: "Communion", href: "/communion", image: doorCommunion.url, description: "Find connection, reflection and support within the Temple community." },
 ];
 
 const tools = [
@@ -64,6 +64,9 @@ export function ExploreDoors() {
               </div>
               <p className="mt-2 font-serif text-lg text-foreground text-center">
                 {door.name}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground text-center leading-relaxed">
+                {door.description}
               </p>
             </Link>
           </motion.div>
