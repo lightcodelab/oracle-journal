@@ -96,9 +96,9 @@ All colors MUST be HSL.
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Member dark mode — deep olive-brown */
+  /* Member dark mode — near-black with warm undertone */
   .dark-theme {
-    --background: 47.4 70.4% 10.6%;
+    --background: 47.1 100% 2.7%;
     --foreground: 34 12% 88%;
 
     --on-image: 40 45% 96%;
@@ -128,7 +128,7 @@ All colors MUST be HSL.
     --input: 25 25% 20%;
     --ring: 40 57% 43%;
 
-    --brand-dark: 47.4 70.4% 10.6%;
+    --brand-dark: 47.1 100% 2.7%;
     --brand-cream: 34 12% 88%;
     --brand-red-light: 0 37% 66%;
 
