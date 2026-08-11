@@ -196,7 +196,7 @@ export default function DoorOfCommunion() {
           className="text-center mb-12"
         >
           <DoorHeader image={communionHeader.url} title="The Door of Communion" />
-          <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
             <span className="font-bold text-primary">A space to connect with community through live sessions, readings, workshops, and interactive experiences.</span>
             <br />
             Come whenever you need support or to be around other humans.
