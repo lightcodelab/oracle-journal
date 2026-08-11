@@ -10,7 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
-import templeBanner from "@/assets/temple-banner.png";
+import templeBannerAsset from "@/assets/homepage-banner.webp.asset.json";
+const templeBanner = templeBannerAsset.url;
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -353,10 +354,10 @@ const Auth = () => {
             transition={{ duration: 0.6 }}
             className="mb-4"
           >
-            <img 
-              src={templeBanner} 
-              alt="Temple of Sustainment" 
-              className="w-full max-w-md mx-auto"
+            <img
+              src={templeBanner}
+              alt="Temple of Sustainment"
+              className="w-full h-32 sm:h-40 object-cover object-center rounded-lg"
             />
           </motion.div>
           <p className="text-foreground/70 text-sm leading-relaxed max-w-sm mx-auto">
