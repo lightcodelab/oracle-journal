@@ -56,7 +56,7 @@ All colors MUST be HSL.
 
   /* Admin tooling keeps the original dark Temple palette */
   .admin-theme {
-    --background: 25 45% 18%;
+    --background: 47.1 100% 2.7%;
     --foreground: 34 12% 88%;
 
     --on-image: 40 45% 96%;
@@ -86,7 +86,7 @@ All colors MUST be HSL.
     --input: 25 25% 20%;
     --ring: 40 57% 43%;
 
-    --brand-dark: 25 45% 18%;
+    --brand-dark: 47.1 100% 2.7%;
     --brand-cream: 34 12% 88%;
     --brand-red-light: 0 37% 66%;
 
