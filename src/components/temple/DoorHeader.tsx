@@ -31,11 +31,11 @@ export function DoorHeader({ image, title, description, imageAlt = "" }: DoorHea
       <div className="absolute inset-0 bg-gradient-to-r from-foreground/10 via-foreground/25 to-foreground/50 md:from-transparent md:via-foreground/10 md:to-foreground/55" />
       <div className="absolute inset-0 flex items-center justify-center md:justify-end px-6 md:px-10">
         <div className="max-w-md text-center md:text-right">
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-background drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-on-image drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
             {title}
           </h1>
           {description && (
-            <p className="mt-3 font-sans text-sm sm:text-base text-background/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+            <p className="mt-3 font-sans text-sm sm:text-base text-on-image/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
               {description}
             </p>
           )}
