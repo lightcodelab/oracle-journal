@@ -44,12 +44,15 @@ const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
         const isClickable = !isLast && (item.href || item.onClick);
         
         return (
-          <div key={index} className="flex min-w-0 items-center gap-1 sm:gap-1.5">
+          <div
+            key={index}
+            className={`${isLast ? 'flex' : 'hidden sm:flex'} min-w-0 items-center gap-1 sm:gap-1.5`}
+          >
             <ChevronRight className="w-3.5 h-3.5 shrink-0 text-muted-foreground/50" />
             {isClickable ? (
               <button
                 onClick={() => handleClick(item)}
-                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors truncate max-w-[90px] sm:max-w-[200px]"
+                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors truncate max-w-[140px] sm:max-w-[200px]"
                 title={item.label}
               >
                 {item.icon && <item.icon className="w-3.5 h-3.5 shrink-0" />}
@@ -57,7 +60,7 @@ const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
               </button>
             ) : (
               <span 
-                className={`${isLast ? 'text-foreground font-medium' : 'text-muted-foreground'} flex items-center gap-1 truncate max-w-[110px] sm:max-w-[200px]`}
+                className={`${isLast ? 'text-foreground font-medium' : 'text-muted-foreground'} flex items-center gap-1 truncate max-w-[180px] sm:max-w-[200px]`}
                 title={item.label}
               >
                 {item.icon && <item.icon className="w-3.5 h-3.5 shrink-0" />}
