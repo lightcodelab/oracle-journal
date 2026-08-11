@@ -1,0 +1,11 @@
+UPDATE public.courses SET image_url = '/__l5e/assets-v1/71d99b6b-9210-4b85-9bae-2b4ff21447f9/01-the-rites-of-remembrance.webp' WHERE id = '91f96c61-17c3-405e-8453-e440fa108d6d';
+UPDATE public.courses SET image_url = '/__l5e/assets-v1/fc896519-abe6-46c0-b4aa-f5ece97f85c7/02-protector-identification.webp' WHERE id = 'a9ca95d2-0867-4757-b66e-ca616de7fe15';
+UPDATE public.courses SET image_url = '/__l5e/assets-v1/716d907a-2601-4700-b372-96639877c9f7/03-the-clarity-scan.webp' WHERE id = '5ab79137-54fb-4328-b9f7-6415f6484d2f';
+UPDATE public.courses SET image_url = '/__l5e/assets-v1/a60caacc-e3ed-4309-afba-1cf62f66007b/04-coherence-calibration.webp' WHERE id = '075d8366-fe61-491f-a4cd-da9039063da1';
+UPDATE public.courses SET image_url = '/__l5e/assets-v1/845985bd-50f4-48b1-8c40-1dce9a6d3e64/05-regulation-log.webp' WHERE id = 'b9e1d859-ebcc-4639-ac12-be1702ccfd8c';
+UPDATE public.courses SET image_url = '/__l5e/assets-v1/5b1ff0bc-bcb9-43cd-a3b5-37916fb9e977/06-boundary-integrity-audit.webp' WHERE id = '064f0a66-52d1-415c-b28a-509857323928';
+UPDATE public.courses SET image_url = '/__l5e/assets-v1/e7105db7-2386-4740-b0d5-3b0b7566b015/07-emotional-mastery.webp' WHERE id = '01489f56-23f9-43bd-9861-e2d7c9bed2b5';
+UPDATE public.courses SET image_url = '/__l5e/assets-v1/4171a925-f498-46d2-92fd-fe09655ba66d/08-trigger-alchemy.webp' WHERE id = '8ff9f2d4-f1b1-4e56-bf79-412071eae173';
+UPDATE public.courses SET image_url = '/__l5e/assets-v1/4f70fef5-b6c7-4d26-b8d2-77fca2b908c3/09-nervous-system-anchoring.webp' WHERE id = '8ff9f2d4-f1b1-4e56-bf79-412071eae173';
+UPDATE public.courses SET image_url = '/__l5e/assets-v1/4171a925-f498-46d2-92fd-fe09655ba66d/08-trigger-alchemy.webp' WHERE id = 'd3c5b7f2-df13-4925-9ebe-9ee5f7080e6a';
+UPDATE public.courses SET image_url = '/__l5e/assets-v1/4f70fef5-b6c7-4d26-b8d2-77fca2b908c3/09-nervous-system-anchoring.webp' WHERE id = '8ff9f2d4-f1b1-4e56-bf79-412071eae173';
