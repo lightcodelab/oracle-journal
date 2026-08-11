@@ -200,7 +200,9 @@ const DoorOfDevotion = () => {
         >
           <DoorHeader image={devotionHeader.url} title="The Door of Devotion" />
            <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto mb-6">
-             Resources for nervous system regulation, physical wellbeing restoration, and embodied repair through Energetic Healing.
+             <span className="font-bold text-primary">A space to restore your body, regulate your nervous system, and return to yourself.</span>
+             <br />
+             Guided meditations and Energetic Healing for embodied repair.
            </p>
 
            {/* View Toggle */}
