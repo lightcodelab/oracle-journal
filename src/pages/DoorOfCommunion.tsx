@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
-import { Sparkles, GraduationCap, Users, CalendarDays, Video, Flower2, Lock, ArrowUpRight, Eye } from 'lucide-react';
+import { Sparkles, Lock, ArrowUpRight } from 'lucide-react';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import NavActions from '@/components/NavActions';
 import { Button } from '@/components/ui/button';
@@ -11,15 +11,20 @@ import { cn } from '@/lib/utils';
 import { useTierAccess } from '@/hooks/useTierAccess';
 import { DoorHeader } from '@/components/temple/DoorHeader';
 import communionHeader from '@/assets/door-communion-header-v1.webp.asset.json';
+import imgReadings from '@/assets/communion-live-readings.png.asset.json';
+import imgClasses from '@/assets/communion-live-classes.png.asset.json';
+import imgWorkshops from '@/assets/communion-live-workshops.png.asset.json';
+import imgMeditations from '@/assets/communion-live-meditation-classes.png.asset.json';
+import imgAllSessions from '@/assets/communion-all-sessions.png.asset.json';
+import imgReplays from '@/assets/communion-live-replays.png.asset.json';
+import imgMirror from '@/assets/communion-the-mirror-exchange.png.asset.json';
 
 interface CommunionCategory {
   id: string;
   title: string;
   description: string;
-  icon: typeof Sparkles;
   route: string;
-  colorClass: string;
-  borderColor: string;
+  image: string;
 }
 
 const categories: CommunionCategory[] = [
@@ -27,64 +32,50 @@ const categories: CommunionCategory[] = [
     id: 'mirror-exchange',
     title: 'The Mirror Exchange',
     description: 'A peer-held space where another member can hold the mirror while you listen for your own revelation.',
-    icon: Eye,
     route: '/communion/mirror-exchange',
-    colorClass: 'text-primary',
-    borderColor: 'border-primary/30 group-hover:border-primary/50',
+    image: imgMirror.url,
   },
   {
     id: 'live-readings',
     title: 'Live Readings',
     description: 'Join live oracle card readings and receive guidance in real-time.',
-    icon: Sparkles,
     route: '/communion/live-readings',
-    colorClass: 'text-purple-400',
-    borderColor: 'border-purple-500/30 group-hover:border-purple-500/50',
+    image: imgReadings.url,
   },
   {
     id: 'live-classes',
     title: 'Live Classes',
     description: 'Participate in live teaching sessions and deepen your practice.',
-    icon: GraduationCap,
     route: '/communion/live-classes',
-    colorClass: 'text-amber-400',
-    borderColor: 'border-amber-500/30 group-hover:border-amber-500/50',
+    image: imgClasses.url,
   },
   {
     id: 'live-workshops',
     title: 'Live Workshops',
     description: 'Join interactive workshops for hands-on learning and group practice.',
-    icon: Users,
     route: '/communion/live-workshops',
-    colorClass: 'text-emerald-400',
-    borderColor: 'border-emerald-500/30 group-hover:border-emerald-500/50',
+    image: imgWorkshops.url,
   },
   {
     id: 'live-meditations',
     title: 'Live Meditation Classes',
     description: 'Join guided meditation sessions for inner peace and spiritual connection.',
-    icon: Flower2,
     route: '/communion/live-meditations',
-    colorClass: 'text-cyan-400',
-    borderColor: 'border-cyan-500/30 group-hover:border-cyan-500/50',
+    image: imgMeditations.url,
   },
   {
     id: 'all-sessions',
     title: 'All Sessions',
     description: 'Browse all upcoming live sessions in one place with calendar and grid views.',
-    icon: CalendarDays,
     route: '/all-live-sessions',
-    colorClass: 'text-primary',
-    borderColor: 'border-primary/30 group-hover:border-primary/50',
+    image: imgAllSessions.url,
   },
   {
     id: 'live-replays',
     title: 'Live Replays',
     description: 'Watch recordings of past live readings, classes, and workshops.',
-    icon: Video,
     route: '/communion/live-replays',
-    colorClass: 'text-rose-400',
-    borderColor: 'border-rose-500/30 group-hover:border-rose-500/50',
+    image: imgReplays.url,
   },
 ];
 
@@ -206,34 +197,43 @@ export default function DoorOfCommunion() {
         {/* Category Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category, index) => {
-            const Icon = category.icon;
             return (
               <motion.div
                 key={category.id}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                onClick={() => navigate(category.route)}
-                className="cursor-pointer group"
+                className="group"
               >
-                <div className={cn(
-                  'bg-card border rounded-lg p-8 transition-all duration-300',
-                  'group-hover:shadow-lg group-hover:scale-[1.01]',
-                  category.borderColor
-                )}>
-                  <div className={cn('mb-4 transition-colors', category.colorClass)}>
-                    <Icon className="w-8 h-8" />
+                <button
+                  type="button"
+                  onClick={() => navigate(category.route)}
+                  className={cn(
+                    'relative block w-full text-left aspect-video overflow-hidden rounded-lg',
+                    'transition-transform duration-300 group-hover:scale-[1.01]',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background'
+                  )}
+                >
+                  <img
+                    src={category.image}
+                    alt=""
+                    aria-hidden
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 bg-gradient-to-t from-[hsl(28_45%_6%/0.92)] via-[hsl(28_40%_10%/0.55)] to-transparent"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 p-5">
+                    <h3 className="font-serif text-2xl text-[hsl(38_60%_94%)] mb-1.5">
+                      {category.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-[hsl(36_35%_86%)]">
+                      {category.description}
+                    </p>
                   </div>
-                  <h3 className={cn(
-                    'font-serif text-2xl mb-2 transition-colors text-foreground',
-                    `group-hover:${category.colorClass}`
-                  )}>
-                    {category.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm">
-                    {category.description}
-                  </p>
-                </div>
+                </button>
               </motion.div>
             );
           })}
