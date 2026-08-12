@@ -495,7 +495,6 @@ const DevotionLessonPage = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Fixed Sidebar */}
-      {/* Companion (Deepening) courses hide the "Session #" labelling */}
       {allLessons && allLessons.length > 0 && courseId && (
         <CourseSessionNav
           lessons={allLessons}
