@@ -457,7 +457,7 @@ const Index = () => {
           >
             {/* Breadcrumb handles navigation now */}
 
-            <h2 className="font-serif text-4xl text-foreground mb-8">
+            <h2 className="font-serif text-4xl text-foreground mb-8 pt-12">
               Your Card Awaits
             </h2>
             <OracleCardComponent
