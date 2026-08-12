@@ -10,6 +10,8 @@ import { Sparkles, Lock, ArrowUpRight, ArrowLeft, DoorOpen } from 'lucide-react'
 import { useTierAccess } from '@/hooks/useTierAccess';
 import { useContentByLocation } from '@/hooks/useContentByLocation';
 import ResourceCard from '@/components/devotion/ResourceCard';
+import { DoorHeader } from '@/components/temple/DoorHeader';
+import companionCoursesHeader from '@/assets/companion-courses-header.png.asset.json';
 
 const LOCATION_SLUG = 'loc-deepening-courses';
 const PAGE_TITLE = 'Companion Courses';
@@ -125,17 +127,14 @@ const DeepeningCourses = () => {
           Back to Door of Remembrance
         </Button>
 
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-12"
-        >
-          <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">{PAGE_TITLE}</h1>
-          <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
-            {PAGE_DESCRIPTION}
-          </p>
-        </motion.div>
+        <div className="mb-12">
+          <DoorHeader
+            image={companionCoursesHeader.url}
+            title={PAGE_TITLE}
+            description={PAGE_DESCRIPTION}
+            align="left"
+          />
+        </div>
 
         {contentLoading ? (
           <div className="flex items-center justify-center py-16">

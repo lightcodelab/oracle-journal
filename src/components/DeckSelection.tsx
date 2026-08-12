@@ -9,6 +9,7 @@ import taoshBanner from "@/assets/taosh-thumbnail.png.asset.json";
 import RemembranceCourseSection from "@/components/RemembranceCourseSection";
 import RitesOfRemembranceSection from "@/components/RitesOfRemembranceSection";
 import sacredSpreadsBanner from "@/assets/sacred-spreads-thumbnail.png.asset.json";
+import companionCoursesBanner from "@/assets/companion-courses-header.png.asset.json";
 import remembranceHeader from "@/assets/door-remembrance-header-v1.webp.asset.json";
 import { DoorHeader } from "@/components/temple/DoorHeader";
 
@@ -169,8 +170,12 @@ export const DeckSelection = ({
               className="group cursor-pointer"
             >
               <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30">
-                <div className="aspect-video w-full overflow-hidden bg-muted relative flex items-center justify-center">
-                  <BookOpen className="w-12 h-12 text-muted-foreground/60" />
+                <div className="aspect-video w-full overflow-hidden bg-muted relative">
+                  <img
+                    src={companionCoursesBanner.url}
+                    alt="Companion Courses"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
                 </div>
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-2 mb-2">
