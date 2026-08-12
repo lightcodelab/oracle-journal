@@ -656,6 +656,35 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
     toast({ title: 'Reordered', description: 'Module order updated.' });
   };
 
+  const renameModule = async (oldTitle: string, rawNewTitle: string) => {
+    const newTitle = rawNewTitle.trim();
+    setRenamingModule(null);
+    if (!newTitle || newTitle === oldTitle) return;
+
+    if (allModules.some(m => m.title === newTitle)) {
+      toast({ title: 'Exists', description: 'A module with that name already exists.', variant: 'destructive' });
+      return;
+    }
+
+    const hasLessons = lessons.some(l => l.module_title === oldTitle);
+    if (hasLessons) {
+      const { error } = await supabase
+        .from('lessons')
+        .update({ module_title: newTitle } as any)
+        .eq('course_id', courseId)
+        .eq('module_title', oldTitle);
+
+      if (error) {
+        toast({ title: 'Error', description: 'Failed to rename module.', variant: 'destructive' });
+        return;
+      }
+      setLessons(lessons.map(l => l.module_title === oldTitle ? { ...l, module_title: newTitle } : l));
+    }
+
+    setTempModules(prev => prev.map(tm => tm.title === oldTitle ? { ...tm, title: newTitle } : tm));
+    toast({ title: 'Renamed', description: `Module is now "${newTitle}".` });
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
