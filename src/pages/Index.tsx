@@ -453,11 +453,11 @@ const Index = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="min-h-[80vh] flex flex-col justify-center items-center space-y-8"
+            className="min-h-[80vh] flex flex-col justify-center items-center space-y-4"
           >
             {/* Breadcrumb handles navigation now */}
 
-            <h2 className="font-serif text-4xl text-foreground mb-8 pt-12">
+            <h2 className="font-serif text-4xl text-foreground pt-6">
               Your Card Awaits
             </h2>
             <OracleCardComponent
