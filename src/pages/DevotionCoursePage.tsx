@@ -175,12 +175,20 @@ const DevotionCoursePage = () => {
           {(() => {
             const locName = (course as any).location?.name as string | undefined;
             const locSlug = (course as any).location?.slug as string | undefined;
-            const isRemembrance = locName === 'The Alchemy of Becoming' || locName === 'The Rites of Remembrance';
+            const isRemembrance = locName === 'The Alchemy of Becoming' || locName === 'The Rites of Remembrance' || locName === 'Deepening Courses';
+            const isDeepening = locName === 'Deepening Courses';
             const doorCrumb = isRemembrance
               ? { label: 'The Door of Remembrance', href: '/remembrance', icon: DoorOpen }
               : { label: 'The Door of Devotion', href: '/devotion', icon: DoorOpen };
             const sectionCrumb = locName
-              ? { label: locName, href: isRemembrance ? `/remembrance/section/${locSlug?.replace(/^loc-/, '') ?? ''}` : `/devotion/section/${locSlug?.replace(/^loc-/, '') ?? ''}` }
+              ? {
+                  label: isDeepening ? 'Companion Courses' : locName,
+                  href: isDeepening
+                    ? '/remembrance/deepening-courses'
+                    : isRemembrance
+                      ? `/remembrance/section/${locSlug?.replace(/^loc-/, '') ?? ''}`
+                      : `/devotion/section/${locSlug?.replace(/^loc-/, '') ?? ''}`,
+                }
               : null;
             return (
               <PageBreadcrumb

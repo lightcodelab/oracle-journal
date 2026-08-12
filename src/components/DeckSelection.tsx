@@ -160,8 +160,38 @@ export const DeckSelection = ({
               </div>
             </motion.div>
 
+            {/* Companion Courses link card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.05 }}
+              onClick={() => navigate('/remembrance/deepening-courses')}
+              className="group cursor-pointer"
+            >
+              <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30">
+                <div className="aspect-video w-full overflow-hidden bg-muted relative flex items-center justify-center">
+                  <BookOpen className="w-12 h-12 text-muted-foreground/60" />
+                </div>
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <h3 className="font-serif text-lg text-foreground group-hover:text-primary transition-colors">
+                      Companion Courses
+                    </h3>
+                    <div className="text-muted-foreground group-hover:text-primary transition-colors shrink-0">
+                      <BookOpen className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                    To deepen your experience with the cards and remember who you are.
+                  </p>
+                  <Badge variant="secondary" className="text-xs">
+                    Enter the Courses
+                  </Badge>
+                </div>
+              </div>
+            </motion.div>
+
             {decks.filter(d => !d.is_starter).map((deck, index) => {
-              return (
               const bannerSrc = deck.thumbnail_url
                 || (deck.name === "The Sacred Rewrite" ? tsrBanner.url
                 : deck.name === "Magic not Logic" ? mnlBanner.url
