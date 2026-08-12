@@ -107,6 +107,8 @@ type FieldDef = {
 const DECK_FIELDS: Record<string, FieldDef[]> = {
   'The Sacred Rewrite': [
     { key: 'card_details', label: 'The Card (card_details)', type: 'textarea', storage: 'column', rows: 5 },
+    { key: 'mini_reading', label: 'Mini Reading — shown on the card view', type: 'textarea', storage: 'json', rows: 5, helper: 'Short 2-3 sentence reading shown after a shuffle or card lookup. Leave blank to show the full sections instead.' },
+    { key: 'mini_reflection_question', label: 'Mini Reading — Reflection Question', type: 'input', storage: 'json', helper: 'One distilled question shown under the mini reading.' },
     { key: 'opening_invocation_heading', label: 'Opening Invocation — Heading', type: 'input', storage: 'column' },
     { key: 'opening_invocation_content', label: 'Opening Invocation — Content', type: 'textarea', storage: 'column', rows: 6 },
     { key: 'spiral_of_inquiry_heading', label: 'Spiral of Inquiry — Heading', type: 'input', storage: 'column' },
