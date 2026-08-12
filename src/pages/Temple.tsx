@@ -193,17 +193,17 @@ const Temple = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-sm text-muted-foreground">
-        <Home className="h-3.5 w-3.5" aria-hidden="true" />
-        <span className="font-medium hover:text-foreground transition-colors">
-          The Temple of Sustainment
-        </span>
-      </div>
-      <div className="absolute top-4 right-4 z-20">
+      <header className="max-w-6xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
+          <Home className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <span className="font-medium truncate">
+            The Temple of Sustainment
+          </span>
+        </div>
         <NavActions />
-      </div>
+      </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-10 sm:py-14">
+      <main className="max-w-6xl mx-auto px-4 pb-10 sm:pb-14">
         <WelcomeHome
           displayName={profileLoaded ? displayName : null}
           showFounderBadge={!!founderBadge}
