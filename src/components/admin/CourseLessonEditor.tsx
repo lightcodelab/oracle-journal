@@ -509,6 +509,8 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
   const [newLessonTitle, setNewLessonTitle] = useState('');
   const [newModuleTitle, setNewModuleTitle] = useState('');
   const [showModuleInput, setShowModuleInput] = useState(false);
+  const [renamingModule, setRenamingModule] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState('');
 
   // Derive modules from lesson data
   const modules: Module[] = Array.from(
