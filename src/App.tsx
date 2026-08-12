@@ -99,7 +99,8 @@ const App = () => {
             <Route path="/remembrance" element={<Index />} />
             <Route path="/remembrance/section/:section" element={<RemembranceSectionPage />} />
             <Route path="/remembrance/spreads" element={<SacredSpreads />} />
-            <Route path="/remembrance/deepening-courses" element={<DeepeningCourses />} />
+            <Route path="/remembrance/companion-courses" element={<DeepeningCourses />} />
+            <Route path="/remembrance/deepening-courses" element={<Navigate to="/remembrance/companion-courses" replace />} />
             <Route path="/remembrance/resources/:slug" element={<DevotionResourcePage />} />
             <Route path="/remembrance/courses/:slug" element={<DevotionCoursePage />} />
             <Route path="/remembrance/course/:courseId" element={<DevotionCoursePage />} />
