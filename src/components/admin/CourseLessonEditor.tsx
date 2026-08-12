@@ -19,7 +19,7 @@ import RichTextEditorToolbar from './RichTextEditorToolbar';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import {
   Plus, Trash2, ChevronDown, ChevronRight, Loader2, FileText, Save, X,
-  Link as LinkIcon, FileAudio, BookOpen, FolderPlus, ArrowUp, ArrowDown,
+  Link as LinkIcon, FileAudio, BookOpen, FolderPlus, ArrowUp, ArrowDown, Pencil,
 } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -509,6 +509,8 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
   const [newLessonTitle, setNewLessonTitle] = useState('');
   const [newModuleTitle, setNewModuleTitle] = useState('');
   const [showModuleInput, setShowModuleInput] = useState(false);
+  const [renamingModule, setRenamingModule] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState('');
 
   // Derive modules from lesson data
   const modules: Module[] = Array.from(
@@ -654,6 +656,35 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
     toast({ title: 'Reordered', description: 'Module order updated.' });
   };
 
+  const renameModule = async (oldTitle: string, rawNewTitle: string) => {
+    const newTitle = rawNewTitle.trim();
+    setRenamingModule(null);
+    if (!newTitle || newTitle === oldTitle) return;
+
+    if (allModules.some(m => m.title === newTitle)) {
+      toast({ title: 'Exists', description: 'A module with that name already exists.', variant: 'destructive' });
+      return;
+    }
+
+    const hasLessons = lessons.some(l => l.module_title === oldTitle);
+    if (hasLessons) {
+      const { error } = await supabase
+        .from('lessons')
+        .update({ module_title: newTitle } as any)
+        .eq('course_id', courseId)
+        .eq('module_title', oldTitle);
+
+      if (error) {
+        toast({ title: 'Error', description: 'Failed to rename module.', variant: 'destructive' });
+        return;
+      }
+      setLessons(lessons.map(l => l.module_title === oldTitle ? { ...l, module_title: newTitle } : l));
+    }
+
+    setTempModules(prev => prev.map(tm => tm.title === oldTitle ? { ...tm, title: newTitle } : tm));
+    toast({ title: 'Renamed', description: `Module is now "${newTitle}".` });
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -737,9 +768,34 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
         <div key={module.title} className="space-y-3">
           <div className="flex items-center gap-2 pb-1 border-b border-border">
             <BookOpen className="w-4 h-4 text-primary" />
-            <h3 className="text-sm font-semibold text-foreground">{module.title}</h3>
-            <span className="text-xs text-muted-foreground">({moduleLessons.length} lessons)</span>
+            {renamingModule === module.title ? (
+              <Input
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                onBlur={() => renameModule(module.title, renameValue)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') renameModule(module.title, renameValue);
+                  if (e.key === 'Escape') setRenamingModule(null);
+                }}
+                autoFocus
+                className="h-7 w-56 text-sm"
+              />
+            ) : (
+              <>
+                <h3 className="text-sm font-semibold text-foreground">{module.title}</h3>
+                <span className="text-xs text-muted-foreground">({moduleLessons.length} lessons)</span>
+              </>
+            )}
             <div className="ml-auto flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0"
+                onClick={() => { setRenamingModule(module.title); setRenameValue(module.title); }}
+                title="Rename module"
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
               <Button
                 variant="ghost"
                 size="sm"

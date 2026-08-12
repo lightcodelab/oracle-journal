@@ -6890,9 +6890,12 @@ export type Database = {
           referral_code: string
         }[]
       }
+      tsr_body_to_nodes: { Args: { _body: string }; Returns: Json }
       tsr_card_to_richtext: { Args: { _cs: Json }; Returns: Json }
       tsr_card_to_text: { Args: { _cs: Json }; Returns: string }
+      tsr_inline: { Args: { _italic?: boolean; _line: string }; Returns: Json }
       tsr_line_to_paragraph: { Args: { _line: string }; Returns: Json }
+      tsr_mythic_block: { Args: { _line: string }; Returns: Json }
       upsert_entitlement: {
         Args: {
           _ends_at: string
