@@ -495,6 +495,7 @@ const DevotionLessonPage = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Fixed Sidebar */}
+      {/* Companion (Deepening) courses hide the "Session #" labelling */}
       {allLessons && allLessons.length > 0 && courseId && (
         <CourseSessionNav
           lessons={allLessons}
@@ -549,9 +550,11 @@ const DevotionLessonPage = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-8"
           >
-            <p className="text-primary font-sans text-sm uppercase tracking-wider mb-2">
-              Session {lesson.lesson_number}
-            </p>
+            {!isDeepeningCourse && (
+              <p className="text-primary font-sans text-sm uppercase tracking-wider mb-2">
+                Session {lesson.lesson_number}
+              </p>
+            )}
             <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
               {lesson.title}
             </h1>
@@ -775,7 +778,7 @@ const DevotionLessonPage = () => {
                 className="text-foreground/70 hover:text-foreground"
               >
                 <ChevronLeft className="w-4 h-4 mr-2" />
-                Session {prevLesson.lesson_number}
+                {isDeepeningCourse ? prevLesson.title : `Session ${prevLesson.lesson_number}`}
               </Button>
             ) : (
               <div />
@@ -787,7 +790,7 @@ const DevotionLessonPage = () => {
                 variant="ghost"
                 className="text-foreground/70 hover:text-foreground"
               >
-                Session {nextLesson.lesson_number}
+                {isDeepeningCourse ? nextLesson.title : `Session ${nextLesson.lesson_number}`}
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             ) : (
