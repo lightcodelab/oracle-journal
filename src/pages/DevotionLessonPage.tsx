@@ -492,6 +492,8 @@ const DevotionLessonPage = () => {
     ),
   ];
 
+  const isDeepeningCourse = (course as any)?.location?.name === 'Deepening Courses';
+
   return (
     <div className="min-h-screen bg-background">
       {/* Fixed Sidebar */}
