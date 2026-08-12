@@ -308,7 +308,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
       {/* Magic not Logic - Card Details */}
       {isMagicNotLogic && getContent('card_details') && (
-        <div className="bg-card border border-border rounded-lg p-6">
+        <div className="bg-card border border-border rounded-lg p-6 pt-12">
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-primary" />
             <h3 className="font-serif text-xl text-foreground">The Card</h3>
