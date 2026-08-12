@@ -115,7 +115,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
       {isAreekeerA && (
         <>
           {/* Card Heading (card_title) and Subtitle */}
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-2 pt-12">
             <h2 className="font-serif text-2xl font-semibold text-foreground">{card.card_title}</h2>
             {getContent('card_subtitle') && (
               <p className="font-serif text-xl italic text-foreground/70">{getContent('card_subtitle')}</p>
@@ -149,7 +149,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
       {isArtOfSelfHealing && (
         <>
           {/* Card Number */}
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-2 pt-12">
             <h2 className="font-serif text-2xl font-semibold text-foreground">Card: {card.card_number}</h2>
           </div>
 
@@ -181,7 +181,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         <>
           {/* 1. The Card */}
           {getContent('card_details') && (
-            <div className="bg-card border border-border rounded-lg p-6">
+            <div className="bg-card border border-border rounded-lg p-6 pt-12">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-5 h-5 text-primary" />
                 <h3 className="font-serif text-xl text-foreground">The Card</h3>
@@ -193,7 +193,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
           {/* Mini reading (replaces the full teaching, which lives in the Companion Course) */}
           {showMiniReading && (
             <>
-              <div className="bg-card border border-border rounded-lg p-6">
+              <div className={`bg-card border border-border rounded-lg p-6 ${!getContent('card_details') ? 'pt-12' : ''}`}>
                 <h3 className="font-serif text-xl text-foreground mb-4">Your Reading</h3>
                 <FormattedContent content={miniReading!} className="text-foreground/90 font-sans leading-relaxed" />
               </div>
@@ -308,7 +308,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
       {/* Magic not Logic - Card Details */}
       {isMagicNotLogic && getContent('card_details') && (
-        <div className="bg-card border border-border rounded-lg p-6">
+        <div className="bg-card border border-border rounded-lg p-6 pt-12">
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-primary" />
             <h3 className="font-serif text-xl text-foreground">The Card</h3>
