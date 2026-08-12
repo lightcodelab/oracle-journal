@@ -593,7 +593,7 @@ const DevotionLessonPage = () => {
           >
             {lesson.body_richtext ? (
               <div 
-                className="text-foreground/90 font-sans leading-relaxed ProseMirror"
+                className={`text-foreground/90 font-sans leading-relaxed ProseMirror${isDeepeningCourse ? ' companion-lesson-content' : ''}`}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(
                   (() => {
                     // Render TipTap JSON to HTML (simplified)
@@ -635,7 +635,7 @@ const DevotionLessonPage = () => {
               />
             ) : (
               <div 
-                className="text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap"
+                className={`text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap${isDeepeningCourse ? ' companion-lesson-content' : ''}`}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.content) }}
               />
             )}
