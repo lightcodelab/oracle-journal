@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OracleCard } from "@/data/oracleCards";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Sparkles, RefreshCw, Bookmark } from "lucide-react";
+import { Sparkles, RefreshCw, Bookmark, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { FormattedContent } from "./FormattedContent";
 import { VimeoEmbed } from "./VimeoEmbed";
 import ContextualJournal from "./journal/ContextualJournal";
 import SaveReadingDialog from "./SaveReadingDialog";
+import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
 
 interface CardDetailProps {
   card: OracleCard;
@@ -20,6 +22,7 @@ interface CardDetailProps {
 
 export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isStarterDeck = false, deckId, hideActions = false }: CardDetailProps) => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [companionLessonPath, setCompanionLessonPath] = useState<string | null>(null);
 
   // Helper to get content from either JSON structure or legacy fields
   const getContent = (key: string): string | undefined => {
@@ -30,6 +33,38 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
   const isArtOfSelfHealing = card.deck_name === 'The Art of Self-Healing';
   const isSacredRewrite = card.deck_name === 'The Sacred Rewrite';
   const isMagicNotLogic = card.deck_name === 'Magic not Logic';
+
+  const miniReading = getContent('mini_reading');
+  const miniQuestion = getContent('mini_reflection_question');
+  const showMiniReading = isSacredRewrite && !!miniReading;
+
+  // Find the matching Companion Course lesson for this card (Sacred Rewrite only).
+  useEffect(() => {
+    if (!showMiniReading || !card.card_number) {
+      setCompanionLessonPath(null);
+      return;
+    }
+    let active = true;
+    (async () => {
+      const { data: courses } = await supabase
+        .from('courses')
+        .select('id, title')
+        .ilike('title', '%Sacred Rewrite%');
+      const courseIds = (courses || []).map((c: any) => c.id);
+      if (!courseIds.length) return;
+      const { data: lessons } = await supabase
+        .from('lessons')
+        .select('id, course_id, lesson_number')
+        .in('course_id', courseIds)
+        .eq('lesson_number', card.card_number)
+        .limit(1);
+      const lesson = lessons?.[0] as any;
+      if (active && lesson) {
+        setCompanionLessonPath(`/devotion/course/${lesson.course_id}/lesson/${lesson.id}`);
+      }
+    })();
+    return () => { active = false; };
+  }, [showMiniReading, card.card_number]);
   
   // For Starter Collection, now show FULL content (changed from basic-only)
   const showBasicOnly = false;
