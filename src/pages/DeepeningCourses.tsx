@@ -155,7 +155,9 @@ const DeepeningCourses = () => {
             <p className="text-sm text-muted-foreground/70 mt-2">Check back later for new courses.</p>
           </motion.div>
         ) : (
-          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${resources.length === 1 ? 'max-w-sm mx-auto' : ''}`}>
+          <div className={resources.length === 1
+            ? 'grid grid-cols-1 gap-6 max-w-sm mx-auto'
+            : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'}>
             {resources.map((resource, index) => (
               <ResourceCard
                 key={resource.id}
