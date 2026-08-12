@@ -523,7 +523,7 @@ const DevotionLessonPage = () => {
               ? {
                   label: isDeepening ? 'Companion Courses' : locName,
                   href: isDeepening
-                    ? '/remembrance/deepening-courses'
+                    ? '/remembrance/companion-courses'
                     : isRemembrance
                       ? `/remembrance/section/${locSlug?.replace(/^loc-/, '') ?? ''}`
                       : `/devotion/section/${locSlug?.replace(/^loc-/, '') ?? ''}`,
