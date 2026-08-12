@@ -190,8 +190,34 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
             </div>
           )}
 
+          {/* Mini reading (replaces the full teaching, which lives in the Companion Course) */}
+          {showMiniReading && (
+            <>
+              <div className="bg-card border border-border rounded-lg p-6">
+                <h3 className="font-serif text-xl text-foreground mb-4">Your Reading</h3>
+                <FormattedContent content={miniReading!} className="text-foreground/90 font-sans leading-relaxed" />
+              </div>
+
+              {miniQuestion && (
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <h3 className="font-serif text-xl text-foreground mb-3">Sit With This</h3>
+                  <p className="text-foreground/90 font-sans italic leading-relaxed">{miniQuestion}</p>
+                </div>
+              )}
+
+              <div className="flex justify-center">
+                <Button asChild variant="outline" className="font-sans">
+                  <Link to={companionLessonPath || '/remembrance/companion-courses'}>
+                    Go deeper in the Companion Course
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
+            </>
+          )}
+
           {/* 2. Opening Invocation - only show if NOT in Starter Collection */}
-          {!showBasicOnly && getContent('opening_invocation_content') && (
+          {!showMiniReading && !showBasicOnly && getContent('opening_invocation_content') && (
             <div className="bg-card border border-border rounded-lg p-6">
               <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('opening_invocation_heading') || "Opening Invocation & Altar Ritual"}
@@ -201,7 +227,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
           )}
 
           {/* 3. Spiral of Inquiry (always shown for basic version) */}
-          {getContent('spiral_of_inquiry_content') && (
+          {!showMiniReading && getContent('spiral_of_inquiry_content') && (
             <div className="bg-card border border-border rounded-lg p-6">
               <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('spiral_of_inquiry_heading') || "Spiral of Inquiry"}
@@ -211,7 +237,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
           )}
 
           {/* Additional content - only shown if NOT in Starter Collection */}
-          {!showBasicOnly && (
+          {!showMiniReading && !showBasicOnly && (
             <>
               {/* 4. Acknowledgement */}
               {getContent('acknowledgement_content') && (
