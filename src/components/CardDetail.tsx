@@ -149,7 +149,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
       {isArtOfSelfHealing && (
         <>
           {/* Card Number */}
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-2 pt-12">
             <h2 className="font-serif text-2xl font-semibold text-foreground">Card: {card.card_number}</h2>
           </div>
 
