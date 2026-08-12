@@ -768,9 +768,34 @@ const CourseLessonEditor = ({ courseId }: CourseLessonEditorProps) => {
         <div key={module.title} className="space-y-3">
           <div className="flex items-center gap-2 pb-1 border-b border-border">
             <BookOpen className="w-4 h-4 text-primary" />
-            <h3 className="text-sm font-semibold text-foreground">{module.title}</h3>
-            <span className="text-xs text-muted-foreground">({moduleLessons.length} lessons)</span>
+            {renamingModule === module.title ? (
+              <Input
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                onBlur={() => renameModule(module.title, renameValue)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') renameModule(module.title, renameValue);
+                  if (e.key === 'Escape') setRenamingModule(null);
+                }}
+                autoFocus
+                className="h-7 w-56 text-sm"
+              />
+            ) : (
+              <>
+                <h3 className="text-sm font-semibold text-foreground">{module.title}</h3>
+                <span className="text-xs text-muted-foreground">({moduleLessons.length} lessons)</span>
+              </>
+            )}
             <div className="ml-auto flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0"
+                onClick={() => { setRenamingModule(module.title); setRenameValue(module.title); }}
+                title="Rename module"
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
               <Button
                 variant="ghost"
                 size="sm"
