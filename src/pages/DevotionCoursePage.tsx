@@ -136,6 +136,8 @@ const DevotionCoursePage = () => {
     navigate(`/devotion/course/${courseId}/lesson/${lessonId}`);
   };
 
+  const isDeepeningCourse = (course as any)?.location?.name === 'Deepening Courses';
+
   if (loading || courseLoading || lessonsLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -242,6 +244,7 @@ const DevotionCoursePage = () => {
                   lessons={lessons}
                   journalEntries={journalEntries}
                   onLessonClick={handleLessonClick}
+                  hideSessionLabel={isDeepeningCourse}
                 />
               </TabsContent>
               <TabsContent value="tracking" className="mt-6 space-y-4">
@@ -276,6 +279,7 @@ const DevotionCoursePage = () => {
               lessons={lessons}
               journalEntries={journalEntries}
               onLessonClick={handleLessonClick}
+              hideSessionLabel={isDeepeningCourse}
             />
           )}
 
@@ -315,10 +319,12 @@ const LessonsList = ({
   lessons,
   journalEntries,
   onLessonClick,
+  hideSessionLabel = false,
 }: {
   lessons: Lesson[] | undefined;
   journalEntries: string[] | undefined;
   onLessonClick: (id: string) => void;
+  hideSessionLabel?: boolean;
 }) => {
   if (!lessons || lessons.length === 0) {
     return (
@@ -373,7 +379,7 @@ const LessonsList = ({
           </div>
           <div className="flex-grow">
             <h3 className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">
-              Session {lesson.lesson_number}: {lesson.title}
+              {hideSessionLabel ? lesson.title : `Session ${lesson.lesson_number}: ${lesson.title}`}
             </h3>
             {lesson.description && (
               <p className="text-muted-foreground text-sm mt-1">
