@@ -53,6 +53,7 @@ import DevotionSectionPage from "./pages/DevotionSectionPage";
 import DevotionResourcePage from "./pages/DevotionResourcePage";
 import ProtocolDetailPage from "./pages/ProtocolDetailPage";
 import RemembranceSectionPage from "./pages/RemembranceSectionPage";
+import DeepeningCourses from "./pages/DeepeningCourses";
 import MyPlaylists from "./pages/MyPlaylists";
 import SacredSpreads from "./pages/SacredSpreads";
 import SearchResults from "./pages/SearchResults";
@@ -98,6 +99,7 @@ const App = () => {
             <Route path="/remembrance" element={<Index />} />
             <Route path="/remembrance/section/:section" element={<RemembranceSectionPage />} />
             <Route path="/remembrance/spreads" element={<SacredSpreads />} />
+            <Route path="/remembrance/deepening-courses" element={<DeepeningCourses />} />
             <Route path="/remembrance/resources/:slug" element={<DevotionResourcePage />} />
             <Route path="/remembrance/courses/:slug" element={<DevotionCoursePage />} />
             <Route path="/remembrance/course/:courseId" element={<DevotionCoursePage />} />
