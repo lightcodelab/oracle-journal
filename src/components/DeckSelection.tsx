@@ -161,6 +161,7 @@ export const DeckSelection = ({
             </motion.div>
 
             {decks.filter(d => !d.is_starter).map((deck, index) => {
+              return (
               const bannerSrc = deck.thumbnail_url
                 || (deck.name === "The Sacred Rewrite" ? tsrBanner.url
                 : deck.name === "Magic not Logic" ? mnlBanner.url
