@@ -492,6 +492,8 @@ const DevotionLessonPage = () => {
     ),
   ];
 
+  const isDeepeningCourse = (course as any)?.location?.name === 'Deepening Courses';
+
   return (
     <div className="min-h-screen bg-background">
       {/* Fixed Sidebar */}
@@ -549,9 +551,11 @@ const DevotionLessonPage = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-8"
           >
-            <p className="text-primary font-sans text-sm uppercase tracking-wider mb-2">
-              Session {lesson.lesson_number}
-            </p>
+            {!isDeepeningCourse && (
+              <p className="text-primary font-sans text-sm uppercase tracking-wider mb-2">
+                Session {lesson.lesson_number}
+              </p>
+            )}
             <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
               {lesson.title}
             </h1>
@@ -589,7 +593,7 @@ const DevotionLessonPage = () => {
           >
             {lesson.body_richtext ? (
               <div 
-                className="text-foreground/90 font-sans leading-relaxed ProseMirror"
+                className={`text-foreground/90 font-sans leading-relaxed ProseMirror${isDeepeningCourse ? ' companion-lesson-content' : ''}`}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(
                   (() => {
                     // Render TipTap JSON to HTML (simplified)
@@ -631,7 +635,7 @@ const DevotionLessonPage = () => {
               />
             ) : (
               <div 
-                className="text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap"
+                className={`text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap${isDeepeningCourse ? ' companion-lesson-content' : ''}`}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.content) }}
               />
             )}
@@ -775,7 +779,7 @@ const DevotionLessonPage = () => {
                 className="text-foreground/70 hover:text-foreground"
               >
                 <ChevronLeft className="w-4 h-4 mr-2" />
-                Session {prevLesson.lesson_number}
+                {isDeepeningCourse ? prevLesson.title : `Session ${prevLesson.lesson_number}`}
               </Button>
             ) : (
               <div />
@@ -787,7 +791,7 @@ const DevotionLessonPage = () => {
                 variant="ghost"
                 className="text-foreground/70 hover:text-foreground"
               >
-                Session {nextLesson.lesson_number}
+                {isDeepeningCourse ? nextLesson.title : `Session ${nextLesson.lesson_number}`}
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             ) : (

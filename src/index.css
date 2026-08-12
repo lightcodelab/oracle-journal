@@ -276,3 +276,12 @@ All colors MUST be HSL.
 .ProseMirror a:hover {
   color: hsl(var(--accent));
 }
+
+/* Companion (Deepening) course lessons: rule between body text and section headings */
+.companion-lesson-content h1:not(:first-child),
+.companion-lesson-content h2:not(:first-child),
+.companion-lesson-content h3:not(:first-child) {
+  border-top: 1px solid hsl(var(--border));
+  padding-top: 1.75rem;
+  margin-top: 2.25rem;
+}
