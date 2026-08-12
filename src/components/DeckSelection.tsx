@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, DoorOpen } from "lucide-react";
+import { Sparkles, DoorOpen, BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import tsrBanner from "@/assets/sacred-rewrite-thumbnail.png.asset.json";
 import mnlBanner from "@/assets/magic-not-logic-thumbnail.png.asset.json";
