@@ -20,6 +20,8 @@ const REMEMBRANCE_LOCATIONS = new Set([
 const getPublicUrl = (bucket: string, path: string | null): string | null => {
   if (!path) return null;
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  // Already an app-relative asset URL (e.g. /__l5e/assets-v1/...), not a storage object key.
+  if (path.startsWith('/')) return path;
   const { data } = supabase.storage.from(bucket).getPublicUrl(path);
   return data.publicUrl;
 };
