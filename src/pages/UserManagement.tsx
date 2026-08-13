@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Eye, EyeOff, UserPlus, RefreshCw, Copy, Check, KeyRound, CalendarPlus, Pencil, Send, CalendarIcon, XCircle } from "lucide-react";
+import { Loader2, Eye, EyeOff, UserPlus, RefreshCw, Copy, Check, KeyRound, CalendarPlus, Pencil, Send, CalendarIcon, XCircle, Search } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -116,6 +116,8 @@ const UserManagement = () => {
 
   const [users, setUsers] = useState<ManualUser[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -453,6 +455,15 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
     setTimeout(() => setCopiedUserId(null), 3000);
   };
 
+  const filteredUsers = users.filter((u) => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      (u.full_name ?? "").toLowerCase().includes(q) ||
+      u.email.toLowerCase().includes(q)
+    );
+  });
+
   if (authLoading || loadingUsers) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -597,17 +608,33 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
           </Dialog>
         </motion.div>
 
-        {users.length === 0 ? (
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name or email…"
+            className="pl-9"
+          />
+        </div>
+
+        {filteredUsers.length === 0 ? (
           <Card className="border-dashed">
             <CardContent className="flex flex-col items-center justify-center py-12 text-center">
               <UserPlus className="w-10 h-10 text-muted-foreground mb-3" />
-              <p className="text-muted-foreground">No manually granted users yet.</p>
-              <p className="text-sm text-muted-foreground mt-1">Click "Add User" to grant time-limited access.</p>
+              {searchQuery.trim() ? (
+                <p className="text-muted-foreground">No users match your search.</p>
+              ) : (
+                <>
+                  <p className="text-muted-foreground">No manually granted users yet.</p>
+                  <p className="text-sm text-muted-foreground mt-1">Click "Add User" to grant time-limited access.</p>
+                </>
+              )}
             </CardContent>
           </Card>
         ) : (
           <div className="space-y-3">
-            {users.map((u, i) => {
+            {filteredUsers.map((u, i) => {
               const badgeVariant =
                 u.state === "active" ? "default" :
                 u.state === "scheduled" ? "secondary" :
