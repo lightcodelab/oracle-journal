@@ -608,7 +608,17 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
           </Dialog>
         </motion.div>
 
-        {users.length === 0 ? (
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name or email…"
+            className="pl-9"
+          />
+        </div>
+
+        {filteredUsers.length === 0 ? (
           <Card className="border-dashed">
             <CardContent className="flex flex-col items-center justify-center py-12 text-center">
               <UserPlus className="w-10 h-10 text-muted-foreground mb-3" />
