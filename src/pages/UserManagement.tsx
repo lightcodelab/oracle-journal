@@ -455,6 +455,15 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
     setTimeout(() => setCopiedUserId(null), 3000);
   };
 
+  const filteredUsers = users.filter((u) => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      (u.full_name ?? "").toLowerCase().includes(q) ||
+      u.email.toLowerCase().includes(q)
+    );
+  });
+
   if (authLoading || loadingUsers) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
