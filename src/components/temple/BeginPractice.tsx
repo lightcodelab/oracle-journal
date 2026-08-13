@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 const items = [
-  { title: "Draw a card", href: "/remembrance", icon: Sparkles },
+  { title: "Draw a card", href: "/remembrance#mirrors-of-sacred-undoing", icon: Sparkles },
   {
     title: "Choose a meditation",
     href: "/devotion/section/guided-meditation",
