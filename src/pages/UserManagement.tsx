@@ -116,6 +116,8 @@ const UserManagement = () => {
 
   const [users, setUsers] = useState<ManualUser[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
