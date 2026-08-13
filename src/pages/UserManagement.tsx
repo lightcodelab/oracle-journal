@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Eye, EyeOff, UserPlus, RefreshCw, Copy, Check, KeyRound, CalendarPlus, Pencil, Send, CalendarIcon, XCircle } from "lucide-react";
+import { Loader2, Eye, EyeOff, UserPlus, RefreshCw, Copy, Check, KeyRound, CalendarPlus, Pencil, Send, CalendarIcon, XCircle, Search } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
