@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Sparkles, DoorOpen, BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import tsrBanner from "@/assets/sacred-rewrite-thumbnail.png.asset.json";
@@ -37,6 +38,23 @@ export const DeckSelection = ({
   onSelectDeck,
 }: DeckSelectionProps) => {
   const navigate = useNavigate();
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash) return;
+    const id = hash.slice(1);
+    const scroll = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        return true;
+      }
+      return false;
+    };
+    if (scroll()) return;
+    const t = setTimeout(scroll, 300);
+    return () => clearTimeout(t);
+  }, [hash, decks.length]);
 
   return (
     <motion.div
@@ -64,10 +82,12 @@ export const DeckSelection = ({
 
       {/* Section 1: The Rites of Remembrance — default bg */}
       <motion.div
+        id="rites-of-remembrance"
+        className="scroll-mt-24"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="py-16"
+        style={{ paddingTop: undefined }}
       >
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
