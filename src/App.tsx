@@ -56,6 +56,7 @@ import RemembranceSectionPage from "./pages/RemembranceSectionPage";
 import DeepeningCourses from "./pages/DeepeningCourses";
 import MyPlaylists from "./pages/MyPlaylists";
 import SacredSpreads from "./pages/SacredSpreads";
+import AllCourses from "./pages/AllCourses";
 import SearchResults from "./pages/SearchResults";
 import FeatureSuggestions from "./pages/FeatureSuggestions";
 import BugReports from "./pages/BugReports";
@@ -120,6 +121,7 @@ const App = () => {
             <Route path="/tools/:slug" element={<ToolDetail />} />
             <Route path="/tools/:slug/new" element={<ToolReflection />} />
             <Route path="/tracking" element={<MyTracking />} />
+            <Route path="/courses" element={<AllCourses />} />
             <Route path="/devotion/energy-hygiene" element={<DevotionCourses />} />
             <Route path="/devotion/section/energy-hygiene-practices" element={<DevotionCourses />} />
             <Route path="/devotion/section/:section" element={<DevotionSectionPage />} />

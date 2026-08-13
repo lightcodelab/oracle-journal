@@ -25,7 +25,7 @@ const items = [
     href: "/devotion/section/healing-templates",
     icon: FileHeart,
   },
-  { title: "Explore courses", href: "/devotion/energy-hygiene", icon: BookOpen },
+  { title: "Explore courses", href: "/courses", icon: BookOpen },
   { title: "View live offerings", href: "/all-live-sessions", icon: Radio },
 ];
 
