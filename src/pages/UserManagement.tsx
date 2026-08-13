@@ -628,7 +628,7 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
           </Card>
         ) : (
           <div className="space-y-3">
-            {users.map((u, i) => {
+            {filteredUsers.map((u, i) => {
               const badgeVariant =
                 u.state === "active" ? "default" :
                 u.state === "scheduled" ? "secondary" :
