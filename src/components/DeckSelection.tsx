@@ -83,11 +83,10 @@ export const DeckSelection = ({
       {/* Section 1: The Rites of Remembrance — default bg */}
       <motion.div
         id="rites-of-remembrance"
-        className="scroll-mt-24"
+        className="py-16 scroll-mt-24"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        style={{ paddingTop: undefined }}
       >
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
@@ -116,10 +115,11 @@ export const DeckSelection = ({
 
       {/* Section 2: The Mirrors of Sacred Undoing — muted bg */}
       <motion.div
+        id="mirrors-of-sacred-undoing"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="bg-muted/30 py-16"
+        className="bg-muted/30 py-16 scroll-mt-24"
       >
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
@@ -286,10 +286,11 @@ export const DeckSelection = ({
 
       {/* Section 3: The Alchemy of Becoming — default bg */}
       <motion.div
+        id="alchemy-of-becoming"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="py-16"
+        className="py-16 scroll-mt-24"
       >
         <div className="container mx-auto px-4">
           <RemembranceCourseSection />
