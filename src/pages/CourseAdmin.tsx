@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,6 +45,7 @@ type View = 'list' | 'form';
 
 const CourseAdmin = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<View>('list');
@@ -79,6 +80,16 @@ const CourseAdmin = () => {
       fetchCategories();
     }
   }, [loading]);
+
+  // Deep-link: /admin/courses?edit=<courseId> opens that course's editor directly.
+  useEffect(() => {
+    if (loading) return;
+    const editId = searchParams.get('edit');
+    if (editId) {
+      setEditingCourseId(editId);
+      setView('form');
+    }
+  }, [loading, searchParams]);
 
   const fetchCourses = async () => {
     const { data, error } = await supabase
@@ -127,12 +138,14 @@ const CourseAdmin = () => {
   const handleFormSuccess = () => {
     setEditingCourseId(null);
     setView('list');
+    if (searchParams.get('edit')) setSearchParams({}, { replace: true });
     fetchCourses();
   };
 
   const handleFormCancel = () => {
     setEditingCourseId(null);
     setView('list');
+    if (searchParams.get('edit')) setSearchParams({}, { replace: true });
   };
 
   const filteredCourses = courses.filter(course => {

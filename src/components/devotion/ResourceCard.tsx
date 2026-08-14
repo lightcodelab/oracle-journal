@@ -93,7 +93,11 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
                 className="h-7 px-2 bg-white/90 hover:bg-white text-zinc-800 shadow-sm"
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/admin/content?edit=${resource.id}`);
+                  if (resource.slug.startsWith('legacy-course-')) {
+                    navigate(`/admin/courses?edit=${resource.slug.replace('legacy-course-', '')}`);
+                  } else {
+                    navigate(`/admin/content?edit=${resource.id}`);
+                  }
                 }}
               >
                 <Pencil className="w-3 h-3 mr-1" />
