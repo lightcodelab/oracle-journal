@@ -6711,6 +6711,10 @@ export type Database = {
         Args: { _user_id: string }
         Returns: Json
       }
+      arrival_abandon_and_restart: {
+        Args: { _expected_interaction_id: string }
+        Returns: Json
+      }
       arrival_admin_suspend_resource: {
         Args: { _reason: string; _registry_id: string }
         Returns: undefined
