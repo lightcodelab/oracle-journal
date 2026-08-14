@@ -6629,6 +6629,10 @@ export type Database = {
       }
     }
     Functions: {
+      _arrival_questionnaire_payload: {
+        Args: { _interaction_id: string; _user_id: string }
+        Returns: Json
+      }
       _mirror_blocks_bidirectional: {
         Args: { _a: string; _b: string }
         Returns: boolean
@@ -6719,7 +6723,12 @@ export type Database = {
         Args: { _codes: string[]; _vocab: string[] }
         Returns: boolean
       }
+      arrival_load_interaction: {
+        Args: { _interaction_id: string }
+        Returns: Json
+      }
       arrival_reasons_valid: { Args: { _reasons: Json }; Returns: boolean }
+      arrival_start_or_resume: { Args: never; Returns: Json }
       assert_caller_is_admin: { Args: never; Returns: string }
       attribute_affiliate_referral: {
         Args: { _code: string; _commission_model?: string; _link_code?: string }
