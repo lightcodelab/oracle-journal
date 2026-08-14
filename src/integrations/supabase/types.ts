@@ -6732,6 +6732,14 @@ export type Database = {
         Returns: Json
       }
       arrival_reasons_valid: { Args: { _reasons: Json }; Returns: boolean }
+      arrival_save_answers: {
+        Args: {
+          _answers: Json
+          _expected_answers_revision: number
+          _interaction_id: string
+        }
+        Returns: Json
+      }
       arrival_start_or_resume: { Args: never; Returns: Json }
       assert_caller_is_admin: { Args: never; Returns: string }
       attribute_affiliate_referral: {
