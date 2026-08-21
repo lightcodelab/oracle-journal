@@ -6008,6 +6008,77 @@ export type Database = {
         }
         Relationships: []
       }
+      temple_moment_movements: {
+        Row: {
+          content: Json
+          content_revision: number
+          created_at: string
+          id: string
+          moment_id: string
+          movement_code: string
+          schema_version: number
+          updated_at: string
+        }
+        Insert: {
+          content: Json
+          content_revision?: number
+          created_at?: string
+          id?: string
+          moment_id: string
+          movement_code: string
+          schema_version?: number
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          content_revision?: number
+          created_at?: string
+          id?: string
+          moment_id?: string
+          movement_code?: string
+          schema_version?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "temple_moment_movements_moment_id_fkey"
+            columns: ["moment_id"]
+            isOneToOne: false
+            referencedRelation: "temple_moments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      temple_moments: {
+        Row: {
+          archived_at: string | null
+          created_at: string
+          id: string
+          label: string | null
+          occurred_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string
+          id?: string
+          label?: string | null
+          occurred_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string
+          id?: string
+          label?: string | null
+          occurred_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       tier_bucket_access: {
         Row: {
           bucket_key: string
