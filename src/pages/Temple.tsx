@@ -8,6 +8,7 @@ import NavActions from "@/components/NavActions";
 import { Button } from "@/components/ui/button";
 import { WelcomeHome } from "@/components/temple/WelcomeHome";
 import { ContinueJourney } from "@/components/temple/ContinueJourney";
+import { LivingPatternCard } from "@/components/temple/LivingPatternCard";
 import { BeginPractice } from "@/components/temple/BeginPractice";
 import { ExploreDoors } from "@/components/temple/ExploreDoors";
 import { LiveAndSupport } from "@/components/temple/LiveAndSupport";
@@ -211,6 +212,7 @@ const Temple = () => {
         />
 
         <ContinueJourney enabled={hasFullAccess} />
+        <LivingPatternCard />
         <BeginPractice />
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />
