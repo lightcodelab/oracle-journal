@@ -56,9 +56,12 @@ export function LivingPatternCard() {
   return (
     <section aria-labelledby="living-pattern-heading" className="mb-12">
       <div className="rounded-xl border border-border/60 bg-card p-5 sm:p-6 md:p-8">
+        <p className="text-[0.65rem] sm:text-xs tracking-[0.22em] uppercase text-primary">
+          A private place to notice
+        </p>
         <h2
           id="living-pattern-heading"
-          className="font-serif text-2xl sm:text-3xl text-foreground"
+          className="mt-2 font-serif text-2xl sm:text-3xl text-foreground"
         >
           Logging My Living Pattern
         </h2>
@@ -71,11 +74,11 @@ export function LivingPatternCard() {
           more like your own.
         </p>
 
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="mt-6 flex flex-col gap-4">
           {panels.map((panel) => (
             <article
               key={panel.key}
-              className="relative overflow-hidden rounded-lg border border-border/50 min-h-[300px] sm:min-h-[320px] flex flex-col"
+              className="relative overflow-hidden rounded-lg border border-border/50 aspect-[16/9]"
             >
               <img
                 src={panel.image}
@@ -88,19 +91,19 @@ export function LivingPatternCard() {
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/30"
+                className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"
               />
-              <div className="relative flex h-full flex-1 flex-col p-5">
+              <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 md:p-9 max-w-full sm:max-w-[62%]">
                 <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
                   {panel.record}
                 </p>
-                <h3 className="mt-1 font-serif text-2xl sm:text-3xl tracking-wide text-on-image">
+                <h3 className="mt-1 font-serif text-2xl sm:text-3xl md:text-4xl tracking-wide text-on-image">
                   {panel.practice}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-on-image/85">
+                <p className="mt-2 text-sm sm:text-base leading-relaxed text-on-image/85">
                   {panel.description}
                 </p>
-                <div className="mt-auto pt-6">
+                <div className="mt-4">
                   {panel.href ? (
                     <Link
                       to={panel.href}
@@ -127,6 +130,7 @@ export function LivingPatternCard() {
             </article>
           ))}
         </div>
+
       </div>
     </section>
   );
