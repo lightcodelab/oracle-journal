@@ -55,6 +55,7 @@ import ProtocolDetailPage from "./pages/ProtocolDetailPage";
 import RemembranceSectionPage from "./pages/RemembranceSectionPage";
 import DeepeningCourses from "./pages/DeepeningCourses";
 import MyPlaylists from "./pages/MyPlaylists";
+import LivingPatternPause from "./pages/LivingPatternPause";
 import SacredSpreads from "./pages/SacredSpreads";
 import AllCourses from "./pages/AllCourses";
 import SearchResults from "./pages/SearchResults";
@@ -136,6 +137,7 @@ const App = () => {
             <Route path="/journal" element={<Journal />} />
             <Route path="/readings" element={<MyReadings />} />
             <Route path="/playlists" element={<MyPlaylists />} />
+            <Route path="/living-pattern/pause" element={<LivingPatternPause />} />
             <Route path="/my-calendar" element={<MyCalendar />} />
             <Route path="/all-live-sessions" element={<LiveSessions />} />
             <Route path="/all-live-sessions/:sessionId/join" element={<LiveSessionJoin />} />
