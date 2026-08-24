@@ -74,11 +74,11 @@ export function LivingPatternCard() {
           more like your own.
         </p>
 
-        <div className="mt-6 flex flex-col gap-4">
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
           {panels.map((panel) => (
             <article
               key={panel.key}
-              className="relative overflow-hidden rounded-lg border border-border/50 min-h-[320px] sm:min-h-0 aspect-[16/9]"
+              className="relative overflow-hidden rounded-lg border border-border/50 min-h-[320px] lg:min-h-0 aspect-[16/9]"
             >
               <img
                 src={panel.image}
@@ -91,11 +91,11 @@ export function LivingPatternCard() {
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"
+                className="absolute inset-0 bg-gradient-to-r from-[#5c3d2e]/85 via-[#5c3d2e]/45 to-transparent"
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent sm:from-black/35 sm:via-transparent"
+                className="absolute inset-0 bg-gradient-to-t from-[#3b261b]/80 via-[#3b261b]/15 to-transparent lg:from-[#3b261b]/40 lg:via-transparent"
               />
 
               <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 md:p-9 max-w-full sm:max-w-[62%]">
