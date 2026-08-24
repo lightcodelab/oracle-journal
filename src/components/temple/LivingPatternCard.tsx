@@ -93,6 +93,11 @@ export function LivingPatternCard() {
                 aria-hidden="true"
                 className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"
               />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent sm:from-black/35 sm:via-transparent"
+              />
+
               <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 md:p-9 max-w-full sm:max-w-[62%]">
                 <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
                   {panel.record}
