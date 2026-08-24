@@ -98,7 +98,7 @@ export function LivingPatternCard() {
                 className="absolute inset-0 bg-gradient-to-t from-[#3b261b]/80 via-[#3b261b]/15 to-transparent lg:from-[#3b261b]/40 lg:via-transparent"
               />
 
-              <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 md:p-9 max-w-full sm:max-w-[62%]">
+              <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 md:p-9 max-w-full sm:max-w-[62%] lg:max-w-[90%] lg:p-6 xl:p-8">
                 <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
                   {panel.record}
                 </p>
