@@ -78,7 +78,7 @@ export function LivingPatternCard() {
           {panels.map((panel) => (
             <article
               key={panel.key}
-              className="relative overflow-hidden rounded-lg border border-border/50 min-h-[320px] lg:min-h-0 aspect-[16/9]"
+              className="relative overflow-hidden rounded-lg border border-border/50 min-h-[320px] lg:min-h-0 aspect-[4/3]"
             >
               <img
                 src={panel.image}
@@ -86,7 +86,7 @@ export function LivingPatternCard() {
                 aria-hidden="true"
                 loading="lazy"
                 width={1600}
-                height={900}
+                height={1200}
                 className="absolute inset-0 h-full w-full object-cover"
               />
               <div
@@ -98,14 +98,14 @@ export function LivingPatternCard() {
                 className="absolute inset-0 bg-gradient-to-t from-[#2a1a12]/90 via-[#2a1a12]/20 to-transparent lg:from-[#2a1a12]/55 lg:via-transparent"
               />
 
-              <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 md:p-9 max-w-full sm:max-w-[62%] lg:max-w-[90%] lg:p-6 xl:p-8">
-                <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+              <div className="relative flex h-full flex-col justify-end p-5 sm:p-6 lg:p-5 xl:p-6 max-w-full sm:max-w-[62%] lg:max-w-[90%]">
+                <p className="text-[0.65rem] lg:text-[0.6rem] tracking-[0.2em] uppercase text-primary">
                   {panel.record}
                 </p>
-                <h3 className="mt-1 font-serif text-2xl sm:text-3xl md:text-4xl lg:text-2xl xl:text-3xl tracking-wide text-on-image">
+                <h3 className="mt-1 font-serif text-2xl sm:text-3xl lg:text-2xl tracking-wide text-on-image">
                   {panel.practice}
                 </h3>
-                <p className="mt-2 text-sm sm:text-base leading-relaxed text-on-image/85">
+                <p className="mt-2 text-sm sm:text-base lg:text-sm leading-relaxed text-on-image/85">
                   {panel.description}
                 </p>
                 <div className="mt-4">
