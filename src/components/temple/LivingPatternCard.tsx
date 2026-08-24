@@ -78,7 +78,7 @@ export function LivingPatternCard() {
           {panels.map((panel) => (
             <article
               key={panel.key}
-              className="relative overflow-hidden rounded-lg border border-border/50 min-h-[320px] lg:min-h-0 aspect-[4/3]"
+              className="relative overflow-hidden rounded-lg border border-border/50 min-h-[320px] lg:min-h-0 aspect-[16/9] sm:aspect-[4/3]"
             >
               <img
                 src={panel.image}
@@ -91,21 +91,25 @@ export function LivingPatternCard() {
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-r from-[#3b261b]/92 via-[#3b261b]/55 to-transparent"
+                className="absolute inset-0 bg-[#2a1a12]/60"
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-[#2a1a12]/90 via-[#2a1a12]/20 to-transparent lg:from-[#2a1a12]/55 lg:via-transparent"
+                className="absolute inset-0 bg-gradient-to-r from-[#2a1a12]/95 via-[#2a1a12]/75 to-transparent"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-[#1f140e]/95 via-[#1f140e]/30 to-transparent sm:from-[#1f140e]/80 sm:via-transparent"
               />
 
-              <div className="relative flex h-full flex-col justify-end p-5 sm:p-6 lg:p-5 xl:p-6 max-w-full sm:max-w-[62%] lg:max-w-[90%]">
+              <div className="relative flex h-full flex-col justify-end p-5 sm:p-6 lg:p-5 xl:p-6 max-w-full sm:max-w-[62%] lg:max-w-[90%] [text-shadow:0_1px_3px_rgba(0,0,0,0.45)]">
                 <p className="text-[0.65rem] lg:text-[0.6rem] tracking-[0.2em] uppercase text-primary">
                   {panel.record}
                 </p>
                 <h3 className="mt-1 font-serif text-2xl sm:text-3xl lg:text-2xl tracking-wide text-on-image">
                   {panel.practice}
                 </h3>
-                <p className="mt-2 text-sm sm:text-base lg:text-sm leading-relaxed text-on-image/85">
+                <p className="mt-2 text-sm sm:text-base lg:text-sm leading-relaxed text-on-image">
                   {panel.description}
                 </p>
                 <div className="mt-4">
@@ -124,7 +128,7 @@ export function LivingPatternCard() {
                       >
                         {panel.action}
                       </span>
-                      <p className="mt-2 text-xs text-on-image/70">
+                      <p className="mt-2 text-xs text-on-image">
                         {panel.previewNote} — this practice arrives in a later
                         opening of The Temple.
                       </p>
