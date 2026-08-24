@@ -102,7 +102,7 @@ export function LivingPatternCard() {
                 <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
                   {panel.record}
                 </p>
-                <h3 className="mt-1 font-serif text-2xl sm:text-3xl md:text-4xl tracking-wide text-on-image">
+                <h3 className="mt-1 font-serif text-2xl sm:text-3xl md:text-4xl lg:text-2xl xl:text-3xl tracking-wide text-on-image">
                   {panel.practice}
                 </h3>
                 <p className="mt-2 text-sm sm:text-base leading-relaxed text-on-image/85">
