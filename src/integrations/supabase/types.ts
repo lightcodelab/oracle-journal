@@ -3582,6 +3582,209 @@ export type Database = {
         }
         Relationships: []
       }
+      living_pattern_evidence: {
+        Row: {
+          content: Json
+          content_revision: number
+          created_at: string
+          id: string
+          occurred_at: string
+          pattern_id: string
+          schema_version: number
+          updated_at: string
+        }
+        Insert: {
+          content?: Json
+          content_revision?: number
+          created_at?: string
+          id?: string
+          occurred_at?: string
+          pattern_id: string
+          schema_version?: number
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          content_revision?: number
+          created_at?: string
+          id?: string
+          occurred_at?: string
+          pattern_id?: string
+          schema_version?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "living_pattern_evidence_pattern_id_fkey"
+            columns: ["pattern_id"]
+            isOneToOne: false
+            referencedRelation: "living_patterns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      living_patterns: {
+        Row: {
+          chosen_at: string
+          commitment: string | null
+          content: Json
+          content_revision: number
+          created_at: string
+          id: string
+          label: string
+          rechosen_at: string | null
+          retired_at: string | null
+          schema_version: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chosen_at?: string
+          commitment?: string | null
+          content?: Json
+          content_revision?: number
+          created_at?: string
+          id?: string
+          label: string
+          rechosen_at?: string | null
+          retired_at?: string | null
+          schema_version?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chosen_at?: string
+          commitment?: string | null
+          content?: Json
+          content_revision?: number
+          created_at?: string
+          id?: string
+          label?: string
+          rechosen_at?: string | null
+          retired_at?: string | null
+          schema_version?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      living_record_links: {
+        Row: {
+          created_at: string
+          id: string
+          note: string | null
+          source_id: string
+          source_kind: string
+          target_id: string
+          target_kind: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          source_id: string
+          source_kind: string
+          target_id: string
+          target_kind: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          source_id?: string
+          source_kind?: string
+          target_id?: string
+          target_kind?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      living_resource_tags: {
+        Row: {
+          created_at: string
+          id: string
+          noticed_after: string | null
+          resource_family: string
+          resource_id: string
+          target_id: string
+          target_kind: string
+          title_snapshot: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          noticed_after?: string | null
+          resource_family: string
+          resource_id: string
+          target_id: string
+          target_kind: string
+          title_snapshot: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          noticed_after?: string | null
+          resource_family?: string
+          resource_id?: string
+          target_id?: string
+          target_kind?: string
+          title_snapshot?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      living_states: {
+        Row: {
+          body: Json
+          capacity: Json
+          content_revision: number
+          created_at: string
+          desired_state: Json
+          feeling: Json
+          id: string
+          occurred_at: string
+          receive: Json
+          reorient: Json
+          schema_version: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: Json
+          capacity?: Json
+          content_revision?: number
+          created_at?: string
+          desired_state?: Json
+          feeling?: Json
+          id?: string
+          occurred_at?: string
+          receive?: Json
+          reorient?: Json
+          schema_version?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: Json
+          capacity?: Json
+          content_revision?: number
+          created_at?: string
+          desired_state?: Json
+          feeling?: Json
+          id?: string
+          occurred_at?: string
+          receive?: Json
+          reorient?: Json
+          schema_version?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       manual_access_grant_audit: {
         Row: {
           acted_at: string
@@ -6892,6 +7095,130 @@ export type Database = {
         Returns: Json
       }
       is_active_member: { Args: { _user_id: string }; Returns: boolean }
+      living_caller: { Args: never; Returns: string }
+      living_link_create: {
+        Args: {
+          _note?: string
+          _source_id: string
+          _source_kind: string
+          _target_id: string
+          _target_kind: string
+        }
+        Returns: Json
+      }
+      living_link_delete: { Args: { _id: string }; Returns: Json }
+      living_links_list: { Args: { _id: string; _kind: string }; Returns: Json }
+      living_owns_record: {
+        Args: { _id: string; _kind: string; _uid: string }
+        Returns: boolean
+      }
+      living_pattern_create: {
+        Args: { _commitment?: string; _content?: Json; _label: string }
+        Returns: Json
+      }
+      living_pattern_evidence_create: {
+        Args: { _content?: Json; _occurred_at?: string; _pattern_id: string }
+        Returns: Json
+      }
+      living_pattern_evidence_list: {
+        Args: {
+          _cursor_id?: string
+          _cursor_occurred_at?: string
+          _limit?: number
+          _pattern_id: string
+        }
+        Returns: Json
+      }
+      living_pattern_evidence_update: {
+        Args: {
+          _content?: Json
+          _expected_revision: number
+          _id: string
+          _occurred_at?: string
+        }
+        Returns: Json
+      }
+      living_pattern_get: { Args: { _id: string }; Returns: Json }
+      living_pattern_update: {
+        Args: {
+          _commitment?: string
+          _content?: Json
+          _expected_revision: number
+          _id: string
+          _label?: string
+          _rechoose?: boolean
+          _retire?: boolean
+          _unretire?: boolean
+        }
+        Returns: Json
+      }
+      living_patterns_list: {
+        Args: {
+          _cursor_chosen_at?: string
+          _cursor_id?: string
+          _include_retired?: boolean
+          _limit?: number
+        }
+        Returns: Json
+      }
+      living_resource_tag_add: {
+        Args: {
+          _noticed_after?: string
+          _resource_family: string
+          _resource_id: string
+          _target_id: string
+          _target_kind: string
+        }
+        Returns: Json
+      }
+      living_resource_tag_remove: { Args: { _id: string }; Returns: Json }
+      living_resource_tags_list: {
+        Args: { _target_id: string; _target_kind: string }
+        Returns: Json
+      }
+      living_resource_title: {
+        Args: { _family: string; _resource_id: string }
+        Returns: string
+      }
+      living_state_create: {
+        Args: {
+          _body?: Json
+          _capacity?: Json
+          _desired_state?: Json
+          _feeling?: Json
+          _occurred_at?: string
+          _receive?: Json
+          _reorient?: Json
+        }
+        Returns: Json
+      }
+      living_state_get: { Args: { _id: string }; Returns: Json }
+      living_state_update: {
+        Args: {
+          _body?: Json
+          _capacity?: Json
+          _desired_state?: Json
+          _expected_revision: number
+          _feeling?: Json
+          _id: string
+          _occurred_at?: string
+          _receive?: Json
+          _reorient?: Json
+        }
+        Returns: Json
+      }
+      living_states_list: {
+        Args: {
+          _cursor_id?: string
+          _cursor_occurred_at?: string
+          _limit?: number
+        }
+        Returns: Json
+      }
+      living_thread_page: {
+        Args: { _cursor_id?: string; _cursor_occurred_at?: string }
+        Returns: Json
+      }
       mark_founder_price_lost:
         | { Args: { _reason: string; _user_id: string }; Returns: undefined }
         | {
