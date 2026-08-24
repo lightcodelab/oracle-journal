@@ -100,7 +100,7 @@ export function LivingPatternCard() {
                 <p className="mt-2 text-sm leading-relaxed text-on-image/85">
                   {panel.description}
                 </p>
-                <div className="mt-6 pt-2 mt-auto">
+                <div className="mt-auto pt-6">
                   {panel.href ? (
                     <Link
                       to={panel.href}
