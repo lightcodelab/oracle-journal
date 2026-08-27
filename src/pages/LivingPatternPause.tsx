@@ -88,7 +88,7 @@ function Chips({
 const LivingPatternPause = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
+  const { hasFullTempleAccess, isAdmin, loading: memberLoading } = useMemberState();
 
   const [step, setStep] = useState<Step>(1);
   const [feelingWords, setFeelingWords] = useState<string[]>([]);
@@ -183,7 +183,7 @@ const LivingPatternPause = () => {
     );
   }
 
-  if (!hasFullTempleAccess) {
+  if (!hasFullTempleAccess || !isAdmin) {
     return (
       <div className="min-h-screen bg-background">
         <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">

@@ -212,7 +212,7 @@ const Temple = () => {
         />
 
         <ContinueJourney enabled={hasFullAccess} />
-        <LivingPatternCard />
+        {isAdmin && <LivingPatternCard />}
         <BeginPractice />
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />
