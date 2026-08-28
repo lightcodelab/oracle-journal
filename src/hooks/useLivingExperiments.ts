@@ -17,6 +17,8 @@ export interface LivingExperiment {
   id: string;
   state_id: string | null;
   moment_id: string | null;
+  /** LP-E: an experiment may instead originate from one of her own Patterns. */
+  pattern_id: string | null;
   guide_key: string | null;
   own_experiment: string | null;
 
@@ -28,6 +30,7 @@ export interface LivingExperiment {
   notice_count?: number;
   has_return?: boolean;
 }
+
 
 export interface LivingFieldNote {
   id: string;
