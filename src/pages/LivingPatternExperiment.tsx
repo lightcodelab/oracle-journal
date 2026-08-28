@@ -397,6 +397,7 @@ const LivingPatternExperiment = () => {
                       value={returnDraft}
                       onChange={(e) => setReturnDraft(e.target.value)}
                     />
+                    <FormHelp help={FIELD_NOTE_HELP.return} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="return-unknown">What is still unknown? (optional)</Label>
