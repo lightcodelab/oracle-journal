@@ -38,3 +38,7 @@ verify_jwt = false
 
 [functions.mirror-s01-runner]
 verify_jwt = false
+
+[functions.living-media-gc]
+verify_jwt = false
+
