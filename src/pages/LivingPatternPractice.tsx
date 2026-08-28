@@ -401,6 +401,7 @@ const LivingPatternPractice = () => {
                     onChange={(e) => setField(setRecognise, f.key, e.target.value)}
                     placeholder="As much or as little as you like."
                   />
+                  <FormHelp help={PRACTICE_HELP.recognise} />
                 </div>
               ))}
               <p className="text-xs text-muted-foreground">
