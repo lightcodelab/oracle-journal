@@ -37,7 +37,7 @@ export const MEDIA_LIMITS = {
     mimes: ["video/mp4", "video/webm", "video/quicktime"],
     maxBytes: 150 * 1024 * 1024,
     maxLabel: "150 MB",
-    maxSeconds: 120,
+    maxSeconds: 180,
   },
 } as const;
 
