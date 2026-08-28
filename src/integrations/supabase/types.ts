@@ -3591,6 +3591,7 @@ export type Database = {
           lifecycle: string
           moment_id: string | null
           own_experiment: string | null
+          pattern_id: string | null
           returned_at: string | null
           schema_version: number
           state_id: string | null
@@ -3605,6 +3606,7 @@ export type Database = {
           lifecycle?: string
           moment_id?: string | null
           own_experiment?: string | null
+          pattern_id?: string | null
           returned_at?: string | null
           schema_version?: number
           state_id?: string | null
@@ -3619,6 +3621,7 @@ export type Database = {
           lifecycle?: string
           moment_id?: string | null
           own_experiment?: string | null
+          pattern_id?: string | null
           returned_at?: string | null
           schema_version?: number
           state_id?: string | null
@@ -3631,6 +3634,13 @@ export type Database = {
             columns: ["moment_id"]
             isOneToOne: false
             referencedRelation: "temple_moments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "living_experiments_pattern_id_fkey"
+            columns: ["pattern_id"]
+            isOneToOne: false
+            referencedRelation: "living_patterns"
             referencedColumns: ["id"]
           },
           {
@@ -7214,6 +7224,7 @@ export type Database = {
           _guide_key?: string
           _moment_id?: string
           _own_experiment?: string
+          _pattern_id?: string
           _state_id?: string
           _try_body?: string
           _try_content?: Json
@@ -7229,6 +7240,7 @@ export type Database = {
           _lifecycle?: string
           _moment_id?: string
           _own_experiment?: string
+          _pattern_id?: string
           _state_id?: string
         }
         Returns: Json
@@ -7338,6 +7350,10 @@ export type Database = {
           _id: string
           _occurred_at?: string
         }
+        Returns: Json
+      }
+      living_pattern_experiments_list: {
+        Args: { _limit?: number; _pattern_id: string }
         Returns: Json
       }
       living_pattern_get: { Args: { _id: string }; Returns: Json }
