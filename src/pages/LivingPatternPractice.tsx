@@ -373,6 +373,9 @@ const LivingPatternPractice = () => {
             );
           })}
         </nav>
+        <MovementNote>{GLOBAL_MOVEMENT_HELPER}</MovementNote>
+        <p className="mt-3 text-sm text-muted-foreground">{PRACTICE_LEAD_IN}</p>
+
 
         <div className="mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6 space-y-6">
           {step === 1 && (
