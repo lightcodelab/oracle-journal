@@ -63,6 +63,7 @@ import LivingPatternPresence from "./pages/LivingPatternPresence";
 import LivingPatternMoments from "./pages/LivingPatternMoments";
 import LivingPatternPractice from "./pages/LivingPatternPractice";
 import LivingPatternPatterns from "./pages/LivingPatternPatterns";
+import LivingPatternRecord from "./pages/LivingPatternRecord";
 
 
 import SacredSpreads from "./pages/SacredSpreads";
@@ -146,6 +147,7 @@ const App = () => {
             <Route path="/journal" element={<Journal />} />
             <Route path="/readings" element={<MyReadings />} />
             <Route path="/playlists" element={<MyPlaylists />} />
+            <Route path="/living-pattern/record" element={<LivingPatternRecord />} />
             <Route path="/living-pattern/orientation" element={<LivingPatternOrientation />} />
             <Route path="/living-pattern/pause" element={<LivingPatternPause />} />
             <Route path="/living-pattern/experiments" element={<LivingPatternExperiments />} />
