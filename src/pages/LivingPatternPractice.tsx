@@ -427,6 +427,7 @@ const LivingPatternPractice = () => {
                   value={commitment}
                   onChange={(e) => setCommitment(e.target.value)}
                 />
+                <FormHelp help={PRACTICE_HELP.resolve} />
               </div>
               {RESOLVE_FIELDS.map((f) => (
                 <div key={f.key} className="space-y-2">
