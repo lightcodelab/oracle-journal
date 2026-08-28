@@ -455,6 +455,7 @@ const LivingPatternPractice = () => {
                   value={reinforce.expression ?? ""}
                   onChange={(e) => setField(setReinforce, "expression", e.target.value)}
                 />
+                <FormHelp help={PRACTICE_HELP.reinforce} />
               </div>
               <div className="rounded-lg border border-border/60 bg-background/40 p-4 space-y-3">
                 <p className="text-sm text-muted-foreground">
