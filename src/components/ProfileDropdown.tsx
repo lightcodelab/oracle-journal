@@ -113,11 +113,21 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       icon: <FolderHeart className="w-4 h-4 mr-2" />,
       route: '/devotion/protocols',
     },
+    ...(showLivingPattern
+      ? [
+          {
+            label: 'My Living Pattern',
+            icon: <Compass className="w-4 h-4 mr-2" />,
+            route: '/living-pattern/record',
+          },
+        ]
+      : []),
     {
       label: 'My Journal',
       icon: <BookOpen className="w-4 h-4 mr-2" />,
       route: '/journal',
     },
+
     {
       label: 'My Readings',
       icon: <Sparkles className="w-4 h-4 mr-2" />,
