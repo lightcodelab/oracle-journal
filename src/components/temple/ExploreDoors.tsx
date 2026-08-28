@@ -78,7 +78,7 @@ export function ExploreDoors() {
           Search The Temple
         </h3>
         <p className="text-sm text-muted-foreground mb-3">
-          Find teachings, resources, and pathways by name or keyword.
+          Find teachings, resources, and pathways by name or keyword. Use this if you know what your symptoms are and you want to find multiple resource options based on what you are experiencing. 
         </p>
         <form onSubmit={handleSearch} className="flex items-center gap-2">
           <div className="relative flex-1">
