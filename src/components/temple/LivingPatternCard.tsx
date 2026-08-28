@@ -66,34 +66,37 @@ export function LivingPatternCard() {
         >
           Logging My Living Pattern
         </h2>
-        <p className="mt-3 max-w-3xl text-sm sm:text-base leading-relaxed text-muted-foreground">
-          Your Living Pattern is a private record of the moments that shape a
-          life: how you were, what stood out, and the choices you made. Return
-          when something is hard, beautiful, or quietly different. Over time, you
-          will be able to see what steadies you, the stories you repeat, the
-          commitments you are strengthening, and the evidence of a life becoming
-          more like your own.
-        </p>
+        <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
+            Your Living Pattern is a private record of the moments that shape a
+            life: how you were, what stood out, and the choices you made. Return
+            when something is hard, beautiful, or quietly different. Over time, you
+            will be able to see what steadies you, the stories you repeat, the
+            commitments you are strengthening, and the evidence of a life becoming
+            more like your own.
+          </p>
 
-        <div className="mt-4 space-y-2 text-sm text-muted-foreground">
-          <p>
-            <span className="font-semibold text-foreground">New to the Living Pattern?</span>
-            <br />
-            Start with the five-minute introduction. It will show you how to choose a lens, write a small enough entry, and use experiments without turning your life into homework.
-            <br />
-            You can also begin with any lens now.
-          </p>
-          <p>
-            <Link
-              to="/living-pattern/orientation"
-              className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
-            >
-              Start here: How to use your Living Pattern
-            </Link>{" "}
-            — a short, private orientation you can read now, later, or never. You
-            may open any lens straight away.
-          </p>
+          <div className="space-y-2 text-sm text-muted-foreground">
+            <p>
+              <span className="font-semibold text-foreground">New to the Living Pattern?</span>
+              <br />
+              Start with the five-minute introduction. It will show you how to choose a lens, write a small enough entry, and use experiments without turning your life into homework.
+              <br />
+              You can also begin with any lens now.
+            </p>
+            <p>
+              <Link
+                to="/living-pattern/orientation"
+                className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+              >
+                Start here: How to use your Living Pattern
+              </Link>{" "}
+              — a short, private orientation you can read now, later, or never. You
+              may open any lens straight away.
+            </p>
+          </div>
         </div>
+
 
 
 
