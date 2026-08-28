@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button";
 import { BookHeart, Search, ListMusic, LineChart, Sparkles, HeartPulse } from "lucide-react";
 
 const doors = [
-  { name: "Remembrance", href: "/remembrance", image: doorRemembrance.url, description: "Explore the patterns, stories and inheritances shaping you.\nRITUALS, CARD DECKS & COURSES" },
-  { name: "Devotion", href: "/devotion", image: doorDevotion.url, description: "Return to yourself through guided meditation and restorative practice.\nAREEKEERA HEALING TEMPLATES & MEDITATIONS" },
-  { name: "Communion", href: "/communion", image: doorCommunion.url, description: "Find connection, reflection and support within our community.\nLIVE READINGS, CLASSES, WORKSHOPS & REPLAYS" },
+  { name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance.url, description: "Explore the patterns, stories and inheritances shaping you.\nRITUALS, CARD DECKS & COURSES" },
+  { name: "The Door of Devotion", href: "/devotion", image: doorDevotion.url, description: "Return to yourself through guided meditation and restorative practice.\nAREEKEERA HEALING TEMPLATES & MEDITATIONS" },
+  { name: "The Door of Communion", href: "/communion", image: doorCommunion.url, description: "Find connection, reflection and support within our community.\nLIVE READINGS, CLASSES, WORKSHOPS & REPLAYS" },
 ];
 
 const tools = [
@@ -53,12 +53,12 @@ export function ExploreDoors() {
             <Link
               to={door.href}
               className="block group rounded-lg overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              aria-label={`Open the Door of ${door.name}`}
+              aria-label={`Open ${door.name}`}
             >
               <div className="overflow-hidden rounded-lg aspect-square">
                 <img
                   src={door.image}
-                  alt={`The Door of ${door.name}`}
+                  alt={door.name}
                   className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               </div>
