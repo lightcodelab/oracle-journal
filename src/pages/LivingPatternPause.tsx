@@ -406,6 +406,128 @@ const LivingPatternPause = () => {
               </div>
             </div>
 
+            <div className="space-y-4 border-t border-border/60 pt-5">
+              {!wantExperiment ? (
+                <>
+                  <p className="text-sm text-foreground">
+                    This State is complete on its own. If you would like, you can also make it a small
+                    experiment — equally optional, and never better.
+                  </p>
+                  <Button variant="outline" onClick={() => setWantExperiment(true)}>
+                    Make this a small experiment
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-foreground">
+                    Choose a Guide, if one is useful. Nothing here is advice, and none is recommended
+                    over another.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {EXPERIMENT_GUIDES.map((g) => (
+                      <button
+                        key={g.key}
+                        type="button"
+                        aria-pressed={guideKey === g.key}
+                        onClick={() => setGuideKey(g.key)}
+                        className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                          guideKey === g.key
+                            ? "border-primary bg-primary/15 text-foreground"
+                            : "border-border/70 bg-card/60 text-muted-foreground hover:border-primary/50"
+                        }`}
+                      >
+                        {g.title}
+                      </button>
+                    ))}
+                  </div>
+
+                  {selectedGuide && (
+                    <div className="space-y-2 rounded-lg border border-border/60 bg-background/40 p-4 text-sm">
+                      <p className="text-muted-foreground">
+                        <span className="text-primary">What this is for — </span>
+                        {selectedGuide.purpose}
+                      </p>
+                      <p className="text-foreground">
+                        <span className="text-primary">Try this — </span>
+                        {selectedGuide.tryThis}
+                      </p>
+                      {selectedGuide.script && (
+                        <p className="rounded-md border border-border/60 p-3 italic text-foreground">
+                          “{selectedGuide.script}”
+                        </p>
+                      )}
+                      <p className="text-muted-foreground">
+                        <span className="text-primary">What you are testing — </span>
+                        {selectedGuide.testing}
+                      </p>
+                      <p className="text-muted-foreground">
+                        <span className="text-primary">What to notice afterwards — </span>
+                        {selectedGuide.notice}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{CHANGE_COURSE_NOTE}</p>
+                    </div>
+                  )}
+
+                  {guideKey === "own" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="own-experiment">Your own experiment</Label>
+                      <Textarea
+                        id="own-experiment"
+                        rows={2}
+                        value={ownText}
+                        onChange={(e) => setOwnText(e.target.value)}
+                        placeholder="In your own words, as small as you like."
+                      />
+                    </div>
+                  )}
+
+                  {guideKey && (
+                    <>
+                      <div className="space-y-2">
+                        <Label htmlFor="try-note">
+                          What, if anything, are you curious to try? (optional)
+                        </Label>
+                        <Textarea
+                          id="try-note"
+                          rows={2}
+                          value={tryText}
+                          onChange={(e) => setTryText(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="safe-note">
+                          What would make this safe enough to try? (optional)
+                        </Label>
+                        <Textarea
+                          id="safe-note"
+                          rows={2}
+                          value={safeText}
+                          onChange={(e) => setSafeText(e.target.value)}
+                        />
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Button onClick={handleBeginExperiment} disabled={creating}>
+                          {creating && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
+                          Begin this experiment
+                        </Button>
+                        <Button variant="ghost" onClick={() => setWantExperiment(false)} disabled={creating}>
+                          Not now
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+              <p className="text-xs text-muted-foreground">
+                <Link to="/living-pattern/experiments" className="underline hover:text-foreground">
+                  My experiments
+                </Link>{" "}
+                — return to any of them whenever you have more information.
+              </p>
+            </div>
+
+
+
             <div className="space-y-2">
               <Label htmlFor="amend-note">Your next direction</Label>
               <Textarea
