@@ -68,12 +68,14 @@ export function LivingPatternCard() {
         </h2>
         <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
-            Your Living Pattern is a private record of the moments that shape a
-            life: how you were, what stood out, and the choices you made. Return
-            when something is hard, beautiful, or quietly different. Over time, you
-            will be able to see what steadies you, the stories you repeat, the
-            commitments you are strengthening, and the evidence of a life becoming
-            more like your own.
+            Your Living Pattern is a private Conservatory laboratory for
+            learning how you want to shape your life. Here, you can notice what
+            is true in a moment, become curious about the meaning your mind is
+            making, try one small different choice, and gather evidence from
+            what happens next. Over time, you will see the conditions that
+            steady you, the stories and habits that narrow your choices, the
+            commitments you want to strengthen, and the living evidence of a life
+            becoming more like your own.
           </p>
 
           <div className="space-y-2 text-sm text-muted-foreground">
