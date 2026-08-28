@@ -14,7 +14,9 @@ export type GuideKey =
   | "gather_one_fact"
   | "borrow_steadiness"
   | "smaller_boundary"
+  | "hold_second_possibility"
   | "own";
+
 
 export interface ExperimentGuide {
   key: GuideKey;
@@ -95,7 +97,19 @@ export const EXPERIMENT_GUIDES: ExperimentGuide[] = [
     changeCourse: CHANGE_COURSE_NOTE,
   },
   {
+    key: "hold_second_possibility",
+    title: "Hold a second possibility",
+    purpose:
+      "For when your mind has already offered one meaning and you would like company for another.",
+    tryThis:
+      "Alongside the story your mind offered first, write one other thing that could plausibly be true, and let both stand for now.",
+    testing: "Whether more than one reading of this can be held at once.",
+    notice: "Which reading the next piece of information actually supports.",
+    changeCourse: CHANGE_COURSE_NOTE,
+  },
+  {
     key: "own",
+
     title: "Write my own experiment",
     purpose: "For when you already know the thing you are curious to try.",
     tryThis: "Describe it in your own words, as small as you like.",
@@ -123,3 +137,20 @@ export const LIFECYCLE_LABELS: Record<string, string> = {
   changed_course: "Changed course",
   stopped: "Stopped",
 };
+
+/**
+ * LP-D — the subset of the same static Guides offered at the end of Presence.
+ * These are member-selected only. Nothing here is ranked, inferred, recommended,
+ * or claimed to be clinically appropriate.
+ */
+export const PRESENCE_GUIDE_KEYS: GuideKey[] = [
+  "gather_one_fact",
+  "hold_second_possibility",
+  "ask_for_space",
+  "borrow_steadiness",
+  "own",
+];
+
+export const PRESENCE_GUIDES = PRESENCE_GUIDE_KEYS.map(
+  (k) => EXPERIMENT_GUIDES.find((g) => g.key === k)!,
+);

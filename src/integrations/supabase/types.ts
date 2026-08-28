@@ -3589,6 +3589,7 @@ export type Database = {
           guide_key: string | null
           id: string
           lifecycle: string
+          moment_id: string | null
           own_experiment: string | null
           returned_at: string | null
           schema_version: number
@@ -3602,6 +3603,7 @@ export type Database = {
           guide_key?: string | null
           id?: string
           lifecycle?: string
+          moment_id?: string | null
           own_experiment?: string | null
           returned_at?: string | null
           schema_version?: number
@@ -3615,6 +3617,7 @@ export type Database = {
           guide_key?: string | null
           id?: string
           lifecycle?: string
+          moment_id?: string | null
           own_experiment?: string | null
           returned_at?: string | null
           schema_version?: number
@@ -3623,6 +3626,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "living_experiments_moment_id_fkey"
+            columns: ["moment_id"]
+            isOneToOne: false
+            referencedRelation: "temple_moments"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "living_experiments_state_id_fkey"
             columns: ["state_id"]
@@ -6355,6 +6365,7 @@ export type Database = {
       temple_moments: {
         Row: {
           archived_at: string | null
+          content_revision: number
           created_at: string
           id: string
           label: string | null
@@ -6364,6 +6375,7 @@ export type Database = {
         }
         Insert: {
           archived_at?: string | null
+          content_revision?: number
           created_at?: string
           id?: string
           label?: string | null
@@ -6373,6 +6385,7 @@ export type Database = {
         }
         Update: {
           archived_at?: string | null
+          content_revision?: number
           created_at?: string
           id?: string
           label?: string | null
@@ -7199,6 +7212,7 @@ export type Database = {
       living_experiment_create: {
         Args: {
           _guide_key?: string
+          _moment_id?: string
           _own_experiment?: string
           _state_id?: string
           _try_body?: string
@@ -7213,6 +7227,7 @@ export type Database = {
           _guide_key?: string
           _id: string
           _lifecycle?: string
+          _moment_id?: string
           _own_experiment?: string
           _state_id?: string
         }
@@ -7260,6 +7275,41 @@ export type Database = {
       }
       living_link_delete: { Args: { _id: string }; Returns: Json }
       living_links_list: { Args: { _id: string; _kind: string }; Returns: Json }
+      living_moment_create: {
+        Args: {
+          _label?: string
+          _occurred_at?: string
+          _recalibrate?: Json
+          _recognise?: Json
+          _register?: Json
+        }
+        Returns: Json
+      }
+      living_moment_get: { Args: { _id: string }; Returns: Json }
+      living_moment_payload: { Args: { _moment_id: string }; Returns: Json }
+      living_moment_update: {
+        Args: {
+          _archive?: boolean
+          _clear_label?: boolean
+          _expected_revision: number
+          _id: string
+          _label?: string
+          _occurred_at?: string
+          _recalibrate?: Json
+          _recognise?: Json
+          _register?: Json
+        }
+        Returns: Json
+      }
+      living_moments_list: {
+        Args: {
+          _cursor_id?: string
+          _cursor_occurred_at?: string
+          _include_archived?: boolean
+          _limit?: number
+        }
+        Returns: Json
+      }
       living_owns_record: {
         Args: { _id: string; _kind: string; _uid: string }
         Returns: boolean
