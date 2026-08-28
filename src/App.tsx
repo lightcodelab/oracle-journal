@@ -60,6 +60,9 @@ import LivingPatternExperiments from "./pages/LivingPatternExperiments";
 import LivingPatternExperiment from "./pages/LivingPatternExperiment";
 import LivingPatternPresence from "./pages/LivingPatternPresence";
 import LivingPatternMoments from "./pages/LivingPatternMoments";
+import LivingPatternPractice from "./pages/LivingPatternPractice";
+import LivingPatternPatterns from "./pages/LivingPatternPatterns";
+
 
 import SacredSpreads from "./pages/SacredSpreads";
 import AllCourses from "./pages/AllCourses";
@@ -148,6 +151,10 @@ const App = () => {
             <Route path="/living-pattern/presence" element={<LivingPatternPresence />} />
             <Route path="/living-pattern/moments" element={<LivingPatternMoments />} />
             <Route path="/living-pattern/moments/:id" element={<LivingPatternPresence />} />
+            <Route path="/living-pattern/practice" element={<LivingPatternPractice />} />
+            <Route path="/living-pattern/patterns" element={<LivingPatternPatterns />} />
+            <Route path="/living-pattern/patterns/:id" element={<LivingPatternPractice />} />
+
 
             <Route path="/my-calendar" element={<MyCalendar />} />
             <Route path="/all-live-sessions" element={<LiveSessions />} />

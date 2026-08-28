@@ -17,6 +17,8 @@ export interface LivingExperiment {
   id: string;
   state_id: string | null;
   moment_id: string | null;
+  /** LP-E: an experiment may instead originate from one of her own Patterns. */
+  pattern_id: string | null;
   guide_key: string | null;
   own_experiment: string | null;
 
@@ -28,6 +30,7 @@ export interface LivingExperiment {
   notice_count?: number;
   has_return?: boolean;
 }
+
 
 export interface LivingFieldNote {
   id: string;
@@ -53,6 +56,8 @@ export async function createExperiment(input: {
   stateId?: string | null;
   /** LP-D: an experiment may instead originate from one of her own Moments. */
   momentId?: string | null;
+  /** LP-E: or from one of her own Patterns of Choosing. */
+  patternId?: string | null;
   guideKey: string | null;
   ownExperiment?: string | null;
   tryBody?: string;
@@ -64,6 +69,7 @@ export async function createExperiment(input: {
   const { data, error } = await rpc("living_experiment_create", {
     _state_id: input.stateId ?? null,
     _moment_id: input.momentId ?? null,
+    _pattern_id: input.patternId ?? null,
     _guide_key: input.guideKey,
     _own_experiment: input.ownExperiment?.trim() || null,
     _try_body: input.tryBody?.trim() ?? "",
@@ -73,6 +79,7 @@ export async function createExperiment(input: {
   if (error) throw new Error(error.message);
   return data as LivingExperiment;
 }
+
 
 export async function getExperiment(id: string): Promise<{
   experiment: LivingExperiment;

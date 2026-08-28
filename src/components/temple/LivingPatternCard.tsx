@@ -6,9 +6,8 @@ import practiceImg from "@/assets/practice-img.png.asset.json";
 /**
  * Home doorway: "Logging My Living Pattern".
  *
- * LP-D: Pause and Presence are live, connected lenses — not steps, not a
- * sequence, not progress. Practice remains a truthful preview with no route at
- * all — no link, no click handler, no dead navigation.
+ * LP-E: Pause, Presence and Practice are all live, connected lenses — not
+ * steps, not a sequence, not a checklist, and not progress.
  */
 
 type Panel = {
@@ -18,8 +17,7 @@ type Panel = {
   description: string;
   image: string;
   action: string;
-  href?: string;
-  previewNote?: string;
+  href: string;
 };
 
 const panels: Panel[] = [
@@ -50,9 +48,10 @@ const panels: Panel[] = [
       "Consciously choose and sustain the commitments your actions are making real.",
     image: practiceImg.url,
     action: "Log a Pattern of Choosing",
-    previewNote: "Not open yet",
+    href: "/living-pattern/practice",
   },
 ];
+
 
 export function LivingPatternCard() {
   return (
@@ -113,28 +112,14 @@ export function LivingPatternCard() {
                   {panel.description}
                 </p>
                 <div className="mt-4">
-                  {panel.href ? (
-                    <Link
-                      to={panel.href}
-                      className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                    >
-                      {panel.action}
-                    </Link>
-                  ) : (
-                    <div>
-                      <span
-                        aria-disabled="true"
-                        className="inline-flex items-center justify-center rounded-md border border-primary/50 px-4 py-2.5 text-sm font-medium text-primary/70"
-                      >
-                        {panel.action}
-                      </span>
-                      <p className="mt-2 text-xs text-on-image">
-                        {panel.previewNote} — this practice arrives in a later
-                        opening of The Temple.
-                      </p>
-                    </div>
-                  )}
+                  <Link
+                    to={panel.href}
+                    className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  >
+                    {panel.action}
+                  </Link>
                 </div>
+
               </div>
             </article>
           ))}
