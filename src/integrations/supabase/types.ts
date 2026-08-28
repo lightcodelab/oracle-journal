@@ -3582,6 +3582,106 @@ export type Database = {
         }
         Relationships: []
       }
+      living_experiments: {
+        Row: {
+          content_revision: number
+          created_at: string
+          guide_key: string | null
+          id: string
+          lifecycle: string
+          own_experiment: string | null
+          returned_at: string | null
+          schema_version: number
+          state_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content_revision?: number
+          created_at?: string
+          guide_key?: string | null
+          id?: string
+          lifecycle?: string
+          own_experiment?: string | null
+          returned_at?: string | null
+          schema_version?: number
+          state_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content_revision?: number
+          created_at?: string
+          guide_key?: string | null
+          id?: string
+          lifecycle?: string
+          own_experiment?: string | null
+          returned_at?: string | null
+          schema_version?: number
+          state_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "living_experiments_state_id_fkey"
+            columns: ["state_id"]
+            isOneToOne: false
+            referencedRelation: "living_states"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      living_field_notes: {
+        Row: {
+          body: string
+          content: Json
+          content_revision: number
+          created_at: string
+          experiment_id: string
+          id: string
+          outcome: string | null
+          phase: string
+          recorded_at: string
+          schema_version: number
+          updated_at: string
+        }
+        Insert: {
+          body?: string
+          content?: Json
+          content_revision?: number
+          created_at?: string
+          experiment_id: string
+          id?: string
+          outcome?: string | null
+          phase: string
+          recorded_at?: string
+          schema_version?: number
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          content?: Json
+          content_revision?: number
+          created_at?: string
+          experiment_id?: string
+          id?: string
+          outcome?: string | null
+          phase?: string
+          recorded_at?: string
+          schema_version?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "living_field_notes_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "living_experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       living_pattern_evidence: {
         Row: {
           content: Json
@@ -7096,6 +7196,58 @@ export type Database = {
       }
       is_active_member: { Args: { _user_id: string }; Returns: boolean }
       living_caller: { Args: never; Returns: string }
+      living_experiment_create: {
+        Args: {
+          _guide_key?: string
+          _own_experiment?: string
+          _state_id?: string
+          _try_body?: string
+          _try_content?: Json
+        }
+        Returns: Json
+      }
+      living_experiment_get: { Args: { _id: string }; Returns: Json }
+      living_experiment_update: {
+        Args: {
+          _expected_revision: number
+          _guide_key?: string
+          _id: string
+          _lifecycle?: string
+          _own_experiment?: string
+          _state_id?: string
+        }
+        Returns: Json
+      }
+      living_experiments_list: {
+        Args: {
+          _cursor_created_at?: string
+          _cursor_id?: string
+          _include_closed?: boolean
+          _limit?: number
+        }
+        Returns: Json
+      }
+      living_field_note_create: {
+        Args: {
+          _body?: string
+          _content?: Json
+          _experiment_id: string
+          _outcome?: string
+          _phase: string
+        }
+        Returns: Json
+      }
+      living_field_note_update: {
+        Args: {
+          _body?: string
+          _clear_outcome?: boolean
+          _content?: Json
+          _expected_revision: number
+          _id: string
+          _outcome?: string
+        }
+        Returns: Json
+      }
       living_link_create: {
         Args: {
           _note?: string
