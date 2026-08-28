@@ -27,6 +27,12 @@ import {
   PRACTICE_GUIDES,
   guideByKey,
 } from "@/components/temple/living/experimentGuides";
+import { FormHelp, GuideScriptPanel, MovementNote } from "@/components/temple/living/FormHelp";
+import {
+  GLOBAL_MOVEMENT_HELPER,
+  PRACTICE_HELP,
+  PRACTICE_LEAD_IN,
+} from "@/components/temple/living/orientationContent";
 
 /**
  * LP-E — Practice / Patterns of Choosing.
