@@ -310,6 +310,7 @@ const LivingPatternExperiment = () => {
                       onChange={(e) => setTryDraft(e.target.value)}
                       placeholder="As small as you like."
                     />
+                    <FormHelp help={FIELD_NOTE_HELP.try} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="try-safe">What would make this safe enough to try? (optional)</Label>
