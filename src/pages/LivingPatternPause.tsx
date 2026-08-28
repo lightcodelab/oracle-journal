@@ -410,6 +410,7 @@ const LivingPatternPause = () => {
                       onChange={(e) => setReorientNote(e.target.value)}
                       placeholder="Small is enough. It can be one breath, or one honest sentence."
                     />
+                    <FormHelp help={PAUSE_HELP.reorient} />
                   </div>
                   {saveError && (
                     <p role="alert" className="text-sm text-destructive">
