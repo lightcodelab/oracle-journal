@@ -24,11 +24,14 @@ import {
   Bug,
   Smartphone,
   LineChart,
-  Share2
+  Share2,
+  Compass
 } from 'lucide-react';
 import { useInstallApp } from '@/components/InstallAppDialog';
 import GlobalSearch from '@/components/GlobalSearch';
 import ThemeModeToggle from '@/components/ThemeModeToggle';
+import { useMemberState } from '@/hooks/useMemberState';
+
 
 interface ProfileDropdownProps {
   onSignOut?: () => void;
@@ -38,6 +41,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
   const { openInstallDialog } = useInstallApp();
+  // LP-F.0: My Living Pattern stays behind exactly the same admin-only staging
+  // gate as the Living Pattern card and routes.
+  const { hasFullTempleAccess, isAdmin: memberIsAdmin } = useMemberState();
+  const showLivingPattern = hasFullTempleAccess && memberIsAdmin;
+
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -105,11 +113,21 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       icon: <FolderHeart className="w-4 h-4 mr-2" />,
       route: '/devotion/protocols',
     },
+    ...(showLivingPattern
+      ? [
+          {
+            label: 'My Living Pattern',
+            icon: <Compass className="w-4 h-4 mr-2" />,
+            route: '/living-pattern/record',
+          },
+        ]
+      : []),
     {
       label: 'My Journal',
       icon: <BookOpen className="w-4 h-4 mr-2" />,
       route: '/journal',
     },
+
     {
       label: 'My Readings',
       icon: <Sparkles className="w-4 h-4 mr-2" />,
