@@ -112,28 +112,14 @@ export function LivingPatternCard() {
                   {panel.description}
                 </p>
                 <div className="mt-4">
-                  {panel.href ? (
-                    <Link
-                      to={panel.href}
-                      className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                    >
-                      {panel.action}
-                    </Link>
-                  ) : (
-                    <div>
-                      <span
-                        aria-disabled="true"
-                        className="inline-flex items-center justify-center rounded-md border border-primary/50 px-4 py-2.5 text-sm font-medium text-primary/70"
-                      >
-                        {panel.action}
-                      </span>
-                      <p className="mt-2 text-xs text-on-image">
-                        {panel.previewNote} — this practice arrives in a later
-                        opening of The Temple.
-                      </p>
-                    </div>
-                  )}
+                  <Link
+                    to={panel.href}
+                    className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  >
+                    {panel.action}
+                  </Link>
                 </div>
+
               </div>
             </article>
           ))}
