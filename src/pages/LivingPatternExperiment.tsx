@@ -22,6 +22,11 @@ import {
   OUTCOME_LABELS,
   guideByKey,
 } from "@/components/temple/living/experimentGuides";
+import { FormHelp, GuideScriptPanel, MovementNote } from "@/components/temple/living/FormHelp";
+import {
+  FIELD_NOTE_HELP,
+  FIELD_NOTE_TAB_NOTE,
+} from "@/components/temple/living/orientationContent";
 
 /**
  * LP-C.1 — private Field Notes detail surface for one experiment.
