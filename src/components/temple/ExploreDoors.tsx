@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { BookHeart, Search, ListMusic, LineChart, Sparkles, HeartPulse } from "lucide-react";
 
 const doors = [
-  { name: "Remembrance", href: "/remembrance", image: doorRemembrance.url, description: "Explore the patterns, stories and inheritances shaping you. RITUALS, CARD DECKS & COURSES" },
-  { name: "Devotion", href: "/devotion", image: doorDevotion.url, description: "Return to yourself through guided meditation and restorative practice. AREEKEERA HEALING TEMPLATES & MEDITATIONS" },
+  { name: "Remembrance", href: "/remembrance", image: doorRemembrance.url, description: "Explore the patterns, stories and inheritances shaping you.\nRITUALS, CARD DECKS & COURSES" },
+  { name: "Devotion", href: "/devotion", image: doorDevotion.url, description: "Return to yourself through guided meditation and restorative practice.\nAREEKEERA HEALING TEMPLATES & MEDITATIONS" },
   { name: "Communion", href: "/communion", image: doorCommunion.url, description: "Find connection, reflection and support within our community.\nLIVE READINGS, CLASSES, WORKSHOPS & REPLAYS" },
 ];
 
