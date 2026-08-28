@@ -112,7 +112,7 @@ const LivingPatternPresence = () => {
   const [register, setRegister] = useState<TextMap>({});
   const [recognise, setRecognise] = useState<TextMap>({});
   const [recalibrate, setRecalibrate] = useState<TextMap>({});
-  const [openInquiry, setOpenInquiry] = useState<string[]>(["meaning"]);
+  
 
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
