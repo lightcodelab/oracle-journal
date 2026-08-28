@@ -6,9 +6,8 @@ import practiceImg from "@/assets/practice-img.png.asset.json";
 /**
  * Home doorway: "Logging My Living Pattern".
  *
- * LP-D: Pause and Presence are live, connected lenses — not steps, not a
- * sequence, not progress. Practice remains a truthful preview with no route at
- * all — no link, no click handler, no dead navigation.
+ * LP-E: Pause, Presence and Practice are all live, connected lenses — not
+ * steps, not a sequence, not a checklist, and not progress.
  */
 
 type Panel = {
@@ -18,8 +17,7 @@ type Panel = {
   description: string;
   image: string;
   action: string;
-  href?: string;
-  previewNote?: string;
+  href: string;
 };
 
 const panels: Panel[] = [
@@ -50,9 +48,10 @@ const panels: Panel[] = [
       "Consciously choose and sustain the commitments your actions are making real.",
     image: practiceImg.url,
     action: "Log a Pattern of Choosing",
-    previewNote: "Not open yet",
+    href: "/living-pattern/practice",
   },
 ];
+
 
 export function LivingPatternCard() {
   return (
