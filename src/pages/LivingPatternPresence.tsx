@@ -432,6 +432,7 @@ const LivingPatternPresence = () => {
                     value={recalibrate[f.key] ?? ""}
                     onChange={(e) => setField(setRecalibrate, f.key, e.target.value)}
                   />
+                  {f.help && <FormHelp help={PRESENCE_HELP[f.help]} />}
                 </div>
               ))}
             </>
