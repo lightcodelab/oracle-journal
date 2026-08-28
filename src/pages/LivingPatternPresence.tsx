@@ -400,9 +400,11 @@ const LivingPatternPresence = () => {
 
           {step === 2 && (
             <>
+              <p className="text-sm text-muted-foreground">{PRESENCE_LEAD_IN}</p>
               <p className="text-sm text-muted-foreground">
-                Answer only the questions you want. There is nothing to get right here — you are simply
-                separating what happened from what you are making it mean.
+                This is not a worksheet, and there is nothing to get right. You are simply
+                separating what happened from what you are making it mean. Your feelings are real
+                even where a prediction turns out to be incomplete.
               </p>
               {RECOGNISE_FIELDS.map((f) => (
                 <div key={f.key} className="space-y-2">
@@ -413,6 +415,7 @@ const LivingPatternPresence = () => {
                     value={recognise[f.key] ?? ""}
                     onChange={(e) => setField(setRecognise, f.key, e.target.value)}
                   />
+                  {f.help && <FormHelp help={PRESENCE_HELP[f.help]} />}
                 </div>
               ))}
             </>
