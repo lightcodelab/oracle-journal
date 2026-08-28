@@ -492,6 +492,7 @@ const LivingPatternPractice = () => {
                   value={reinforce.tenderness ?? ""}
                   onChange={(e) => setField(setReinforce, "tenderness", e.target.value)}
                 />
+                <FormHelp help={PRACTICE_HELP.tenderness} />
               </div>
             </>
           )}
