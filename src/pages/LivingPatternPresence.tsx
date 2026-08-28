@@ -584,7 +584,7 @@ const LivingPatternPresence = () => {
                       variant="outline"
                       onClick={() => handleLink("pattern", p.id)}
                     >
-                      {p.title ?? "Pattern"}
+                      {p.label || "Pattern of Choosing"}
                     </Button>
                   ))}
                 </div>
