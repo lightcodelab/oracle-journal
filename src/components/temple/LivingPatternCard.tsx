@@ -90,15 +90,15 @@ export function LivingPatternCard() {
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-[#2a1a12]/60"
+                className="absolute inset-0 bg-[#2a1a12]/40"
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-r from-[#2a1a12]/95 via-[#2a1a12]/75 to-transparent"
+                className="absolute inset-0 bg-gradient-to-r from-[#2a1a12]/80 via-[#2a1a12]/50 to-transparent"
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-[#1f140e]/95 via-[#1f140e]/30 to-transparent sm:from-[#1f140e]/80 sm:via-transparent"
+                className="absolute inset-0 bg-gradient-to-t from-[#1f140e]/70 via-[#1f140e]/20 to-transparent sm:from-[#1f140e]/60 sm:via-transparent"
               />
 
               <div className="relative flex h-full flex-col justify-end p-5 sm:p-6 lg:p-5 xl:p-6 max-w-full sm:max-w-[62%] lg:max-w-[90%] [text-shadow:0_1px_3px_rgba(0,0,0,0.45)]">
