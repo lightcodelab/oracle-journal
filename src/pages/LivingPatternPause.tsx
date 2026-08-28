@@ -294,6 +294,7 @@ const LivingPatternPause = () => {
                 );
               })}
             </nav>
+            <MovementNote>{GLOBAL_MOVEMENT_HELPER}</MovementNote>
 
             <div className="mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6 space-y-6">
               {step === 1 && (
@@ -305,6 +306,7 @@ const LivingPatternPause = () => {
                       selected={feelingWords}
                       onToggle={(v) => toggle(feelingWords, setFeelingWords, v)}
                     />
+                    <FormHelp help={PAUSE_HELP.register} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="feeling-note">In your own words (optional)</Label>
