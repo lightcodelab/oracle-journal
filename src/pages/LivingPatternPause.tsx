@@ -112,6 +112,15 @@ const LivingPatternPause = () => {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [linkedPatternId, setLinkedPatternId] = useState<string | null>(null);
 
+  // LP-C.1 — optional Field Notes experiment. Never compulsory, never superior.
+  const [wantExperiment, setWantExperiment] = useState(false);
+  const [guideKey, setGuideKey] = useState<string | null>(null);
+  const [ownText, setOwnText] = useState("");
+  const [tryText, setTryText] = useState("");
+  const [safeText, setSafeText] = useState("");
+  const [creating, setCreating] = useState(false);
+  const selectedGuide = guideByKey(guideKey);
+
   const accessResolved = !authLoading && !memberLoading && !!user;
   const { patterns } = useOwnPatterns(accessResolved && hasFullTempleAccess);
 
