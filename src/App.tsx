@@ -140,6 +140,8 @@ const App = () => {
             <Route path="/readings" element={<MyReadings />} />
             <Route path="/playlists" element={<MyPlaylists />} />
             <Route path="/living-pattern/pause" element={<LivingPatternPause />} />
+            <Route path="/living-pattern/experiments" element={<LivingPatternExperiments />} />
+            <Route path="/living-pattern/experiments/:id" element={<LivingPatternExperiment />} />
             <Route path="/my-calendar" element={<MyCalendar />} />
             <Route path="/all-live-sessions" element={<LiveSessions />} />
             <Route path="/all-live-sessions/:sessionId/join" element={<LiveSessionJoin />} />
