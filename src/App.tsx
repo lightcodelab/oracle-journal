@@ -146,6 +146,7 @@ const App = () => {
             <Route path="/journal" element={<Journal />} />
             <Route path="/readings" element={<MyReadings />} />
             <Route path="/playlists" element={<MyPlaylists />} />
+            <Route path="/living-pattern/orientation" element={<LivingPatternOrientation />} />
             <Route path="/living-pattern/pause" element={<LivingPatternPause />} />
             <Route path="/living-pattern/experiments" element={<LivingPatternExperiments />} />
             <Route path="/living-pattern/experiments/:id" element={<LivingPatternExperiment />} />
