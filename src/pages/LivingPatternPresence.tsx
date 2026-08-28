@@ -112,7 +112,7 @@ const LivingPatternPresence = () => {
   const [register, setRegister] = useState<TextMap>({});
   const [recognise, setRecognise] = useState<TextMap>({});
   const [recalibrate, setRecalibrate] = useState<TextMap>({});
-  const [openInquiry, setOpenInquiry] = useState<string[]>(["meaning"]);
+  
 
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -383,39 +383,20 @@ const LivingPatternPresence = () => {
           {step === 2 && (
             <>
               <p className="text-sm text-muted-foreground">
-                Open only the questions you want. There is nothing to get right here — you are simply
+                Answer only the questions you want. There is nothing to get right here — you are simply
                 separating what happened from what you are making it mean.
               </p>
-              {RECOGNISE_FIELDS.map((f) => {
-                const open = openInquiry.includes(f.key) || (recognise[f.key] ?? "").length > 0;
-                return (
-                  <div key={f.key} className="rounded-lg border border-border/60 bg-background/40 p-3">
-                    <button
-                      type="button"
-                      aria-expanded={open}
-                      onClick={() =>
-                        setOpenInquiry((prev) =>
-                          prev.includes(f.key)
-                            ? prev.filter((k) => k !== f.key)
-                            : [...prev, f.key],
-                        )
-                      }
-                      className="w-full text-left text-sm text-foreground"
-                    >
-                      {f.label}
-                    </button>
-                    {open && (
-                      <Textarea
-                        aria-label={f.label}
-                        className="mt-2"
-                        rows={2}
-                        value={recognise[f.key] ?? ""}
-                        onChange={(e) => setField(setRecognise, f.key, e.target.value)}
-                      />
-                    )}
-                  </div>
-                );
-              })}
+              {RECOGNISE_FIELDS.map((f) => (
+                <div key={f.key} className="space-y-2">
+                  <Label htmlFor={`recog-${f.key}`}>{f.label}</Label>
+                  <Textarea
+                    id={`recog-${f.key}`}
+                    rows={2}
+                    value={recognise[f.key] ?? ""}
+                    onChange={(e) => setField(setRecognise, f.key, e.target.value)}
+                  />
+                </div>
+              ))}
             </>
           )}
 
