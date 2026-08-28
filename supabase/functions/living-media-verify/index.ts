@@ -78,11 +78,6 @@ Deno.serve(async (req) => {
       return json({ error: "living_media_missing_object" }, 400);
     }
 
-    const { data: signed } = await admin.storage.from(BUCKET).createSignedUrl(row.object_path, 120);
-    if (!signed?.signedUrl) {
-      await discard();
-      return json({ error: "living_media_missing_object" }, 400);
-    }
 
     const read: Reader = async (start, end) => {
       const res = await fetch(signed.signedUrl, {
