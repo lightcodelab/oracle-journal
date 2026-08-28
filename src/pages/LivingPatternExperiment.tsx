@@ -23,6 +23,7 @@ import {
   guideByKey,
 } from "@/components/temple/living/experimentGuides";
 import { FormHelp, GuideScriptPanel, MovementNote } from "@/components/temple/living/FormHelp";
+import FieldNoteMedia from "@/components/temple/living/FieldNoteMedia";
 import {
   FIELD_NOTE_HELP,
   FIELD_NOTE_TAB_NOTE,
