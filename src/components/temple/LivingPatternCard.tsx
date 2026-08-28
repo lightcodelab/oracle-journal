@@ -75,16 +75,25 @@ export function LivingPatternCard() {
           more like your own.
         </p>
 
-        <p className="mt-4 text-sm text-muted-foreground">
-          <Link
-            to="/living-pattern/orientation"
-            className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
-          >
-            Start here: How to use your Living Pattern
-          </Link>{" "}
-          — a short, private orientation you can read now, later, or never. You
-          may open any lens straight away.
-        </p>
+        <div className="mt-4 space-y-2 text-sm text-muted-foreground">
+          <p>
+            <span className="font-semibold text-foreground">New to the Living Pattern?</span>
+            <br />
+            Start with the five-minute introduction. It will show you how to choose a lens, write a small enough entry, and use experiments without turning your life into homework.
+            <br />
+            You can also begin with any lens now.
+          </p>
+          <p>
+            <Link
+              to="/living-pattern/orientation"
+              className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+            >
+              Start here: How to use your Living Pattern
+            </Link>{" "}
+            — a short, private orientation you can read now, later, or never. You
+            may open any lens straight away.
+          </p>
+        </div>
 
 
 
