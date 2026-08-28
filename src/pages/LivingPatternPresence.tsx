@@ -363,6 +363,8 @@ const LivingPatternPresence = () => {
             );
           })}
         </nav>
+        <MovementNote>{GLOBAL_MOVEMENT_HELPER}</MovementNote>
+
 
         <div className="mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6 space-y-6">
           {step === 1 && (
