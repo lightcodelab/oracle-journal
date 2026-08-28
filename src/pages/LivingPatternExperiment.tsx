@@ -460,6 +460,10 @@ const LivingPatternExperiment = () => {
                     {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
                     {returnNote ? "Update my Return" : "Record my Return"}
                   </Button>
+                  <FieldNoteMedia
+                    fieldNoteId={returnNote?.id}
+                    emptyHint="Nothing is attached to your Return."
+                  />
                 </>
               )}
             </div>
