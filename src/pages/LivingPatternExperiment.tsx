@@ -23,6 +23,7 @@ import {
   guideByKey,
 } from "@/components/temple/living/experimentGuides";
 import { FormHelp, GuideScriptPanel, MovementNote } from "@/components/temple/living/FormHelp";
+import FieldNoteMedia from "@/components/temple/living/FieldNoteMedia";
 import {
   FIELD_NOTE_HELP,
   FIELD_NOTE_TAB_NOTE,
@@ -339,6 +340,10 @@ const LivingPatternExperiment = () => {
                       . An empty note is fine.
                     </p>
                   )}
+                  <FieldNoteMedia
+                    fieldNoteId={tryNote?.id}
+                    emptyHint="Nothing is attached to your starting conditions. Words alone are plenty."
+                  />
                 </>
               )}
 
@@ -361,6 +366,10 @@ const LivingPatternExperiment = () => {
                           <p className="mt-1 text-sm text-foreground whitespace-pre-wrap">
                             {n.body || "—"}
                           </p>
+                          <FieldNoteMedia
+                            fieldNoteId={n.id}
+                            emptyHint="Nothing is attached to this noticing."
+                          />
                         </li>
                       ))}
                     </ul>
@@ -451,6 +460,10 @@ const LivingPatternExperiment = () => {
                     {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
                     {returnNote ? "Update my Return" : "Record my Return"}
                   </Button>
+                  <FieldNoteMedia
+                    fieldNoteId={returnNote?.id}
+                    emptyHint="Nothing is attached to your Return."
+                  />
                 </>
               )}
             </div>
