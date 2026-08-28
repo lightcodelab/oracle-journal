@@ -133,12 +133,22 @@ export async function uploadAttachment(
     throw new Error("That upload did not complete. You can try again whenever you like.");
   }
 
-  const finalized = await rpc("living_media_finalize", { _id: attachment.id });
-  if (finalized.error) {
+  // The server derives the real duration from the uploaded bytes and is the only
+  // place an attachment can become `ready`; the probe above is a courtesy check.
+  const verified = await supabase.functions.invoke("living-media-verify", {
+    body: { id: attachment.id },
+  });
+  const verifiedAttachment = (verified.data as { attachment?: FieldNoteAttachment } | null)
+    ?.attachment;
+  if (verified.error || !verifiedAttachment) {
     await supabase.storage.from(BUCKET).remove([attachment.object_path]).catch(() => undefined);
-    throw new Error("That file could not be accepted. Nothing was kept.");
+    await rpc("living_media_delete", { _id: attachment.id }).catch(() => undefined);
+    const limitLabel = limits.maxSeconds
+      ? ` ${limits.label}s need to be ${Math.floor(limits.maxSeconds / 60)} minutes or shorter.`
+      : "";
+    throw new Error(`That file could not be accepted. Nothing was kept.${limitLabel}`);
   }
-  return finalized.data as FieldNoteAttachment;
+  return verifiedAttachment;
 }
 
 export async function deleteAttachment(attachment: FieldNoteAttachment): Promise<void> {

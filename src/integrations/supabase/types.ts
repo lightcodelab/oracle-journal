@@ -7378,6 +7378,10 @@ export type Database = {
       living_links_list: { Args: { _id: string; _kind: string }; Returns: Json }
       living_media_delete: { Args: { _id: string }; Returns: Json }
       living_media_finalize: { Args: { _id: string }; Returns: Json }
+      living_media_finalize_verified: {
+        Args: { _duration_seconds: number; _id: string; _user_id: string }
+        Returns: Json
+      }
       living_media_list: { Args: { _field_note_id: string }; Returns: Json }
       living_media_owns_path: {
         Args: { _path: string; _uid: string }
