@@ -197,7 +197,7 @@ const FieldNoteMedia = ({
       <p className="text-sm text-foreground">Private attachments (optional)</p>
       <p className="mt-1 text-xs text-muted-foreground">
         Photographs up to {MEDIA_LIMITS.image.maxLabel}, voice notes up to 10 minutes, short video up
-        to 2 minutes. Up to {MAX_PER_NOTE} per note. These stay private to you: they are never
+        to 3 minutes. Up to {MAX_PER_NOTE} per note. These stay private to you: they are never
         shared, published, listened to, or read by anyone else.
       </p>
 
