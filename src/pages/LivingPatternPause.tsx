@@ -16,6 +16,12 @@ import {
   useOwnPatterns,
   type LivingStateRecord,
 } from "@/hooks/useLivingStates";
+import { createExperiment } from "@/hooks/useLivingExperiments";
+import {
+  CHANGE_COURSE_NOTE,
+  EXPERIMENT_GUIDES,
+  guideByKey,
+} from "@/components/temple/living/experimentGuides";
 
 /**
  * States of Being — Pause (LP-C).
