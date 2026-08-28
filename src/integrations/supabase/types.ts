@@ -7379,6 +7379,10 @@ export type Database = {
       living_media_delete: { Args: { _id: string }; Returns: Json }
       living_media_finalize: { Args: { _id: string }; Returns: Json }
       living_media_list: { Args: { _field_note_id: string }; Returns: Json }
+      living_media_owns_path: {
+        Args: { _path: string; _uid: string }
+        Returns: boolean
+      }
       living_media_prepare: {
         Args: {
           _byte_size: number
