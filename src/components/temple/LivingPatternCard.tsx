@@ -6,8 +6,9 @@ import practiceImg from "@/assets/practice-img.png.asset.json";
 /**
  * Home doorway: "Logging My Living Pattern".
  *
- * LP-C: only Pause is live. Presence and Practice are truthful previews with no
- * route at all — no link, no click handler, no dead navigation.
+ * LP-D: Pause and Presence are live, connected lenses — not steps, not a
+ * sequence, not progress. Practice remains a truthful preview with no route at
+ * all — no link, no click handler, no dead navigation.
  */
 
 type Panel = {
@@ -38,8 +39,9 @@ const panels: Panel[] = [
     description: "Meet what stood out before its story makes the choice for you.",
     image: presenceImg.url,
     action: "Log a Moment of Meaning",
-    previewNote: "Not open yet",
+    href: "/living-pattern/presence",
   },
+
   {
     key: "practice",
     record: "Patterns of Choosing",

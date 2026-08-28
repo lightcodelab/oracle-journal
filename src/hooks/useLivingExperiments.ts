@@ -16,8 +16,10 @@ export type FieldNotePhase = "try" | "notice" | "return";
 export interface LivingExperiment {
   id: string;
   state_id: string | null;
+  moment_id: string | null;
   guide_key: string | null;
   own_experiment: string | null;
+
   lifecycle: ExperimentLifecycle;
   content_revision: number;
   created_at: string;
@@ -49,6 +51,8 @@ function rpc(name: string, args: Record<string, unknown>) {
 
 export async function createExperiment(input: {
   stateId?: string | null;
+  /** LP-D: an experiment may instead originate from one of her own Moments. */
+  momentId?: string | null;
   guideKey: string | null;
   ownExperiment?: string | null;
   tryBody?: string;
@@ -59,11 +63,13 @@ export async function createExperiment(input: {
 
   const { data, error } = await rpc("living_experiment_create", {
     _state_id: input.stateId ?? null,
+    _moment_id: input.momentId ?? null,
     _guide_key: input.guideKey,
     _own_experiment: input.ownExperiment?.trim() || null,
     _try_body: input.tryBody?.trim() ?? "",
     _try_content: content,
   });
+
   if (error) throw new Error(error.message);
   return data as LivingExperiment;
 }
