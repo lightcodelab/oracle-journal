@@ -373,6 +373,7 @@ const LivingPatternExperiment = () => {
                       onChange={(e) => setNoticeDraft(e.target.value)}
                       placeholder="What is different, the same, or surprising?"
                     />
+                    <FormHelp help={FIELD_NOTE_HELP.notice} />
                     <Button onClick={addNotice} disabled={busy || !noticeDraft.trim()}>
                       {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
                       Add a noticing
