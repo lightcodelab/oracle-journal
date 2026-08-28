@@ -177,6 +177,14 @@ const LivingPatternOrientation = () => {
                 </ul>
               )}
 
+              {lesson.guideNote && (
+                <div className="mt-5 rounded-lg border border-border/60 bg-background/40 p-4">
+                  <p className="text-sm leading-relaxed text-foreground">
+                    {lesson.guideNote}
+                  </p>
+                </div>
+              )}
+
               {lesson.table && (
                 <div className="mt-5 space-y-3">
                   {lesson.table.rows.map((row) => (
