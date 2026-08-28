@@ -188,7 +188,7 @@ export const ORIENTATION_LESSONS: OrientationLesson[] = [
       "“Identity” means the value or commitment a choice makes real now; it is not a permanent label.",
       "A Pattern may be current-season-specific, uncertain, revised, re-chosen, or retired.",
       "Re-choosing is not proof that you failed the first time. It is the practice itself.",
-      GUIDE_OPTION_NOTE,
+      "This is an option to adapt, not a prescription. Choose another guide, make it smaller, or do nothing today.",
     ],
     guideNote:
       "When a Guide appears, it is a starter script—not a recommendation about what you need. Choose the one that feels closest, adapt the words, make it smaller, choose another, or do nothing today.",
