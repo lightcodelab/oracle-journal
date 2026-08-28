@@ -63,17 +63,17 @@ Deno.serve(async (req) => {
   let duration: number | null = null;
 
   if (row.media_kind !== "image") {
-    const { data: object } = await admin
-      .schema("storage")
-      .from("objects")
-      .select("metadata")
-      .eq("bucket_id", BUCKET)
-      .eq("name", row.object_path)
-      .maybeSingle();
+    const { data: signed } = await admin.storage.from(BUCKET).createSignedUrl(row.object_path, 120);
+    if (!signed?.signedUrl) {
+      await discard();
+      return json({ error: "living_media_missing_object" }, 400);
+    }
 
-    const size = Number((object?.metadata as { size?: number } | null)?.size ?? 0);
-    const mime = String((object?.metadata as { mimetype?: string } | null)?.mimetype ?? row.mime_type);
-    if (!size) {
+    // Size and content type come from the stored object itself, never the client.
+    const head = await fetch(signed.signedUrl, { method: "HEAD" });
+    const size = Number(head.headers.get("content-length") ?? 0);
+    const mime = (head.headers.get("content-type") ?? row.mime_type).split(";")[0].trim();
+    if (!head.ok || !size) {
       await discard();
       return json({ error: "living_media_missing_object" }, 400);
     }
