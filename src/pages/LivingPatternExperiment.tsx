@@ -340,6 +340,10 @@ const LivingPatternExperiment = () => {
                       . An empty note is fine.
                     </p>
                   )}
+                  <FieldNoteMedia
+                    fieldNoteId={tryNote?.id}
+                    emptyHint="Nothing is attached to your starting conditions. Words alone are plenty."
+                  />
                 </>
               )}
 
