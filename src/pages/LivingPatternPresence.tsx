@@ -388,6 +388,7 @@ const LivingPatternPresence = () => {
                     onChange={(e) => setField(setRegister, f.key, e.target.value)}
                     placeholder="As much or as little as you like."
                   />
+                  {f.help && <FormHelp help={PRESENCE_HELP[f.help]} />}
                 </div>
               ))}
               <p className="text-xs text-muted-foreground">
