@@ -47,42 +47,51 @@ import {
 type Step = 1 | 2 | 3;
 
 const REGISTER_FIELDS = [
-  { key: "happened", label: "What happened?", rows: 3 },
-  { key: "stood_out", label: "What stood out?", rows: 2 },
+  { key: "happened", label: "What happened?", rows: 3, help: "happened" },
+  { key: "stood_out", label: "What stood out?", rows: 2, help: undefined },
   {
     key: "noticed_first",
     label: "What did you notice first — in the moment, in your body, or afterward?",
     rows: 2,
+    help: undefined,
   },
 ] as const;
 
 const RECOGNISE_FIELDS = [
-  { key: "meaning", label: "What am I making this mean?" },
-  { key: "prediction", label: "What does my mind seem to be predicting?" },
-  { key: "told_before", label: "Where has this story been told before, if anywhere?" },
+  { key: "meaning", label: "What am I making this mean?", help: "meaning" },
+  { key: "prediction", label: "What does my mind seem to be predicting?", help: "meaning" },
+  {
+    key: "told_before",
+    label: "Where has this story been told before, if anywhere?",
+    help: undefined,
+  },
   {
     key: "then_now",
     label: "Am I saying: “this happened then, therefore it is happening now”?",
+    help: undefined,
   },
-  { key: "facts", label: "What do I know as fact?" },
-  { key: "story", label: "What is story, prediction, or interpretation?" },
-  { key: "else_true", label: "What else could plausibly be true?" },
+  { key: "facts", label: "What do I know as fact?", help: "facts" },
+  { key: "story", label: "What is story, prediction, or interpretation?", help: "facts" },
+  { key: "else_true", label: "What else could plausibly be true?", help: undefined },
   {
     key: "protector",
     label:
       "Is a protective part trying to help here? What might it be trying to prevent or protect?",
+    help: "protector",
   },
 ] as const;
 
 const RECALIBRATE_FIELDS = [
-  { key: "next_choice", label: "What is my grounded next choice?" },
+  { key: "next_choice", label: "What is my grounded next choice?", help: "recalibrate" },
   {
     key: "small_action",
     label: "What small action could give me more information than this story has right now?",
+    help: "recalibrate",
   },
   {
     key: "identity",
     label: "Which identity is this next choice reinforcing? (optional)",
+    help: undefined,
   },
 ] as const;
 
