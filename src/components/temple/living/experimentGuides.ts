@@ -154,3 +154,34 @@ export const PRESENCE_GUIDE_KEYS: GuideKey[] = [
 export const PRESENCE_GUIDES = PRESENCE_GUIDE_KEYS.map(
   (k) => EXPERIMENT_GUIDES.find((g) => g.key === k)!,
 );
+
+/**
+ * LP-E — the subset of the same static Guides offered at the end of Practice.
+ * Member-selected only. Nothing here is ranked, inferred, recommended, or
+ * claimed to be clinically appropriate, and none creates a second experiment
+ * system: they all use the shared Try → Notice → Return Field Notes.
+ */
+export const PRACTICE_GUIDE_KEYS: GuideKey[] = [
+  "make_it_smaller",
+  "smaller_boundary",
+  "meet_one_basic_need",
+  "borrow_steadiness",
+  "own",
+];
+
+export const PRACTICE_GUIDES = PRACTICE_GUIDE_KEYS.map(
+  (k) => EXPERIMENT_GUIDES.find((g) => g.key === k)!,
+);
+
+/**
+ * LP-E — how a member may relate a piece of her own Pattern evidence to what she
+ * expected. Never success/failure, never a score, never a causal claim.
+ */
+export const EVIDENCE_RELATIONS: { value: string; label: string }[] = [
+  { value: "supported", label: "This supported it" },
+  { value: "complicated", label: "This complicated it" },
+  { value: "contradicted", label: "This contradicted it" },
+  { value: "insufficient", label: "Not enough information yet" },
+  { value: "changed_course", label: "I changed course" },
+];
+
