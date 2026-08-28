@@ -139,7 +139,7 @@ const LivingPatternPause = () => {
   const toggle = (list: string[], set: (v: string[]) => void, value: string) =>
     set(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
 
-  const handleSave = async () => {
+  const handleSave = async (alsoExperiment: boolean) => {
     setSaving(true);
     setSaveError(null);
     try {
@@ -154,11 +154,35 @@ const LivingPatternPause = () => {
       // Owner-only read-back confirms the record exists and belongs to her.
       const confirmed = await getLivingState(record.id);
       setSaved(confirmed);
+      setWantExperiment(alsoExperiment);
       toast.success("Your State of Being is saved to your private record.");
     } catch (e) {
       setSaveError(e instanceof Error ? e.message : "Something went wrong while saving.");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleBeginExperiment = async () => {
+    if (!saved || !guideKey) return;
+    if (guideKey === "own" && !ownText.trim()) {
+      toast.error("Add a sentence describing your own experiment.");
+      return;
+    }
+    setCreating(true);
+    try {
+      const experiment = await createExperiment({
+        stateId: saved.id,
+        guideKey,
+        ownExperiment: guideKey === "own" ? ownText : null,
+        tryBody: tryText,
+        trySafeEnough: safeText,
+      });
+      navigate(`/living-pattern/experiments/${experiment.id}`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not begin that experiment.");
+    } finally {
+      setCreating(false);
     }
   };
 
