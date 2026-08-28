@@ -60,6 +60,9 @@ import LivingPatternExperiments from "./pages/LivingPatternExperiments";
 import LivingPatternExperiment from "./pages/LivingPatternExperiment";
 import LivingPatternPresence from "./pages/LivingPatternPresence";
 import LivingPatternMoments from "./pages/LivingPatternMoments";
+import LivingPatternPractice from "./pages/LivingPatternPractice";
+import LivingPatternPatterns from "./pages/LivingPatternPatterns";
+
 
 import SacredSpreads from "./pages/SacredSpreads";
 import AllCourses from "./pages/AllCourses";
