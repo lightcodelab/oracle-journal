@@ -374,6 +374,7 @@ const LivingPatternPause = () => {
                       onChange={(e) => setReceiveNote(e.target.value)}
                       placeholder="What it is like to simply acknowledge this."
                     />
+                    <FormHelp help={PAUSE_HELP.receive} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="support-note">
