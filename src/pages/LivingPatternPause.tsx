@@ -16,6 +16,12 @@ import {
   useOwnPatterns,
   type LivingStateRecord,
 } from "@/hooks/useLivingStates";
+import { createExperiment } from "@/hooks/useLivingExperiments";
+import {
+  CHANGE_COURSE_NOTE,
+  EXPERIMENT_GUIDES,
+  guideByKey,
+} from "@/components/temple/living/experimentGuides";
 
 /**
  * States of Being — Pause (LP-C).
@@ -106,6 +112,15 @@ const LivingPatternPause = () => {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [linkedPatternId, setLinkedPatternId] = useState<string | null>(null);
 
+  // LP-C.1 — optional Field Notes experiment. Never compulsory, never superior.
+  const [wantExperiment, setWantExperiment] = useState(false);
+  const [guideKey, setGuideKey] = useState<string | null>(null);
+  const [ownText, setOwnText] = useState("");
+  const [tryText, setTryText] = useState("");
+  const [safeText, setSafeText] = useState("");
+  const [creating, setCreating] = useState(false);
+  const selectedGuide = guideByKey(guideKey);
+
   const accessResolved = !authLoading && !memberLoading && !!user;
   const { patterns } = useOwnPatterns(accessResolved && hasFullTempleAccess);
 
@@ -124,7 +139,7 @@ const LivingPatternPause = () => {
   const toggle = (list: string[], set: (v: string[]) => void, value: string) =>
     set(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
 
-  const handleSave = async () => {
+  const handleSave = async (alsoExperiment: boolean) => {
     setSaving(true);
     setSaveError(null);
     try {
@@ -139,11 +154,35 @@ const LivingPatternPause = () => {
       // Owner-only read-back confirms the record exists and belongs to her.
       const confirmed = await getLivingState(record.id);
       setSaved(confirmed);
+      setWantExperiment(alsoExperiment);
       toast.success("Your State of Being is saved to your private record.");
     } catch (e) {
       setSaveError(e instanceof Error ? e.message : "Something went wrong while saving.");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleBeginExperiment = async () => {
+    if (!saved || !guideKey) return;
+    if (guideKey === "own" && !ownText.trim()) {
+      toast.error("Add a sentence describing your own experiment.");
+      return;
+    }
+    setCreating(true);
+    try {
+      const experiment = await createExperiment({
+        stateId: saved.id,
+        guideKey,
+        ownExperiment: guideKey === "own" ? ownText : null,
+        tryBody: tryText,
+        trySafeEnough: safeText,
+      });
+      navigate(`/living-pattern/experiments/${experiment.id}`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not begin that experiment.");
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -369,13 +408,24 @@ const LivingPatternPause = () => {
                       {saveError}
                     </p>
                   )}
-                  <div className="flex flex-wrap justify-between gap-2">
+                  <div className="border-t border-border/60 pt-5 space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      Two equally good ways to finish. Neither is more complete than the other.
+                    </p>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <Button onClick={() => handleSave(false)} disabled={saving || !canSave}>
+                        {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
+                        Save this State
+                      </Button>
+                      <Button onClick={() => handleSave(true)} disabled={saving || !canSave}>
+                        {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
+                        Make this a small experiment
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
                     <Button variant="ghost" onClick={() => setStep(2)}>
                       Back
-                    </Button>
-                    <Button onClick={handleSave} disabled={saving || !canSave}>
-                      {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
-                      Save to my Living Pattern
                     </Button>
                   </div>
                   {!canSave && (
@@ -405,6 +455,128 @@ const LivingPatternPause = () => {
                 </p>
               </div>
             </div>
+
+            <div className="space-y-4 border-t border-border/60 pt-5">
+              {!wantExperiment ? (
+                <>
+                  <p className="text-sm text-foreground">
+                    This State is complete on its own. If you would like, you can also make it a small
+                    experiment — equally optional, and never better.
+                  </p>
+                  <Button variant="outline" onClick={() => setWantExperiment(true)}>
+                    Make this a small experiment
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-foreground">
+                    Choose a Guide, if one is useful. Nothing here is advice, and none is recommended
+                    over another.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {EXPERIMENT_GUIDES.map((g) => (
+                      <button
+                        key={g.key}
+                        type="button"
+                        aria-pressed={guideKey === g.key}
+                        onClick={() => setGuideKey(g.key)}
+                        className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                          guideKey === g.key
+                            ? "border-primary bg-primary/15 text-foreground"
+                            : "border-border/70 bg-card/60 text-muted-foreground hover:border-primary/50"
+                        }`}
+                      >
+                        {g.title}
+                      </button>
+                    ))}
+                  </div>
+
+                  {selectedGuide && (
+                    <div className="space-y-2 rounded-lg border border-border/60 bg-background/40 p-4 text-sm">
+                      <p className="text-muted-foreground">
+                        <span className="text-primary">What this is for — </span>
+                        {selectedGuide.purpose}
+                      </p>
+                      <p className="text-foreground">
+                        <span className="text-primary">Try this — </span>
+                        {selectedGuide.tryThis}
+                      </p>
+                      {selectedGuide.script && (
+                        <p className="rounded-md border border-border/60 p-3 italic text-foreground">
+                          “{selectedGuide.script}”
+                        </p>
+                      )}
+                      <p className="text-muted-foreground">
+                        <span className="text-primary">What you are testing — </span>
+                        {selectedGuide.testing}
+                      </p>
+                      <p className="text-muted-foreground">
+                        <span className="text-primary">What to notice afterwards — </span>
+                        {selectedGuide.notice}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{CHANGE_COURSE_NOTE}</p>
+                    </div>
+                  )}
+
+                  {guideKey === "own" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="own-experiment">Your own experiment</Label>
+                      <Textarea
+                        id="own-experiment"
+                        rows={2}
+                        value={ownText}
+                        onChange={(e) => setOwnText(e.target.value)}
+                        placeholder="In your own words, as small as you like."
+                      />
+                    </div>
+                  )}
+
+                  {guideKey && (
+                    <>
+                      <div className="space-y-2">
+                        <Label htmlFor="try-note">
+                          What, if anything, are you curious to try? (optional)
+                        </Label>
+                        <Textarea
+                          id="try-note"
+                          rows={2}
+                          value={tryText}
+                          onChange={(e) => setTryText(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="safe-note">
+                          What would make this safe enough to try? (optional)
+                        </Label>
+                        <Textarea
+                          id="safe-note"
+                          rows={2}
+                          value={safeText}
+                          onChange={(e) => setSafeText(e.target.value)}
+                        />
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Button onClick={handleBeginExperiment} disabled={creating}>
+                          {creating && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
+                          Begin this experiment
+                        </Button>
+                        <Button variant="ghost" onClick={() => setWantExperiment(false)} disabled={creating}>
+                          Not now
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+              <p className="text-xs text-muted-foreground">
+                <Link to="/living-pattern/experiments" className="underline hover:text-foreground">
+                  My experiments
+                </Link>{" "}
+                — return to any of them whenever you have more information.
+              </p>
+            </div>
+
+
 
             <div className="space-y-2">
               <Label htmlFor="amend-note">Your next direction</Label>
