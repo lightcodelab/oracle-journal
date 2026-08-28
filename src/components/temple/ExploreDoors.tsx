@@ -65,7 +65,7 @@ export function ExploreDoors() {
               <p className="mt-2 font-serif text-lg text-foreground text-center">
                 {door.name}
               </p>
-              <p className="mt-1 text-sm text-muted-foreground text-center leading-relaxed">
+              <p className="mt-1 text-sm text-muted-foreground text-center leading-relaxed whitespace-pre-line">
                 {door.description}
               </p>
             </Link>
