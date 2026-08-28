@@ -524,6 +524,7 @@ const LivingPatternPause = () => {
                         {selectedGuide.notice}
                       </p>
                       <p className="text-xs text-muted-foreground">{CHANGE_COURSE_NOTE}</p>
+                      <GuideScriptPanel guideKey={guideKey} />
                     </div>
                   )}
 
