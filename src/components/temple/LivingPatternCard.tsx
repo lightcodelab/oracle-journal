@@ -106,7 +106,7 @@ export function LivingPatternCard() {
           {panels.map((panel) => (
             <article
               key={panel.key}
-              className="relative overflow-hidden rounded-lg border border-border/50 w-full min-w-0 max-w-full aspect-[16/9] sm:aspect-[4/3] min-h-0 sm:min-h-[280px] lg:min-h-[320px]"
+              className="relative overflow-hidden rounded-lg border border-border/50 w-full min-w-0 max-w-full sm:aspect-[4/3] sm:min-h-[280px] lg:min-h-[320px]"
             >
               <img
                 src={panel.image}
