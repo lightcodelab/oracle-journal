@@ -369,13 +369,24 @@ const LivingPatternPause = () => {
                       {saveError}
                     </p>
                   )}
-                  <div className="flex flex-wrap justify-between gap-2">
+                  <div className="border-t border-border/60 pt-5 space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      Two equally good ways to finish. Neither is more complete than the other.
+                    </p>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <Button onClick={() => handleSave(false)} disabled={saving || !canSave}>
+                        {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
+                        Save this State
+                      </Button>
+                      <Button onClick={() => handleSave(true)} disabled={saving || !canSave}>
+                        {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
+                        Make this a small experiment
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
                     <Button variant="ghost" onClick={() => setStep(2)}>
                       Back
-                    </Button>
-                    <Button onClick={handleSave} disabled={saving || !canSave}>
-                      {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
-                      Save to my Living Pattern
                     </Button>
                   </div>
                   {!canSave && (
