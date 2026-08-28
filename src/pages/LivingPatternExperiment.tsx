@@ -293,6 +293,7 @@ const LivingPatternExperiment = () => {
                         {guide.notice}
                       </p>
                       <p className="text-xs text-muted-foreground">{CHANGE_COURSE_NOTE}</p>
+                      <GuideScriptPanel guideKey={experiment.guide_key} />
                     </div>
                   )}
                   {experiment.own_experiment && (
