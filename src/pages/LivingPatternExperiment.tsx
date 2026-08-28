@@ -366,6 +366,10 @@ const LivingPatternExperiment = () => {
                           <p className="mt-1 text-sm text-foreground whitespace-pre-wrap">
                             {n.body || "—"}
                           </p>
+                          <FieldNoteMedia
+                            fieldNoteId={n.id}
+                            emptyHint="Nothing is attached to this noticing."
+                          />
                         </li>
                       ))}
                     </ul>
