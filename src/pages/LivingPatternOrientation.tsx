@@ -90,7 +90,7 @@ const LivingPatternOrientation = () => {
         </h1>
         <div className="mt-4 space-y-1 max-w-2xl">
           {ORIENTATION_PROMISE.map((line) => (
-            <p key={line} className="font-serif text-lg leading-relaxed text-foreground">
+            <p key={line} className="text-lg leading-relaxed text-foreground">
               {line}
             </p>
           ))}
