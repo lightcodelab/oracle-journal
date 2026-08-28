@@ -3702,6 +3702,95 @@ export type Database = {
           },
         ]
       }
+      living_media_attachments: {
+        Row: {
+          byte_size: number | null
+          content_revision: number
+          created_at: string
+          declared_byte_size: number
+          duration_seconds: number | null
+          field_note_id: string
+          finalized_at: string | null
+          id: string
+          media_kind: string
+          mime_type: string
+          object_path: string
+          original_filename: string
+          schema_version: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          byte_size?: number | null
+          content_revision?: number
+          created_at?: string
+          declared_byte_size: number
+          duration_seconds?: number | null
+          field_note_id: string
+          finalized_at?: string | null
+          id?: string
+          media_kind: string
+          mime_type: string
+          object_path: string
+          original_filename: string
+          schema_version?: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          byte_size?: number | null
+          content_revision?: number
+          created_at?: string
+          declared_byte_size?: number
+          duration_seconds?: number | null
+          field_note_id?: string
+          finalized_at?: string | null
+          id?: string
+          media_kind?: string
+          mime_type?: string
+          object_path?: string
+          original_filename?: string
+          schema_version?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "living_media_attachments_field_note_id_fkey"
+            columns: ["field_note_id"]
+            isOneToOne: false
+            referencedRelation: "living_field_notes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      living_media_deletions: {
+        Row: {
+          attempts: number
+          enqueued_at: string
+          id: string
+          last_error: string | null
+          object_path: string
+        }
+        Insert: {
+          attempts?: number
+          enqueued_at?: string
+          id?: string
+          last_error?: string | null
+          object_path: string
+        }
+        Update: {
+          attempts?: number
+          enqueued_at?: string
+          id?: string
+          last_error?: string | null
+          object_path?: string
+        }
+        Relationships: []
+      }
       living_pattern_evidence: {
         Row: {
           content: Json
@@ -7287,6 +7376,20 @@ export type Database = {
       }
       living_link_delete: { Args: { _id: string }; Returns: Json }
       living_links_list: { Args: { _id: string; _kind: string }; Returns: Json }
+      living_media_delete: { Args: { _id: string }; Returns: Json }
+      living_media_finalize: { Args: { _id: string }; Returns: Json }
+      living_media_list: { Args: { _field_note_id: string }; Returns: Json }
+      living_media_prepare: {
+        Args: {
+          _byte_size: number
+          _duration_seconds?: number
+          _field_note_id: string
+          _filename: string
+          _media_kind: string
+          _mime_type: string
+        }
+        Returns: Json
+      }
       living_moment_create: {
         Args: {
           _label?: string
