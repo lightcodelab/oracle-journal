@@ -22,6 +22,11 @@ import {
   EXPERIMENT_GUIDES,
   guideByKey,
 } from "@/components/temple/living/experimentGuides";
+import { FormHelp, GuideScriptPanel, MovementNote } from "@/components/temple/living/FormHelp";
+import {
+  GLOBAL_MOVEMENT_HELPER,
+  PAUSE_HELP,
+} from "@/components/temple/living/orientationContent";
 
 /**
  * States of Being — Pause (LP-C).
