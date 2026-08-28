@@ -75,6 +75,19 @@ export function LivingPatternCard() {
           more like your own.
         </p>
 
+        <p className="mt-4 text-sm text-muted-foreground">
+          <Link
+            to="/living-pattern/orientation"
+            className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+          >
+            Start here: How to use your Living Pattern
+          </Link>{" "}
+          — a short, private orientation you can read now, later, or never. You
+          may open any lens straight away.
+        </p>
+
+
+
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
           {panels.map((panel) => (
             <article

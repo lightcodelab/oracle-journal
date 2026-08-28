@@ -26,6 +26,12 @@ import {
   PRESENCE_GUIDES,
   guideByKey,
 } from "@/components/temple/living/experimentGuides";
+import { FormHelp, GuideScriptPanel, MovementNote } from "@/components/temple/living/FormHelp";
+import {
+  GLOBAL_MOVEMENT_HELPER,
+  PRESENCE_HELP,
+  PRESENCE_LEAD_IN,
+} from "@/components/temple/living/orientationContent";
 
 /**
  * LP-D — Presence / Moments of Meaning.
@@ -41,42 +47,51 @@ import {
 type Step = 1 | 2 | 3;
 
 const REGISTER_FIELDS = [
-  { key: "happened", label: "What happened?", rows: 3 },
-  { key: "stood_out", label: "What stood out?", rows: 2 },
+  { key: "happened", label: "What happened?", rows: 3, help: "happened" },
+  { key: "stood_out", label: "What stood out?", rows: 2, help: undefined },
   {
     key: "noticed_first",
     label: "What did you notice first — in the moment, in your body, or afterward?",
     rows: 2,
+    help: undefined,
   },
 ] as const;
 
 const RECOGNISE_FIELDS = [
-  { key: "meaning", label: "What am I making this mean?" },
-  { key: "prediction", label: "What does my mind seem to be predicting?" },
-  { key: "told_before", label: "Where has this story been told before, if anywhere?" },
+  { key: "meaning", label: "What am I making this mean?", help: "meaning" },
+  { key: "prediction", label: "What does my mind seem to be predicting?", help: "meaning" },
+  {
+    key: "told_before",
+    label: "Where has this story been told before, if anywhere?",
+    help: undefined,
+  },
   {
     key: "then_now",
     label: "Am I saying: “this happened then, therefore it is happening now”?",
+    help: undefined,
   },
-  { key: "facts", label: "What do I know as fact?" },
-  { key: "story", label: "What is story, prediction, or interpretation?" },
-  { key: "else_true", label: "What else could plausibly be true?" },
+  { key: "facts", label: "What do I know as fact?", help: "facts" },
+  { key: "story", label: "What is story, prediction, or interpretation?", help: "facts" },
+  { key: "else_true", label: "What else could plausibly be true?", help: undefined },
   {
     key: "protector",
     label:
       "Is a protective part trying to help here? What might it be trying to prevent or protect?",
+    help: "protector",
   },
 ] as const;
 
 const RECALIBRATE_FIELDS = [
-  { key: "next_choice", label: "What is my grounded next choice?" },
+  { key: "next_choice", label: "What is my grounded next choice?", help: "recalibrate" },
   {
     key: "small_action",
     label: "What small action could give me more information than this story has right now?",
+    help: "recalibrate",
   },
   {
     key: "identity",
     label: "Which identity is this next choice reinforcing? (optional)",
+    help: undefined,
   },
 ] as const;
 
@@ -348,6 +363,8 @@ const LivingPatternPresence = () => {
             );
           })}
         </nav>
+        <MovementNote>{GLOBAL_MOVEMENT_HELPER}</MovementNote>
+
 
         <div className="mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6 space-y-6">
           {step === 1 && (
@@ -371,6 +388,7 @@ const LivingPatternPresence = () => {
                     onChange={(e) => setField(setRegister, f.key, e.target.value)}
                     placeholder="As much or as little as you like."
                   />
+                  {f.help && <FormHelp help={PRESENCE_HELP[f.help]} />}
                 </div>
               ))}
               <p className="text-xs text-muted-foreground">
@@ -382,9 +400,11 @@ const LivingPatternPresence = () => {
 
           {step === 2 && (
             <>
+              <p className="text-sm text-muted-foreground">{PRESENCE_LEAD_IN}</p>
               <p className="text-sm text-muted-foreground">
-                Answer only the questions you want. There is nothing to get right here — you are simply
-                separating what happened from what you are making it mean.
+                This is not a worksheet, and there is nothing to get right. You are simply
+                separating what happened from what you are making it mean. Your feelings are real
+                even where a prediction turns out to be incomplete.
               </p>
               {RECOGNISE_FIELDS.map((f) => (
                 <div key={f.key} className="space-y-2">
@@ -395,6 +415,7 @@ const LivingPatternPresence = () => {
                     value={recognise[f.key] ?? ""}
                     onChange={(e) => setField(setRecognise, f.key, e.target.value)}
                   />
+                  {f.help && <FormHelp help={PRESENCE_HELP[f.help]} />}
                 </div>
               ))}
             </>
@@ -411,6 +432,7 @@ const LivingPatternPresence = () => {
                     value={recalibrate[f.key] ?? ""}
                     onChange={(e) => setField(setRecalibrate, f.key, e.target.value)}
                   />
+                  {f.help && <FormHelp help={PRESENCE_HELP[f.help]} />}
                 </div>
               ))}
             </>
@@ -485,6 +507,7 @@ const LivingPatternPresence = () => {
                   {selectedGuide.notice}
                 </p>
                 <p className="text-xs text-muted-foreground">{CHANGE_COURSE_NOTE}</p>
+                <GuideScriptPanel guideKey={guideKey} />
               </div>
             )}
 

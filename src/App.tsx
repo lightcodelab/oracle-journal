@@ -56,6 +56,7 @@ import RemembranceSectionPage from "./pages/RemembranceSectionPage";
 import DeepeningCourses from "./pages/DeepeningCourses";
 import MyPlaylists from "./pages/MyPlaylists";
 import LivingPatternPause from "./pages/LivingPatternPause";
+import LivingPatternOrientation from "./pages/LivingPatternOrientation";
 import LivingPatternExperiments from "./pages/LivingPatternExperiments";
 import LivingPatternExperiment from "./pages/LivingPatternExperiment";
 import LivingPatternPresence from "./pages/LivingPatternPresence";
@@ -145,6 +146,7 @@ const App = () => {
             <Route path="/journal" element={<Journal />} />
             <Route path="/readings" element={<MyReadings />} />
             <Route path="/playlists" element={<MyPlaylists />} />
+            <Route path="/living-pattern/orientation" element={<LivingPatternOrientation />} />
             <Route path="/living-pattern/pause" element={<LivingPatternPause />} />
             <Route path="/living-pattern/experiments" element={<LivingPatternExperiments />} />
             <Route path="/living-pattern/experiments/:id" element={<LivingPatternExperiment />} />

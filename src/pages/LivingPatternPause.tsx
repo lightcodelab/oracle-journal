@@ -22,6 +22,11 @@ import {
   EXPERIMENT_GUIDES,
   guideByKey,
 } from "@/components/temple/living/experimentGuides";
+import { FormHelp, GuideScriptPanel, MovementNote } from "@/components/temple/living/FormHelp";
+import {
+  GLOBAL_MOVEMENT_HELPER,
+  PAUSE_HELP,
+} from "@/components/temple/living/orientationContent";
 
 /**
  * States of Being — Pause (LP-C).
@@ -289,6 +294,7 @@ const LivingPatternPause = () => {
                 );
               })}
             </nav>
+            <MovementNote>{GLOBAL_MOVEMENT_HELPER}</MovementNote>
 
             <div className="mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6 space-y-6">
               {step === 1 && (
@@ -300,6 +306,7 @@ const LivingPatternPause = () => {
                       selected={feelingWords}
                       onToggle={(v) => toggle(feelingWords, setFeelingWords, v)}
                     />
+                    <FormHelp help={PAUSE_HELP.register} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="feeling-note">In your own words (optional)</Label>
@@ -367,6 +374,7 @@ const LivingPatternPause = () => {
                       onChange={(e) => setReceiveNote(e.target.value)}
                       placeholder="What it is like to simply acknowledge this."
                     />
+                    <FormHelp help={PAUSE_HELP.receive} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="support-note">
@@ -402,6 +410,7 @@ const LivingPatternPause = () => {
                       onChange={(e) => setReorientNote(e.target.value)}
                       placeholder="Small is enough. It can be one breath, or one honest sentence."
                     />
+                    <FormHelp help={PAUSE_HELP.reorient} />
                   </div>
                   {saveError && (
                     <p role="alert" className="text-sm text-destructive">
@@ -515,6 +524,7 @@ const LivingPatternPause = () => {
                         {selectedGuide.notice}
                       </p>
                       <p className="text-xs text-muted-foreground">{CHANGE_COURSE_NOTE}</p>
+                      <GuideScriptPanel guideKey={guideKey} />
                     </div>
                   )}
 

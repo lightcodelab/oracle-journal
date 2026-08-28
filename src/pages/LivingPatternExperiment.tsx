@@ -22,6 +22,11 @@ import {
   OUTCOME_LABELS,
   guideByKey,
 } from "@/components/temple/living/experimentGuides";
+import { FormHelp, GuideScriptPanel, MovementNote } from "@/components/temple/living/FormHelp";
+import {
+  FIELD_NOTE_HELP,
+  FIELD_NOTE_TAB_NOTE,
+} from "@/components/temple/living/orientationContent";
 
 /**
  * LP-C.1 — private Field Notes detail surface for one experiment.
@@ -263,6 +268,8 @@ const LivingPatternExperiment = () => {
                 </button>
               ))}
             </nav>
+            <MovementNote>{FIELD_NOTE_TAB_NOTE}</MovementNote>
+
 
             <div className="mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6 space-y-6">
               {tab === "try" && (
@@ -288,6 +295,7 @@ const LivingPatternExperiment = () => {
                         {guide.notice}
                       </p>
                       <p className="text-xs text-muted-foreground">{CHANGE_COURSE_NOTE}</p>
+                      <GuideScriptPanel guideKey={experiment.guide_key} />
                     </div>
                   )}
                   {experiment.own_experiment && (
@@ -305,6 +313,7 @@ const LivingPatternExperiment = () => {
                       onChange={(e) => setTryDraft(e.target.value)}
                       placeholder="As small as you like."
                     />
+                    <FormHelp help={FIELD_NOTE_HELP.try} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="try-safe">What would make this safe enough to try? (optional)</Label>
@@ -368,6 +377,7 @@ const LivingPatternExperiment = () => {
                       onChange={(e) => setNoticeDraft(e.target.value)}
                       placeholder="What is different, the same, or surprising?"
                     />
+                    <FormHelp help={FIELD_NOTE_HELP.notice} />
                     <Button onClick={addNotice} disabled={busy || !noticeDraft.trim()}>
                       {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
                       Add a noticing
@@ -392,6 +402,7 @@ const LivingPatternExperiment = () => {
                       value={returnDraft}
                       onChange={(e) => setReturnDraft(e.target.value)}
                     />
+                    <FormHelp help={FIELD_NOTE_HELP.return} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="return-unknown">What is still unknown? (optional)</Label>

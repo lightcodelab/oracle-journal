@@ -27,6 +27,12 @@ import {
   PRACTICE_GUIDES,
   guideByKey,
 } from "@/components/temple/living/experimentGuides";
+import { FormHelp, GuideScriptPanel, MovementNote } from "@/components/temple/living/FormHelp";
+import {
+  GLOBAL_MOVEMENT_HELPER,
+  PRACTICE_HELP,
+  PRACTICE_LEAD_IN,
+} from "@/components/temple/living/orientationContent";
 
 /**
  * LP-E — Practice / Patterns of Choosing.
@@ -367,6 +373,9 @@ const LivingPatternPractice = () => {
             );
           })}
         </nav>
+        <MovementNote>{GLOBAL_MOVEMENT_HELPER}</MovementNote>
+        <p className="mt-3 text-sm text-muted-foreground">{PRACTICE_LEAD_IN}</p>
+
 
         <div className="mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6 space-y-6">
           {step === 1 && (
@@ -392,6 +401,7 @@ const LivingPatternPractice = () => {
                     onChange={(e) => setField(setRecognise, f.key, e.target.value)}
                     placeholder="As much or as little as you like."
                   />
+                  <FormHelp help={PRACTICE_HELP.recognise} />
                 </div>
               ))}
               <p className="text-xs text-muted-foreground">
@@ -417,6 +427,7 @@ const LivingPatternPractice = () => {
                   value={commitment}
                   onChange={(e) => setCommitment(e.target.value)}
                 />
+                <FormHelp help={PRACTICE_HELP.resolve} />
               </div>
               {RESOLVE_FIELDS.map((f) => (
                 <div key={f.key} className="space-y-2">
@@ -444,6 +455,7 @@ const LivingPatternPractice = () => {
                   value={reinforce.expression ?? ""}
                   onChange={(e) => setField(setReinforce, "expression", e.target.value)}
                 />
+                <FormHelp help={PRACTICE_HELP.reinforce} />
               </div>
               <div className="rounded-lg border border-border/60 bg-background/40 p-4 space-y-3">
                 <p className="text-sm text-muted-foreground">
@@ -480,6 +492,7 @@ const LivingPatternPractice = () => {
                   value={reinforce.tenderness ?? ""}
                   onChange={(e) => setField(setReinforce, "tenderness", e.target.value)}
                 />
+                <FormHelp help={PRACTICE_HELP.tenderness} />
               </div>
             </>
           )}
@@ -583,6 +596,7 @@ const LivingPatternPractice = () => {
                   {selectedGuide.notice}
                 </p>
                 <p className="text-xs text-muted-foreground">{CHANGE_COURSE_NOTE}</p>
+                <GuideScriptPanel guideKey={guideKey} />
               </div>
             )}
 
