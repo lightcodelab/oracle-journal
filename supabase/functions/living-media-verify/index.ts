@@ -103,7 +103,9 @@ Deno.serve(async (req) => {
   });
 
   if (error) {
-    await admin.storage.from(BUCKET).remove([row.object_path]);
+    // The refusal inside the RPC rolls back, so remove the pending record and
+    // its object here: nothing is kept.
+    await discard();
     return json({ error: error.message, derived_duration_seconds: duration }, 400);
   }
 
