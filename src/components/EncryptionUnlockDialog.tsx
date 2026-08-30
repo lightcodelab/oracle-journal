@@ -129,10 +129,11 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
         </CardHeader>
 
         <CardContent>
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'password' | 'recovery')}>
-            <TabsList className="grid w-full grid-cols-2">
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'password' | 'recovery' | 'reset')}>
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="password">Password</TabsTrigger>
               <TabsTrigger value="recovery">Recovery</TabsTrigger>
+              <TabsTrigger value="reset">Start fresh</TabsTrigger>
             </TabsList>
 
             <TabsContent value="password" className="mt-4">
