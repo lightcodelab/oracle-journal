@@ -29,6 +29,8 @@ interface EncryptionContextType {
   lockEncryption: () => void;
   changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
   recoverWithPhrase: (recoveryPhrase: string, newPassword: string) => Promise<void>;
+  /** Destroys the existing key and creates a brand new encrypted space. Returns new recovery phrase. */
+  resetEncryption: (newPassword: string) => Promise<string>;
   
   // Encryption utilities (only work when unlocked)
   encryptText: (text: string) => Promise<EncryptedField>;
