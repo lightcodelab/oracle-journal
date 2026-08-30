@@ -490,7 +490,6 @@ const AreekeeraBot = () => {
   }
 
   return (
-    <EncryptionGate required>
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
@@ -513,6 +512,7 @@ const AreekeeraBot = () => {
         </div>
       </div>
 
+      <EncryptionGate required embedded>
       {/* Escalation Banner */}
       <AnimatePresence>
         {showEscalation && (
@@ -925,8 +925,8 @@ const AreekeeraBot = () => {
           </ScrollArea>
         )}
       </div>
-    </div>
     </EncryptionGate>
+    </div>
   );
 };
 
