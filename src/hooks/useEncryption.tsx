@@ -29,6 +29,8 @@ interface EncryptionContextType {
   lockEncryption: () => void;
   changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
   recoverWithPhrase: (recoveryPhrase: string, newPassword: string) => Promise<void>;
+  /** Destroys the existing key and creates a brand new encrypted space. Returns new recovery phrase. */
+  resetEncryption: (newPassword: string) => Promise<string>;
   
   // Encryption utilities (only work when unlocked)
   encryptText: (text: string) => Promise<EncryptedField>;
@@ -275,6 +277,59 @@ export function EncryptionProvider({ children }: { children: ReactNode }) {
   }, [encryptionKeyRecord]);
 
   /**
+   * Reset encryption entirely: discard the old key and create a new one.
+   * Anything encrypted with the previous key becomes permanently unreadable.
+   */
+  const resetEncryption = useCallback(async (newPassword: string): Promise<string> => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      throw new Error('Must be logged in');
+    }
+
+    const { error: deleteError } = await supabase
+      .from('user_encryption_keys')
+      .delete()
+      .eq('user_id', session.user.id);
+
+    if (deleteError) {
+      throw new Error('Failed to reset encryption: ' + deleteError.message);
+    }
+
+    // Create a brand new master key + recovery phrase
+    const newMasterKey = await generateMasterKey();
+    const recoveryPhrase = await generateRecoveryPhrase(newMasterKey);
+    const recoveryHash = await hashRecoveryPhrase(recoveryPhrase);
+    const { encryptedKey, salt, iv } = await wrapMasterKey(newMasterKey, newPassword);
+
+    const { error: insertError } = await supabase
+      .from('user_encryption_keys')
+      .insert({
+        user_id: session.user.id,
+        encrypted_master_key: encryptedKey,
+        key_salt: salt,
+        key_iv: iv,
+        recovery_key_hash: recoveryHash,
+        key_version: 1,
+      });
+
+    if (insertError) {
+      throw new Error('Failed to save new encryption keys: ' + insertError.message);
+    }
+
+    const { data } = await supabase
+      .from('user_encryption_keys')
+      .select('*')
+      .eq('user_id', session.user.id)
+      .single();
+
+    setEncryptionKeyRecord(data as UserEncryptionKey);
+    setMasterKey(newMasterKey);
+    setHasEncryptionKey(true);
+
+    return recoveryPhrase;
+  }, []);
+
+  /**
    * Encrypt text (requires unlocked encryption)
    */
   const encryptText = useCallback(async (text: string): Promise<EncryptedField> => {
@@ -325,6 +380,7 @@ export function EncryptionProvider({ children }: { children: ReactNode }) {
     lockEncryption,
     changePassword,
     recoverWithPhrase,
+    resetEncryption,
     encryptText,
     decryptText,
     encryptObject,

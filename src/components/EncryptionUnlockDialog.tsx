@@ -5,8 +5,9 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Lock, Key, Loader2, AlertTriangle } from 'lucide-react';
+import { Lock, Key, Loader2, AlertTriangle, RotateCcw } from 'lucide-react';
 import { useEncryption } from '@/hooks/useEncryption';
+import RecoveryKeySetup from '@/components/RecoveryKeySetup';
 import { toast } from 'sonner';
 
 interface EncryptionUnlockDialogProps {
@@ -17,8 +18,10 @@ interface EncryptionUnlockDialogProps {
 }
 
 export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = false }: EncryptionUnlockDialogProps) {
-  const { unlockEncryption, recoverWithPhrase, hasEncryptionKey } = useEncryption();
-  const [activeTab, setActiveTab] = useState<'password' | 'recovery'>('password');
+  const { unlockEncryption, recoverWithPhrase, resetEncryption, hasEncryptionKey } = useEncryption();
+  const [activeTab, setActiveTab] = useState<'password' | 'recovery' | 'reset'>('password');
+  const [resetConfirmText, setResetConfirmText] = useState('');
+  const [newPhrase, setNewPhrase] = useState('');
   const [password, setPassword] = useState('');
   const [recoveryPhrase, setRecoveryPhrase] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -69,8 +72,48 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
     }
   };
 
+  const handleReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (resetConfirmText.trim().toUpperCase() !== 'START FRESH') {
+      setError('Please type START FRESH to confirm');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const phrase = await resetEncryption(newPassword);
+      setNewPhrase(phrase);
+      toast.success('New encrypted space created');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to reset encryption');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!hasEncryptionKey) {
     return null;
+  }
+
+  if (newPhrase) {
+    return (
+      <div className={embedded ? "flex-1 bg-background flex items-center justify-center p-4" : "min-h-screen bg-background flex items-center justify-center p-4"}>
+        <RecoveryKeySetup recoveryPhrase={newPhrase} onComplete={onUnlocked} />
+      </div>
+    );
   }
 
   return (
@@ -87,10 +130,11 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
         </CardHeader>
 
         <CardContent>
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'password' | 'recovery')}>
-            <TabsList className="grid w-full grid-cols-2">
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'password' | 'recovery' | 'reset')}>
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="password">Password</TabsTrigger>
               <TabsTrigger value="recovery">Recovery</TabsTrigger>
+              <TabsTrigger value="reset">Start fresh</TabsTrigger>
             </TabsList>
 
             <TabsContent value="password" className="mt-4">
@@ -195,6 +239,85 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
                     </>
                   )}
                 </Button>
+              </form>
+            </TabsContent>
+
+            <TabsContent value="reset" className="mt-4">
+              <form onSubmit={handleReset} className="space-y-4">
+                <Alert variant="destructive" className="bg-destructive/10 border-destructive/20">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription className="text-sm">
+                    Use this only if you have lost <strong>both</strong> your encryption password and your
+                    12-word recovery phrase. Your key is held only by you, so nobody — including the Temple —
+                    can restore it. Starting fresh creates a new encryption key: anything previously encrypted
+                    with the old key becomes permanently unreadable, and you begin a new private space.
+                  </AlertDescription>
+                </Alert>
+
+                <div className="space-y-2">
+                  <Label htmlFor="reset-confirm">Type START FRESH to confirm</Label>
+                  <Input
+                    id="reset-confirm"
+                    type="text"
+                    value={resetConfirmText}
+                    onChange={(e) => setResetConfirmText(e.target.value)}
+                    placeholder="START FRESH"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="reset-password">New Encryption Password</Label>
+                  <Input
+                    id="reset-password"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Create a new password"
+                    required
+                    disabled={loading}
+                    minLength={8}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="reset-confirm-password">Confirm New Password</Label>
+                  <Input
+                    id="reset-confirm-password"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm your new password"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+
+                {error && activeTab === 'reset' && (
+                  <Alert variant="destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                <Button type="submit" variant="destructive" className="w-full" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Creating new encrypted space...
+                    </>
+                  ) : (
+                    <>
+                      <RotateCcw className="w-4 h-4 mr-2" />
+                      Start a Fresh Encrypted Space
+                    </>
+                  )}
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  You will be shown a new 12-word recovery phrase. Save it somewhere safe — with it, you can
+                  reset your password in future without losing anything.
+                </p>
               </form>
             </TabsContent>
           </Tabs>

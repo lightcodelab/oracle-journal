@@ -15,6 +15,8 @@ import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import EncryptionGate from '@/components/EncryptionGate';
+import ProtocolBuilderIntro from '@/components/areekeera/ProtocolBuilderIntro';
+import { useEncryption } from '@/hooks/useEncryption';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -66,6 +68,19 @@ const AreekeeraBot = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [phase, setPhase] = useState<IntakePhase>('consent');
+  const { hasEncryptionKey } = useEncryption();
+  const [showIntro, setShowIntro] = useState(
+    () => typeof window === 'undefined' || localStorage.getItem('areekeera-intro-seen') !== 'true'
+  );
+
+  const handleIntroContinue = () => {
+    try {
+      localStorage.setItem('areekeera-intro-seen', 'true');
+    } catch {
+      // ignore storage failures
+    }
+    setShowIntro(false);
+  };
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
@@ -512,6 +527,9 @@ const AreekeeraBot = () => {
         </div>
       </div>
 
+      {showIntro ? (
+        <ProtocolBuilderIntro onContinue={handleIntroContinue} hasEncryptionKey={hasEncryptionKey} />
+      ) : (
       <EncryptionGate required embedded>
       {/* Escalation Banner */}
       <AnimatePresence>
@@ -926,6 +944,7 @@ const AreekeeraBot = () => {
         )}
       </div>
     </EncryptionGate>
+      )}
     </div>
   );
 };
