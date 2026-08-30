@@ -12,9 +12,11 @@ import { toast } from 'sonner';
 interface EncryptionUnlockDialogProps {
   onUnlocked: () => void;
   onSkip?: () => void;
+  /** Render inside an existing page layout instead of a full-screen takeover */
+  embedded?: boolean;
 }
 
-export default function EncryptionUnlockDialog({ onUnlocked, onSkip }: EncryptionUnlockDialogProps) {
+export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = false }: EncryptionUnlockDialogProps) {
   const { unlockEncryption, recoverWithPhrase, hasEncryptionKey } = useEncryption();
   const [activeTab, setActiveTab] = useState<'password' | 'recovery'>('password');
   const [password, setPassword] = useState('');
@@ -72,7 +74,7 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip }: Encryptio
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className={embedded ? "flex-1 bg-background flex items-center justify-center p-4" : "min-h-screen bg-background flex items-center justify-center p-4"}>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
