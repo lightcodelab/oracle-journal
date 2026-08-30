@@ -15,6 +15,8 @@ import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import EncryptionGate from '@/components/EncryptionGate';
+import ProtocolBuilderIntro from '@/components/areekeera/ProtocolBuilderIntro';
+import { useEncryption } from '@/hooks/useEncryption';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -525,6 +527,9 @@ const AreekeeraBot = () => {
         </div>
       </div>
 
+      {showIntro ? (
+        <ProtocolBuilderIntro onContinue={handleIntroContinue} hasEncryptionKey={hasEncryptionKey} />
+      ) : (
       <EncryptionGate required embedded>
       {/* Escalation Banner */}
       <AnimatePresence>
@@ -939,6 +944,7 @@ const AreekeeraBot = () => {
         )}
       </div>
     </EncryptionGate>
+      )}
     </div>
   );
 };
