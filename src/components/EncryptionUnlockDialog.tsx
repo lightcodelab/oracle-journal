@@ -71,8 +71,48 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
     }
   };
 
+  const handleReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (resetConfirmText.trim().toUpperCase() !== 'START FRESH') {
+      setError('Please type START FRESH to confirm');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const phrase = await resetEncryption(newPassword);
+      setNewPhrase(phrase);
+      toast.success('New encrypted space created');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to reset encryption');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!hasEncryptionKey) {
     return null;
+  }
+
+  if (newPhrase) {
+    return (
+      <div className={embedded ? "flex-1 bg-background flex items-center justify-center p-4" : "min-h-screen bg-background flex items-center justify-center p-4"}>
+        <RecoveryKeySetup recoveryPhrase={newPhrase} onComplete={onUnlocked} />
+      </div>
+    );
   }
 
   return (
