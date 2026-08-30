@@ -240,6 +240,85 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
                 </Button>
               </form>
             </TabsContent>
+
+            <TabsContent value="reset" className="mt-4">
+              <form onSubmit={handleReset} className="space-y-4">
+                <Alert variant="destructive" className="bg-destructive/10 border-destructive/20">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription className="text-sm">
+                    Use this only if you have lost <strong>both</strong> your encryption password and your
+                    12-word recovery phrase. Your key is held only by you, so nobody — including the Temple —
+                    can restore it. Starting fresh creates a new encryption key: anything previously encrypted
+                    with the old key becomes permanently unreadable, and you begin a new private space.
+                  </AlertDescription>
+                </Alert>
+
+                <div className="space-y-2">
+                  <Label htmlFor="reset-confirm">Type START FRESH to confirm</Label>
+                  <Input
+                    id="reset-confirm"
+                    type="text"
+                    value={resetConfirmText}
+                    onChange={(e) => setResetConfirmText(e.target.value)}
+                    placeholder="START FRESH"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="reset-password">New Encryption Password</Label>
+                  <Input
+                    id="reset-password"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Create a new password"
+                    required
+                    disabled={loading}
+                    minLength={8}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="reset-confirm-password">Confirm New Password</Label>
+                  <Input
+                    id="reset-confirm-password"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm your new password"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+
+                {error && activeTab === 'reset' && (
+                  <Alert variant="destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                <Button type="submit" variant="destructive" className="w-full" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Creating new encrypted space...
+                    </>
+                  ) : (
+                    <>
+                      <RotateCcw className="w-4 h-4 mr-2" />
+                      Start a Fresh Encrypted Space
+                    </>
+                  )}
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  You will be shown a new 12-word recovery phrase. Save it somewhere safe — with it, you can
+                  reset your password in future without losing anything.
+                </p>
+              </form>
+            </TabsContent>
           </Tabs>
         </CardContent>
 
