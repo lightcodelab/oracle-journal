@@ -17,8 +17,10 @@ interface EncryptionUnlockDialogProps {
 }
 
 export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = false }: EncryptionUnlockDialogProps) {
-  const { unlockEncryption, recoverWithPhrase, hasEncryptionKey } = useEncryption();
-  const [activeTab, setActiveTab] = useState<'password' | 'recovery'>('password');
+  const { unlockEncryption, recoverWithPhrase, resetEncryption, hasEncryptionKey } = useEncryption();
+  const [activeTab, setActiveTab] = useState<'password' | 'recovery' | 'reset'>('password');
+  const [resetConfirmText, setResetConfirmText] = useState('');
+  const [newPhrase, setNewPhrase] = useState('');
   const [password, setPassword] = useState('');
   const [recoveryPhrase, setRecoveryPhrase] = useState('');
   const [newPassword, setNewPassword] = useState('');
