@@ -380,6 +380,7 @@ export function EncryptionProvider({ children }: { children: ReactNode }) {
     lockEncryption,
     changePassword,
     recoverWithPhrase,
+    resetEncryption,
     encryptText,
     decryptText,
     encryptObject,
