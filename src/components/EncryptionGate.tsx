@@ -20,6 +20,11 @@ interface EncryptionGateProps {
    * Called when user completes setup/unlock
    */
   onReady?: () => void;
+  /**
+   * If true, the unlock/loading states fill the parent flex container
+   * instead of taking over the whole screen
+   */
+  embedded?: boolean;
 }
 
 /**
@@ -35,7 +40,8 @@ export default function EncryptionGate({
   children, 
   required = true,
   allowSkip = false,
-  onReady 
+  onReady,
+  embedded = false
 }: EncryptionGateProps) {
   const { user, loading: authLoading } = useAuth();
   const { isInitialized, isUnlocked, hasEncryptionKey } = useEncryption();
@@ -43,7 +49,7 @@ export default function EncryptionGate({
   // Show loading while auth or encryption is initializing
   if (authLoading || !isInitialized) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className={embedded ? "flex-1 bg-background flex items-center justify-center" : "min-h-screen bg-background flex items-center justify-center"}>
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
           <p className="text-muted-foreground">Loading...</p>
@@ -77,6 +83,7 @@ export default function EncryptionGate({
       <EncryptionUnlockDialog
         onUnlocked={() => onReady?.()}
         onSkip={allowSkip ? () => onReady?.() : undefined}
+        embedded={embedded}
       />
     );
   }
