@@ -5,8 +5,9 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Lock, Key, Loader2, AlertTriangle } from 'lucide-react';
+import { Lock, Key, Loader2, AlertTriangle, RotateCcw } from 'lucide-react';
 import { useEncryption } from '@/hooks/useEncryption';
+import RecoveryKeySetup from '@/components/RecoveryKeySetup';
 import { toast } from 'sonner';
 
 interface EncryptionUnlockDialogProps {
