@@ -8,9 +8,9 @@ import { SearchTheTempleCard } from "./SearchTheTempleCard";
 import { BookHeart, ListMusic, LineChart, Sparkles, HeartPulse, Sprout } from "lucide-react";
 
 const doors = [
-  { name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance.url, description: "Explore the patterns, stories and inheritances shaping you.\nRITUALS, CARD DECKS & COURSES" },
-  { name: "The Door of Devotion", href: "/devotion", image: doorDevotion.url, description: "Return to yourself through guided meditation and restorative practice.\nAREEKEERA HEALING TEMPLATES & MEDITATIONS" },
-  { name: "The Door of Communion", href: "/communion", image: doorCommunion.url, description: "Find connection, reflection and support within our community.\nLIVE READINGS, CLASSES, WORKSHOPS & REPLAYS" },
+  { name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance.url, label: "RITUALS, CARD DECKS & COURSES", description: "Explore the patterns, stories and inheritances shaping you." },
+  { name: "The Door of Devotion", href: "/devotion", image: doorDevotion.url, label: "AREEKEERA HEALING TEMPLATES & MEDITATIONS", description: "Return to yourself through guided meditation and restorative practice." },
+  { name: "The Door of Communion", href: "/communion", image: doorCommunion.url, label: "LIVE READINGS, CLASSES, WORKSHOPS & REPLAYS", description: "Find connection, reflection and support within our community." },
 ];
 
 const tools = [
@@ -54,7 +54,10 @@ export function ExploreDoors() {
               <p className="mt-2 font-serif text-lg text-foreground text-center">
                 {door.name}
               </p>
-              <p className="mt-1 text-sm text-muted-foreground text-center leading-relaxed whitespace-pre-line">
+              <p className="mt-1 text-xs text-primary/80 text-center uppercase tracking-wider">
+                {door.label}
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground text-center leading-relaxed">
                 {door.description}
               </p>
             </Link>
