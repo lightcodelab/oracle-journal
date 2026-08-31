@@ -22,7 +22,7 @@ export function SearchTheTempleCard() {
         Search The Temple
       </h3>
       <p className="text-sm text-muted-foreground mb-5">
-        Find teachings, resources, and pathways by name or keyword. Use this if you know what your symptoms are and you want to find multiple resource options based on what you are experiencing.
+        Find teachings, resources, and pathways by symptom, resources name, or keyword. Use this if you can't remember the resources name, or you know your symptoms but not which resources will help.
       </p>
       <form onSubmit={handleSearch} className="flex items-center gap-2 mt-auto">
         <div className="relative flex-1">
