@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { OracleCardComponent } from "@/components/OracleCardComponent";
 import { CardDetail } from "@/components/CardDetail";
@@ -55,6 +55,7 @@ const Index = () => {
   
   
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
   const { hasAccess, loading: tierLoading } = useTierAccess();
   const canAccessRemembrance = hasAccess('remembrance');
@@ -111,6 +112,39 @@ const Index = () => {
   };
 
 
+
+  // Resume a previously drawn card via /remembrance?deck=<id>&card=<id>
+  const resumeDeckId = searchParams.get("deck");
+  const resumeCardId = searchParams.get("card");
+
+  useEffect(() => {
+    if (!user || !resumeDeckId || !resumeCardId || decks.length === 0) return;
+    if (selectedCard?.id === resumeCardId) return;
+
+    const deck = decks.find((d) => d.id === resumeDeckId);
+    if (!deck) return;
+
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase
+        .from("cards")
+        .select("*")
+        .eq("id", resumeCardId)
+        .eq("deck_id", resumeDeckId)
+        .maybeSingle();
+
+      if (cancelled || error || !data) return;
+      setSelectedDeck(deck);
+      setHasPremiumAccess(true);
+      setSelectedCard(data as OracleCard);
+      setShowCard(true);
+      setIsRevealed(true);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user, decks, resumeDeckId, resumeCardId, selectedCard?.id]);
 
   const handleSelectDeck = async (deckId: string) => {
     const deck = decks.find(d => d.id === deckId);
