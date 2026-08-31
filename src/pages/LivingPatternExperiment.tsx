@@ -47,7 +47,9 @@ const LivingPatternExperiment = () => {
 
   const [tab, setTab] = useState<Tab>("try");
   const [experiment, setExperiment] = useState<LivingExperiment | null>(null);
+  const [support, setSupport] = useState<LivingSupportTag[]>([]);
   const [notes, setNotes] = useState<LivingFieldNote[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
