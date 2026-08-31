@@ -5,7 +5,7 @@ import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
 import { Button } from "@/components/ui/button";
 import { SearchTheTempleCard } from "./SearchTheTempleCard";
-import { BookHeart, ListMusic, LineChart, Sparkles, HeartPulse } from "lucide-react";
+import { BookHeart, ListMusic, LineChart, Sparkles, HeartPulse, Sprout } from "lucide-react";
 
 const doors = [
   { name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance.url, description: "Explore the patterns, stories and inheritances shaping you.\nRITUALS, CARD DECKS & COURSES" },
@@ -16,6 +16,7 @@ const doors = [
 const tools = [
   { label: "Journal", href: "/journal", icon: BookHeart },
   { label: "Playlists", href: "/playlists", icon: ListMusic },
+  { label: "My Living Pattern", href: "/living-pattern", icon: Sprout },
   { label: "Tracking", href: "/tracking", icon: LineChart },
   { label: "Readings", href: "/readings", icon: Sparkles },
   { label: "Protocols", href: "/devotion/protocols", icon: HeartPulse },
