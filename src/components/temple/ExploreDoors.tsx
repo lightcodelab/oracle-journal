@@ -16,6 +16,7 @@ const doors = [
 const tools = [
   { label: "Journal", href: "/journal", icon: BookHeart },
   { label: "Playlists", href: "/playlists", icon: ListMusic },
+  { label: "My Living Pattern", href: "/living-pattern", icon: Sprout },
   { label: "Tracking", href: "/tracking", icon: LineChart },
   { label: "Readings", href: "/readings", icon: Sparkles },
   { label: "Protocols", href: "/devotion/protocols", icon: HeartPulse },
