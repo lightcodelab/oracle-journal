@@ -1,12 +1,11 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import doorRemembrance from "@/assets/door-of-remembrance-4.png.asset.json";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { BookHeart, Search, ListMusic, LineChart, Sparkles, HeartPulse } from "lucide-react";
+import { SearchTheTempleCard } from "./SearchTheTempleCard";
+import { BookHeart, ListMusic, LineChart, Sparkles, HeartPulse } from "lucide-react";
 
 const doors = [
   { name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance.url, description: "Explore the patterns, stories and inheritances shaping you.\nRITUALS, CARD DECKS & COURSES" },
@@ -23,17 +22,6 @@ const tools = [
 ];
 
 export function ExploreDoors() {
-  const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = searchQuery.trim();
-    if (q) {
-      navigate(`/search?q=${encodeURIComponent(q)}`);
-    }
-  };
-
   return (
     <section aria-labelledby="explore-heading" className="mb-12">
       <h2 id="explore-heading" className="font-serif text-2xl text-foreground mb-1">
@@ -73,30 +61,7 @@ export function ExploreDoors() {
         ))}
       </div>
 
-      <div className="rounded-lg border border-border/50 bg-card/50 p-4 mt-10 mb-10">
-        <h3 className="font-serif text-2xl text-foreground mb-1">
-          Search The Temple
-        </h3>
-        <p className="text-sm text-muted-foreground mb-3">
-          Find teachings, resources, and pathways by name or keyword. Use this if you know what your symptoms are and you want to find multiple resource options based on what you are experiencing. 
-        </p>
-        <form onSubmit={handleSearch} className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden />
-            <Input
-              type="search"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
-              aria-label="Search The Temple"
-            />
-          </div>
-          <Button type="submit" variant="secondary" disabled={!searchQuery.trim()}>
-            Search
-          </Button>
-        </form>
-      </div>
+      <SearchTheTempleCard />
 
       <div className="rounded-lg border border-border/50 bg-card/50 p-4">
         <h3 className="font-serif text-2xl text-foreground mb-1">

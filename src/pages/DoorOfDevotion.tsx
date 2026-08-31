@@ -11,6 +11,7 @@ import AllResourcesSection from '@/components/devotion/AllResourcesSection';
 import { useTierAccess } from '@/hooks/useTierAccess';
 import { DoorHeader } from '@/components/temple/DoorHeader';
 import { GuideNextStepCard } from '@/components/temple/GuideNextStepCard';
+import { SearchTheTempleCard } from '@/components/temple/SearchTheTempleCard';
 import devotionHeader from '@/assets/door-devotion-header-v1.webp.asset.json';
 
 interface LocationCategory {
@@ -207,7 +208,10 @@ const DoorOfDevotion = () => {
             </p>
           </motion.div>
 
-          <GuideNextStepCard />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
+            <GuideNextStepCard />
+            <SearchTheTempleCard />
+          </div>
 
           <motion.div
             initial={{ opacity: 0, y: -10 }}

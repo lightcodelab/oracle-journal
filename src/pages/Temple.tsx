@@ -212,7 +212,9 @@ const Temple = () => {
           foundingSince={foundingMemberSince}
         />
 
-        <GuideNextStepCard />
+        <section aria-labelledby="guide-next-step-heading" className="mb-12">
+          <GuideNextStepCard />
+        </section>
         <ContinueJourney enabled={hasFullAccess} />
         {isAdmin && <LivingPatternCard />}
         <BeginPractice />
