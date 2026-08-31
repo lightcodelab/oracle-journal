@@ -75,12 +75,27 @@ export default function EncryptionSetupFlow({ onComplete }: EncryptionSetupFlowP
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+          <form onSubmit={handlePasswordSubmit} className="space-y-4" autoComplete="on">
+            {/* Helps password managers (Google Password Manager, iCloud Keychain, 1Password)
+                store this as a distinct credential for the Protocol Builder */}
+            <input
+              type="text"
+              name="username"
+              autoComplete="username"
+              value="AreekeerA Protocol Builder"
+              readOnly
+              tabIndex={-1}
+              aria-hidden="true"
+              className="sr-only"
+            />
+
             <div className="space-y-2">
               <Label htmlFor="encryption-password">Encryption Password</Label>
               <Input
                 id="encryption-password"
+                name="new-password"
                 type="password"
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Create a strong password"
@@ -91,13 +106,19 @@ export default function EncryptionSetupFlow({ onComplete }: EncryptionSetupFlowP
               <p className="text-xs text-muted-foreground">
                 Minimum 8 characters. This can be different from your login password.
               </p>
+              <p className="text-xs text-muted-foreground">
+                Tip: tap the field and choose “Suggest strong password” to let Google Password Manager
+                (or your browser/keychain) generate and save it for you.
+              </p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="confirm-encryption-password">Confirm Password</Label>
               <Input
                 id="confirm-encryption-password"
+                name="confirm-new-password"
                 type="password"
+                autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm your password"
@@ -105,6 +126,7 @@ export default function EncryptionSetupFlow({ onComplete }: EncryptionSetupFlowP
                 disabled={loading}
               />
             </div>
+
 
             {error && (
               <Alert variant="destructive">
