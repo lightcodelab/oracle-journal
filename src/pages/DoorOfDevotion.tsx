@@ -192,7 +192,7 @@ const DoorOfDevotion = () => {
         </div>
       </div>
 
-      <div className={`${view === 'all' ? 'max-w-6xl' : 'max-w-4xl'} mx-auto pt-12 transition-all duration-300`}>
+      <div className="max-w-6xl mx-auto pt-12 transition-all duration-300">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
