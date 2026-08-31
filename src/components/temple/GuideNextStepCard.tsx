@@ -5,14 +5,14 @@ import { Compass } from "lucide-react";
 export function GuideNextStepCard() {
   return (
     <section aria-labelledby="guide-next-step-heading" className="mb-12">
-      <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+      <div className="rounded-lg border border-border/50 bg-card/50 p-8">
         <h3
           id="guide-next-step-heading"
-          className="font-serif text-2xl text-foreground mb-1 font-bold"
+          className="font-serif text-2xl text-foreground mb-2 font-bold"
         >
           Not sure what you need today?
         </h3>
-        <p className="text-sm text-muted-foreground mb-3">
+        <p className="text-sm text-muted-foreground mb-5">
           Tell The AreekeerA® Guide what life feels like right now. It will help
           you choose one small, supported next experiment — what to try, in what
           order, and why it may meet this moment.
