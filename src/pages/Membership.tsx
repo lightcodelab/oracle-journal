@@ -461,8 +461,8 @@ const Membership = () => {
               reflect, learn and engage.
             </p>
             <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto text-center mt-4">
-              AreekeerA<sup>®</sup> is expressed most directly through the
-              Protocol Builder and the practices it draws together. The
+              AreekeerA<sup>®</sup> is expressed most directly through
+              The AreekeerA® Guide and the practices it draws together. The
               Temple's other resources may be used alongside that work as
               complementary paths of reflection, remembrance and sustainment.
             </p>
