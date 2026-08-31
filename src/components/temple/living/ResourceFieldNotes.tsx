@@ -282,16 +282,25 @@ export default function ResourceFieldNotes({
                 </div>
               </div>
             ) : (
-              <div className="flex flex-wrap gap-2">
-                <Button variant="outline" onClick={() => setStarting(true)}>
+              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                <Button
+                  variant="outline"
+                  className="h-auto w-full whitespace-normal py-2 text-left sm:w-auto"
+                  onClick={() => setStarting(true)}
+                >
                   {experiments.length === 0
                     ? "Start a small experiment from here"
                     : "Start another small experiment from here"}
                 </Button>
-                <Button variant="ghost" onClick={handleOpenPicker}>
+                <Button
+                  variant="ghost"
+                  className="h-auto w-full whitespace-normal py-2 text-left sm:w-auto"
+                  onClick={handleOpenPicker}
+                >
                   Add this as support in an experiment I already have
                 </Button>
               </div>
+
             )}
 
             {attaching && (
