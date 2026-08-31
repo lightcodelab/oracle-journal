@@ -7350,6 +7350,17 @@ export type Database = {
         }
         Returns: Json
       }
+      living_experiment_create_from_resource: {
+        Args: {
+          _guide_key?: string
+          _own_experiment?: string
+          _resource_family: string
+          _resource_id: string
+          _try_body?: string
+          _try_content?: Json
+        }
+        Returns: Json
+      }
       living_experiment_get: { Args: { _id: string }; Returns: Json }
       living_experiment_update: {
         Args: {
@@ -7361,6 +7372,14 @@ export type Database = {
           _own_experiment?: string
           _pattern_id?: string
           _state_id?: string
+        }
+        Returns: Json
+      }
+      living_experiments_from_resource: {
+        Args: {
+          _limit?: number
+          _resource_family: string
+          _resource_id: string
         }
         Returns: Json
       }
@@ -7537,6 +7556,10 @@ export type Database = {
       }
       living_resource_title: {
         Args: { _family: string; _resource_id: string }
+        Returns: string
+      }
+      living_resource_visible_title: {
+        Args: { _family: string; _resource_id: string; _uid: string }
         Returns: string
       }
       living_state_create: {
