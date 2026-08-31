@@ -156,25 +156,27 @@ const LivingPatternRecord = () => {
         </p>
 
         <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="My Living Pattern views">
-          <Button
-            role="tab"
-            aria-selected={view === "thread"}
-            variant={view === "thread" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setView("thread")}
-          >
-            Living Thread
-          </Button>
-          <Button
-            role="tab"
-            aria-selected={view === "experiments"}
-            variant={view === "experiments" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setView("experiments")}
-          >
-            My Experiments
-          </Button>
+          {(
+            [
+              ["thread", "Living Thread"],
+              ["patterns", "Active Patterns"],
+              ["themes", "My Themes"],
+              ["experiments", "My Experiments"],
+            ] as const
+          ).map(([key, labelText]) => (
+            <Button
+              key={key}
+              role="tab"
+              aria-selected={view === key}
+              variant={view === key ? "default" : "outline"}
+              size="sm"
+              onClick={() => setView(key)}
+            >
+              {labelText}
+            </Button>
+          ))}
         </div>
+
 
         {view === "thread" && (
           <section className="mt-8" aria-label="Living Thread">
