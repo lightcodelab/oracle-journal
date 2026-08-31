@@ -18,8 +18,6 @@ import devotionHeader from '@/assets/door-devotion-header-v1.webp.asset.json';
 const DoorOfDevotion = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [locationCategories, setLocationCategories] = useState<LocationCategory[]>([]);
-  
   const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
 
   const canAccessDevotion = hasAccess('devotion');
