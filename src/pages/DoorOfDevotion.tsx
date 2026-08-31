@@ -208,7 +208,10 @@ const DoorOfDevotion = () => {
             </p>
           </motion.div>
 
-          <GuideNextStepCard />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
+            <GuideNextStepCard />
+            <SearchTheTempleCard />
+          </div>
 
           <motion.div
             initial={{ opacity: 0, y: -10 }}
