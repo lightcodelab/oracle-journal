@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Sparkles, Lock, ArrowUpRight, ArrowLeft, Play, Headphones, FileText, Download, ListMusic } from 'lucide-react';
 import { useTierAccess } from '@/hooks/useTierAccess';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
-import ContextualJournal from '@/components/journal/ContextualJournal';
+import ReflectionFooter from '@/components/temple/living/ReflectionFooter';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
 import { useRecordLastActivity } from '@/hooks/useRecordLastActivity';
