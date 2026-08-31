@@ -49,8 +49,8 @@ const EMPTY: HomeContinuations = {
     href: "/search",
     timestamp: null,
     available: false,
-    emptyHint: "Search the Temple",
-    fallbackHref: "/search",
+    emptyHint: "Explore the Door of Devotion",
+    fallbackHref: "/devotion",
   },
 };
 
