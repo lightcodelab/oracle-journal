@@ -23,6 +23,7 @@ import {
 } from '@/lib/lessonFormTypes';
 import { displayStorageFileName, titleFileNameFallback } from '@/lib/storageFileNames';
 import { useCreateJournalEntry } from '@/hooks/useJournalEntries';
+import { useRecordLastActivity } from '@/hooks/useRecordLastActivity';
 
 interface Lesson {
   id: string;
