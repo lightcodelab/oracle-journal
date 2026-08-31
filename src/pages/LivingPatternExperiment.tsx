@@ -15,6 +15,8 @@ import {
   updateFieldNote,
   type LivingExperiment,
   type LivingFieldNote,
+  type LivingSupportTag,
+
 } from "@/hooks/useLivingExperiments";
 import {
   CHANGE_COURSE_NOTE,
