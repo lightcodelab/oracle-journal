@@ -64,7 +64,7 @@ export function LivingPatternCard() {
           id="living-pattern-heading"
           className="mt-2 font-serif text-2xl sm:text-3xl text-foreground"
         >
-          Logging My Living Pattern
+          Your Living Pattern Lab
         </h2>
         <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
