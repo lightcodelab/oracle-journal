@@ -44,43 +44,6 @@ const DoorOfDevotion = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  // Fetch location categories from database
-  useEffect(() => {
-    const fetchLocations = async () => {
-      const { data, error } = await supabase
-        .from('content_categories')
-        .select('id, name, slug, display_order, page')
-        .eq('type', 'location')
-        .eq('active', true)
-        .eq('page', 'devotion')
-        .order('display_order');
-
-      if (data) {
-        setLocationCategories(data);
-      }
-    };
-
-    fetchLocations();
-  }, []);
-
-  // Build dynamic categories from database locations
-  const dynamicCategories = locationCategories.map(loc => ({
-    id: loc.id,
-    name: loc.name,
-    description: CATEGORY_DESCRIPTIONS[loc.slug] || `Explore ${loc.name.toLowerCase()} resources for your healing journey.`,
-    icon: CATEGORY_ICONS[loc.slug] || <Folder className="w-8 h-8" />,
-    route: `/devotion/section/${getRouteSlug(loc.slug)}`,
-    isStatic: false,
-  }));
-
-  // Combine static and dynamic categories
-  const categories = [...STATIC_CATEGORIES, ...dynamicCategories];
-
-  const handleCategoryClick = (category: typeof categories[0]) => {
-    if (category.route && canAccessDevotion) {
-      navigate(category.route);
-    }
-  };
 
   if (loading || tierLoading) {
     return (
