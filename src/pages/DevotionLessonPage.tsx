@@ -166,6 +166,13 @@ const DevotionLessonPage = () => {
     enabled: !loading && !!lessonId,
   });
 
+  useRecordLastActivity('lesson', {
+    id: lessonId,
+    title: lesson?.title ? `${course?.title ? `${course.title} — ` : ''}${lesson.title}` : null,
+    href: courseId && lessonId ? `/devotion/course/${courseId}/lesson/${lessonId}` : null,
+  });
+
+
   const { data: allLessons } = useQuery({
     queryKey: ['devotion-all-lessons', courseId],
     queryFn: async () => {
