@@ -10,6 +10,7 @@ import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Lock, ArrowU
 import AllResourcesSection from '@/components/devotion/AllResourcesSection';
 import { useTierAccess } from '@/hooks/useTierAccess';
 import { DoorHeader } from '@/components/temple/DoorHeader';
+import { GuideNextStepCard } from '@/components/temple/GuideNextStepCard';
 import devotionHeader from '@/assets/door-devotion-header-v1.webp.asset.json';
 
 interface LocationCategory {
@@ -225,11 +226,13 @@ const DoorOfDevotion = () => {
                <LayoutGrid className="w-4 h-4" />
                All Resources
              </Button>
-           </div>
-         </motion.div>
+            </div>
+          </motion.div>
 
-         {/* View Content */}
-         {view === 'categories' ? (
+          <GuideNextStepCard />
+
+          {/* View Content */}
+          {view === 'categories' ? (
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
              {categories.map((category, index) => (
                <motion.div
