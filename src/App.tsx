@@ -12,7 +12,7 @@ import ImportCards from "./pages/ImportCards";
 import NotFound from "./pages/NotFound";
 import DoorOfDevotion from "./pages/DoorOfDevotion";
 // HealingBot / Maelin retired 2026-07-20 — see docs/DEPRECATED_MAELIN.md
-// Route redirected to the AreekeerA Protocol Builder. Data + file preserved
+// Route redirected to the AreekeerA Guide. Data + file preserved
 // for retention review.
 import MyProtocols from "./pages/MyProtocols";
 import AdminDashboard from "./pages/AdminDashboard";
