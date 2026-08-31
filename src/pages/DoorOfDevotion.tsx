@@ -201,35 +201,42 @@ const DoorOfDevotion = () => {
         >
           <DoorHeader image={devotionHeader.url} title="The Door of Devotion" />
            <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto mb-6">
-             <span className="font-bold text-primary">A space to restore your body, regulate your nervous system, and return to yourself.</span>
-             <br />
-             Guided meditations and Energetic Healing for embodied repair.
-           </p>
-
-           {/* View Toggle */}
-           <div className="inline-flex items-center gap-1 bg-muted/50 rounded-lg p-1">
-             <Button
-               variant={view === 'categories' ? 'default' : 'ghost'}
-               size="sm"
-               onClick={() => setView('categories')}
-               className="gap-2"
-             >
-               <Grid3X3 className="w-4 h-4" />
-               Categories
-             </Button>
-             <Button
-               variant={view === 'all' ? 'default' : 'ghost'}
-               size="sm"
-               onClick={() => setView('all')}
-               className="gap-2"
-             >
-               <LayoutGrid className="w-4 h-4" />
-               All Resources
-             </Button>
-            </div>
+              <span className="font-bold text-primary">A space to restore your body, regulate your nervous system, and return to yourself.</span>
+              <br />
+              Guided meditations and Energetic Healing for embodied repair.
+            </p>
           </motion.div>
 
           <GuideNextStepCard />
+
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-center mb-12"
+          >
+           {/* View Toggle */}
+           <div className="inline-flex items-center gap-1 bg-muted/50 rounded-lg p-1">
+              <Button
+                variant={view === 'categories' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setView('categories')}
+                className="gap-2"
+              >
+                <Grid3X3 className="w-4 h-4" />
+                Categories
+              </Button>
+              <Button
+                variant={view === 'all' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setView('all')}
+                className="gap-2"
+              >
+                <LayoutGrid className="w-4 h-4" />
+                All Resources
+              </Button>
+            </div>
+          </motion.div>
 
           {/* View Content */}
           {view === 'categories' ? (
