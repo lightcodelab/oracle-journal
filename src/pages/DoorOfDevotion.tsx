@@ -213,64 +213,7 @@ const DoorOfDevotion = () => {
             <SearchTheTempleCard />
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-center mb-12"
-          >
-           {/* View Toggle */}
-           <div className="inline-flex items-center gap-1 bg-muted/50 rounded-lg p-1">
-              <Button
-                variant={view === 'categories' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setView('categories')}
-                className="gap-2"
-              >
-                <Grid3X3 className="w-4 h-4" />
-                Categories
-              </Button>
-              <Button
-                variant={view === 'all' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setView('all')}
-                className="gap-2"
-              >
-                <LayoutGrid className="w-4 h-4" />
-                All Resources
-              </Button>
-            </div>
-          </motion.div>
-
-          {/* View Content */}
-          {view === 'categories' ? (
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-             {categories.map((category, index) => (
-               <motion.div
-                 key={category.id}
-                 initial={{ opacity: 0, y: 30 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                 onClick={() => handleCategoryClick(category)}
-                 className="relative group cursor-pointer"
-               >
-                 <div className="bg-card border border-border rounded-lg p-8 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30">
-                   <div className="mb-4 text-primary transition-colors group-hover:text-primary">
-                     {category.icon}
-                   </div>
-                   <h3 className="font-serif text-2xl mb-2 text-foreground group-hover:text-primary transition-colors">
-                     {category.name}
-                   </h3>
-                   <p className="text-muted-foreground text-sm">
-                     {category.description}
-                   </p>
-                 </div>
-               </motion.div>
-             ))}
-           </div>
-         ) : (
-           <AllResourcesSection />
-         )}
+          <AllResourcesSection />
       </div>
     </div>
   );
