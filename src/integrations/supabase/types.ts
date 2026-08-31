@@ -3702,6 +3702,30 @@ export type Database = {
           },
         ]
       }
+      living_invitation_hides: {
+        Row: {
+          created_at: string
+          id: string
+          invitation_key: string
+          subject_key: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invitation_key: string
+          subject_key: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invitation_key?: string
+          subject_key?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       living_media_attachments: {
         Row: {
           byte_size: number | null
@@ -3989,6 +4013,71 @@ export type Database = {
           receive?: Json
           reorient?: Json
           schema_version?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      living_theme_attachments: {
+        Row: {
+          created_at: string
+          id: string
+          target_id: string
+          target_kind: string
+          theme_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          target_id: string
+          target_kind: string
+          theme_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          target_id?: string
+          target_kind?: string
+          theme_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "living_theme_attachments_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "living_themes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      living_themes: {
+        Row: {
+          content_revision: number
+          created_at: string
+          id: string
+          label: string
+          note: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content_revision?: number
+          created_at?: string
+          id?: string
+          label: string
+          note?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content_revision?: number
+          created_at?: string
+          id?: string
+          label?: string
+          note?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -7337,6 +7426,10 @@ export type Database = {
         Returns: Json
       }
       is_active_member: { Args: { _user_id: string }; Returns: boolean }
+      living_active_patterns: {
+        Args: { _include_retired?: boolean; _limit?: number }
+        Returns: Json
+      }
       living_caller: { Args: never; Returns: string }
       living_experiment_create: {
         Args: {
@@ -7413,6 +7506,16 @@ export type Database = {
         }
         Returns: Json
       }
+      living_invitation_hide: {
+        Args: { _invitation_key: string; _subject_key: string }
+        Returns: Json
+      }
+      living_invitation_hides_list: { Args: never; Returns: Json }
+      living_invitation_unhide: {
+        Args: { _invitation_key: string; _subject_key: string }
+        Returns: Json
+      }
+      living_invitations: { Args: { _include_hidden?: boolean }; Returns: Json }
       living_link_create: {
         Args: {
           _note?: string
@@ -7539,6 +7642,14 @@ export type Database = {
         }
         Returns: Json
       }
+      living_record_row: {
+        Args: { _id: string; _kind: string; _uid: string }
+        Returns: Json
+      }
+      living_record_themes: {
+        Args: { _target_id: string; _target_kind: string }
+        Returns: Json
+      }
       living_resource_tag_add: {
         Args: {
           _noticed_after?: string
@@ -7597,6 +7708,39 @@ export type Database = {
         }
         Returns: Json
       }
+      living_theme_attach: {
+        Args: { _target_id: string; _target_kind: string; _theme_id: string }
+        Returns: Json
+      }
+      living_theme_create: {
+        Args: { _label: string; _note?: string }
+        Returns: Json
+      }
+      living_theme_delete: { Args: { _id: string }; Returns: Json }
+      living_theme_detach: {
+        Args: { _target_id: string; _target_kind: string; _theme_id: string }
+        Returns: Json
+      }
+      living_theme_records: {
+        Args: {
+          _cursor_created_at?: string
+          _cursor_id?: string
+          _limit?: number
+          _theme_id: string
+        }
+        Returns: Json
+      }
+      living_theme_update: {
+        Args: {
+          _clear_note?: boolean
+          _expected_revision: number
+          _id: string
+          _label?: string
+          _note?: string
+        }
+        Returns: Json
+      }
+      living_themes_list: { Args: { _limit?: number }; Returns: Json }
       living_thread_page: {
         Args: { _cursor_id?: string; _cursor_occurred_at?: string }
         Returns: Json

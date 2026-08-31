@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button";
 import { useLivingThread, type ThreadRecord } from "@/hooks/useLivingThread";
 import { useOwnExperiments } from "@/hooks/useLivingExperiments";
 import { LIFECYCLE_LABELS, guideByKey } from "@/components/temple/living/experimentGuides";
+import ActivePatternsPanel from "@/components/temple/living/ActivePatternsPanel";
+import ThemesPanel from "@/components/temple/living/ThemesPanel";
+import InvitationsPanel from "@/components/temple/living/InvitationsPanel";
+
 
 /**
  * LP-F.0 — My Living Pattern: her private return path.
@@ -73,7 +77,7 @@ const LivingPatternRecord = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { hasFullTempleAccess, isAdmin, loading: memberLoading } = useMemberState();
-  const [view, setView] = useState<"thread" | "experiments">("thread");
+  const [view, setView] = useState<"thread" | "patterns" | "themes" | "experiments">("thread");
 
   const ready = !authLoading && !memberLoading && !!user && hasFullTempleAccess && isAdmin;
   const thread = useLivingThread(ready && view === "thread");
@@ -152,25 +156,27 @@ const LivingPatternRecord = () => {
         </p>
 
         <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="My Living Pattern views">
-          <Button
-            role="tab"
-            aria-selected={view === "thread"}
-            variant={view === "thread" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setView("thread")}
-          >
-            Living Thread
-          </Button>
-          <Button
-            role="tab"
-            aria-selected={view === "experiments"}
-            variant={view === "experiments" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setView("experiments")}
-          >
-            My Experiments
-          </Button>
+          {(
+            [
+              ["thread", "Living Thread"],
+              ["patterns", "Active Patterns"],
+              ["themes", "My Themes"],
+              ["experiments", "My Experiments"],
+            ] as const
+          ).map(([key, labelText]) => (
+            <Button
+              key={key}
+              role="tab"
+              aria-selected={view === key}
+              variant={view === key ? "default" : "outline"}
+              size="sm"
+              onClick={() => setView(key)}
+            >
+              {labelText}
+            </Button>
+          ))}
         </div>
+
 
         {view === "thread" && (
           <section className="mt-8" aria-label="Living Thread">
@@ -311,7 +317,18 @@ const LivingPatternRecord = () => {
             )}
           </section>
         )}
+
+        {view === "patterns" && (
+          <ActivePatternsPanel enabled={ready && view === "patterns"} lensLinks={lensLinks} />
+        )}
+
+        {view === "themes" && (
+          <ThemesPanel enabled={ready && view === "themes"} lensLinks={lensLinks} />
+        )}
+
+        <InvitationsPanel enabled={ready} />
       </main>
+
     </div>
   );
 };

@@ -514,6 +514,11 @@ const LivingPatternExperiment = () => {
               )}
             </div>
 
+            <div className="mt-8">
+              <RecordThemeTags targetKind="experiment" targetId={experiment.id} />
+            </div>
+
+
             <div className="mt-8 flex flex-wrap gap-2 border-t border-border/60 pt-5">
               <Button asChild variant="ghost">
                 <Link to="/living-pattern/experiments">My experiments</Link>
