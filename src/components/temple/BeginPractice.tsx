@@ -2,23 +2,23 @@ import { Link } from "react-router-dom";
 import {
   Sparkles,
   Headphones,
-  Compass,
+  DoorOpen,
   FileHeart,
   BookOpen,
   Radio,
 } from "lucide-react";
 
 const items = [
+  {
+    title: "Prepare your Inner Temple",
+    href: "/remembrance",
+    icon: DoorOpen,
+  },
   { title: "Draw a card", href: "/remembrance#mirrors-of-sacred-undoing", icon: Sparkles },
   {
     title: "Choose a meditation",
     href: "/devotion/section/guided-meditation",
     icon: Headphones,
-  },
-  {
-    title: "Build an AreekeerA® protocol",
-    href: "/devotion/areekeera",
-    icon: Compass,
   },
   {
     title: "Open healing templates",
