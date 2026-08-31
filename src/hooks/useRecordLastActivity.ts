@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -16,6 +17,7 @@ export function useRecordLastActivity(
   ref: { id?: string | null; title?: string | null; href?: string | null }
 ) {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const lastKey = useRef<string | null>(null);
 
   const { id, title, href } = ref;
@@ -26,18 +28,28 @@ export function useRecordLastActivity(
     if (lastKey.current === key) return;
     lastKey.current = key;
 
-    void supabase
-      .from("member_last_activity")
-      .upsert(
-        {
-          user_id: user.id,
-          kind,
-          ref_id: id,
-          title,
-          href,
-          occurred_at: new Date().toISOString(),
-        },
-        { onConflict: "user_id,kind" }
-      );
-  }, [user, kind, id, title, href]);
+    void (async () => {
+      const { error } = await supabase
+        .from("member_last_activity")
+        .upsert(
+          {
+            user_id: user.id,
+            kind,
+            ref_id: id,
+            title,
+            href,
+            occurred_at: new Date().toISOString(),
+          },
+          { onConflict: "user_id,kind" }
+        );
+
+      if (error) {
+        lastKey.current = null;
+        console.error("Failed to record last activity", error);
+        return;
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ["home-continuation", user.id] });
+    })();
+  }, [user, kind, id, title, href, queryClient]);
 }
