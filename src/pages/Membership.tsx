@@ -502,11 +502,11 @@ const Membership = () => {
             {[
               {
                 title: "Describe what is present",
-                body: "Share your symptoms, their severity, your goals and the time you have. The Builder uses this information to understand your submitted state; it does not diagnose its medical cause.",
+                body: "Share your symptoms, their severity, your goals and the time you have. The Guide uses this information to understand your submitted state; it does not diagnose its medical cause.",
               },
               {
                 title: "Receive a suggested protocol",
-                body: "The Builder assembles a sequence of relevant Temple practices, such as meditations, visualisations, somatic tools, rituals and reflective processes.",
+                body: "The Guide assembles a sequence of relevant Temple practices, such as meditations, visualisations, somatic tools, rituals and reflective processes.",
               },
               {
                 title: "Practise at your own pace",
