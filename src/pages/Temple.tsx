@@ -11,6 +11,7 @@ import { ContinueJourney } from "@/components/temple/ContinueJourney";
 import { LivingPatternCard } from "@/components/temple/LivingPatternCard";
 import { BeginPractice } from "@/components/temple/BeginPractice";
 import { ExploreDoors } from "@/components/temple/ExploreDoors";
+import { GuideNextStepCard } from "@/components/temple/GuideNextStepCard";
 import { LiveAndSupport } from "@/components/temple/LiveAndSupport";
 import { RecommendationGrid } from "@/components/temple/RecommendationGrid";
 import { useHomeRecommendations } from "@/hooks/useHomeRecommendations";
@@ -213,6 +214,7 @@ const Temple = () => {
 
         <ContinueJourney enabled={hasFullAccess} />
         {isAdmin && <LivingPatternCard />}
+        <GuideNextStepCard />
         <BeginPractice />
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />

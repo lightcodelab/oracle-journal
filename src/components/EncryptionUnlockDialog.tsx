@@ -143,7 +143,7 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
                   type="text"
                   name="username"
                   autoComplete="username"
-                  value="AreekeerA Protocol Builder"
+                  value="AreekeerA Guide"
                   readOnly
                   tabIndex={-1}
                   aria-hidden="true"
@@ -194,7 +194,7 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
                   type="text"
                   name="username"
                   autoComplete="username"
-                  value="AreekeerA Protocol Builder"
+                  value="AreekeerA Guide"
                   readOnly
                   tabIndex={-1}
                   aria-hidden="true"
@@ -277,7 +277,7 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
                   type="text"
                   name="username"
                   autoComplete="username"
-                  value="AreekeerA Protocol Builder"
+                  value="AreekeerA Guide"
                   readOnly
                   tabIndex={-1}
                   aria-hidden="true"

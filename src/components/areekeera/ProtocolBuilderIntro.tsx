@@ -17,7 +17,7 @@ export default function ProtocolBuilderIntro({ onContinue, hasEncryptionKey }: P
             <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Sparkles className="w-8 h-8 text-primary" />
             </div>
-            <CardTitle className="font-serif text-3xl">The AreekeerA® Protocol Builder</CardTitle>
+            <CardTitle className="font-serif text-3xl">The AreekeerA® Guide</CardTitle>
             <CardDescription className="text-base">
               A private space to turn what you are experiencing in your body, mind and heart into a
               gentle, personalised healing protocol you can actually follow.

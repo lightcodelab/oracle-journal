@@ -77,12 +77,12 @@ export default function EncryptionSetupFlow({ onComplete }: EncryptionSetupFlowP
         <CardContent>
           <form onSubmit={handlePasswordSubmit} className="space-y-4" autoComplete="on">
             {/* Helps password managers (Google Password Manager, iCloud Keychain, 1Password)
-                store this as a distinct credential for the Protocol Builder */}
+                store this as a distinct credential for the AreekeerA Guide */}
             <input
               type="text"
               name="username"
               autoComplete="username"
-              value="AreekeerA Protocol Builder"
+              value="AreekeerA Guide"
               readOnly
               tabIndex={-1}
               aria-hidden="true"
