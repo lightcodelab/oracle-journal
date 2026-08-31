@@ -159,6 +159,7 @@ const Index = () => {
   const handleShuffle = async () => {
     if (!selectedDeck || !user) return;
 
+    if (resumeCardId || resumeDeckId) setSearchParams({}, { replace: true });
     setIsShuffling(true);
     setShowCard(false);
     setIsRevealed(false);

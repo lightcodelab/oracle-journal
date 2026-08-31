@@ -74,7 +74,7 @@ export function useHomeContinuation(enabled: boolean) {
       const [cardRes, activityRes] = await Promise.allSettled([
         supabase
           .from("card_draws")
-          .select("card_id, deck_id, drawn_at")
+          .select("card_id, deck_id, drawn_at, cards(card_title), decks(name)")
           .eq("user_id", user.id)
           .order("drawn_at", { ascending: false })
           .limit(1)
@@ -92,11 +92,26 @@ export function useHomeContinuation(enabled: boolean) {
       };
 
       if (cardRes.status === "fulfilled" && cardRes.value.data) {
-        const row = cardRes.value.data as { drawn_at: string };
+        const row = cardRes.value.data as {
+          drawn_at: string;
+          card_id: string | null;
+          deck_id: string | null;
+          cards: { card_title: string | null } | null;
+          decks: { name: string | null } | null;
+        };
+        const cardTitle = row.cards?.card_title?.trim();
+        const deckName = row.decks?.name?.trim();
         result.card = {
           ...result.card,
-          title: "Your recent card draw",
-          href: "/readings",
+          title: cardTitle
+            ? deckName
+              ? `${cardTitle} — ${deckName}`
+              : cardTitle
+            : "Your recent card draw",
+          href:
+            row.card_id && row.deck_id
+              ? `/remembrance?deck=${row.deck_id}&card=${row.card_id}`
+              : "/remembrance",
           timestamp: row.drawn_at,
           available: true,
         };
