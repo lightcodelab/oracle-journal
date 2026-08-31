@@ -25,12 +25,22 @@ export const MEDIA_LIMITS = {
   },
   audio: {
     label: "Voice note",
-    accept: "audio/mpeg,audio/mp4,audio/webm,audio/ogg,audio/wav",
-    mimes: ["audio/mpeg", "audio/mp4", "audio/webm", "audio/ogg", "audio/wav"],
+    // `audio/x-m4a` is the practical MIME Chromium reports for iPhone voice
+    // memos; it is the same M4A container as `audio/mp4`.
+    accept: "audio/mpeg,audio/mp4,audio/x-m4a,audio/webm,audio/ogg,audio/wav,.m4a",
+    mimes: [
+      "audio/mpeg",
+      "audio/mp4",
+      "audio/x-m4a",
+      "audio/webm",
+      "audio/ogg",
+      "audio/wav",
+    ],
     maxBytes: 50 * 1024 * 1024,
     maxLabel: "50 MB",
     maxSeconds: 600,
   },
+
   video: {
     label: "Short video",
     accept: "video/mp4,video/webm,video/quicktime",
