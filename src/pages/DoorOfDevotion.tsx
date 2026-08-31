@@ -14,44 +14,6 @@ import { GuideNextStepCard } from '@/components/temple/GuideNextStepCard';
 import { SearchTheTempleCard } from '@/components/temple/SearchTheTempleCard';
 import devotionHeader from '@/assets/door-devotion-header-v1.webp.asset.json';
 
-interface LocationCategory {
-  id: string;
-  name: string;
-  slug: string;
-  display_order: number;
-}
-
-// Map location slugs to route slugs (for URL formatting)
-const getRouteSlug = (locationSlug: string) => {
-  // Remove 'loc-' prefix and keep as-is for URL
-  return locationSlug.replace(/^loc-/, '');
-};
-
-// Static categories that aren't from the database
-const STATIC_CATEGORIES = [
-  {
-    id: 'areekeera',
-    name: 'AreekeerA® Guide',
-    description: 'Personalised Energy Healing Protocols built for you based on your symptoms (with trauma informed safety guardrails)',
-    icon: <MessageCircleHeart className="w-8 h-8" />,
-    route: '/devotion/areekeera',
-    isStatic: true,
-  },
-];
-
-// Icon mapping for dynamic categories (can be extended)
-const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-  'loc-guided-meditation': <Sparkles className="w-8 h-8" />,
-  'loc-altar-practices': <Flame className="w-8 h-8" />,
-  'loc-somatic-rituals': <Move className="w-8 h-8" />,
-  'loc-healing-templates': <FileHeart className="w-8 h-8" />,
-  'loc-energy-hygiene-practices': <Zap className="w-8 h-8" />,
-};
-
-// Custom descriptions for specific categories (overrides auto-generated)
-const CATEGORY_DESCRIPTIONS: Record<string, string> = {
-  'loc-energy-hygiene-practices': 'Tools for clearing, cleansing, and protecting your energetic field from outside interference.',
-};
 
 const DoorOfDevotion = () => {
   const navigate = useNavigate();
