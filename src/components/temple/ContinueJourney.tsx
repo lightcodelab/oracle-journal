@@ -1,16 +1,51 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, BookOpen, Compass } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useHomeContinuation } from "@/hooks/useHomeContinuation";
+import { useHomeContinuation, type Continuation } from "@/hooks/useHomeContinuation";
 
 interface ContinueJourneyProps {
   enabled: boolean;
 }
 
+const ICONS = {
+  card: Sparkles,
+  lesson: BookOpen,
+  resource: Compass,
+} as const;
+
+function ContinuationColumn({ item }: { item: Continuation }) {
+  const Icon = ICONS[item.kind];
+  const href = item.available ? item.href : item.fallbackHref;
+
+  return (
+    <Link to={href} className="block group h-full">
+      <Card className="h-full bg-card border-border/60 group-hover:border-primary/40 transition-colors">
+        <CardContent className="p-5 flex items-start gap-4 h-full">
+          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <Icon className="h-5 w-5 text-primary" aria-hidden />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              {item.label}
+            </p>
+            <p className="font-serif text-lg text-foreground truncate">
+              {item.available ? item.title : item.emptyHint}
+            </p>
+          </div>
+          <ArrowRight
+            className="h-5 w-5 text-primary flex-shrink-0 mt-0.5"
+            aria-hidden
+          />
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
+
 export function ContinueJourney({ enabled }: ContinueJourneyProps) {
-  const { data, isLoading, isError } = useHomeContinuation(enabled);
+  const { data, isLoading } = useHomeContinuation(enabled);
 
   return (
     <motion.section
@@ -27,48 +62,18 @@ export function ContinueJourney({ enabled }: ContinueJourneyProps) {
         Continue your journey
       </h2>
 
-      {isLoading ? (
-        <Skeleton className="h-24 w-full rounded-lg" />
-      ) : isError || !data || data.kind === "none" ? (
-        <Card className="bg-card/60 border-border/60">
-          <CardContent className="p-5 flex items-center justify-between gap-4">
-            <div>
-              <p className="font-serif text-lg text-foreground">
-                Choose a place to begin
-              </p>
-              <p className="text-sm text-muted-foreground">
-                The Temple is yours to explore in any order.
-              </p>
-            </div>
-            <a
-              href="#begin-practice"
-              className="inline-flex items-center gap-1.5 text-primary text-sm font-medium hover:underline"
-            >
-              Begin a practice <ArrowRight className="h-4 w-4" />
-            </a>
-          </CardContent>
-        </Card>
+      {isLoading || !data ? (
+        <div className="grid gap-4 md:grid-cols-3">
+          <Skeleton className="h-24 w-full rounded-lg" />
+          <Skeleton className="h-24 w-full rounded-lg" />
+          <Skeleton className="h-24 w-full rounded-lg" />
+        </div>
       ) : (
-        <Link to={data.href} className="block group">
-          <Card className="bg-card border-border/60 group-hover:border-primary/40 transition-colors">
-            <CardContent className="p-5 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-4 min-w-0">
-                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Sparkles className="h-5 w-5 text-primary" aria-hidden />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                    {data.label}
-                  </p>
-                  <p className="font-serif text-lg text-foreground truncate">
-                    {data.title}
-                  </p>
-                </div>
-              </div>
-              <ArrowRight className="h-5 w-5 text-primary flex-shrink-0" aria-hidden />
-            </CardContent>
-          </Card>
-        </Link>
+        <div className="grid gap-4 md:grid-cols-3">
+          <ContinuationColumn item={data.card} />
+          <ContinuationColumn item={data.lesson} />
+          <ContinuationColumn item={data.resource} />
+        </div>
       )}
     </motion.section>
   );

@@ -12,6 +12,7 @@ import { VimeoEmbed } from '@/components/VimeoEmbed';
 import ContextualJournal from '@/components/journal/ContextualJournal';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
+import { useRecordLastActivity } from '@/hooks/useRecordLastActivity';
 
 interface ResourceAttachment {
   id: string;
@@ -62,6 +63,12 @@ const DevotionResourcePage = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
   const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
+
+  useRecordLastActivity('resource', {
+    id: resource?.id,
+    title: resource?.title,
+    href: typeof window !== 'undefined' ? window.location.pathname : null,
+  });
 
   const canAccessDevotion = hasAccess('devotion');
   const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
