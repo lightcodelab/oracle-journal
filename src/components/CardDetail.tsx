@@ -6,7 +6,7 @@ import { Sparkles, RefreshCw, Bookmark, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { FormattedContent } from "./FormattedContent";
 import { VimeoEmbed } from "./VimeoEmbed";
-import ContextualJournal from "./journal/ContextualJournal";
+import ReflectionFooter from "@/components/temple/living/ReflectionFooter";
 import SaveReadingDialog from "./SaveReadingDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
@@ -344,8 +344,10 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         </>
       )}
 
-      {/* Digital Journal Section */}
-      <ContextualJournal
+      {/* Reflection footer: staging Field Notes, otherwise generic Journal Notes */}
+      <ReflectionFooter
+        resourceFamily="card"
+        resourceId={card.id}
         contextType="card"
         contextId={card.id}
         contextTitle={`${card.deck_name || 'Card'}: ${card.card_title}`}
