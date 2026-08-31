@@ -310,8 +310,8 @@ const Membership = () => {
                 body: "Short courses and longer paths through Remembrance, Devotion, and Communion.",
               },
               {
-                title: "AreekeerA® Protocol Builder",
-                body: "Build and follow your own AreekeerA® protocol, gently paced to your capacity.",
+                title: "The AreekeerA® Guide",
+                body: "Find one small, supported next experiment, gently paced to your capacity.",
               },
               {
                 title: "Live offerings each month",
@@ -366,7 +366,7 @@ const Membership = () => {
             <p className="text-lg text-foreground/85 max-w-3xl mx-auto leading-relaxed mt-5">
               AreekeerA<sup>®</sup> is one of the foundational bodies of work
               within The Temple. Members encounter it most directly through
-              the Protocol Builder, guided creative visualisations,
+              The AreekeerA® Guide, guided creative visualisations,
               meditations, somatic and energetic practices, reflective
               processes, and Julie and Tash's teaching.
             </p>
@@ -470,7 +470,7 @@ const Membership = () => {
         </div>
       </section>
 
-      {/* How the Protocol Builder applies the Method */}
+      {/* How The AreekeerA® Guide applies the Method */}
       <section className="py-20 px-4 bg-muted/30">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
@@ -481,17 +481,17 @@ const Membership = () => {
               </span>
             </div>
             <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
-              The AreekeerA<sup>®</sup> Protocol Builder
+              The AreekeerA<sup>®</sup> Guide
             </h2>
             <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto">
-              The Protocol Builder is one practical application of AreekeerA<sup>®</sup>{" "}
+              The AreekeerA® Guide is one practical application of AreekeerA<sup>®</sup>{" "}
               The Method — not the whole Method.
             </p>
             <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto mt-4">
               You share what you are presently experiencing across the
-              Builder's physical, mental, emotional and spiritual domains,
+              Guide's physical, mental, emotional and spiritual domains,
               together with severity, your goals and the time you have
-              available. The Builder then assembles a personalised sequence
+              available. The Guide then assembles a personalised sequence
               from existing Temple practices, following the grounding →
               processing → integration flow and applying trauma-informed
               safety guardrails.
@@ -532,7 +532,7 @@ const Membership = () => {
 
           <div className="max-w-3xl mx-auto mt-10 rounded-xl border border-border/60 bg-background/60 p-5">
             <p className="text-sm text-muted-foreground leading-relaxed text-center">
-              The AreekeerA<sup>®</sup> Protocol Builder does not diagnose
+              The AreekeerA<sup>®</sup> Guide does not diagnose
               conditions, determine medical causes, prescribe treatment or
               replace professional care. It offers educational and
               self-directed practice suggestions from The Temple's resource
