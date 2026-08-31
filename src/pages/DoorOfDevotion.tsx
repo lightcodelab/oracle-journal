@@ -57,7 +57,7 @@ const DoorOfDevotion = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [locationCategories, setLocationCategories] = useState<LocationCategory[]>([]);
-  const [view, setView] = useState<'categories' | 'all'>('all');
+  
   const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
 
   const canAccessDevotion = hasAccess('devotion');
