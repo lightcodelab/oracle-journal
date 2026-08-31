@@ -344,8 +344,10 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         </>
       )}
 
-      {/* Digital Journal Section */}
-      <ContextualJournal
+      {/* Reflection footer: staging Field Notes, otherwise generic Journal Notes */}
+      <ReflectionFooter
+        resourceFamily="card"
+        resourceId={card.id}
         contextType="card"
         contextId={card.id}
         contextTitle={`${card.deck_name || 'Card'}: ${card.card_title}`}
