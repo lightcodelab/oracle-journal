@@ -138,12 +138,25 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
             </TabsList>
 
             <TabsContent value="password" className="mt-4">
-              <form onSubmit={handlePasswordUnlock} className="space-y-4">
+              <form onSubmit={handlePasswordUnlock} className="space-y-4" autoComplete="on">
+                <input
+                  type="text"
+                  name="username"
+                  autoComplete="username"
+                  value="AreekeerA Protocol Builder"
+                  readOnly
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  className="sr-only"
+                />
+
                 <div className="space-y-2">
                   <Label htmlFor="unlock-password">Password</Label>
                   <Input
                     id="unlock-password"
+                    name="password"
                     type="password"
+                    autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
@@ -176,12 +189,24 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
             </TabsContent>
 
             <TabsContent value="recovery" className="mt-4">
-              <form onSubmit={handleRecoveryUnlock} className="space-y-4">
+              <form onSubmit={handleRecoveryUnlock} className="space-y-4" autoComplete="on">
+                <input
+                  type="text"
+                  name="username"
+                  autoComplete="username"
+                  value="AreekeerA Protocol Builder"
+                  readOnly
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  className="sr-only"
+                />
+
                 <div className="space-y-2">
                   <Label htmlFor="recovery-phrase">Recovery Phrase</Label>
                   <Input
                     id="recovery-phrase"
                     type="text"
+                    autoComplete="off"
                     value={recoveryPhrase}
                     onChange={(e) => setRecoveryPhrase(e.target.value)}
                     placeholder="Enter your 12-word recovery phrase"
@@ -197,7 +222,9 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
                   <Label htmlFor="new-password">New Password</Label>
                   <Input
                     id="new-password"
+                    name="new-password"
                     type="password"
+                    autoComplete="new-password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Create a new password"
@@ -210,7 +237,9 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
                   <Label htmlFor="confirm-password">Confirm Password</Label>
                   <Input
                     id="confirm-password"
+                    name="confirm-new-password"
                     type="password"
+                    autoComplete="new-password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm your new password"
@@ -243,7 +272,18 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
             </TabsContent>
 
             <TabsContent value="reset" className="mt-4">
-              <form onSubmit={handleReset} className="space-y-4">
+              <form onSubmit={handleReset} className="space-y-4" autoComplete="on">
+                <input
+                  type="text"
+                  name="username"
+                  autoComplete="username"
+                  value="AreekeerA Protocol Builder"
+                  readOnly
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  className="sr-only"
+                />
+
                 <Alert variant="destructive" className="bg-destructive/10 border-destructive/20">
                   <AlertTriangle className="h-4 w-4" />
                   <AlertDescription className="text-sm">
@@ -259,6 +299,7 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
                   <Input
                     id="reset-confirm"
                     type="text"
+                    autoComplete="off"
                     value={resetConfirmText}
                     onChange={(e) => setResetConfirmText(e.target.value)}
                     placeholder="START FRESH"
@@ -271,7 +312,9 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
                   <Label htmlFor="reset-password">New Encryption Password</Label>
                   <Input
                     id="reset-password"
+                    name="new-password"
                     type="password"
+                    autoComplete="new-password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Create a new password"
@@ -285,7 +328,9 @@ export default function EncryptionUnlockDialog({ onUnlocked, onSkip, embedded = 
                   <Label htmlFor="reset-confirm-password">Confirm New Password</Label>
                   <Input
                     id="reset-confirm-password"
+                    name="confirm-new-password"
                     type="password"
+                    autoComplete="new-password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm your new password"
