@@ -616,8 +616,9 @@ const AreekeeraBot = () => {
             <div className="max-w-2xl mx-auto p-4 space-y-6">
               <div className="text-center mb-8">
                 <h2 className="font-serif text-2xl mb-2">How are you feeling?</h2>
-                <p className="text-muted-foreground">
-                  Select the symptoms you're experiencing and rate their intensity.
+                <p className="text-muted-foreground whitespace-pre-line">
+                  {`Select the symptoms you're experiencing and rate their intensity.
+N.B. Add one symptom at a time, alongside its intensity rating.`}
                 </p>
               </div>
 
