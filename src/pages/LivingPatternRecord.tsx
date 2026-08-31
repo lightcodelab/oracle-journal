@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button";
 import { useLivingThread, type ThreadRecord } from "@/hooks/useLivingThread";
 import { useOwnExperiments } from "@/hooks/useLivingExperiments";
 import { LIFECYCLE_LABELS, guideByKey } from "@/components/temple/living/experimentGuides";
+import ActivePatternsPanel from "@/components/temple/living/ActivePatternsPanel";
+import ThemesPanel from "@/components/temple/living/ThemesPanel";
+import InvitationsPanel from "@/components/temple/living/InvitationsPanel";
+
 
 /**
  * LP-F.0 — My Living Pattern: her private return path.
