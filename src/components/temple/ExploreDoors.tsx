@@ -61,7 +61,9 @@ export function ExploreDoors() {
         ))}
       </div>
 
-      <SearchTheTempleCard />
+      <div className="mb-8">
+        <SearchTheTempleCard />
+      </div>
 
       <div className="rounded-lg border border-border/50 bg-card/50 p-4">
         <h3 className="font-serif text-2xl text-foreground mb-1">
