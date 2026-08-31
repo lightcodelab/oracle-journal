@@ -14,8 +14,8 @@ export function GuideNextStepCard() {
         </h3>
         <p className="text-sm text-muted-foreground mb-5">
           Tell The AreekeerA® Guide what life feels like right now. It will help
-          you choose one small, supported next experiment — what to try, in what
-          order, and why it may meet this moment.
+          you choose your next experiment — what to try, in what order, and why
+          it may meet this moment.
         </p>
         <Button asChild>
           <Link to="/devotion/areekeera" className="inline-flex items-center gap-2">
