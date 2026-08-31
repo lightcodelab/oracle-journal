@@ -13,7 +13,7 @@ export function GuideNextStepCard() {
           Not sure what you need today?
         </h3>
         <p className="text-sm text-muted-foreground mb-5">
-          Tell The AreekeerA® Guide what life feels like right now, and it will
+          Tell <strong>The AreekeerA® Guide</strong> what life feels like right now, and it will
           help you choose your next experiment — what to try, in what order, and
           why it may meet this moment.
         </p>
