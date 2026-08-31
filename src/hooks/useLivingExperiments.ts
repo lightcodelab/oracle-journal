@@ -104,13 +104,77 @@ export async function createExperiment(input: {
 }
 
 
+/**
+ * TL-1B — begin a private experiment from an eligible resource or card she is
+ * looking at. The server derives and snapshots the member-readable title and
+ * refuses any resource she is not entitled to see, so nothing about the
+ * resource is ever client-declared.
+ */
+export async function createExperimentFromResource(input: {
+  resourceFamily: LivingResourceFamily;
+  resourceId: string;
+  guideKey?: string | null;
+  ownExperiment?: string | null;
+  tryBody?: string;
+  trySafeEnough?: string;
+}): Promise<{ experiment: LivingExperiment; support: LivingSupportTag }> {
+  const content: Record<string, string> = {};
+  if (input.trySafeEnough?.trim()) content.safe_enough = input.trySafeEnough.trim();
+
+  const { data, error } = await rpc("living_experiment_create_from_resource", {
+    _resource_family: input.resourceFamily,
+    _resource_id: input.resourceId,
+    _guide_key: input.guideKey ?? null,
+    _own_experiment: input.ownExperiment?.trim() || null,
+    _try_body: input.tryBody?.trim() ?? "",
+    _try_content: content,
+  });
+  if (error) throw new Error(error.message);
+  return data as { experiment: LivingExperiment; support: LivingSupportTag };
+}
+
+/** Her own experiments that began from this exact resource/card. Owner-only. */
+export async function listExperimentsFromResource(
+  resourceFamily: LivingResourceFamily,
+  resourceId: string,
+): Promise<LivingExperiment[]> {
+  const { data, error } = await rpc("living_experiments_from_resource", {
+    _resource_family: resourceFamily,
+    _resource_id: resourceId,
+    _limit: 20,
+  });
+  if (error) throw new Error(error.message);
+  return ((data as { records?: LivingExperiment[] })?.records ?? []) as LivingExperiment[];
+}
+
+/** Record this resource/card as support she used inside an existing experiment. */
+export async function addResourceSupport(input: {
+  experimentId: string;
+  resourceFamily: LivingResourceFamily;
+  resourceId: string;
+}): Promise<LivingSupportTag> {
+  const { data, error } = await rpc("living_resource_tag_add", {
+    _target_kind: "experiment",
+    _target_id: input.experimentId,
+    _resource_family: input.resourceFamily,
+    _resource_id: input.resourceId,
+  });
+  if (error) throw new Error(error.message);
+  return data as LivingSupportTag;
+}
+
 export async function getExperiment(id: string): Promise<{
   experiment: LivingExperiment;
   field_notes: LivingFieldNote[];
+  support?: LivingSupportTag[];
 }> {
   const { data, error } = await rpc("living_experiment_get", { _id: id });
   if (error) throw new Error(error.message);
-  return data as { experiment: LivingExperiment; field_notes: LivingFieldNote[] };
+  return data as {
+    experiment: LivingExperiment;
+    field_notes: LivingFieldNote[];
+    support?: LivingSupportTag[];
+  };
 }
 
 export async function listExperiments(includeClosed = true): Promise<LivingExperiment[]> {
