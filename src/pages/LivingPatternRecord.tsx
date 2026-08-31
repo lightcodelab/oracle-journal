@@ -77,7 +77,7 @@ const LivingPatternRecord = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { hasFullTempleAccess, isAdmin, loading: memberLoading } = useMemberState();
-  const [view, setView] = useState<"thread" | "experiments">("thread");
+  const [view, setView] = useState<"thread" | "patterns" | "themes" | "experiments">("thread");
 
   const ready = !authLoading && !memberLoading && !!user && hasFullTempleAccess && isAdmin;
   const thread = useLivingThread(ready && view === "thread");
