@@ -876,13 +876,15 @@ const DevotionResourcePage = () => {
           </motion.div>
         )}
 
-        {/* Journal Reflections */}
+        {/* Reflection footer: staging Field Notes, otherwise generic Journal Notes */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <ContextualJournal
+          <ReflectionFooter
+            resourceFamily={slug?.startsWith('healing-') ? 'healing_resource' : 'content_resource'}
+            resourceId={resource.id}
             contextType="resource"
             contextId={resource.id}
             contextTitle={resource.title}
