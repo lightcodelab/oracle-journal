@@ -22,17 +22,6 @@ const tools = [
 ];
 
 export function ExploreDoors() {
-  const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = searchQuery.trim();
-    if (q) {
-      navigate(`/search?q=${encodeURIComponent(q)}`);
-    }
-  };
-
   return (
     <section aria-labelledby="explore-heading" className="mb-12">
       <h2 id="explore-heading" className="font-serif text-2xl text-foreground mb-1">
