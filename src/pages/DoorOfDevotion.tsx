@@ -226,11 +226,13 @@ const DoorOfDevotion = () => {
                <LayoutGrid className="w-4 h-4" />
                All Resources
              </Button>
-           </div>
-         </motion.div>
+            </div>
+          </motion.div>
 
-         {/* View Content */}
-         {view === 'categories' ? (
+          <GuideNextStepCard />
+
+          {/* View Content */}
+          {view === 'categories' ? (
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
              {categories.map((category, index) => (
                <motion.div
