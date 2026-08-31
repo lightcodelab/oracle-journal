@@ -69,7 +69,9 @@ const LivingPatternExperiment = () => {
     try {
       const result = await getExperiment(id);
       setExperiment(result.experiment);
+      setSupport(result.support ?? []);
       setNotes(result.field_notes);
+
       const tryNote = result.field_notes.find((n) => n.phase === "try");
       setTryDraft(tryNote?.body ?? "");
       setSafeDraft(String(tryNote?.content?.safe_enough ?? ""));
