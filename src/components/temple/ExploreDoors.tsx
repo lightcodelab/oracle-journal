@@ -73,7 +73,7 @@ export function ExploreDoors() {
         ))}
       </div>
 
-      <div className="rounded-lg border border-border/50 bg-card/50 p-4 mb-6">
+      <div className="rounded-lg border border-border/50 bg-card/50 p-4 mt-10 mb-10">
         <h3 className="font-serif text-2xl text-foreground mb-1">
           Search The Temple
         </h3>
