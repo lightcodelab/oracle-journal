@@ -144,7 +144,7 @@ const LivingPatternRecord = () => {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 pb-16 min-w-0">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">The Living Pattern</p>
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">THE LIVING PATTERN LAB</p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">My Living Pattern</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground leading-relaxed">
           A private record of what you have already saved, in the order life offered it. Nothing here
