@@ -10,6 +10,7 @@ import { MessageCircleHeart, Sparkles, Flame, Move, Zap, FileHeart, Lock, ArrowU
 import AllResourcesSection from '@/components/devotion/AllResourcesSection';
 import { useTierAccess } from '@/hooks/useTierAccess';
 import { DoorHeader } from '@/components/temple/DoorHeader';
+import { GuideNextStepCard } from '@/components/temple/GuideNextStepCard';
 import devotionHeader from '@/assets/door-devotion-header-v1.webp.asset.json';
 
 interface LocationCategory {

@@ -206,6 +206,7 @@ const Temple = () => {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 pb-10 sm:pb-14">
+        <GuideNextStepCard />
         <WelcomeHome
           displayName={profileLoaded ? displayName : null}
           showFounderBadge={!!founderBadge}
@@ -214,7 +215,6 @@ const Temple = () => {
 
         <ContinueJourney enabled={hasFullAccess} />
         {isAdmin && <LivingPatternCard />}
-        <GuideNextStepCard />
         <BeginPractice />
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />
