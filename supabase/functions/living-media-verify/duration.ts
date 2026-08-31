@@ -204,7 +204,11 @@ export async function deriveDuration(
   size: number,
 ): Promise<number | null> {
   try {
-    if (mime === "video/mp4" || mime === "video/quicktime" || mime === "audio/mp4") {
+    if (
+      mime === "video/mp4" || mime === "video/quicktime" ||
+      mime === "audio/mp4" || mime === "audio/x-m4a"
+    ) {
+
       return await isoDuration(read, size);
     }
     if (mime === "video/webm" || mime === "audio/webm") return await webmDuration(read, size);
