@@ -29,6 +29,29 @@ export interface LivingExperiment {
   returned_at: string | null;
   notice_count?: number;
   has_return?: boolean;
+  /** TL-1B: present only on resource/card-origin listings. */
+  title_snapshot?: string | null;
+}
+
+/** TL-1B — explicitly member-authored "Temple support I used" evidence. */
+export type LivingResourceFamily =
+  | "content_resource"
+  | "healing_resource"
+  | "course"
+  | "lesson"
+  | "card";
+
+export interface LivingSupportTag {
+  id: string;
+  target_kind: string;
+  target_id: string;
+  resource_family: LivingResourceFamily;
+  resource_id: string;
+  title_snapshot: string;
+  noticed_after: string | null;
+  created_at: string;
+  /** False when the support is no longer available to her; never substituted. */
+  available: boolean;
 }
 
 
