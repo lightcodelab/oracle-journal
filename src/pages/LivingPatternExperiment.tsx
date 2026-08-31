@@ -252,6 +252,32 @@ const LivingPatternExperiment = () => {
               {experiment.state_id ? " · linked to a State of Being" : ""}
             </p>
 
+            {support.length > 0 && (
+              <section
+                aria-label="Temple support I used"
+                className="mt-5 rounded-xl border border-border/60 bg-card p-4 sm:p-5"
+              >
+                <h2 className="font-serif text-lg text-foreground">Temple support I used</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  You chose this as a support for this experiment.
+                </p>
+                <ul className="mt-3 space-y-1.5">
+                  {support.map((s) => (
+                    <li
+                      key={s.id}
+                      className={`break-words text-sm ${
+                        s.available ? "text-foreground/90" : "text-muted-foreground italic"
+                      }`}
+                    >
+                      {s.title_snapshot}
+                      {!s.available && " — no longer available in the Temple"}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+
             <nav aria-label="Field Note phases" className="mt-6 flex flex-wrap gap-2">
               {(["try", "notice", "return"] as const).map((t) => (
                 <button
