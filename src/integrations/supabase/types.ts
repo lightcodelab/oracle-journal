@@ -4156,6 +4156,36 @@ export type Database = {
         }
         Relationships: []
       }
+      member_last_activity: {
+        Row: {
+          href: string
+          id: string
+          kind: string
+          occurred_at: string
+          ref_id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          href: string
+          id?: string
+          kind: string
+          occurred_at?: string
+          ref_id: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          href?: string
+          id?: string
+          kind?: string
+          occurred_at?: string
+          ref_id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       membership_audit: {
         Row: {
           id: string
