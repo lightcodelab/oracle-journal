@@ -317,7 +317,18 @@ const LivingPatternRecord = () => {
             )}
           </section>
         )}
+
+        {view === "patterns" && (
+          <ActivePatternsPanel enabled={ready && view === "patterns"} lensLinks={lensLinks} />
+        )}
+
+        {view === "themes" && (
+          <ThemesPanel enabled={ready && view === "themes"} lensLinks={lensLinks} />
+        )}
+
+        <InvitationsPanel enabled={ready} />
       </main>
+
     </div>
   );
 };
