@@ -72,30 +72,7 @@ export function ExploreDoors() {
         ))}
       </div>
 
-      <div className="rounded-lg border border-border/50 bg-card/50 p-4 mt-10 mb-10">
-        <h3 className="font-serif text-2xl text-foreground mb-1">
-          Search The Temple
-        </h3>
-        <p className="text-sm text-muted-foreground mb-3">
-          Find teachings, resources, and pathways by name or keyword. Use this if you know what your symptoms are and you want to find multiple resource options based on what you are experiencing. 
-        </p>
-        <form onSubmit={handleSearch} className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden />
-            <Input
-              type="search"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
-              aria-label="Search The Temple"
-            />
-          </div>
-          <Button type="submit" variant="secondary" disabled={!searchQuery.trim()}>
-            Search
-          </Button>
-        </form>
-      </div>
+      <SearchTheTempleCard />
 
       <div className="rounded-lg border border-border/50 bg-card/50 p-4">
         <h3 className="font-serif text-2xl text-foreground mb-1">
