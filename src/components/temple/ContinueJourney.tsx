@@ -63,13 +63,13 @@ export function ContinueJourney({ enabled }: ContinueJourneyProps) {
       </h2>
 
       {isLoading || !data ? (
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(22rem,1fr))]">
           <Skeleton className="h-24 w-full rounded-lg" />
           <Skeleton className="h-24 w-full rounded-lg" />
           <Skeleton className="h-24 w-full rounded-lg" />
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(22rem,1fr))]">
           <ContinuationColumn item={data.card} />
           <ContinuationColumn item={data.lesson} />
           <ContinuationColumn item={data.resource} />
