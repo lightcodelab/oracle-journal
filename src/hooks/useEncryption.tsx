@@ -286,35 +286,41 @@ export function EncryptionProvider({ children }: { children: ReactNode }) {
       throw new Error('Must be logged in');
     }
 
-    const { error: deleteError } = await supabase
-      .from('user_encryption_keys')
-      .delete()
-      .eq('user_id', session.user.id);
-
-    if (deleteError) {
-      throw new Error('Failed to reset encryption: ' + deleteError.message);
-    }
-
     // Create a brand new master key + recovery phrase
     const newMasterKey = await generateMasterKey();
     const recoveryPhrase = await generateRecoveryPhrase(newMasterKey);
     const recoveryHash = await hashRecoveryPhrase(recoveryPhrase);
     const { encryptedKey, salt, iv } = await wrapMasterKey(newMasterKey, newPassword);
 
-    const { error: insertError } = await supabase
+    // Overwrite any existing key row for this user (rows are never deleted,
+    // so replace in place rather than delete + insert)
+    const { data: existing } = await supabase
       .from('user_encryption_keys')
-      .insert({
-        user_id: session.user.id,
-        encrypted_master_key: encryptedKey,
-        key_salt: salt,
-        key_iv: iv,
-        recovery_key_hash: recoveryHash,
-        key_version: 1,
-      });
+      .select('id, key_version')
+      .eq('user_id', session.user.id)
+      .maybeSingle();
 
-    if (insertError) {
-      throw new Error('Failed to save new encryption keys: ' + insertError.message);
+    const payload = {
+      encrypted_master_key: encryptedKey,
+      key_salt: salt,
+      key_iv: iv,
+      recovery_key_hash: recoveryHash,
+      key_version: (existing?.key_version ?? 0) + 1,
+    };
+
+    const { error: saveError } = existing
+      ? await supabase
+          .from('user_encryption_keys')
+          .update(payload)
+          .eq('user_id', session.user.id)
+      : await supabase
+          .from('user_encryption_keys')
+          .insert({ user_id: session.user.id, ...payload });
+
+    if (saveError) {
+      throw new Error('Failed to save new encryption keys: ' + saveError.message);
     }
+
 
     const { data } = await supabase
       .from('user_encryption_keys')
