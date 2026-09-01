@@ -614,6 +614,9 @@ const LivingPatternPresence = () => {
               )}
             </div>
 
+            {saved && <RecordThemeTags targetKind="moment" targetId={saved.moment.id} />}
+
+
             <p className="text-xs text-muted-foreground">
               <Link to="/living-pattern/moments" className="underline hover:text-foreground">
                 My Moments
