@@ -1,0 +1,1 @@
+delete from public.living_themes where label like 'LPF1BPUB%';
