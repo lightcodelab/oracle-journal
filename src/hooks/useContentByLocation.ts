@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { htmlToPlainText } from '@/lib/richText';
 
 export interface ContentResource {
   id: string;
@@ -201,7 +202,7 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
           id: c.id,
           title: c.title,
           slug: `legacy-course-${c.id}`,
-          summary: c.description || null,
+          summary: htmlToPlainText(c.description),
           thumbnail_url: c.image_url || null,
           main_media_kind: null,
           main_media_file_url: null,

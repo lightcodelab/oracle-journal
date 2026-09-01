@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, X, Image as ImageIcon } from 'lucide-react';
 import CourseLessonEditor from './CourseLessonEditor';
+import CourseDescriptionEditor from './CourseDescriptionEditor';
 import CourseTagPicker from './CourseTagPicker';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -236,11 +237,9 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
 
           <div className="space-y-2">
             <Label>Description</Label>
-            <Textarea
+            <CourseDescriptionEditor
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Brief description of the course"
-              rows={3}
+              onChange={setDescription}
             />
           </div>
 
