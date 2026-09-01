@@ -289,6 +289,11 @@ const DevotionCoursePage = () => {
                         {tool.short_description && (
                           <p className="text-muted-foreground text-sm mt-1">{tool.short_description}</p>
                         )}
+                        {tool.slug === 'living-pattern-open' && (
+                          <p className="text-muted-foreground text-sm mt-2 italic">
+                            This is a private laboratory, not homework. Open a tool only when it helps you meet the life that is actually here.
+                          </p>
+                        )}
                       </div>
                     </div>
                   </motion.div>
