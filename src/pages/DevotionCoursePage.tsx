@@ -11,6 +11,8 @@ import CourseSessionNav from '@/components/CourseSessionNav';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sparkles } from 'lucide-react';
 import { ToolDetailDialog } from '@/components/tools/ToolDetailDialog';
+import DOMPurify from 'dompurify';
+import { looksLikeHtml } from '@/lib/richText';
 
 interface Lesson {
   id: string;
