@@ -236,11 +236,9 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
 
           <div className="space-y-2">
             <Label>Description</Label>
-            <Textarea
+            <CourseDescriptionEditor
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Brief description of the course"
-              rows={3}
+              onChange={setDescription}
             />
           </div>
 
