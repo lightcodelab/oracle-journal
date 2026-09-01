@@ -27,6 +27,7 @@ import {
   guideByKey,
 } from "@/components/temple/living/experimentGuides";
 import { FormHelp, GuideScriptPanel, MovementNote } from "@/components/temple/living/FormHelp";
+import RecordThemeTags from "@/components/temple/living/RecordThemeTags";
 import {
   GLOBAL_MOVEMENT_HELPER,
   PRESENCE_HELP,
@@ -613,6 +614,9 @@ const LivingPatternPresence = () => {
                 </div>
               )}
             </div>
+
+            {saved && <RecordThemeTags targetKind="moment" targetId={saved.moment.id} />}
+
 
             <p className="text-xs text-muted-foreground">
               <Link to="/living-pattern/moments" className="underline hover:text-foreground">
