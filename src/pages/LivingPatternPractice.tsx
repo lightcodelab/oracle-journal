@@ -773,6 +773,9 @@ const LivingPatternPractice = () => {
               </div>
             )}
 
+            {saved && <RecordThemeTags targetKind="pattern" targetId={saved.id} />}
+
+
             <p className="text-xs text-muted-foreground">
               <Link to="/living-pattern/patterns" className="underline hover:text-foreground">
                 My Patterns
