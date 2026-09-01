@@ -11,6 +11,8 @@ import { LIFECYCLE_LABELS, guideByKey } from "@/components/temple/living/experim
 import ActivePatternsPanel from "@/components/temple/living/ActivePatternsPanel";
 import ThemesPanel from "@/components/temple/living/ThemesPanel";
 import InvitationsPanel from "@/components/temple/living/InvitationsPanel";
+import StateThreadEntry from "@/components/temple/living/StateThreadEntry";
+
 
 
 /**
@@ -229,12 +231,14 @@ const LivingPatternRecord = () => {
                             {inner}
                           </Link>
                         ) : (
-                          <div className="rounded-xl border border-border/60 bg-card p-4 sm:p-5">
+                          <div className="rounded-xl border border-border/60 bg-card p-4 sm:p-5 min-w-0">
                             {inner}
+                            {r.kind === "state" && <StateThreadEntry stateId={r.id} />}
                           </div>
                         )}
                       </li>
                     );
+
                   })}
                 </ul>
 

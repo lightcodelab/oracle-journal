@@ -130,8 +130,21 @@ export async function listRecordThemes(
     _target_id: targetId,
   });
   if (error) throw new Error(friendly(error.message));
-  return ((data as { records?: LivingTheme[] })?.records ?? []) as LivingTheme[];
+  // `living_record_themes` returns { theme_id, label, attached_at }; normalise to
+  // the shared LivingTheme shape so attach/detach always carry a theme id.
+  const rows = ((data as { records?: Array<Record<string, unknown>> })?.records ?? []) as Array<
+    Record<string, unknown>
+  >;
+  return rows.map((r) => ({
+    id: String(r.id ?? r.theme_id ?? ""),
+    label: String(r.label ?? ""),
+    note: (r.note as string | null) ?? null,
+    content_revision: Number(r.content_revision ?? 0),
+    created_at: String(r.attached_at ?? r.created_at ?? ""),
+    updated_at: String(r.updated_at ?? r.attached_at ?? ""),
+  }));
 }
+
 
 export function useLivingThemes(enabled: boolean) {
   const [themes, setThemes] = useState<LivingTheme[]>([]);
