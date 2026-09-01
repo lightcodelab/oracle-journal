@@ -96,6 +96,16 @@ export function LivingPatternCard() {
               — a short, private orientation you can read now, later, or never. You
               may open any lens straight away.
             </p>
+            <p>
+              To go deeper and understand why to use The Living Pattern,{" "}
+              <Link
+                to="/remembrance/course/ba0869d1-128d-4e5b-8c1a-e4c7a6d7f17a"
+                className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+              >
+                access the Becoming course now
+              </Link>
+              .
+            </p>
           </div>
         </div>
 
