@@ -13,8 +13,8 @@ export function GuideNextStepCard() {
       </h3>
       <p className="text-sm text-muted-foreground mb-5">
         Tell <strong>The AreekeerA® Guide</strong> what life feels like right now, and it will
-        help you choose your next experiment — what to try, in what order, and
-        why it may meet this moment.
+         help you choose your next experiment — what resources to try, in what order, and
+         why it may meet the moment you are in.
       </p>
       <div className="mt-auto">
         <Button asChild>
