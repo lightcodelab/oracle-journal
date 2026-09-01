@@ -243,7 +243,7 @@ const DevotionCoursePage = () => {
             {course.description && (
               looksLikeHtml(course.description) ? (
                 <div
-                  className="prose prose-lg dark:prose-invert font-sans text-muted-foreground max-w-2xl mx-auto text-left prose-headings:font-serif prose-headings:text-foreground"
+                  className="prose prose-lg dark:prose-invert font-sans text-muted-foreground max-w-2xl mx-auto text-left prose-headings:font-serif prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-li:marker:text-primary prose-ul:list-disc prose-ol:list-decimal prose-ul:pl-6 prose-ol:pl-6"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(course.description) }}
                 />
               ) : (
