@@ -39,10 +39,21 @@ const DevotionCoursePage = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [activeToolSlug, setActiveToolSlug] = useState<string | null>(null);
 
+  const openTool = (slug: string) => {
+    const livingRoute = livingPatternToolRoute(slug);
+    if (livingRoute) {
+      navigate(livingRoute);
+      return;
+    }
+    setActiveToolSlug(slug);
+  };
+
   useEffect(() => {
     const t = searchParams.get('tool');
-    if (t) setActiveToolSlug(t);
+    if (t) openTool(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
+
 
   useEffect(() => {
     const checkAuth = async () => {
