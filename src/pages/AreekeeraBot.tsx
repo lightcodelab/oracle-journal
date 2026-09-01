@@ -490,7 +490,8 @@ const AreekeeraBot = () => {
 
   const domains: ('physical' | 'mental' | 'emotional' | 'spiritual')[] = ['physical', 'mental', 'emotional', 'spiritual'];
 
-  if (loading) {
+  if (loading && !showIntro) {
+
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
