@@ -229,9 +229,16 @@ const DevotionCoursePage = () => {
               {course.title}
             </h1>
             {course.description && (
-              <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
-                {course.description}
-              </p>
+              looksLikeHtml(course.description) ? (
+                <div
+                  className="prose prose-lg dark:prose-invert font-sans text-muted-foreground max-w-2xl mx-auto text-left prose-headings:font-serif prose-headings:text-foreground"
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(course.description) }}
+                />
+              ) : (
+                <p className="text-muted-foreground font-sans text-lg max-w-2xl mx-auto">
+                  {course.description}
+                </p>
+              )
             )}
           </motion.div>
 
