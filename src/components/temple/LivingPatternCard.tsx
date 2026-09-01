@@ -33,7 +33,7 @@ const panels: Panel[] = [
   {
     key: "presence",
     record: "Moments of Meaning",
-    practice: "PRESENCE",
+    practice: "PERCEIVE",
     description: "Meet what stood out before its story makes the choice for you.",
     image: presenceImg.url,
     action: "Log a Moment of Meaning",
