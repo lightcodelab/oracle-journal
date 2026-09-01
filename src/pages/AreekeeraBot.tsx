@@ -69,18 +69,14 @@ const AreekeeraBot = () => {
   const [loading, setLoading] = useState(true);
   const [phase, setPhase] = useState<IntakePhase>('consent');
   const { hasEncryptionKey } = useEncryption();
-  const [showIntro, setShowIntro] = useState(
-    () => typeof window === 'undefined' || localStorage.getItem('areekeera-intro-seen') !== 'true'
-  );
+  // The explanatory first page is always shown on arrival and is never
+  // behind the encryption unlock — continuing moves on to unlock/setup.
+  const [showIntro, setShowIntro] = useState(true);
 
   const handleIntroContinue = () => {
-    try {
-      localStorage.setItem('areekeera-intro-seen', 'true');
-    } catch {
-      // ignore storage failures
-    }
     setShowIntro(false);
   };
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
