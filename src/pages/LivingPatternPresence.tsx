@@ -27,6 +27,7 @@ import {
   guideByKey,
 } from "@/components/temple/living/experimentGuides";
 import { FormHelp, GuideScriptPanel, MovementNote } from "@/components/temple/living/FormHelp";
+import RecordThemeTags from "@/components/temple/living/RecordThemeTags";
 import {
   GLOBAL_MOVEMENT_HELPER,
   PRESENCE_HELP,
