@@ -54,8 +54,14 @@ export default function CourseSessionNav({
 
   const handleToolClick = (slug: string) => {
     setIsMobileOpen(false);
+    const livingRoute = livingPatternToolRoute(slug);
+    if (livingRoute) {
+      navigate(livingRoute);
+      return;
+    }
     navigate(`/devotion/course/${courseId}?tool=${encodeURIComponent(slug)}`);
   };
+
 
   const completedCount = lessons.filter(l => completedLessonIds.includes(l.id)).length;
   const progressPercent = lessons.length > 0 ? (completedCount / lessons.length) * 100 : 0;
