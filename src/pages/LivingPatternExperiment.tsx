@@ -377,6 +377,15 @@ const LivingPatternExperiment = () => {
                     fieldNoteId={tryNote?.id}
                     emptyHint="Nothing is attached to your starting conditions. Words alone are plenty."
                   />
+                  {tryNote && (
+                    <RecordThemeTags
+                      targetKind="field_note"
+                      targetId={tryNote.id}
+                      variant="inline"
+                      inlineLabel="this Try note"
+                    />
+                  )}
+
                 </>
               )}
 
@@ -389,21 +398,28 @@ const LivingPatternExperiment = () => {
                   ) : (
                     <ul className="space-y-3">
                       {noticeNotes.map((n) => (
-                        <li key={n.id} className="rounded-md border border-border/60 bg-background/40 p-3">
+                        <li key={n.id} className="rounded-md border border-border/60 bg-background/40 p-3 min-w-0">
                           <p className="text-xs text-muted-foreground">
                             {new Date(n.recorded_at).toLocaleString(undefined, {
                               dateStyle: "medium",
                               timeStyle: "short",
                             })}
                           </p>
-                          <p className="mt-1 text-sm text-foreground whitespace-pre-wrap">
+                          <p className="mt-1 text-sm text-foreground whitespace-pre-wrap break-words">
                             {n.body || "—"}
                           </p>
                           <FieldNoteMedia
                             fieldNoteId={n.id}
                             emptyHint="Nothing is attached to this noticing."
                           />
+                          <RecordThemeTags
+                            targetKind="field_note"
+                            targetId={n.id}
+                            variant="inline"
+                            inlineLabel="this noticing"
+                          />
                         </li>
+
                       ))}
                     </ul>
                   )}
@@ -497,6 +513,15 @@ const LivingPatternExperiment = () => {
                     fieldNoteId={returnNote?.id}
                     emptyHint="Nothing is attached to your Return."
                   />
+                  {returnNote && (
+                    <RecordThemeTags
+                      targetKind="field_note"
+                      targetId={returnNote.id}
+                      variant="inline"
+                      inlineLabel="this Return"
+                    />
+                  )}
+
                 </>
               )}
             </div>

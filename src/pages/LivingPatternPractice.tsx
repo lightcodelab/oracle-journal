@@ -694,15 +694,22 @@ const LivingPatternPractice = () => {
                   const relationLabel =
                     EVIDENCE_RELATIONS.find((r) => r.value === relation)?.label ?? null;
                   return (
-                    <li key={e.id} className="rounded-lg border border-border/60 p-3">
+                    <li key={e.id} className="rounded-lg border border-border/60 p-3 min-w-0">
                       <p className="text-xs text-muted-foreground">
                         {new Date(e.occurred_at).toLocaleString()}
                       </p>
-                      {body && <p className="mt-1 text-sm text-foreground">{body}</p>}
+                      {body && <p className="mt-1 text-sm text-foreground break-words">{body}</p>}
                       {relationLabel && (
                         <p className="mt-1 text-xs text-primary">{relationLabel}</p>
                       )}
+                      <RecordThemeTags
+                        targetKind="pattern_evidence"
+                        targetId={e.id}
+                        variant="inline"
+                        inlineLabel="this piece of evidence"
+                      />
                     </li>
+
                   );
                 })}
               </ul>
