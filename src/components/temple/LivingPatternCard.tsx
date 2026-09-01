@@ -34,7 +34,7 @@ const panels: Panel[] = [
     key: "presence",
     record: "Moments of Meaning",
     practice: "PERCEIVE",
-    description: "Meet what stood out before its story makes the choice for you.",
+    description: "Unpack the story your subconscious has been telling, so you can make more conscious choices.",
     image: presenceImg.url,
     action: "Log a Moment of Meaning",
     href: "/living-pattern/presence",
