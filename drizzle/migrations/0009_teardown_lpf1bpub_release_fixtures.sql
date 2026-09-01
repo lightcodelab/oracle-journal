@@ -1,0 +1,12 @@
+delete from public.living_theme_attachments where theme_id in (select id from public.living_themes where label like 'LPF1BPUB%');
+delete from public.living_themes where label like 'LPF1BPUB%';
+delete from public.living_invitation_hides where user_id in (select user_id from public.living_states where feeling::text like '%LPF1BPUB%');
+delete from public.living_resource_tags where noticed_after like 'LPF1BPUB%';
+delete from public.living_record_links where source_id in (select id from public.living_patterns where label like 'LPF1BPUB%') or target_id in (select id from public.living_patterns where label like 'LPF1BPUB%');
+delete from public.living_field_notes where experiment_id in (select id from public.living_experiments where own_experiment like 'LPF1BPUB%');
+delete from public.living_experiments where own_experiment like 'LPF1BPUB%';
+delete from public.living_pattern_evidence where pattern_id in (select id from public.living_patterns where label like 'LPF1BPUB%');
+delete from public.living_patterns where label like 'LPF1BPUB%';
+delete from public.temple_moment_movements where moment_id in (select id from public.temple_moments where label like 'LPF1BPUB%');
+delete from public.temple_moments where label like 'LPF1BPUB%';
+delete from public.living_states where feeling::text like '%LPF1BPUB%';

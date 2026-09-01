@@ -57,6 +57,20 @@
       "when": 1788175947251,
       "tag": "0007_lpf1b_theme_update_conflict_errcode",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788229259025,
+      "tag": "0008_cleanup_lpf1bpub_fixture_themes",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1788230823280,
+      "tag": "0009_teardown_lpf1bpub_release_fixtures",
+      "breakpoints": true
     }
   ]
 }
