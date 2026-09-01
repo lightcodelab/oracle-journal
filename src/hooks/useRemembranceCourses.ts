@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { htmlToPlainText } from '@/lib/richText';
 
 export interface RemembranceCourse {
   id: string;
@@ -142,7 +143,7 @@ export const useRemembranceCourses = (): UseRemembranceCoursesResult => {
           id: course.id,
           title: course.title,
           slug: `legacy-course-${course.id}`,
-          summary: course.description || null,
+          summary: htmlToPlainText(course.description),
           thumbnail_url: course.image_url || null,
           main_media_kind: null,
           main_media_file_url: null,
