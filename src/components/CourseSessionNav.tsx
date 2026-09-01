@@ -4,6 +4,8 @@ import { CheckCircle, Sparkles, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { livingPatternToolRoute } from '@/lib/livingPatternTools';
+
 
 interface Lesson {
   id: string;
@@ -54,8 +56,14 @@ export default function CourseSessionNav({
 
   const handleToolClick = (slug: string) => {
     setIsMobileOpen(false);
+    const livingRoute = livingPatternToolRoute(slug);
+    if (livingRoute) {
+      navigate(livingRoute);
+      return;
+    }
     navigate(`/devotion/course/${courseId}?tool=${encodeURIComponent(slug)}`);
   };
+
 
   const completedCount = lessons.filter(l => completedLessonIds.includes(l.id)).length;
   const progressPercent = lessons.length > 0 ? (completedCount / lessons.length) * 100 : 0;

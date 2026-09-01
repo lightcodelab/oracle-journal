@@ -13,6 +13,7 @@ import { Sparkles } from 'lucide-react';
 import { ToolDetailDialog } from '@/components/tools/ToolDetailDialog';
 import DOMPurify from 'dompurify';
 import { looksLikeHtml } from '@/lib/richText';
+import { livingPatternToolRoute } from '@/lib/livingPatternTools';
 
 interface Lesson {
   id: string;
@@ -39,10 +40,21 @@ const DevotionCoursePage = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [activeToolSlug, setActiveToolSlug] = useState<string | null>(null);
 
+  const openTool = (slug: string) => {
+    const livingRoute = livingPatternToolRoute(slug);
+    if (livingRoute) {
+      navigate(livingRoute);
+      return;
+    }
+    setActiveToolSlug(slug);
+  };
+
   useEffect(() => {
     const t = searchParams.get('tool');
-    if (t) setActiveToolSlug(t);
+    if (t) openTool(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
+
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -263,7 +275,7 @@ const DevotionCoursePage = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.08 }}
-                    onClick={() => setActiveToolSlug(tool.slug)}
+                    onClick={() => openTool(tool.slug)}
                     className="cursor-pointer group"
                   >
                     <div className="bg-card border border-border rounded-lg p-6 flex items-center gap-4 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/30">
