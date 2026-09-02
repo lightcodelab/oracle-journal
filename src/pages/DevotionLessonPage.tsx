@@ -71,7 +71,7 @@ const DevotionLessonPage = () => {
   const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
   const [downloadingFileUrl, setDownloadingFileUrl] = useState<string | null>(null);
   const [submittingPrompts, setSubmittingPrompts] = useState(false);
-  const createJournalEntry = useCreateJournalEntry();
+  const [promptsSaved, setPromptsSaved] = useState(false);
 
   const toggleCompleteMutation = useMutation({
     mutationFn: async (nextCompleted: boolean) => {
