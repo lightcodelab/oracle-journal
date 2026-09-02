@@ -9,7 +9,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
-import ContextualJournal from '@/components/journal/ContextualJournal';
+import ReflectionFooter from '@/components/temple/living/ReflectionFooter';
 import ProtocolSessionNav from '@/components/ProtocolSessionNav';
 import { VimeoEmbed } from '@/components/VimeoEmbed';
 import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
