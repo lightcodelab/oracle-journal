@@ -569,20 +569,26 @@ const ProtocolDetailPage = () => {
             </motion.div>
           )}
 
-          {/* Contextual Journal */}
+          {/* Reflection footer (TL-2C: anchored to the step's linked healing resource) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.45 }}
             className="mb-12"
           >
-            <ContextualJournal
+            <ReflectionFooter
+              resourceFamily="healing_resource"
+              resourceId={currentStep?.resource_id || ''}
+              historyOnlyWhenUnanchored
               contextType="protocol_step"
               contextId={currentStep?.id || ''}
               contextTitle={`${protocol.title} - Step ${currentStepIndex}: ${resource?.title || 'Practice'}`}
               placeholder="Reflect on your experience with this practice..."
+              startLabel="Make this practice a small experiment"
+              attachLabel="Add this practice as support in an experiment I already have"
             />
           </motion.div>
+
 
           {/* Navigation Footer */}
           <motion.div
