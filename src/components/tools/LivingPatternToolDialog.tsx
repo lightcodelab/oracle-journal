@@ -46,10 +46,16 @@ export const LivingPatternToolDialog = ({ lens, open, onClose }: LivingPatternTo
           </p>
 
           <Tabs value={active} onValueChange={(v) => setActive(v as Lens)} className="mt-4">
-            <TabsList className="w-full grid grid-cols-3">
-              <TabsTrigger value="pause">Pause</TabsTrigger>
-              <TabsTrigger value="perceive">Perceive</TabsTrigger>
-              <TabsTrigger value="practice">Practice</TabsTrigger>
+            <TabsList className="w-full grid grid-cols-3 bg-primary text-primary-foreground">
+              <TabsTrigger value="pause" className="text-primary-foreground/90 data-[state=active]:bg-primary-foreground data-[state=active]:text-primary">
+                Pause
+              </TabsTrigger>
+              <TabsTrigger value="perceive" className="text-primary-foreground/90 data-[state=active]:bg-primary-foreground data-[state=active]:text-primary">
+                Perceive
+              </TabsTrigger>
+              <TabsTrigger value="practice" className="text-primary-foreground/90 data-[state=active]:bg-primary-foreground data-[state=active]:text-primary">
+                Practice
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="pause" className="mt-6">
               <LivingPatternPause embedded />
