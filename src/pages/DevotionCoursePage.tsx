@@ -344,6 +344,18 @@ const DevotionCoursePage = () => {
           }
         }}
       />
+      <LivingPatternToolDialog
+        lens={activeLens}
+        open={!!activeLens}
+        onClose={() => {
+          setActiveLens(null);
+          if (searchParams.get('tool')) {
+            searchParams.delete('tool');
+            setSearchParams(searchParams, { replace: true });
+          }
+        }}
+      />
+
     </div>
   );
 };
