@@ -13,7 +13,7 @@ import { Sparkles } from 'lucide-react';
 import { ToolDetailDialog } from '@/components/tools/ToolDetailDialog';
 import DOMPurify from 'dompurify';
 import { looksLikeHtml } from '@/lib/richText';
-import { livingPatternToolRoute } from '@/lib/livingPatternTools';
+import { livingPatternToolRoute, livingPatternDialogLens } from '@/lib/livingPatternTools';
 
 interface Lesson {
   id: string;
