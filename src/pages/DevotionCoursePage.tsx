@@ -11,6 +11,7 @@ import CourseSessionNav from '@/components/CourseSessionNav';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sparkles } from 'lucide-react';
 import { ToolDetailDialog } from '@/components/tools/ToolDetailDialog';
+import { LivingPatternToolDialog } from '@/components/tools/LivingPatternToolDialog';
 import DOMPurify from 'dompurify';
 import { looksLikeHtml } from '@/lib/richText';
 import { livingPatternToolRoute, livingPatternDialogLens } from '@/lib/livingPatternTools';
