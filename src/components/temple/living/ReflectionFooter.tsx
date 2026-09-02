@@ -37,25 +37,45 @@ export default function ReflectionFooter({
   placeholder,
   startLabel,
   attachLabel,
+  historyOnlyWhenUnanchored = false,
   className,
 }: ReflectionFooterProps) {
   const { hasFullTempleAccess, isAdmin, loading } = useMemberState();
 
   if (loading) return null;
 
-  if (hasFullTempleAccess && isAdmin && resourceId) {
-    return (
-      <ResourceFieldNotes
-        resourceFamily={resourceFamily}
-        resourceId={resourceId}
-        legacyContextType={contextType}
-        legacyContextId={contextId}
-        startLabel={startLabel}
-        attachLabel={attachLabel}
-        className={className}
-      />
-    );
+  if (hasFullTempleAccess && isAdmin) {
+    /**
+     * TL-2C — an eligible surface with no verified linked resource never gets an
+     * invented origin or a Field Notes composer: her history alone is shown,
+     * strictly read-only.
+     */
+    if (!resourceId) {
+      if (historyOnlyWhenUnanchored) {
+        return (
+          <div className={className}>
+            <EarlierJournalNotes
+              legacyContextType={contextType}
+              legacyContextId={contextId}
+            />
+          </div>
+        );
+      }
+    } else {
+      return (
+        <ResourceFieldNotes
+          resourceFamily={resourceFamily}
+          resourceId={resourceId}
+          legacyContextType={contextType}
+          legacyContextId={contextId}
+          startLabel={startLabel}
+          attachLabel={attachLabel}
+          className={className}
+        />
+      );
+    }
   }
+
 
 
   return (
