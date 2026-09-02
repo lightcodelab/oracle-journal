@@ -67,16 +67,15 @@ const LivingPatternLenses = () => {
               <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-on-image drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] mt-1">
                 Pause, Perceive, Practice
               </h1>
+              <p className="mt-3 font-sans text-sm sm:text-base text-on-image/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] leading-relaxed">
+                A private Conservatory laboratory for noticing what is true,
+                trying one small different thing, and gathering evidence from
+                what life shows you next. These are not steps you must complete
+                in sequence; choose to log whatever is true in the moment.
+              </p>
             </div>
           </div>
         </motion.div>
-
-        <p className="text-center text-sm sm:text-base leading-relaxed text-muted-foreground max-w-2xl mx-auto mb-6">
-          A private Conservatory laboratory for noticing what is true, trying one
-          small different thing, and gathering evidence from what life shows you
-          next. These are not steps you must complete in sequence; choose to log
-          whatever is true in the moment.
-        </p>
 
         <Tabs
           value={lens}
