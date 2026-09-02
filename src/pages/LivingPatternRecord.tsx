@@ -128,7 +128,7 @@ const LivingPatternRecord = () => {
         <Link to="/living-pattern/pause">Open Pause</Link>
       </Button>
       <Button asChild variant="outline" size="sm">
-        <Link to="/living-pattern/presence">Open Presence</Link>
+        <Link to="/living-pattern?lens=perceive">Open Perceive</Link>
       </Button>
       <Button asChild variant="outline" size="sm">
         <Link to="/living-pattern/practice">Open Practice</Link>

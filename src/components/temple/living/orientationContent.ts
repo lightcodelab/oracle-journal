@@ -83,7 +83,7 @@ export const ORIENTATION_LESSONS: OrientationLesson[] = [
         ],
         [
           "Something that stood out and the meaning your mind began to make",
-          "Presence",
+          "Perceive",
           "Separate what happened from what you are predicting, then gather more information.",
         ],
         [
@@ -145,9 +145,9 @@ export const ORIENTATION_LESSONS: OrientationLesson[] = [
   {
     key: "presence",
     eyebrow: "Lesson 3",
-    title: "Presence — make room between a moment and its story",
+    title: "Perceive — make room between a moment and its story",
     copy: [
-      "Feelings are real. A prediction attached to a feeling may or may not be complete. Presence helps you hold both with kindness.",
+      "Feelings are real. A prediction attached to a feeling may or may not be complete. Perceive helps you hold both with kindness.",
     ],
     teach: [
       "You do not have to prove your story wrong.",

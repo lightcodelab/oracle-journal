@@ -25,7 +25,7 @@ import {
 
 const LENS_LINKS = [
   { label: "Open Pause", to: "/living-pattern/pause" },
-  { label: "Open Presence", to: "/living-pattern/presence" },
+  { label: "Open Perceive", to: "/living-pattern?lens=perceive" },
   { label: "Open Practice", to: "/living-pattern/practice" },
 ];
 

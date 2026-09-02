@@ -338,7 +338,7 @@ const LivingPatternPresence = ({ embedded = false }: { embedded?: boolean }) => 
 
       <main className={embedded ? "max-w-3xl mx-auto pb-4" : "max-w-3xl mx-auto px-4 pb-16"}>
         <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">Moments of Meaning</p>
-        <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">Presence</h1>
+        <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">Perceive</h1>
         <p className="mt-3 text-muted-foreground max-w-2xl leading-relaxed">
           Something stood out. This is a private place to meet it before a familiar story quietly
           makes the choice for you. Delight, relief, beauty, courage, surprise and evidence that
@@ -346,7 +346,7 @@ const LivingPatternPresence = ({ embedded = false }: { embedded?: boolean }) => 
           nothing is shared.
         </p>
 
-        <nav aria-label="Presence movement" className="mt-8 flex flex-wrap gap-2">
+        <nav aria-label="Perceive movement" className="mt-8 flex flex-wrap gap-2">
           {(["Register", "Recognise", "Recalibrate"] as const).map((l, i) => {
             const n = (i + 1) as Step;
             return (
