@@ -8,10 +8,10 @@ import type { LivingResourceFamily } from "@/hooks/useLivingExperiments";
  * TL-1B — the single bottom-of-page reflection footer for eligible Temple
  * resources and cards.
  *
- * Behind the existing Living Pattern staging gate (`hasFullTempleAccess &&
- * isAdmin`) an eligible admin-staging member sees Field Notes for Your
- * Experiments. Every other member keeps the existing generic Journal Notes
- * surface, unchanged, until a later rollout decision.
+ * TL-2E — public rollout: every member with full Temple access
+ * (`hasFullTempleAccess`) sees Field Notes for Your Experiments. Members
+ * without full access keep the existing generic Journal Notes surface,
+ * unchanged.
  */
 
 interface ReflectionFooterProps {
