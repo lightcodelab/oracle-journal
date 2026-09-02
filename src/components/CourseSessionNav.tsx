@@ -56,11 +56,14 @@ export default function CourseSessionNav({
 
   const handleToolClick = (slug: string) => {
     setIsMobileOpen(false);
-    const livingRoute = livingPatternToolRoute(slug);
-    if (livingRoute) {
-      navigate(livingRoute);
-      return;
+    if (!livingPatternDialogLens(slug)) {
+      const livingRoute = livingPatternToolRoute(slug);
+      if (livingRoute) {
+        navigate(livingRoute);
+        return;
+      }
     }
+
     navigate(`/devotion/course/${courseId}?tool=${encodeURIComponent(slug)}`);
   };
 
