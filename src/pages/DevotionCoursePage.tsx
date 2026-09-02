@@ -317,21 +317,26 @@ const DevotionCoursePage = () => {
             />
           )}
 
-          {/* Course-level Journal */}
+          {/* Course-level reflection — Field Notes for eligible members, legacy Journal otherwise */}
           {courseId && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <ContextualJournal
+              <ReflectionFooter
+                resourceFamily="course"
+                resourceId={courseId}
                 contextType="course"
                 contextId={courseId}
                 contextTitle={course.title}
                 placeholder="Capture your overall course insights and reflections..."
+                startLabel="Make this a small experiment"
+                attachLabel="Add this as support in an experiment I already have"
               />
             </motion.div>
           )}
+
         </div>
       </div>
       <ToolDetailDialog

@@ -22,6 +22,9 @@ interface ReflectionFooterProps {
   contextId: string;
   contextTitle: string;
   placeholder?: string;
+  /** Optional surface-specific wording for the two voluntary Field Notes actions. */
+  startLabel?: string;
+  attachLabel?: string;
   className?: string;
 }
 
@@ -32,6 +35,8 @@ export default function ReflectionFooter({
   contextId,
   contextTitle,
   placeholder,
+  startLabel,
+  attachLabel,
   className,
 }: ReflectionFooterProps) {
   const { hasFullTempleAccess, isAdmin, loading } = useMemberState();
@@ -45,10 +50,13 @@ export default function ReflectionFooter({
         resourceId={resourceId}
         legacyContextType={contextType}
         legacyContextId={contextId}
+        startLabel={startLabel}
+        attachLabel={attachLabel}
         className={className}
       />
     );
   }
+
 
   return (
     <ContextualJournal
