@@ -125,13 +125,13 @@ const LivingPatternRecord = () => {
   const lensLinks = (
     <div className="mt-4 flex flex-wrap gap-2">
       <Button asChild variant="outline" size="sm">
-        <Link to="/living-pattern/pause">Open Pause</Link>
+        <Link to="/living-pattern?lens=pause">Open Pause</Link>
       </Button>
       <Button asChild variant="outline" size="sm">
         <Link to="/living-pattern?lens=perceive">Open Perceive</Link>
       </Button>
       <Button asChild variant="outline" size="sm">
-        <Link to="/living-pattern/practice">Open Practice</Link>
+        <Link to="/living-pattern?lens=practice">Open Practice</Link>
       </Button>
     </div>
   );
