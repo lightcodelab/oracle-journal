@@ -4,7 +4,7 @@ import { CheckCircle, Sparkles, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { livingPatternToolRoute } from '@/lib/livingPatternTools';
+import { livingPatternToolRoute, livingPatternDialogLens } from '@/lib/livingPatternTools';
 
 
 interface Lesson {
@@ -56,11 +56,14 @@ export default function CourseSessionNav({
 
   const handleToolClick = (slug: string) => {
     setIsMobileOpen(false);
-    const livingRoute = livingPatternToolRoute(slug);
-    if (livingRoute) {
-      navigate(livingRoute);
-      return;
+    if (!livingPatternDialogLens(slug)) {
+      const livingRoute = livingPatternToolRoute(slug);
+      if (livingRoute) {
+        navigate(livingRoute);
+        return;
+      }
     }
+
     navigate(`/devotion/course/${courseId}?tool=${encodeURIComponent(slug)}`);
   };
 

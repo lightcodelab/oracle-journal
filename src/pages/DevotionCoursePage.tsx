@@ -11,9 +11,10 @@ import CourseSessionNav from '@/components/CourseSessionNav';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sparkles } from 'lucide-react';
 import { ToolDetailDialog } from '@/components/tools/ToolDetailDialog';
+import { LivingPatternToolDialog } from '@/components/tools/LivingPatternToolDialog';
 import DOMPurify from 'dompurify';
 import { looksLikeHtml } from '@/lib/richText';
-import { livingPatternToolRoute } from '@/lib/livingPatternTools';
+import { livingPatternToolRoute, livingPatternDialogLens } from '@/lib/livingPatternTools';
 
 interface Lesson {
   id: string;
@@ -39,8 +40,14 @@ const DevotionCoursePage = () => {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [activeToolSlug, setActiveToolSlug] = useState<string | null>(null);
+  const [activeLens, setActiveLens] = useState<'pause' | 'perceive' | 'practice' | null>(null);
 
   const openTool = (slug: string) => {
+    const lens = livingPatternDialogLens(slug);
+    if (lens) {
+      setActiveLens(lens);
+      return;
+    }
     const livingRoute = livingPatternToolRoute(slug);
     if (livingRoute) {
       navigate(livingRoute);
@@ -48,6 +55,7 @@ const DevotionCoursePage = () => {
     }
     setActiveToolSlug(slug);
   };
+
 
   useEffect(() => {
     const t = searchParams.get('tool');
@@ -337,6 +345,18 @@ const DevotionCoursePage = () => {
           }
         }}
       />
+      <LivingPatternToolDialog
+        lens={activeLens}
+        open={!!activeLens}
+        onClose={() => {
+          setActiveLens(null);
+          if (searchParams.get('tool')) {
+            searchParams.delete('tool');
+            setSearchParams(searchParams, { replace: true });
+          }
+        }}
+      />
+
     </div>
   );
 };
