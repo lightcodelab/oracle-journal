@@ -117,7 +117,7 @@ const trimmed = (m: TextMap) => {
   return out;
 };
 
-const LivingPatternPresence = () => {
+const LivingPatternPresence = ({ embedded = false }: { embedded?: boolean }) => {
   const navigate = useNavigate();
   const { id: routeId } = useParams();
   const { user, loading: authLoading } = useAuth();
@@ -322,19 +322,21 @@ const LivingPatternPresence = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
-        <Link
-          to="/temple"
-          className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          <span className="font-medium truncate">Back to Home</span>
-        </Link>
-        <NavActions />
-      </header>
+    <div className={embedded ? "" : "min-h-screen bg-background"}>
+      {!embedded && (
+        <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
+          <Link
+            to="/temple"
+            className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span className="font-medium truncate">Back to Home</span>
+          </Link>
+          <NavActions />
+        </header>
+      )}
 
-      <main className="max-w-3xl mx-auto px-4 pb-16">
+      <main className={embedded ? "max-w-3xl mx-auto pb-4" : "max-w-3xl mx-auto px-4 pb-16"}>
         <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">Moments of Meaning</p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">Presence</h1>
         <p className="mt-3 text-muted-foreground max-w-2xl leading-relaxed">
