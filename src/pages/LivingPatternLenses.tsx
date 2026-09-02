@@ -45,16 +45,37 @@ const LivingPatternLenses = () => {
       </header>
 
       <div className="max-w-3xl mx-auto px-4 pb-16">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
-          Your Living Pattern
-        </p>
-        <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">
-          Pause, Perceive, Practice
-        </h1>
-        <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted-foreground max-w-2xl">
-          Three lenses, one private place. They are not steps and not a
-          sequence — open whichever one meets the moment you are in.
-        </p>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          className="relative w-full overflow-hidden rounded-lg mb-8"
+        >
+          <img
+            src={livingPatternBanner.url}
+            alt=""
+            aria-hidden
+            className="w-full h-[180px] sm:h-[240px] md:h-[300px] object-cover object-center"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-foreground/10 via-foreground/25 to-foreground/50 md:from-transparent md:via-foreground/10 md:to-foreground/55" />
+          <div className="absolute inset-0 flex items-center justify-center px-6 md:px-10 md:justify-end">
+            <div className="max-w-md text-center md:text-right">
+              <p className="text-[0.65rem] sm:text-[0.7rem] tracking-[0.2em] uppercase text-on-image/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+                Your Living Pattern
+              </p>
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-on-image drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] mt-1">
+                Pause, Perceive, Practice
+              </h1>
+              <p className="mt-3 font-sans text-sm sm:text-base text-on-image/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] leading-relaxed">
+                A private Conservatory laboratory for noticing what is true,
+                trying one small different thing, and gathering evidence from
+                what life shows you next. These are not steps you must complete
+                in sequence; choose to log whatever is true in the moment.
+              </p>
+            </div>
+          </div>
+        </motion.div>
 
         <Tabs
           value={lens}
