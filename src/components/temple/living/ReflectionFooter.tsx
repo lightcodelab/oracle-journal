@@ -1,6 +1,7 @@
 import { useMemberState } from "@/hooks/useMemberState";
 import ContextualJournal from "@/components/journal/ContextualJournal";
 import ResourceFieldNotes from "@/components/temple/living/ResourceFieldNotes";
+import EarlierJournalNotes from "@/components/temple/living/EarlierJournalNotes";
 import type { LivingResourceFamily } from "@/hooks/useLivingExperiments";
 
 /**
@@ -25,8 +26,14 @@ interface ReflectionFooterProps {
   /** Optional surface-specific wording for the two voluntary Field Notes actions. */
   startLabel?: string;
   attachLabel?: string;
+  /**
+   * TL-2C — when the surface has no verified linked resource, show her history
+   * read-only instead of any composer. Never invents an origin.
+   */
+  historyOnlyWhenUnanchored?: boolean;
   className?: string;
 }
+
 
 export default function ReflectionFooter({
   resourceFamily,
