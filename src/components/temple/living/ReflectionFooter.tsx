@@ -47,11 +47,11 @@ export default function ReflectionFooter({
   historyOnlyWhenUnanchored = false,
   className,
 }: ReflectionFooterProps) {
-  const { hasFullTempleAccess, isAdmin, loading } = useMemberState();
+  const { hasFullTempleAccess, loading } = useMemberState();
 
   if (loading) return null;
 
-  if (hasFullTempleAccess && isAdmin) {
+  if (hasFullTempleAccess) {
     /**
      * TL-2C — an eligible surface with no verified linked resource never gets an
      * invented origin or a Field Notes composer: her history alone is shown,
