@@ -1,6 +1,7 @@
 import { useMemberState } from "@/hooks/useMemberState";
 import ContextualJournal from "@/components/journal/ContextualJournal";
 import ResourceFieldNotes from "@/components/temple/living/ResourceFieldNotes";
+import EarlierJournalNotes from "@/components/temple/living/EarlierJournalNotes";
 import type { LivingResourceFamily } from "@/hooks/useLivingExperiments";
 
 /**
@@ -25,8 +26,14 @@ interface ReflectionFooterProps {
   /** Optional surface-specific wording for the two voluntary Field Notes actions. */
   startLabel?: string;
   attachLabel?: string;
+  /**
+   * TL-2C — when the surface has no verified linked resource, show her history
+   * read-only instead of any composer. Never invents an origin.
+   */
+  historyOnlyWhenUnanchored?: boolean;
   className?: string;
 }
+
 
 export default function ReflectionFooter({
   resourceFamily,
@@ -37,25 +44,45 @@ export default function ReflectionFooter({
   placeholder,
   startLabel,
   attachLabel,
+  historyOnlyWhenUnanchored = false,
   className,
 }: ReflectionFooterProps) {
   const { hasFullTempleAccess, isAdmin, loading } = useMemberState();
 
   if (loading) return null;
 
-  if (hasFullTempleAccess && isAdmin && resourceId) {
-    return (
-      <ResourceFieldNotes
-        resourceFamily={resourceFamily}
-        resourceId={resourceId}
-        legacyContextType={contextType}
-        legacyContextId={contextId}
-        startLabel={startLabel}
-        attachLabel={attachLabel}
-        className={className}
-      />
-    );
+  if (hasFullTempleAccess && isAdmin) {
+    /**
+     * TL-2C — an eligible surface with no verified linked resource never gets an
+     * invented origin or a Field Notes composer: her history alone is shown,
+     * strictly read-only.
+     */
+    if (!resourceId) {
+      if (historyOnlyWhenUnanchored) {
+        return (
+          <div className={className}>
+            <EarlierJournalNotes
+              legacyContextType={contextType}
+              legacyContextId={contextId}
+            />
+          </div>
+        );
+      }
+    } else {
+      return (
+        <ResourceFieldNotes
+          resourceFamily={resourceFamily}
+          resourceId={resourceId}
+          legacyContextType={contextType}
+          legacyContextId={contextId}
+          startLabel={startLabel}
+          attachLabel={attachLabel}
+          className={className}
+        />
+      );
+    }
   }
+
 
 
   return (
