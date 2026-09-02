@@ -15,3 +15,19 @@ export function livingPatternToolRoute(slug?: string | null): string | null {
   if (!slug) return null;
   return LIVING_PATTERN_TOOL_ROUTES[slug] ?? null;
 }
+
+/**
+ * Lens tools that should open inside a dialog (on course pages) rather than
+ * navigating away. Returns the tab to open, or null when the tool is not one.
+ */
+export const LIVING_PATTERN_DIALOG_LENSES: Record<string, 'pause' | 'perceive' | 'practice'> = {
+  'living-pattern-open': 'pause',
+  'living-pattern-state': 'pause',
+  'living-pattern-moment': 'perceive',
+  'living-pattern-pattern': 'practice',
+};
+
+export function livingPatternDialogLens(slug?: string | null) {
+  if (!slug) return null;
+  return LIVING_PATTERN_DIALOG_LENSES[slug] ?? null;
+}
