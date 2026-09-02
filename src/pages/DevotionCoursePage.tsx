@@ -39,8 +39,14 @@ const DevotionCoursePage = () => {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [activeToolSlug, setActiveToolSlug] = useState<string | null>(null);
+  const [activeLens, setActiveLens] = useState<'pause' | 'perceive' | 'practice' | null>(null);
 
   const openTool = (slug: string) => {
+    const lens = livingPatternDialogLens(slug);
+    if (lens) {
+      setActiveLens(lens);
+      return;
+    }
     const livingRoute = livingPatternToolRoute(slug);
     if (livingRoute) {
       navigate(livingRoute);
@@ -48,6 +54,7 @@ const DevotionCoursePage = () => {
     }
     setActiveToolSlug(slug);
   };
+
 
   useEffect(() => {
     const t = searchParams.get('tool');
