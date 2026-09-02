@@ -22,7 +22,6 @@ import {
   legacyToFormQuestions,
 } from '@/lib/lessonFormTypes';
 import { displayStorageFileName, titleFileNameFallback } from '@/lib/storageFileNames';
-import { useCreateJournalEntry } from '@/hooks/useJournalEntries';
 import { useRecordLastActivity } from '@/hooks/useRecordLastActivity';
 
 interface Lesson {
@@ -71,7 +70,7 @@ const DevotionLessonPage = () => {
   const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
   const [downloadingFileUrl, setDownloadingFileUrl] = useState<string | null>(null);
   const [submittingPrompts, setSubmittingPrompts] = useState(false);
-  const createJournalEntry = useCreateJournalEntry();
+  const [promptsSaved, setPromptsSaved] = useState(false);
 
   const toggleCompleteMutation = useMutation({
     mutationFn: async (nextCompleted: boolean) => {
@@ -283,20 +282,11 @@ const DevotionLessonPage = () => {
 
   const handleFormResponsesChange = (next: LessonFormResponses) => {
     setFormResponses(next);
+    setPromptsSaved(false);
     debouncedSave({ form_responses: next });
   };
 
-  const formatResponseValue = (value: string | string[] | number | null | undefined): string => {
-    if (value === null || value === undefined || value === '') return '(no response)';
-    if (Array.isArray(value)) return value.length ? value.join(', ') : '(no response)';
-    return String(value);
-  };
-
-  const handleSubmitPrompts = async (
-    questions: LessonFormQuestion[],
-    lessonTitle: string,
-    lessonNumber: number,
-  ) => {
+  const handleSavePromptResponses = async (questions: LessonFormQuestion[]) => {
     const answered = questions.filter((q) => {
       const v = formResponses[q.id];
       if (v === null || v === undefined || v === '') return false;
@@ -306,8 +296,8 @@ const DevotionLessonPage = () => {
 
     if (answered.length === 0) {
       toast({
-        title: 'Nothing to submit',
-        description: 'Please answer at least one prompt before submitting.',
+        title: 'Nothing to save',
+        description: 'Please answer at least one prompt before saving.',
         variant: 'destructive',
       });
       return;
@@ -315,43 +305,13 @@ const DevotionLessonPage = () => {
 
     setSubmittingPrompts(true);
     try {
-      // Make sure latest answers are persisted to lesson_journal_entries too
+      // Persist answers only to the owner-only lesson record
       if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
       await saveJournalMutation.mutateAsync({ form_responses: formResponses });
 
-      const contextTitle = `Session ${lessonNumber}: ${lessonTitle}`;
-      const title = `Lesson Notes — ${contextTitle}`;
-
-      // Build TipTap JSON doc: each question as a heading, answer as paragraph
-      const docContent: any[] = [];
-      const lines: string[] = [];
-      questions.forEach((q) => {
-        const answer = formatResponseValue(formResponses[q.id]);
-        docContent.push({
-          type: 'heading',
-          attrs: { level: 3 },
-          content: [{ type: 'text', text: q.label || 'Prompt' }],
-        });
-        docContent.push({
-          type: 'paragraph',
-          content: [{ type: 'text', text: answer }],
-        });
-        lines.push(`${q.label || 'Prompt'}\n${answer}`);
-      });
-
-      await createJournalEntry.mutateAsync({
-        title,
-        content_json: { type: 'doc', content: docContent },
-        content_text: lines.join('\n\n'),
-        is_quick_capture: false,
-        context_type: 'lesson',
-        context_id: lessonId || undefined,
-        context_title: contextTitle,
-      });
-
+      setPromptsSaved(true);
       toast({
-        title: 'Saved to My Journal',
-        description: 'Your responses are filed under Lesson Notes.',
+        title: 'Saved privately with this lesson.',
       });
     } catch (err: any) {
       toast({
@@ -706,9 +666,18 @@ const DevotionLessonPage = () => {
                   responses={formResponses}
                   onChange={handleFormResponsesChange}
                 />
-                <div className="mt-6 flex justify-end">
+                <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
+                  {promptsSaved && !submittingPrompts && (
+                    <p
+                      role="status"
+                      aria-live="polite"
+                      className="text-sm text-muted-foreground"
+                    >
+                      Saved privately with this lesson.
+                    </p>
+                  )}
                   <Button
-                    onClick={() => handleSubmitPrompts(formQuestions, lesson.title, lesson.lesson_number)}
+                    onClick={() => handleSavePromptResponses(formQuestions)}
                     disabled={submittingPrompts}
                     className="bg-primary text-primary-foreground hover:bg-primary/90"
                   >
@@ -720,7 +689,7 @@ const DevotionLessonPage = () => {
                     ) : (
                       <>
                         <FileText className="w-4 h-4 mr-2" />
-                        Submit to My Journal
+                        Save your response
                       </>
                     )}
                   </Button>
