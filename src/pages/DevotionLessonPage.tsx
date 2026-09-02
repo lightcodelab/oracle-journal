@@ -283,6 +283,7 @@ const DevotionLessonPage = () => {
 
   const handleFormResponsesChange = (next: LessonFormResponses) => {
     setFormResponses(next);
+    setPromptsSaved(false);
     debouncedSave({ form_responses: next });
   };
 
