@@ -56,7 +56,6 @@ import RemembranceSectionPage from "./pages/RemembranceSectionPage";
 import DeepeningCourses from "./pages/DeepeningCourses";
 import MyPlaylists from "./pages/MyPlaylists";
 import LivingPatternLenses from "./pages/LivingPatternLenses";
-import LivingPatternPause from "./pages/LivingPatternPause";
 import LivingPatternOrientation from "./pages/LivingPatternOrientation";
 import LivingPatternExperiments from "./pages/LivingPatternExperiments";
 import LivingPatternExperiment from "./pages/LivingPatternExperiment";
