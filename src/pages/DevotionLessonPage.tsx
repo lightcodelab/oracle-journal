@@ -666,9 +666,18 @@ const DevotionLessonPage = () => {
                   responses={formResponses}
                   onChange={handleFormResponsesChange}
                 />
-                <div className="mt-6 flex justify-end">
+                <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
+                  {promptsSaved && !submittingPrompts && (
+                    <p
+                      role="status"
+                      aria-live="polite"
+                      className="text-sm text-muted-foreground"
+                    >
+                      Saved privately with this lesson.
+                    </p>
+                  )}
                   <Button
-                    onClick={() => handleSubmitPrompts(formQuestions, lesson.title, lesson.lesson_number)}
+                    onClick={() => handleSavePromptResponses(formQuestions)}
                     disabled={submittingPrompts}
                     className="bg-primary text-primary-foreground hover:bg-primary/90"
                   >
@@ -680,7 +689,7 @@ const DevotionLessonPage = () => {
                     ) : (
                       <>
                         <FileText className="w-4 h-4 mr-2" />
-                        Submit to My Journal
+                        Save your response
                       </>
                     )}
                   </Button>
