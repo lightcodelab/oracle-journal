@@ -27,7 +27,7 @@ export function GuideNextStepCard() {
           </Button>
         </div>
       </div>
-      <div className="hidden lg:flex items-start justify-center shrink-0 pt-1">
+      <div className="hidden sm:flex items-start justify-center shrink-0 pt-1">
         <img
           src={guideLogoAsset.url}
           alt="AreekeerA Guide"
