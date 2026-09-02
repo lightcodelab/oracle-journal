@@ -78,7 +78,7 @@ const LivingPatternMoments = () => {
 
         <div className="mt-6">
           <Button asChild>
-            <Link to="/living-pattern/presence">Log a Moment of Meaning</Link>
+            <Link to="/living-pattern?lens=perceive">Log a Moment of Meaning</Link>
           </Button>
         </div>
 

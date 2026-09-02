@@ -55,7 +55,7 @@ import ProtocolDetailPage from "./pages/ProtocolDetailPage";
 import RemembranceSectionPage from "./pages/RemembranceSectionPage";
 import DeepeningCourses from "./pages/DeepeningCourses";
 import MyPlaylists from "./pages/MyPlaylists";
-import LivingPatternPause from "./pages/LivingPatternPause";
+import LivingPatternLenses from "./pages/LivingPatternLenses";
 import LivingPatternOrientation from "./pages/LivingPatternOrientation";
 import LivingPatternExperiments from "./pages/LivingPatternExperiments";
 import LivingPatternExperiment from "./pages/LivingPatternExperiment";
@@ -147,15 +147,17 @@ const App = () => {
             <Route path="/journal" element={<Journal />} />
             <Route path="/readings" element={<MyReadings />} />
             <Route path="/playlists" element={<MyPlaylists />} />
+            <Route path="/living-pattern" element={<LivingPatternLenses />} />
             <Route path="/living-pattern/record" element={<LivingPatternRecord />} />
             <Route path="/living-pattern/orientation" element={<LivingPatternOrientation />} />
-            <Route path="/living-pattern/pause" element={<LivingPatternPause />} />
+            <Route path="/living-pattern/pause" element={<Navigate to="/living-pattern?lens=pause" replace />} />
             <Route path="/living-pattern/experiments" element={<LivingPatternExperiments />} />
             <Route path="/living-pattern/experiments/:id" element={<LivingPatternExperiment />} />
-            <Route path="/living-pattern/presence" element={<LivingPatternPresence />} />
+            <Route path="/living-pattern/presence" element={<Navigate to="/living-pattern?lens=perceive" replace />} />
+            <Route path="/living-pattern/perceive" element={<Navigate to="/living-pattern?lens=perceive" replace />} />
             <Route path="/living-pattern/moments" element={<LivingPatternMoments />} />
             <Route path="/living-pattern/moments/:id" element={<LivingPatternPresence />} />
-            <Route path="/living-pattern/practice" element={<LivingPatternPractice />} />
+            <Route path="/living-pattern/practice" element={<Navigate to="/living-pattern?lens=practice" replace />} />
             <Route path="/living-pattern/patterns" element={<LivingPatternPatterns />} />
             <Route path="/living-pattern/patterns/:id" element={<LivingPatternPractice />} />
 

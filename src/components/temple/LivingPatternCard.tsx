@@ -28,7 +28,7 @@ const panels: Panel[] = [
     description: "Notice and tend the state you are in.",
     image: pauseImg.url,
     action: "Log a State of Being",
-    href: "/living-pattern/pause",
+    href: "/living-pattern?lens=pause",
   },
   {
     key: "presence",
@@ -37,7 +37,7 @@ const panels: Panel[] = [
     description: "Unpack the story your subconscious has been telling, so you can make more conscious choices.",
     image: presenceImg.url,
     action: "Log a Moment of Meaning",
-    href: "/living-pattern/presence",
+    href: "/living-pattern?lens=perceive",
   },
 
   {
@@ -48,7 +48,7 @@ const panels: Panel[] = [
       "Consciously choose and sustain the commitments your actions are making real.",
     image: practiceImg.url,
     action: "Log a Pattern of Choosing",
-    href: "/living-pattern/practice",
+    href: "/living-pattern?lens=practice",
   },
 ];
 

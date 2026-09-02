@@ -80,7 +80,7 @@ const LivingPatternPatterns = () => {
 
         <div className="mt-6">
           <Button asChild>
-            <Link to="/living-pattern/practice">Log a Pattern of Choosing</Link>
+            <Link to="/living-pattern?lens=practice">Log a Pattern of Choosing</Link>
           </Button>
         </div>
 

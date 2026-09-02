@@ -100,7 +100,7 @@ const LivingPatternExperiments = () => {
               of Being — both are complete on their own.
             </p>
             <Button asChild variant="outline" className="mt-4">
-              <Link to="/living-pattern/pause">Open a Pause</Link>
+              <Link to="/living-pattern?lens=pause">Open a Pause</Link>
             </Button>
           </div>
         )}

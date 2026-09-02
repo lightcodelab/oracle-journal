@@ -5,9 +5,9 @@
  */
 export const LIVING_PATTERN_TOOL_ROUTES: Record<string, string> = {
   'living-pattern-open': '/living-pattern/record',
-  'living-pattern-state': '/living-pattern/pause',
-  'living-pattern-moment': '/living-pattern/presence',
-  'living-pattern-pattern': '/living-pattern/practice',
+  'living-pattern-state': '/living-pattern?lens=pause',
+  'living-pattern-moment': '/living-pattern?lens=perceive',
+  'living-pattern-pattern': '/living-pattern?lens=practice',
   'living-pattern-experiments': '/living-pattern/experiments',
 };
 
