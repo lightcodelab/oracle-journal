@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
-import ContextualJournal from '@/components/journal/ContextualJournal';
+import ReflectionFooter from '@/components/temple/living/ReflectionFooter';
 import CourseSessionNav from '@/components/CourseSessionNav';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import DOMPurify from 'dompurify';
@@ -729,20 +729,25 @@ const DevotionLessonPage = () => {
             </motion.div>
           )}
 
-          {/* Digital Journal (Rich Text) */}
+          {/* Lesson-level reflection — Field Notes for eligible members, legacy Journal otherwise */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.55 }}
             className="mb-12"
           >
-            <ContextualJournal
+            <ReflectionFooter
+              resourceFamily="lesson"
+              resourceId={lessonId || ''}
               contextType="lesson"
               contextId={lessonId || ''}
               contextTitle={`Session ${lesson.lesson_number}: ${lesson.title}`}
               placeholder="Add deeper reflections, insights, or notes to your digital journal..."
+              startLabel="Make this a small experiment"
+              attachLabel="Add this as support in an experiment I already have"
             />
           </motion.div>
+
 
           {/* Mark Complete */}
           <motion.div

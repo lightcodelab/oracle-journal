@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, BookOpen, Loader2, Sprout } from "lucide-react";
+import { ArrowRight, Loader2, Sprout } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -13,7 +13,8 @@ import {
   type LivingExperiment,
   type LivingResourceFamily,
 } from "@/hooks/useLivingExperiments";
-import { useJournalEntries } from "@/hooks/useJournalEntries";
+import EarlierJournalNotes from "@/components/temple/living/EarlierJournalNotes";
+
 
 /**
  * TL-1B — "Field Notes for Your Experiments" at the foot of an eligible Temple
@@ -41,6 +42,9 @@ interface ResourceFieldNotesProps {
   /** Legacy context pair, used only to show her Earlier Journal Notes read-only. */
   legacyContextType: string;
   legacyContextId: string;
+  /** Optional surface-specific wording for the two voluntary actions. */
+  startLabel?: string;
+  attachLabel?: string;
   className?: string;
 }
 
@@ -53,6 +57,8 @@ export default function ResourceFieldNotes({
   resourceId,
   legacyContextType,
   legacyContextId,
+  startLabel,
+  attachLabel,
   className,
 }: ResourceFieldNotesProps) {
   const [experiments, setExperiments] = useState<LivingExperiment[]>([]);
@@ -69,10 +75,7 @@ export default function ResourceFieldNotes({
   const [attaching, setAttaching] = useState(false);
   const [openExperiments, setOpenExperiments] = useState<LivingExperiment[] | null>(null);
 
-  const { data: legacyEntries = [] } = useJournalEntries({
-    contextType: legacyContextType,
-    contextId: legacyContextId,
-  });
+
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -288,18 +291,20 @@ export default function ResourceFieldNotes({
                   className="h-auto w-full whitespace-normal py-2 text-left sm:w-auto"
                   onClick={() => setStarting(true)}
                 >
-                  {experiments.length === 0
-                    ? "Start a small experiment from here"
-                    : "Start another small experiment from here"}
+                  {startLabel ??
+                    (experiments.length === 0
+                      ? "Start a small experiment from here"
+                      : "Start another small experiment from here")}
                 </Button>
                 <Button
                   variant="ghost"
                   className="h-auto w-full whitespace-normal py-2 text-left sm:w-auto"
                   onClick={handleOpenPicker}
                 >
-                  Add this as support in an experiment I already have
+                  {attachLabel ?? "Add this as support in an experiment I already have"}
                 </Button>
               </div>
+
 
             )}
 
@@ -346,39 +351,11 @@ export default function ResourceFieldNotes({
         )}
 
         {/* Earlier Journal Notes — preserved history, read-only, never relabelled */}
-        {legacyEntries.length > 0 && (
-          <details className="group mt-6 rounded-md border border-border/60 bg-background/40 open:bg-background/60">
-            <summary className="cursor-pointer list-none px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-              Earlier Journal Notes ({legacyEntries.length})
-            </summary>
-            <div className="space-y-3 px-3 pb-3 pt-1">
-              <p className="text-xs text-muted-foreground">
-                Notes you wrote here before. They are unchanged and remain in My Journal.
-              </p>
-              {legacyEntries.map((entry) => (
-                <div
-                  key={entry.id}
-                  className="rounded-md border border-border/60 bg-background/60 p-3"
-                >
-                  <p className="text-xs text-muted-foreground">
-                    {new Date(entry.captured_at).toLocaleDateString()}
-                    {entry.title ? ` — ${entry.title}` : ""}
-                  </p>
-                  <p className="mt-1 whitespace-pre-line break-words text-sm text-foreground/90">
-                    {entry.content_text?.trim() || "(no text)"}
-                  </p>
-                </div>
-              ))}
-              <Link
-                to="/journal"
-                className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
-              >
-                <BookOpen className="h-4 w-4" />
-                Open My Journal
-              </Link>
-            </div>
-          </details>
-        )}
+        <EarlierJournalNotes
+          legacyContextType={legacyContextType}
+          legacyContextId={legacyContextId}
+        />
+
       </div>
     </div>
   );
