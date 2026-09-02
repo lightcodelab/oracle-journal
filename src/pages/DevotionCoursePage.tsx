@@ -6,7 +6,7 @@ import { Play, CheckCircle, DoorOpen } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
-import ContextualJournal from '@/components/journal/ContextualJournal';
+import ReflectionFooter from '@/components/temple/living/ReflectionFooter';
 import CourseSessionNav from '@/components/CourseSessionNav';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sparkles } from 'lucide-react';

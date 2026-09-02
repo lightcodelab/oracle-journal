@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
-import ContextualJournal from '@/components/journal/ContextualJournal';
+import ReflectionFooter from '@/components/temple/living/ReflectionFooter';
 import CourseSessionNav from '@/components/CourseSessionNav';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import DOMPurify from 'dompurify';
