@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { motion } from "framer-motion";
 import NavActions from "@/components/NavActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LivingPatternPause from "./LivingPatternPause";
 import LivingPatternPresence from "./LivingPatternPresence";
 import LivingPatternPractice from "./LivingPatternPractice";
+import livingPatternBanner from "@/assets/living-pattern-banner.png.asset.json";
 
 /**
  * One private page holding all three Living Pattern lenses as tabs:
