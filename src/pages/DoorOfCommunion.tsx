@@ -203,7 +203,7 @@ export default function DoorOfCommunion() {
 
         {/* Category Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category, index) => {
+          {visibleCategories.map((category, index) => {
             return (
               <motion.div
                 key={category.id}
