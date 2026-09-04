@@ -84,6 +84,12 @@ export default function DoorOfCommunion() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
+  const { isAdmin } = useAuth();
+
+  const visibleCategories = useMemo(
+    () => categories.filter((c) => c.id !== 'mirror-exchange' || isAdmin),
+    [isAdmin]
+  );
 
   const canAccessCommunion = hasAccess('communion');
   const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
