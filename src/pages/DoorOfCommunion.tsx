@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useTierAccess } from '@/hooks/useTierAccess';
+import { useAuth } from '@/hooks/useAuth';
 import { DoorHeader } from '@/components/temple/DoorHeader';
 import communionHeader from '@/assets/door-communion-header-v1.webp.asset.json';
 import imgReadings from '@/assets/communion-live-readings.png.asset.json';
