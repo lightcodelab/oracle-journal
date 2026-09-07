@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CheckCircle, Loader2, ArrowRight, FlaskConical } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { trackSalesEvent } from "@/lib/salesAnalytics";
 
 const MembershipSuccess = () => {
   const navigate = useNavigate();
@@ -20,6 +21,12 @@ const MembershipSuccess = () => {
   // exclusively by the server-side membership state.
   const sessionId = searchParams.get("session_id") ?? "";
   const isSandbox = sessionId.startsWith("cs_test_");
+
+  useEffect(() => {
+    if (sessionId) {
+      trackSalesEvent("membership_checkout_completed");
+    }
+  }, [sessionId]);
 
   useEffect(() => {
     if (!sessionId) {

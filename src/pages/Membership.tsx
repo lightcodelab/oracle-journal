@@ -5,25 +5,26 @@ import { useMemberState } from "@/hooks/useMemberState";
 import { supabase } from "@/integrations/supabase/client";
 import { getStoredAffiliateRef } from "@/lib/affiliateTracking";
 import { useToast } from "@/hooks/use-toast";
+import { trackSalesEvent } from "@/lib/salesAnalytics";
 import { Button } from "@/components/ui/button";
-import {
-  Check,
-  Sparkles,
-  Loader2,
-  DoorOpen,
-  Mail,
-  BookHeart,
-  CalendarClock,
-  HeartPulse,
-  Layers,
-  Compass,
-} from "lucide-react";
-import { motion } from "framer-motion";
-import templeBannerAsset from "@/assets/homepage-banner.webp.asset.json";
-const templeBanner = templeBannerAsset.url;
+import { CalendarClock, DoorOpen, Loader2 } from "lucide-react";
+import { SalesHero } from "@/components/sales/SalesHero";
+import { RecognitionSection } from "@/components/sales/RecognitionSection";
+import { TempleDoorPanel } from "@/components/sales/TempleDoorPanel";
+import { TestimonialCard } from "@/components/sales/TestimonialCard";
+import type { Testimonial } from "@/components/sales/TestimonialCard";
+import { MembershipCard } from "@/components/sales/MembershipCard";
+import { FAQAccordion } from "@/components/sales/FAQAccordion";
+import type { FaqItem } from "@/components/sales/FAQAccordion";
+import { StickyMobileCTA } from "@/components/sales/StickyMobileCTA";
+import ProfileDropdown from "@/components/ProfileDropdown";
+import finalThreshold from "@/assets/sales-final-threshold.jpg";
 import guidesPhoto from "@/assets/julie-tash-guides.jpg";
 import areekeeraThumbnail from "@/assets/areekeera-thumbnail.png.asset.json";
-import ProfileDropdown from "@/components/ProfileDropdown";
+import livingPatternImage from "@/assets/living-pattern-banner.png.asset.json";
+import doorRemembrance from "@/assets/door-of-remembrance-4.png.asset.json";
+import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
+import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
 
 type OfferState = "pre_launch" | "founding" | "standard";
 
@@ -40,12 +41,41 @@ interface MembershipOffer {
   server_time: string;
 }
 
-// External Shopify storefront URL is not yet configured. When the real
-// URL is available, set it here (e.g. https://<store>.myshopify.com or
-// a custom shop domain). While null, the "Visit the Temple Shop" link is
-// disabled and clearly marked as coming soon — we do not link back to
-// the app itself.
-const SHOPIFY_URL: string | null = null;
+/**
+ * Real member testimonials only. This list is intentionally empty until real
+ * words are supplied — the public page must never show fabricated or
+ * placeholder quotes. While it is empty, the section renders for admins only
+ * as a reminder that it is awaiting real content.
+ */
+const TESTIMONIALS: Testimonial[] = [];
+
+const FAQ_ITEMS: FaqItem[] = [
+  {
+    question: "What if I do not know where to begin?",
+    answer:
+      "Begin with the AreekeerA® Guide. You can describe what life feels like right now, and it will help you choose a small, supported next experiment.",
+  },
+  {
+    question: "Do I need to be spiritual to belong here?",
+    answer:
+      "No. The Temple makes room for intuitive, emotional, embodied, relational, and practical ways of knowing. You decide what is meaningful and useful in your own life.",
+  },
+  {
+    question: "What if I am already overwhelmed?",
+    answer:
+      "You do not need to do everything. The Temple is designed for return. Start with one small resource, one card, one reflection, or one practice that meets the moment you are in.",
+  },
+  {
+    question: "Is this medical or mental-health treatment?",
+    answer:
+      "No. The Temple offers self-directed reflective, spiritual, and restorative practices. It does not diagnose, treat, or replace medical, mental-health, emergency, or crisis care.",
+  },
+  {
+    question: "Can I cancel?",
+    answer:
+      "Yes. You can pause or cancel your membership at any time from your account. Pausing stops your billing and holds your account while you take a break; cancelling ends your membership and your access to Temple content immediately, and you can rejoin later. Membership is billed monthly in AUD.",
+  },
+];
 
 const formatAudDate = (iso: string | null) => {
   if (!iso) return "";
@@ -63,15 +93,15 @@ const Membership = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
-  const {
-    isActiveMember,
-    isAdmin,
-    loading: memberLoading,
-  } = useMemberState();
+  const { isAdmin, loading: memberLoading } = useMemberState();
 
   const [offer, setOffer] = useState<MembershipOffer | null>(null);
   const [offerLoading, setOfferLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  useEffect(() => {
+    trackSalesEvent("sales_page_view");
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -92,10 +122,7 @@ const Membership = () => {
 
   useEffect(() => {
     // Any authenticated user landing on the public sales page should be
-    // sent into the app. Preserve an explicitly saved intended destination
-    // (e.g. a protected route the user tried to open before signing in).
-    // The sales page remains reachable to unauthenticated visitors via
-    // direct navigation to `/`.
+    // sent into the app, preserving a saved intended destination.
     if (!authLoading && user) {
       const saved = sessionStorage.getItem("postLoginRedirect");
       if (saved && saved.startsWith("/") && saved !== "/") {
@@ -107,8 +134,25 @@ const Membership = () => {
     }
   }, [authLoading, memberLoading, user, navigate]);
 
-  const startCheckout = async () => {
+  const state: OfferState = offer?.state ?? "pre_launch";
+  const priceAud = useMemo(() => {
+    if (!offer?.unit_amount_cents) return null;
+    return Math.round(offer.unit_amount_cents / 100);
+  }, [offer]);
+  const openingDate = formatAudDate(
+    offer?.founding_window_opens_at ?? "2026-09-14T00:00:00Z",
+  );
+
+  const startCheckout = async (
+    placement: "hero" | "midpage" | "final" | "pricing",
+  ) => {
+    if (placement === "hero") trackSalesEvent("hero_enter_temple_clicked");
+    if (placement === "midpage") trackSalesEvent("midpage_enter_temple_clicked");
+    if (placement === "final") trackSalesEvent("final_enter_temple_clicked");
+
     if (!offer?.checkout_available) return;
+    trackSalesEvent("membership_checkout_started", { placement });
+
     if (!user) {
       sessionStorage.setItem("pendingCheckoutOffer", offer.tier);
       navigate("/auth?mode=signup");
@@ -146,15 +190,6 @@ const Membership = () => {
     }
   };
 
-  const state: OfferState = offer?.state ?? "pre_launch";
-  const priceAud = useMemo(() => {
-    if (!offer?.unit_amount_cents) return null;
-    return Math.round(offer.unit_amount_cents / 100);
-  }, [offer]);
-  const openingDate = formatAudDate(
-    offer?.founding_window_opens_at ?? "2026-09-14T00:00:00Z",
-  );
-
   const loading = authLoading || offerLoading || (user && memberLoading);
   if (loading) {
     return (
@@ -164,622 +199,445 @@ const Membership = () => {
     );
   }
 
-  const HeroCta = () => {
+  const EnterTemple = ({
+    placement,
+    size = "lg",
+    className,
+  }: {
+    placement: "hero" | "midpage" | "final" | "pricing";
+    size?: "default" | "lg";
+    className?: string;
+  }) => {
     if (state === "pre_launch") {
-      // Pre-launch: intentional launch-state chip (informational, not a
-      // disabled control). Sign In remains available alongside via the
-      // parent layout.
       return (
         <div
-          className="inline-flex items-center gap-2 rounded-full border border-primary/50 bg-primary/10 px-5 py-2.5 text-sm md:text-base text-foreground"
+          className={`inline-flex items-center gap-2 rounded-full border border-primary/50 bg-primary/10 px-5 py-2.5 text-sm text-foreground ${className ?? ""}`}
           role="status"
-          aria-label={`Doors open ${openingDate}`}
         >
-          <CalendarClock className="w-4 h-4 text-primary" aria-hidden />
+          <CalendarClock className="h-4 w-4 text-primary" aria-hidden />
           <span className="font-serif tracking-wide">
             Doors open {openingDate}
           </span>
         </div>
       );
     }
-    const label =
-      state === "founding"
-        ? user
-          ? "Become a Founding Member"
-          : `Join as a Founding Member — A$${priceAud}/mo`
-        : user
-          ? "Join The Temple"
-          : `Join The Temple — A$${priceAud}/mo`;
     return (
-      <Button size="lg" onClick={startCheckout} disabled={checkoutLoading}>
+      <Button
+        size={size}
+        className={className}
+        onClick={() => startCheckout(placement)}
+        disabled={checkoutLoading}
+      >
         {checkoutLoading ? (
-          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
         ) : (
-          <DoorOpen className="w-4 h-4 mr-2" />
+          <DoorOpen className="mr-2 h-4 w-4" aria-hidden />
         )}
-        {label}
+        Enter The Temple
       </Button>
     );
   };
 
+  const showFounding = state !== "standard";
+  const standardPrice =
+    state === "standard" && priceAud ? `$${priceAud} AUD` : "$50 AUD";
+
   return (
-    <div className="min-h-screen bg-background">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border/50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
-          <span className="font-serif text-sm md:text-base text-foreground/80">
+    <div className="min-h-screen bg-background pb-24 md:pb-0">
+      {/* Quiet threshold header — no site navigation on this page. */}
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/85 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-5 py-3 md:px-8">
+          <a
+            href="#top"
+            className="font-serif text-sm text-foreground/85 hover:text-foreground md:text-base"
+          >
             The Temple of Sustainment
-          </span>
-          <div className="flex items-center gap-3">
+          </a>
+          <div className="flex items-center gap-4">
             {user ? (
-              <>
-                {isAdmin && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => navigate("/admin")}
-                  >
-                    Admin
-                  </Button>
-                )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate("/temple")}
-                >
-                  Enter Temple
-                </Button>
-                <ProfileDropdown />
-              </>
+              <ProfileDropdown />
             ) : (
-              <Button
-                variant="outline"
-                size="sm"
+              <button
+                type="button"
                 onClick={() => navigate("/auth")}
+                className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
               >
-                Sign In
-              </Button>
+                Sign in
+              </button>
             )}
+            <EnterTemple placement="hero" size="default" className="hidden sm:inline-flex" />
           </div>
         </div>
       </header>
 
-      <section className="relative overflow-hidden pt-20">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-background" />
-        <div className="relative max-w-5xl mx-auto px-4 py-16 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <img
-              src={templeBanner}
-              alt="The Temple of Sustainment"
-              className="w-full h-40 sm:h-56 object-cover object-center rounded-lg mb-8"
-            />
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif mb-6 text-foreground leading-tight">
-              The Temple of Sustainment
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
-              A sacred, trauma-informed sanctuary for remembrance, healing, and
-              becoming — offered by Julie &amp; Tash Lewin.
-            </p>
+      <main id="top">
+        {/* 1. Hero — the threshold */}
+        <SalesHero cta={<EnterTemple placement="hero" />} />
 
-            <div className="flex flex-wrap justify-center gap-3">
-              <HeroCta />
-              {!user && (
-                <Button
-                  variant="ghost"
-                  size="lg"
-                  onClick={() => navigate("/auth")}
-                >
-                  Sign In
-                </Button>
-              )}
-            </div>
-          </motion.div>
-        </div>
-      </section>
+        {/* 2. Recognition */}
+        <RecognitionSection />
 
-      <section className="py-20 px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-serif mb-3 text-foreground">
-              One membership. The whole Temple.
+        {/* 3. The real promise */}
+        <section
+          aria-labelledby="promise-heading"
+          className="px-5 py-16 md:px-8 md:py-28"
+        >
+          <div className="mx-auto max-w-4xl">
+            <h2
+              id="promise-heading"
+              className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
+            >
+              Not more information. A different relationship with your life.
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              A single active membership opens every practice, teaching, and
-              live gathering inside the app. Enter as often as you need.
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              The Temple does not ask you to transcend what hurts, think
+              positively, or become endlessly self-aware.
             </p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-4">
-            {[
-              {
-                title: "Card decks & readings",
-                body: "Draw and save readings from the full library of oracle decks and Sacred Spreads.",
-              },
-              {
-                title: "Meditations & healing practices",
-                body: "Guided meditations, energy hygiene practices, and somatic tools you can return to.",
-              },
-              {
-                title: "Healing templates & resources",
-                body: "Journal templates, boundary and nervous-system tools, and reference libraries.",
-              },
-              {
-                title: "Courses & learning journeys",
-                body: "Short courses and longer paths through Remembrance, Devotion, and Communion.",
-              },
-              {
-                title: "The AreekeerA® Guide",
-                body: "Find one small, supported next experiment, gently paced to your capacity.",
-              },
-              {
-                title: "Live offerings each month",
-                body: "At least one live class, reading, meditation, or workshop each month — frequency varies with Julie's health and capacity.",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="rounded-lg border border-border/60 bg-card/40 p-5 flex gap-3"
-              >
-                <Check className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                <div>
-                  <h3 className="font-serif text-lg text-foreground mb-1">
-                    {item.title}
+            <p className="mt-5 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              It gives you a private and living place to recognise what is true,
+              receive support that meets the moment, try something small enough
+              to be real, and return to the evidence of your own life.
+            </p>
+
+            <div className="mt-12 grid gap-8 md:mt-16 md:grid-cols-3 md:gap-10">
+              {[
+                {
+                  title: "Notice",
+                  body: "What is here in your body, emotions, relationships, and inner world?",
+                },
+                {
+                  title: "Meet",
+                  body: "What story, protection, pattern, or old learning may be shaping this moment?",
+                },
+                {
+                  title: "Choose",
+                  body: "What is one supported, workable response you can make from here?",
+                },
+              ].map((step) => (
+                <div key={step.title} className="border-t border-primary/40 pt-5">
+                  <h3 className="text-[0.72rem] uppercase tracking-[0.3em] text-primary">
+                    {step.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {item.body}
+                  <p className="mt-4 text-base leading-relaxed text-foreground/85">
+                    {step.body}
                   </p>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* AreekeerA® The Method — the philosophy beneath the Temple */}
-      <section className="relative py-24 px-4 overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-b from-primary/10 via-background to-primary/5"
-        />
-        <div className="relative max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 text-primary mb-4">
-              <Sparkles className="w-4 h-4" />
-              <span className="uppercase text-xs tracking-[0.25em]">
-                The philosophy beneath The Temple
-              </span>
+              ))}
             </div>
-            <h2 className="text-4xl md:text-5xl font-serif mb-5 text-foreground leading-tight">
-              AreekeerA<sup className="text-xl align-super">®</sup> The Method
-            </h2>
-            <p className="text-lg text-foreground/85 max-w-3xl mx-auto leading-relaxed">
-              AreekeerA<sup>®</sup> The Method is Julie Lewin's body-based
-              healing modality, channelled and developed through more than
-              forty years of practice and client work. It approaches the body
-              as an intelligent, communicative system and invites us to listen
-              to symptoms in context — not as isolated problems to overpower,
-              but as part of the body's physical, emotional, neurological and
-              energetic history.
-            </p>
-            <p className="text-lg text-foreground/85 max-w-3xl mx-auto leading-relaxed mt-5">
-              AreekeerA<sup>®</sup> is one of the foundational bodies of work
-              within The Temple. Members encounter it most directly through
-              The AreekeerA® Guide, guided creative visualisations,
-              meditations, somatic and energetic practices, reflective
-              processes, and Julie and Tash's teaching.
-            </p>
-            <p className="text-base text-foreground/80 max-w-3xl mx-auto leading-relaxed mt-5 italic">
-              Julie has appeared twice on the television program The
-              Extraordinary, and her guided meditations have received more
-              than 1.1 million listens on Insight Timer.
-            </p>
-          </div>
 
-          <div className="grid lg:grid-cols-5 gap-10 items-center mb-16">
-            <div className="lg:col-span-2">
-              <div className="relative rounded-2xl overflow-hidden border border-primary/30 shadow-[0_20px_60px_-20px_hsl(var(--primary)/0.4)]">
-                <img
-                  src={areekeeraThumbnail.url}
-                  alt="AreekeerA® — Energy Medicine Codes"
-                  className="w-full h-auto object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
-              </div>
-            </div>
-            <div className="lg:col-span-3 space-y-6">
-              <div>
-                <h3 className="font-serif text-2xl text-foreground mb-2">
-                  A different way of listening to the body
-                </h3>
-                <p className="text-foreground/85 leading-relaxed">
-                  Rather than approaching a symptom in isolation, AreekeerA<sup>®</sup>{" "}
-                  explores how trauma, stress, unresolved emotional
-                  experiences and long-held protective responses may be
-                  reflected through the body and nervous system.
-                </p>
-                <p className="text-foreground/85 leading-relaxed mt-4">
-                  The Method does not ask the system to push harder than it
-                  can safely hold. Practices are approached according to
-                  present severity, available capacity and safety — beginning
-                  with grounding and stabilisation before moving through
-                  processing and integration.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            {[
-              {
-                icon: <Sparkles className="w-5 h-5" />,
-                title: "The body is communicative",
-                body: "The body is approached as an intelligent system whose symptoms and patterns can be explored within the wider context of a person's lived experience.",
-              },
-              {
-                icon: <HeartPulse className="w-5 h-5" />,
-                title: "Safety before intensity",
-                body: "When the system is under strain, AreekeerA® prioritises grounding and stabilisation. The intention is to work gently, without force or bypassing.",
-              },
-              {
-                icon: <Layers className="w-5 h-5" />,
-                title: "Body, nervous system and energy",
-                body: "The Method considers physical experience alongside emotional, neurological, spiritual and energetic patterns rather than treating each as entirely separate.",
-              },
-              {
-                icon: <Compass className="w-5 h-5" />,
-                title: "Grounding → processing → integration",
-                body: "Practices follow a considered sequence: create sufficient grounding, meet what is present within available capacity, and allow time for integration.",
-              },
-            ].map((p) => (
-              <div
-                key={p.title}
-                className="rounded-xl border border-primary/25 bg-card/50 p-6"
-              >
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/15 text-primary mb-4">
-                  {p.icon}
-                </div>
-                <h3 className="font-serif text-lg text-foreground mb-2">
-                  {p.title}
-                </h3>
-                <p className="text-sm text-foreground/80 leading-relaxed">
-                  {p.body}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="rounded-2xl border border-border/60 bg-card/40 p-6 md:p-8">
-            <h3 className="font-serif text-xl md:text-2xl text-foreground mb-4 text-center">
-              How AreekeerA<sup>®</sup> lives inside The Temple
-            </h3>
-            <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto text-center">
-              The Temple is larger than any one method or tool. It contains
-              card decks, courses, meditations, healing templates, journaling
-              practices and live experiences that offer different ways to
-              reflect, learn and engage.
+            <p className="mt-12 font-serif text-lg italic text-foreground/90">
+              Then you record what happened and return—not to judge yourself,
+              but to learn.
             </p>
-            <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto text-center mt-4">
-              AreekeerA<sup>®</sup> is expressed most directly through
-              The AreekeerA® Guide and the practices it draws together. The
-              Temple's other resources may be used alongside that work as
-              complementary paths of reflection, remembrance and sustainment.
+            <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground">
+              Recognition comes before integration. Integration comes before
+              congruent action.
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* How The AreekeerA® Guide applies the Method */}
-      <section className="py-20 px-4 bg-muted/30">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 text-primary mb-3">
-              <Sparkles className="w-4 h-4" />
-              <span className="uppercase text-xs tracking-[0.2em]">
-                One practical expression of the Method
-              </span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
-              The AreekeerA<sup>®</sup> Guide
-            </h2>
-            <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto">
-              The AreekeerA® Guide is one practical application of AreekeerA<sup>®</sup>{" "}
-              The Method — not the whole Method.
-            </p>
-            <p className="text-foreground/85 leading-relaxed max-w-3xl mx-auto mt-4">
-              You share what you are presently experiencing across the
-              Guide's physical, mental, emotional and spiritual domains,
-              together with severity, your goals and the time you have
-              available. The Guide then assembles a personalised sequence
-              from existing Temple practices, following the grounding →
-              processing → integration flow and applying trauma-informed
-              safety guardrails.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                title: "Describe what is present",
-                body: "Share your symptoms, their severity, your goals and the time you have. The Guide uses this information to understand your submitted state; it does not diagnose its medical cause.",
-              },
-              {
-                title: "Receive a suggested protocol",
-                body: "The Guide assembles a sequence of relevant Temple practices, such as meditations, visualisations, somatic tools, rituals and reflective processes.",
-              },
-              {
-                title: "Practise at your own pace",
-                body: "Save your protocol, return to it and adjust your engagement as your capacity changes. The protocol is an educational, self-directed suggestion — not a medical prescription.",
-              },
-            ].map((s, i) => (
-              <div
-                key={s.title}
-                className="rounded-xl border border-border/60 bg-card/40 p-6"
-              >
-                <div className="text-xs uppercase tracking-widest text-primary mb-2">
-                  Step {i + 1}
-                </div>
-                <h3 className="font-serif text-lg text-foreground mb-2">
-                  {s.title}
-                </h3>
-                <p className="text-sm text-foreground/80 leading-relaxed">
-                  {s.body}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="max-w-3xl mx-auto mt-10 rounded-xl border border-border/60 bg-background/60 p-5">
-            <p className="text-sm text-muted-foreground leading-relaxed text-center">
-              The AreekeerA<sup>®</sup> Guide does not diagnose
-              conditions, determine medical causes, prescribe treatment or
-              replace professional care. It offers educational and
-              self-directed practice suggestions from The Temple's resource
-              library. Seek qualified professional assistance for medical
-              concerns, emergencies or crises.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 px-4 bg-muted/30">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-serif mb-10 text-foreground">
-            How to begin
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8 text-left">
-            {[
-              {
-                step: "One",
-                title: "Enter",
-                body: "Cross the threshold — no assessments, no rush.",
-              },
-              {
-                step: "Two",
-                title: "Choose what supports you now",
-                body: "A card, a meditation, a template, a live gathering — begin wherever feels honest.",
-              },
-              {
-                step: "Three",
-                title: "Continue at your own pace",
-                body: "Return as often as you need. Your practice waits for you.",
-              },
-            ].map((s) => (
-              <div key={s.step}>
-                <div className="text-sm uppercase tracking-widest text-primary mb-2">
-                  {s.step}
-                </div>
-                <h3 className="font-serif text-xl mb-2 text-foreground">
-                  {s.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {s.body}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {(state === "founding" || state === "pre_launch") && (
-        <section className="py-16 px-4">
-          <div className="max-w-3xl mx-auto rounded-2xl border border-primary/30 bg-gradient-to-b from-primary/10 to-background p-8 md:p-12">
-            <div className="flex items-center gap-2 text-primary mb-3">
-              <Sparkles className="w-5 h-5" />
-              <span className="uppercase text-xs tracking-widest">
-                {state === "pre_launch"
-                  ? "Founding invitation — opens 14 September 2026"
-                  : "Founding invitation"}
-              </span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
-              {state === "pre_launch"
-                ? "Founding Membership — A$35 AUD / month"
-                : "Enter as a Founding Member — A$35 AUD / month"}
-            </h2>
-            {state === "pre_launch" && (
-              <p className="text-foreground/85 leading-relaxed mb-6">
-                Founding Membership opens{" "}
-                <span className="text-foreground">
-                  14 September 2026 at 10:00am AEST
-                </span>
-                . Checkout is not available before that time.
-              </p>
-            )}
-            <ul className="space-y-3 mb-8 text-foreground/90">
-              <li className="flex gap-3">
-                <Check className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                <span>
-                  Every practice, course, deck, and live gathering inside the
-                  app is included in your membership.
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <Check className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                <span>
-                  Your A$35 monthly price is retained for as long as your
-                  membership remains continuously active.
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <Check className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                <span>
-                  If a payment fails, a 15-day recovery period keeps your
-                  Founding price intact. A successful recovery in that window
-                  preserves continuity.
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <Check className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                <span>
-                  Permanent cancellation forfeits the Founding price. Rejoining
-                  later uses the then-current standard price (currently A$50
-                  AUD / month).
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <Check className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                <span>
-                  Founding Members carry the Founder badge as recognition of
-                  arriving at the beginning. It is recognition only and does
-                  not change access.
-                </span>
-              </li>
-            </ul>
-            <HeroCta />
-            {state === "founding" && (
-              <p className="text-xs text-muted-foreground mt-4">
-                Founding window closes{" "}
-                {formatAudDate(offer?.founding_window_closes_at ?? null)}.
-              </p>
-            )}
           </div>
         </section>
-      )}
 
-      <section className="py-20 px-4 bg-muted/30">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-serif mb-3 text-foreground">
-              The Physical Temple
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              For those who wish to hold the work in their hands. These are
-              separate, physical offerings ordered from the Temple's shop —
-              they are not part of app membership.
-            </p>
-          </div>
-          <p className="text-xs uppercase tracking-widest text-primary/80 text-center mb-8">
-            Every physical piece is handprinted and handmade
-          </p>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Mail,
-                title: "Snail Mail",
-                price: "A$20 AUD / month",
-                items: [
-                  "A letter from Julie & Tash",
-                  "A shared three-card collective reading",
-                  "One journal page for reflecting on the reading",
-                  "Three stickers for each card in the reading",
-                ],
-              },
-              {
-                icon: BookHeart,
-                title: "Journal Box",
-                price: "A$50 AUD / month",
-                items: [
-                  "Fourteen double-sided journal pages",
-                  "Month one: handmade hard front & back cover with binder rings — later months arrive as pages",
-                  "One double-sided artwork unique to that month's archetype",
-                  "Three random stickers from the monthly artwork",
-                  "A letter from Julie & Tash",
-                  "A shared three-card collective reading",
-                  "Three stickers for each reading card",
-                ],
-              },
-              {
-                icon: BookHeart,
-                title: "Personalised Journal Box",
-                price: "A$200 AUD / month",
-                items: [
-                  "Fourteen double-sided journal pages",
-                  "Month one: handmade hard front and back cover with binder rings; later months arrive as pages",
-                  "One double-sided artwork unique to that month's archetype",
-                  "Three random stickers from the monthly artwork",
-                  "A letter from Julie & Tash",
-                  "A personal three-card reading based on your submitted question",
-                  "Three stickers for each card in your personal reading",
-                  "App access for the month paid",
-                ],
-              },
-            ].map(({ icon: Icon, title, price, items }) => (
-              <div
-                key={title}
-                className="rounded-lg border border-border/60 bg-card/40 p-6 flex flex-col"
+        {/* 4. What awaits inside */}
+        <section
+          aria-labelledby="inside-heading"
+          className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-28"
+        >
+          <div className="mx-auto max-w-6xl">
+            <div className="max-w-3xl">
+              <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">
+                What awaits inside
+              </p>
+              <h2
+                id="inside-heading"
+                className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
               >
-                <Icon className="w-6 h-6 text-primary mb-3" aria-hidden />
-                <h3 className="font-serif text-lg mb-1 text-foreground">
-                  {title}
-                </h3>
-                <p className="text-sm text-primary font-medium mb-4">
-                  {price}
-                </p>
-                <ul className="space-y-2 text-sm text-foreground/80 leading-relaxed">
-                  {items.map((it) => (
-                    <li key={it} className="flex gap-2">
-                      <Check className="w-4 h-4 text-primary/80 mt-0.5 flex-shrink-0" />
-                      <span>{it}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <div className="text-center mt-10">
-            {SHOPIFY_URL ? (
-              <Button variant="outline" asChild>
-                <a
-                  href={SHOPIFY_URL}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Visit the Temple Shop
-                </a>
-              </Button>
-            ) : (
-              <div className="inline-flex flex-col items-center gap-2">
-                <Button variant="outline" disabled>
-                  Temple Shop — coming soon
-                </Button>
-                <p className="text-xs text-muted-foreground max-w-md">
-                  The physical offerings are ordered from the Temple's
-                  external shop, which is being prepared. The link will
-                  appear here once it is live.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+                A Temple with many doors. One living practice.
+              </h2>
+            </div>
 
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif mb-10 text-center text-foreground">
-            Your Guides
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8 items-start">
-            <div className="flex justify-center">
-              <img
-                src={guidesPhoto}
-                alt="Julie and Tash Lewin"
-                className="w-full object-cover grayscale rounded-md"
+            <div className="mt-14 space-y-16 md:mt-20 md:space-y-24">
+              <TempleDoorPanel
+                eyebrow="The AreekeerA® Guide"
+                title="Not sure what you need today?"
+                body="Tell the Guide what life feels like right now. It helps you choose a small, sequenced pathway through Temple resources—what to try, in what order, and why it may meet this particular moment."
+                image={areekeeraThumbnail.url}
+                imageAlt="The AreekeerA Guide inside The Temple, where a member describes what life feels like right now."
+              />
+              <TempleDoorPanel
+                reverse
+                eyebrow="The Living Pattern Lab"
+                title="A private laboratory for what is true"
+                body="A private place to notice what is true, become curious about the meaning being made, practise a different choice, and gather evidence from what happens next."
+                steps={["Pause", "Perceive", "Practice"]}
+                image={livingPatternImage.url}
+                imageAlt="The Living Pattern Lab inside The Temple, with its Pause, Perceive and Practice lenses."
+              />
+              <TempleDoorPanel
+                eyebrow="The Door of Remembrance"
+                title="Rituals, card decks, and courses"
+                body="For exploring the patterns, stories, beliefs, inherited meanings, and protector roles shaping your life."
+                image={doorRemembrance.url}
+                imageAlt="The Door of Remembrance, holding rituals, card decks and courses."
+              />
+              <TempleDoorPanel
+                reverse
+                eyebrow="The Door of Devotion"
+                title="Returning to your body and steadiness"
+                body="Guided meditations, energy-medicine practices, somatic rituals, recipes, and restorative resources for returning to your body, nervous system, and inner steadiness."
+                note="These are self-directed reflective and restorative practices. They do not diagnose, treat, or cure any health condition, and they do not replace medical or mental-health care."
+                image={doorDevotion.url}
+                imageAlt="The Door of Devotion, holding guided meditations and restorative practices."
+              />
+              <TempleDoorPanel
+                eyebrow="The Door of Communion"
+                title="Live gatherings and the Mirror Exchange"
+                body="Live readings, classes, workshops, replays, and the Mirror Exchange: a peer-held space where another member can hold the mirror while you listen for your own revelation."
+                image={doorCommunion.url}
+                imageAlt="The Door of Communion, holding live readings, classes, workshops and replays."
               />
             </div>
+
+            <div className="mt-16 text-center">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => {
+                  trackSalesEvent("midpage_enter_temple_clicked");
+                  document
+                    .getElementById("membership")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                See what awaits inside
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Why this is different */}
+        <section
+          aria-labelledby="different-heading"
+          className="px-5 py-16 md:px-8 md:py-28"
+        >
+          <div className="mx-auto max-w-4xl">
+            <h2
+              id="different-heading"
+              className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
+            >
+              You do not need to heal perfectly to live differently.
+            </h2>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              The Temple is not built around the fantasy that one insight, one
+              card, one meditation, or one decision will solve a life.
+            </p>
+            <p className="mt-6 font-serif text-2xl text-foreground">
+              It is built around return.
+            </p>
+            <ul className="mt-8 space-y-5">
+              {[
+                "Return when the same reaction appears.",
+                "Return when a symptom or season asks for more care.",
+                "Return when your old certainty has made the present feel smaller than it is.",
+                "Return when you want to remember that a feeling can be information without becoming a verdict.",
+              ].map((line) => (
+                <li
+                  key={line}
+                  className="border-l border-primary/40 pl-6 text-base leading-relaxed text-foreground/85 sm:text-lg"
+                >
+                  {line}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-10 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              Over time, you begin to see what steadies you, what narrows your
+              choices, what your life is asking for, and what becoming more like
+              yourself actually looks like in practice.
+            </p>
+            <p className="mt-10 max-w-2xl font-serif text-lg italic text-foreground/90">
+              Change becomes possible when the conditions around a woman change.
+            </p>
+          </div>
+        </section>
+
+        {/* 6. Who it is for / not for */}
+        <section
+          aria-labelledby="fit-heading"
+          className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-28"
+        >
+          <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-2 md:gap-16">
             <div>
-              <p className="text-foreground/90 leading-relaxed mb-4">
+              <h2
+                id="fit-heading"
+                className="font-serif text-[1.7rem] leading-tight text-foreground sm:text-3xl"
+              >
+                The Temple may be for you if…
+              </h2>
+              <ul className="mt-8 space-y-6 text-base leading-relaxed text-foreground/85">
+                {[
+                  "You want to understand the connection between what you feel, what you have lived through, and what you do next.",
+                  "You are drawn to spiritual and intuitive ways of knowing, but want them held alongside your human life rather than above it.",
+                  "You want support that is tender without being vague, and practical without flattening your inner world.",
+                  "You want to build a personal body of evidence about what helps you feel more steady, clear, and able to choose.",
+                  "You want a place to return to—not another programme you must complete perfectly.",
+                ].map((line) => (
+                  <li key={line} className="border-l border-primary/40 pl-5">
+                    {line}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-serif text-[1.7rem] leading-tight text-foreground sm:text-3xl">
+                The Temple is not…
+              </h3>
+              <ul className="mt-8 space-y-6 text-base leading-relaxed text-foreground/85">
+                {[
+                  "A substitute for medical, mental-health, emergency, or crisis care.",
+                  "A promise of diagnosis, cure, or guaranteed relief.",
+                  "A demand to be calm, positive, spiritual, or “healed.”",
+                  "A performance of self-improvement.",
+                  "A place where someone else tells you who you are.",
+                ].map((line) => (
+                  <li key={line} className="border-l border-border pl-5">
+                    {line}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* 7. Proof — real testimonials only */}
+        {(TESTIMONIALS.length > 0 || isAdmin) && (
+          <section
+            aria-labelledby="proof-heading"
+            className="px-5 py-16 md:px-8 md:py-28"
+          >
+            <div className="mx-auto max-w-5xl">
+              <h2
+                id="proof-heading"
+                className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
+              >
+                Women are finding their way back to themselves.
+              </h2>
+              {TESTIMONIALS.length > 0 ? (
+                <div className="mt-10 grid gap-6 md:grid-cols-2">
+                  {TESTIMONIALS.map((t) => (
+                    <TestimonialCard key={t.quote} testimonial={t} />
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-8 rounded-2xl border border-dashed border-primary/50 bg-card/40 p-7">
+                  <p className="text-[0.68rem] uppercase tracking-[0.28em] text-primary">
+                    Visible to admins only
+                  </p>
+                  <p className="mt-3 text-base leading-relaxed text-foreground/85">
+                    This section is waiting for real member testimonials. It
+                    stays hidden from visitors until three to five real quotes
+                    are added — each one foregrounding a lived shift, such as
+                    having language for a reaction before acting from it,
+                    feeling less alone with a difficult pattern, returning to a
+                    practice during a hard week, moving from self-punishment to
+                    curiosity, or making one clearer boundary or choice.
+                  </p>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* 8. Membership invitation */}
+        <section
+          id="membership"
+          aria-labelledby="membership-heading"
+          className="scroll-mt-20 border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-28"
+        >
+          <div className="mx-auto max-w-5xl">
+            {TESTIMONIALS.length > 0 && (
+              <TestimonialCard
+                testimonial={TESTIMONIALS[0]}
+                className="mb-12 mx-auto max-w-2xl"
+              />
+            )}
+            <h2
+              id="membership-heading"
+              className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
+            >
+              Enter The Temple.
+            </h2>
+            <p className="mt-6 max-w-3xl text-base leading-relaxed text-foreground/85 sm:text-lg">
+              Your membership gives you full access to every Door, every
+              practice, every course, the Living Pattern Lab, card decks, live
+              offerings and replays, and the support available for the season you
+              are actually in.
+            </p>
+            <p className="mt-5 font-serif text-xl italic text-foreground/90">
+              A living place to return to.
+            </p>
+
+            <div className="mt-12 grid gap-6 md:grid-cols-2">
+              <MembershipCard
+                label="Membership"
+                price={`${standardPrice} / month`}
+                cadence="Billed monthly in AUD"
+                lines={[
+                  "Full access to every Door and every practice inside The Temple.",
+                  "The AreekeerA® Guide, the Living Pattern Lab, courses, card decks and readings.",
+                  "Live readings, classes, workshops and replays.",
+                  "Pause or cancel at any time from your account.",
+                ]}
+                cta={<EnterTemple placement="pricing" />}
+              />
+              {showFounding && (
+                <MembershipCard
+                  highlight
+                  label="Founding Beta"
+                  price="$35 AUD / month"
+                  cadence="Billed monthly in AUD"
+                  lines={[
+                    "Available until 14 December 2026.",
+                    "Your founding rate remains while your membership stays active.",
+                    "If a payment fails, a 15-day recovery period keeps your founding rate intact.",
+                    "Cancelling permanently forfeits the founding rate; rejoining later uses the then-current standard price.",
+                    "Founding members carry the Founder badge as recognition only; it does not change access.",
+                  ]}
+                  cta={<EnterTemple placement="pricing" />}
+                  footnote={
+                    state === "pre_launch"
+                      ? `Founding membership opens ${openingDate}.`
+                      : undefined
+                  }
+                />
+              )}
+            </div>
+
+            <p className="mt-8 font-serif text-sm italic text-muted-foreground">
+              Begin where life is asking you to begin.
+            </p>
+          </div>
+        </section>
+
+        {/* Your guides */}
+        <section
+          aria-labelledby="guides-heading"
+          className="px-5 py-16 md:px-8 md:py-24"
+        >
+          <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-3">
+            <div>
+              <h2
+                id="guides-heading"
+                className="mb-6 font-serif text-[1.7rem] leading-tight text-foreground sm:text-3xl"
+              >
+                Your guides
+              </h2>
+              <img
+                src={guidesPhoto}
+                alt="Julie and Tash Lewin, the guides of The Temple of Sustainment"
+                loading="lazy"
+                className="w-full rounded-2xl object-cover grayscale"
+              />
+            </div>
+            <div className="text-base leading-relaxed text-foreground/85">
+              <p className="mb-4">
                 <span className="font-semibold text-foreground">
                   Julie Lewin
                 </span>{" "}
@@ -788,87 +646,92 @@ const Membership = () => {
                 supports the release of long-held survival responses so the
                 system can return to safety, repair, and resilience.
               </p>
-              <p className="text-foreground/90 leading-relaxed">
+              <p>
                 Julie channelled and developed the AreekeerA<sup>®</sup>{" "}
                 Modality through more than forty years of practice and client
-                work. She has appeared twice on the television program The
-                Extraordinary, and her guided meditations have received more
-                than 1.1 million listens on Insight Timer.
+                work.
               </p>
             </div>
-            <div>
-              <p className="text-foreground/90 leading-relaxed mb-4">
-                <span className="font-semibold text-foreground">
-                  Tash Lewin
-                </span>{" "}
+            <div className="text-base leading-relaxed text-foreground/85">
+              <p className="mb-4">
+                <span className="font-semibold text-foreground">Tash Lewin</span>{" "}
                 works at the intersection of trauma, identity, and nervous
                 system regulation, helping people understand how protective
                 patterns and energetic contracts quietly shape health.
               </p>
-              <p className="text-foreground/90 leading-relaxed">
-                Through structured, trauma-informed processes, Tash supports
-                the rewriting of identity at both psychological and energetic
+              <p>
+                Through structured, trauma-informed processes, Tash supports the
+                rewriting of identity at both psychological and energetic
                 levels — without force or bypassing.
               </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="py-20 px-4 bg-muted/30">
-        <div className="max-w-3xl mx-auto text-center">
-          {state === "pre_launch" && (
-            <>
-              <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
-                Doors open {openingDate}
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                Founding Membership opens on this date. If you already have an
-                account, you can sign in now.
-              </p>
-            </>
-          )}
-          {state === "founding" && (
-            <>
-              <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
-                Enter The Temple as a Founding Member
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                A$35 AUD / month, retained while your membership remains
-                continuously active.
-              </p>
-            </>
-          )}
-          {state === "standard" && (
-            <>
-              <h2 className="text-3xl md:text-4xl font-serif mb-4 text-foreground">
-                Enter The Temple
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                A$50 AUD / month. Cancel anytime from your account.
-              </p>
-            </>
-          )}
-          <div className="flex flex-wrap justify-center gap-3">
-            <HeroCta />
-            {!user && (
-              <Button
-                variant="ghost"
-                size="lg"
-                onClick={() => navigate("/auth")}
-              >
-                Sign In
-              </Button>
-            )}
+        {/* 9. Final threshold */}
+        <section
+          aria-labelledby="final-heading"
+          className="relative isolate overflow-hidden"
+        >
+          <img
+            src={finalThreshold}
+            alt="An open weathered timber gate in a sandstone wall, opening onto a gravel path through an olive and eucalyptus garden in late afternoon light."
+            loading="lazy"
+            width={1920}
+            height={1088}
+            className="absolute inset-0 -z-10 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 -z-10 bg-[hsl(var(--brand-dark)/0.72)]" aria-hidden />
+          <div className="mx-auto max-w-3xl px-5 py-24 text-center md:px-8 md:py-36">
+            <h2
+              id="final-heading"
+              className="font-serif text-[1.9rem] leading-tight text-on-image sm:text-4xl"
+            >
+              You do not need certainty before you live differently.
+            </h2>
+            <p className="mt-7 text-base leading-relaxed text-on-image/90 sm:text-lg">
+              You need enough curiosity to try one small thing,
+              <br />
+              and enough tenderness to learn from what happens.
+            </p>
+            <div className="mt-10 flex justify-center">
+              <EnterTemple placement="final" />
+            </div>
           </div>
-          <p className="text-xs text-muted-foreground mt-8 max-w-2xl mx-auto">
-            The Temple offers education, reflection, and self-healing
-            practices. It is not a substitute for medical care and makes no
-            guarantees of healing outcomes. All prices shown in AUD, billed
-            monthly.
-          </p>
-        </div>
-      </section>
+        </section>
+
+        {/* 10. FAQ */}
+        <section
+          aria-labelledby="faq-heading"
+          className="px-5 py-16 md:px-8 md:py-28"
+        >
+          <div className="mx-auto max-w-3xl">
+            <h2
+              id="faq-heading"
+              className="mb-8 font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
+            >
+              Questions before you begin
+            </h2>
+            <FAQAccordion
+              items={FAQ_ITEMS}
+              onOpen={(question) =>
+                trackSalesEvent("faq_opened", { question })
+              }
+            />
+            <p className="mt-12 text-xs leading-relaxed text-muted-foreground">
+              The Temple offers self-directed reflective, spiritual, and
+              restorative practices. It does not diagnose, treat, or replace
+              medical, mental-health, emergency, or crisis care, and makes no
+              promise of cure or guaranteed relief. All prices shown in AUD,
+              billed monthly.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <StickyMobileCTA>
+        <EnterTemple placement="final" className="w-full" />
+      </StickyMobileCTA>
     </div>
   );
 };
