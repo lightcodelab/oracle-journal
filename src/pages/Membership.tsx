@@ -7,7 +7,7 @@ import { getStoredAffiliateRef } from "@/lib/affiliateTracking";
 import { useToast } from "@/hooks/use-toast";
 import { trackSalesEvent } from "@/lib/salesAnalytics";
 import { Button } from "@/components/ui/button";
-import { CalendarClock, DoorOpen, Loader2 } from "lucide-react";
+import { DoorOpen, Loader2 } from "lucide-react";
 import { SalesHero } from "@/components/sales/SalesHero";
 import { RecognitionSection } from "@/components/sales/RecognitionSection";
 import { TempleDoorPanel } from "@/components/sales/TempleDoorPanel";
@@ -208,25 +208,23 @@ const Membership = () => {
     size?: "default" | "lg";
     className?: string;
   }) => {
-    if (state === "pre_launch") {
-      return (
-        <div
-          className={`inline-flex items-center gap-2 rounded-full border border-primary/50 bg-primary/10 px-5 py-2.5 text-sm text-foreground ${className ?? ""}`}
-          role="status"
-        >
-          <CalendarClock className="h-4 w-4 text-primary" aria-hidden />
-          <span className="font-serif tracking-wide">
-            Doors open {openingDate}
-          </span>
-        </div>
-      );
-    }
     return (
       <Button
         size={size}
         className={className}
-        onClick={() => startCheckout(placement)}
+        onClick={() => {
+          if (state === "pre_launch") {
+            if (placement === "hero") trackSalesEvent("hero_enter_temple_clicked");
+            if (placement === "midpage") trackSalesEvent("midpage_enter_temple_clicked");
+            if (placement === "final") trackSalesEvent("final_enter_temple_clicked");
+            sessionStorage.setItem("pendingCheckoutOffer", offer?.tier ?? "founding");
+            navigate("/auth?mode=signup");
+            return;
+          }
+          startCheckout(placement);
+        }}
         disabled={checkoutLoading}
+        aria-describedby={state === "pre_launch" ? "opening-date" : undefined}
       >
         {checkoutLoading ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
@@ -299,35 +297,9 @@ const Membership = () => {
               to be real, and return to the evidence of your own life.
             </p>
 
-            <div className="mt-12 grid gap-8 md:mt-16 md:grid-cols-3 md:gap-10">
-              {[
-                {
-                  title: "Notice",
-                  body: "What is here in your body, emotions, relationships, and inner world?",
-                },
-                {
-                  title: "Meet",
-                  body: "What story, protection, pattern, or old learning may be shaping this moment?",
-                },
-                {
-                  title: "Choose",
-                  body: "What is one supported, workable response you can make from here?",
-                },
-              ].map((step) => (
-                <div key={step.title} className="border-t border-primary/40 pt-5">
-                  <h3 className="text-[0.72rem] uppercase tracking-[0.3em] text-primary">
-                    {step.title}
-                  </h3>
-                  <p className="mt-4 text-base leading-relaxed text-foreground/85">
-                    {step.body}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <p className="mt-12 font-serif text-lg italic text-foreground/90">
-              Then you record what happened and return—not to judge yourself,
-              but to learn.
+            <p className="mt-10 max-w-2xl font-serif text-xl italic leading-relaxed text-foreground/90">
+              You do not need to become someone else. You need a place where
+              what is true can be witnessed and tended.
             </p>
             <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground">
               Recognition comes before integration. Integration comes before
@@ -336,7 +308,31 @@ const Membership = () => {
           </div>
         </section>
 
-        {/* 4. What awaits inside */}
+        {/* 4. Notice / Meet / Choose / Record / Return */}
+        <section aria-labelledby="process-heading" className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-24">
+          <div className="mx-auto max-w-6xl">
+            <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">A living practice</p>
+            <h2 id="process-heading" className="max-w-3xl font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">Recognition becomes a way of moving through life.</h2>
+            <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+              {[
+                ["Notice", "What is here in your body, emotions, relationships, and inner world?"],
+                ["Meet", "What story, protection, pattern, or old learning may be shaping this moment?"],
+                ["Choose", "What is one supported, workable response you can make from here?"],
+                ["Record", "What happened when you tried the small thing that felt possible?"],
+                ["Return", "Come back without judgement, and let the evidence of your life teach you."],
+              ].map(([title, body], index) => (
+                <div key={title} className="border-t border-primary/45 pt-5">
+                  <p className="font-serif text-sm text-primary">0{index + 1}</p>
+                  <h3 className="mt-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground">{title}</h3>
+                  <p className="mt-4 text-sm leading-relaxed text-foreground/80">{body}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-12 max-w-3xl font-serif text-lg italic text-foreground/90">Record what happened and return—not to judge yourself, but to learn.</p>
+          </div>
+        </section>
+
+        {/* 5. What awaits inside */}
         <section
           aria-labelledby="inside-heading"
           className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-28"
@@ -458,50 +454,56 @@ const Membership = () => {
           </div>
         </section>
 
-        {/* 6. Who it is for / not for */}
+        {/* The women and Method behind The Temple */}
         <section
-          aria-labelledby="fit-heading"
-          className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-28"
+          aria-labelledby="guides-heading"
+          className="px-5 py-16 md:px-8 md:py-24"
         >
-          <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-2 md:gap-16">
+          <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-3">
             <div>
               <h2
-                id="fit-heading"
-                className="font-serif text-[1.7rem] leading-tight text-foreground sm:text-3xl"
+                id="guides-heading"
+                className="mb-6 font-serif text-[1.7rem] leading-tight text-foreground sm:text-3xl"
               >
-                The Temple may be for you if…
+                The women and Method behind The Temple
               </h2>
-              <ul className="mt-8 space-y-6 text-base leading-relaxed text-foreground/85">
-                {[
-                  "You want to understand the connection between what you feel, what you have lived through, and what you do next.",
-                  "You are drawn to spiritual and intuitive ways of knowing, but want them held alongside your human life rather than above it.",
-                  "You want support that is tender without being vague, and practical without flattening your inner world.",
-                  "You want to build a personal body of evidence about what helps you feel more steady, clear, and able to choose.",
-                  "You want a place to return to—not another programme you must complete perfectly.",
-                ].map((line) => (
-                  <li key={line} className="border-l border-primary/40 pl-5">
-                    {line}
-                  </li>
-                ))}
-              </ul>
+              <img
+                src={guidesPhoto}
+                alt="Julie and Tash Lewin, the guides of The Temple of Sustainment"
+                loading="lazy"
+                className="w-full rounded-2xl object-cover grayscale"
+              />
             </div>
-            <div>
-              <h3 className="font-serif text-[1.7rem] leading-tight text-foreground sm:text-3xl">
-                The Temple is not…
-              </h3>
-              <ul className="mt-8 space-y-6 text-base leading-relaxed text-foreground/85">
-                {[
-                  "A substitute for medical, mental-health, emergency, or crisis care.",
-                  "A promise of diagnosis, cure, or guaranteed relief.",
-                  "A demand to be calm, positive, spiritual, or “healed.”",
-                  "A performance of self-improvement.",
-                  "A place where someone else tells you who you are.",
-                ].map((line) => (
-                  <li key={line} className="border-l border-border pl-5">
-                    {line}
-                  </li>
-                ))}
-              </ul>
+            <div className="text-base leading-relaxed text-foreground/85">
+              <p className="mb-4">
+                <span className="font-semibold text-foreground">
+                  Julie Lewin
+                </span>{" "}
+                is a medical intuitive with over 40 years of experience working
+                with the body as an intelligent, communicative system. Julie
+                channelled and developed the AreekeerA<sup>®</sup> Modality
+                through decades of practice and client work.
+              </p>
+              <p>
+                The AreekeerA<sup>®</sup> Method listens to symptoms and patterns
+                in the context of a woman's physical, emotional, relational,
+                neurological and energetic history—without reducing her to a
+                problem that needs to be overpowered.
+              </p>
+            </div>
+            <div className="text-base leading-relaxed text-foreground/85">
+              <p className="mb-4">
+                <span className="font-semibold text-foreground">Tash Lewin</span>{" "}
+                works at the intersection of trauma, identity, and nervous
+                system regulation, helping women understand how protective
+                patterns and old meanings quietly shape the choices available
+                in the present.
+              </p>
+              <p>
+                Together, Julie and Tash hold intuitive, embodied and practical
+                ways of knowing alongside ordinary human life. Their work asks
+                for curiosity, safety and evidence—not force or bypassing.
+              </p>
             </div>
           </div>
         </section>
@@ -573,6 +575,11 @@ const Membership = () => {
             <p className="mt-5 font-serif text-xl italic text-foreground/90">
               A living place to return to.
             </p>
+            {state === "pre_launch" && (
+              <p id="opening-date" className="mt-4 text-sm text-muted-foreground">
+                The founding invitation opens {openingDate}. Create your account now and your invitation will be waiting.
+              </p>
+            )}
 
             <div className="mt-12 grid gap-6 md:grid-cols-2">
               <MembershipCard
@@ -616,59 +623,60 @@ const Membership = () => {
           </div>
         </section>
 
-        {/* Your guides */}
-        <section
-          aria-labelledby="guides-heading"
-          className="px-5 py-16 md:px-8 md:py-24"
-        >
-          <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-3">
-            <div>
-              <h2
-                id="guides-heading"
-                className="mb-6 font-serif text-[1.7rem] leading-tight text-foreground sm:text-3xl"
-              >
-                Your guides
-              </h2>
-              <img
-                src={guidesPhoto}
-                alt="Julie and Tash Lewin, the guides of The Temple of Sustainment"
-                loading="lazy"
-                className="w-full rounded-2xl object-cover grayscale"
-              />
-            </div>
-            <div className="text-base leading-relaxed text-foreground/85">
-              <p className="mb-4">
-                <span className="font-semibold text-foreground">
-                  Julie Lewin
-                </span>{" "}
-                is a medical intuitive with over 40 years of experience working
-                with the body as an intelligent, communicative system. Her work
-                supports the release of long-held survival responses so the
-                system can return to safety, repair, and resilience.
-              </p>
-              <p>
-                Julie channelled and developed the AreekeerA<sup>®</sup>{" "}
-                Modality through more than forty years of practice and client
-                work.
-              </p>
-            </div>
-            <div className="text-base leading-relaxed text-foreground/85">
-              <p className="mb-4">
-                <span className="font-semibold text-foreground">Tash Lewin</span>{" "}
-                works at the intersection of trauma, identity, and nervous
-                system regulation, helping people understand how protective
-                patterns and energetic contracts quietly shape health.
-              </p>
-              <p>
-                Through structured, trauma-informed processes, Tash supports the
-                rewriting of identity at both psychological and energetic
-                levels — without force or bypassing.
-              </p>
+        {/* 10. Physical Temple — separate from digital membership */}
+        <section aria-labelledby="physical-heading" className="px-5 py-16 md:px-8 md:py-24">
+          <div className="mx-auto max-w-5xl border-t border-primary/40 pt-12">
+            <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">Held in your hands</p>
+            <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
+              <div>
+                <h2 id="physical-heading" className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">The Physical Temple</h2>
+                <p className="mt-5 text-base leading-relaxed text-foreground/80">Separate handmade offerings for those who wish to hold the work in their hands. These are ordered from the Temple shop and are not included in digital membership.</p>
+                <p className="mt-5 text-xs uppercase tracking-[0.22em] text-primary">Every physical piece is handprinted and handmade</p>
+              </div>
+              <div className="divide-y divide-border/70 border-y border-border/70">
+                {[
+                  ["Snail Mail", "A$20 AUD / month", "A letter from Julie & Tash, a shared three-card collective reading, a journal page, and stickers for each card."],
+                  ["Journal Box", "A$50 AUD / month", "Fourteen double-sided journal pages, handmade covers in month one, monthly artwork, stickers, a letter, and a shared three-card reading."],
+                  ["Personalised Journal Box", "A$200 AUD / month", "The Journal Box with a personal three-card reading shaped around your submitted question, plus app access for the month paid."],
+                ].map(([title, price, body]) => (
+                  <div key={title} className="grid gap-2 py-6 sm:grid-cols-[1fr_auto] sm:gap-8">
+                    <div><h3 className="font-serif text-xl text-foreground">{title}</h3><p className="mt-2 text-sm leading-relaxed text-foreground/75">{body}</p></div>
+                    <p className="text-sm font-medium text-primary sm:text-right">{price}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
-        {/* 9. Final threshold */}
+        {/* 11. FAQ */}
+        <section
+          aria-labelledby="faq-heading"
+          className="px-5 py-16 md:px-8 md:py-28"
+        >
+          <div className="mx-auto max-w-3xl">
+            <h2
+              id="faq-heading"
+              className="mb-8 font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
+            >
+              Questions before you begin
+            </h2>
+            <FAQAccordion
+              items={FAQ_ITEMS}
+              onOpen={(question) =>
+                trackSalesEvent("faq_opened", { question })
+              }
+            />
+            <p className="mt-12 text-xs leading-relaxed text-muted-foreground">
+              The Temple offers self-directed reflective, spiritual, and
+              restorative practices. It does not diagnose, treat, or replace
+              medical, mental-health, emergency, or crisis care, and makes no
+              promise of cure or guaranteed relief. All prices shown in AUD,
+              billed monthly.
+            </p>
+          </div>
+        </section>
+        {/* 12. Final threshold */}
         <section
           aria-labelledby="final-heading"
           className="relative isolate overflow-hidden"
@@ -700,33 +708,6 @@ const Membership = () => {
           </div>
         </section>
 
-        {/* 10. FAQ */}
-        <section
-          aria-labelledby="faq-heading"
-          className="px-5 py-16 md:px-8 md:py-28"
-        >
-          <div className="mx-auto max-w-3xl">
-            <h2
-              id="faq-heading"
-              className="mb-8 font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
-            >
-              Questions before you begin
-            </h2>
-            <FAQAccordion
-              items={FAQ_ITEMS}
-              onOpen={(question) =>
-                trackSalesEvent("faq_opened", { question })
-              }
-            />
-            <p className="mt-12 text-xs leading-relaxed text-muted-foreground">
-              The Temple offers self-directed reflective, spiritual, and
-              restorative practices. It does not diagnose, treat, or replace
-              medical, mental-health, emergency, or crisis care, and makes no
-              promise of cure or guaranteed relief. All prices shown in AUD,
-              billed monthly.
-            </p>
-          </div>
-        </section>
       </main>
 
       <StickyMobileCTA>
