@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 interface MembershipCardProps {
   label: string;
-  price: string;
+  price: ReactNode;
   cadence?: string;
   highlight?: boolean;
   lines: string[];
