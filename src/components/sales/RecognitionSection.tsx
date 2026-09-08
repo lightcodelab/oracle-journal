@@ -19,7 +19,7 @@ export function RecognitionSection() {
     >
       <div className="mx-auto max-w-5xl">
         <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">
-          This may be for you
+          The Temple may be for you if…
         </p>
         <h2
           id="recognition-heading"
