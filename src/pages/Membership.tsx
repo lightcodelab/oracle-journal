@@ -7,7 +7,7 @@ import { getStoredAffiliateRef } from "@/lib/affiliateTracking";
 import { useToast } from "@/hooks/use-toast";
 import { trackSalesEvent } from "@/lib/salesAnalytics";
 import { Button } from "@/components/ui/button";
-import { DoorOpen, Loader2 } from "lucide-react";
+import { DoorOpen, Home, Loader2 } from "lucide-react";
 import { SalesHero } from "@/components/sales/SalesHero";
 import { RecognitionSection } from "@/components/sales/RecognitionSection";
 import { TempleDoorPanel } from "@/components/sales/TempleDoorPanel";
