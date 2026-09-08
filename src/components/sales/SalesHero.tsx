@@ -33,15 +33,8 @@ export function SalesHero({ cta, signIn }: SalesHeroProps) {
           </h1>
           <div className="my-5 h-px w-16 bg-primary/80" aria-hidden />
           <p className="max-w-xl text-sm leading-relaxed text-on-image/95 sm:text-base">
-            You may already know why you do what you do. You may have read the
-            books, collected the practices, named the patterns—and still find
-            yourself overwhelmed, reacting from somewhere older, or unsure what
-            to do when life becomes too much.
-          </p>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-on-image/95 sm:text-base">
-            The Temple is a place to return to yourself: to notice what is here,
-            meet what sits beneath it, choose one supported next step, and learn
-            from what happens.
+            The Temple is a place to return to yourself. Notice what is here,
+            meet what sits beneath it, and choose one supported next step.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             {cta}
