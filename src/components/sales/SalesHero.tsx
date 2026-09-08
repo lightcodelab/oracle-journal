@@ -32,7 +32,7 @@ export function SalesHero({ cta, signIn }: SalesHeroProps) {
             You are not broken or a problem to solve.
           </h1>
           <div className="my-5 h-px w-16 bg-primary/80" aria-hidden />
-          <p className="max-w-xl text-sm leading-relaxed text-on-image/95 sm:text-base">
+          <p className="max-w-xl text-sm leading-relaxed text-on-image/95">
             The Temple is a place to return to yourself. Notice what is here,
             meet what sits beneath it, and choose one supported next step.
           </p>
