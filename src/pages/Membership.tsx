@@ -297,31 +297,43 @@ const Membership = () => {
           aria-labelledby="promise-heading"
           className="px-5 py-16 md:px-8 md:py-28"
         >
-          <div className="mx-auto max-w-4xl">
-            <h2
-              id="promise-heading"
-              className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
-            >
-              Not more information. A different relationship with your life.
-            </h2>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
-              The Temple does not ask you to transcend what hurts, think
-              positively, or become endlessly self-aware.
-            </p>
-            <p className="mt-5 text-base leading-relaxed text-foreground/85 sm:text-lg">
-              It gives you a private and living place to recognise what is true,
-              receive support that meets the moment, try something small enough
-              to be real, and return to the evidence of your own life.
-            </p>
+          <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-10 lg:grid-cols-[1fr,auto] lg:gap-16">
+            <div className="space-y-6">
+              <h2
+                id="promise-heading"
+                className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
+              >
+                Not more information. A different relationship with your life.
+              </h2>
+              <p className="text-base leading-relaxed text-foreground/85 sm:text-lg">
+                The Temple does not ask you to transcend what hurts, think
+                positively, or become endlessly self-aware.
+              </p>
+              <p className="text-base leading-relaxed text-foreground/85 sm:text-lg">
+                It gives you a private and living place to recognise what is true,
+                receive support that meets the moment, try something small enough
+                to be real, and return to the evidence of your own life.
+              </p>
 
-            <p className="mt-10 max-w-2xl font-serif text-xl italic leading-relaxed text-foreground/90">
-              You do not need to become someone else. You need a place where
-              what is true can be witnessed and tended.
-            </p>
-            <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              Recognition comes before integration. Integration comes before
-              congruent action.
-            </p>
+              <p className="max-w-2xl font-serif text-xl italic leading-relaxed text-foreground/90">
+                You do not need to become someone else. You need a place where
+                what is true can be witnessed and tended.
+              </p>
+              <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
+                Recognition comes before integration. Integration comes before
+                congruent action.
+              </p>
+            </div>
+
+            <div className="hidden lg:block">
+              <div
+                className="aspect-[3/8] h-full max-h-[640px] w-auto overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl"
+                role="img"
+                aria-label="Placeholder"
+              >
+                <div className="h-full w-full bg-muted/60" />
+              </div>
+            </div>
           </div>
         </section>
 
