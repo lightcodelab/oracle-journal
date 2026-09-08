@@ -587,7 +587,15 @@ const Membership = () => {
             <div className="mt-12 grid gap-6 md:grid-cols-2">
               <MembershipCard
                 label="Membership"
-                price={`${standardPrice} / month`}
+                price={
+                  foundingDeadlinePassed ? (
+                    `${standardPrice} / month`
+                  ) : (
+                    <span className="line-through opacity-60">
+                      {standardPrice} / month
+                    </span>
+                  )
+                }
                 cadence="Billed monthly in AUD"
                 lines={[
                   "Full access to every Door and every practice inside The Temple.",
@@ -611,7 +619,7 @@ const Membership = () => {
                     "Founding members carry the Founder badge as recognition only; it does not change access.",
                   ]}
                   cta={
-                    foundingDeadlinePassed ? (
+                    !foundingDeadlinePassed ? (
                       <EnterTemple placement="pricing" />
                     ) : undefined
                   }
