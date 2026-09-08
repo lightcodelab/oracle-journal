@@ -360,6 +360,7 @@ const Membership = () => {
                 body="Tell the Guide what life feels like right now. It helps you choose a small, sequenced pathway through Temple resources—what to try, in what order, and why it may meet this particular moment."
                 image={areekeeraThumbnail.url}
                 imageAlt="The AreekeerA Guide inside The Temple, where a member describes what life feels like right now."
+                contain
               />
               <TempleDoorPanel
                 reverse
