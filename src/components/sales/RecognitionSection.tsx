@@ -19,13 +19,6 @@ export function RecognitionSection() {
     >
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 gap-12">
-          {/* Image */}
-          <div className="flex aspect-[8/3] items-center justify-center overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl">
-            <span className="text-sm uppercase tracking-widest text-foreground/50">
-              Image placeholder
-            </span>
-          </div>
-
           {/* Content */}
           <div className="space-y-10">
             <div className="space-y-4">
@@ -55,6 +48,13 @@ export function RecognitionSection() {
               You do not need another identity to perform. You need conditions
               that make a different response possible.
             </p>
+          </div>
+
+          {/* Image */}
+          <div className="flex aspect-[8/3] items-center justify-center overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl">
+            <span className="text-sm uppercase tracking-widest text-foreground/50">
+              Image placeholder
+            </span>
           </div>
         </div>
       </div>
