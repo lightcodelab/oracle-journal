@@ -13,7 +13,7 @@ export function RecognitionSection() {
       aria-labelledby="recognition-heading"
       className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-28"
     >
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-5xl">
         <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">
           This may be for you
         </p>
@@ -27,16 +27,24 @@ export function RecognitionSection() {
           The Temple is for the woman who is perceptive, capable, and tired.
         </p>
 
-        <ul className="mt-12 space-y-9 md:mt-16 md:space-y-12">
-          {lines.map((line) => (
-            <li
-              key={line}
-              className="border-l border-primary/40 pl-6 font-serif text-xl leading-snug text-foreground sm:text-2xl md:pl-8 md:text-[1.7rem]"
-            >
-              {line}
-            </li>
-          ))}
-        </ul>
+        <div className="mt-12 grid items-start gap-10 md:mt-16 md:grid-cols-2 md:gap-12 lg:gap-16">
+          <div className="order-2 flex aspect-[4/5] items-center justify-center rounded-lg bg-muted md:order-1">
+            <span className="text-sm uppercase tracking-widest text-foreground/50">
+              Image placeholder
+            </span>
+          </div>
+
+          <ul className="order-1 space-y-5 md:order-2">
+            {lines.map((line) => (
+              <li
+                key={line}
+                className="list-disc pl-5 text-base leading-relaxed text-foreground/90 marker:text-primary"
+              >
+                {line}
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <p className="mt-14 max-w-2xl text-base leading-relaxed text-foreground/85 sm:text-lg">
           You do not need another identity to perform. You need conditions that
