@@ -27,7 +27,7 @@ export function RecognitionSection() {
           </div>
 
           {/* Content */}
-          <div className="order-1 space-y-10 lg:order-2 lg:col-span-7">
+          <div className="space-y-10">
             <div className="space-y-4">
               <p className="text-[0.7rem] uppercase tracking-[0.32em] text-primary">
                 HOW TO KNOW IF
