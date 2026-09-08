@@ -610,7 +610,11 @@ const Membership = () => {
                     "Cancelling permanently forfeits the founding rate; rejoining later uses the then-current standard price.",
                     "Founding members carry the Founder badge as recognition only; it does not change access.",
                   ]}
-                  cta={<EnterTemple placement="pricing" />}
+                  cta={
+                    foundingDeadlinePassed ? (
+                      <EnterTemple placement="pricing" />
+                    ) : undefined
+                  }
                   footnote={
                     state === "pre_launch"
                       ? `Founding membership opens ${openingDate}.`
