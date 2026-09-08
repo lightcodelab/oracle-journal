@@ -645,33 +645,7 @@ const Membership = () => {
           </div>
         </section>
 
-        {/* 10. Physical Temple — separate from digital membership */}
-        <section aria-labelledby="physical-heading" className="px-5 py-16 md:px-8 md:py-24">
-          <div className="mx-auto max-w-5xl border-t border-primary/40 pt-12">
-            <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">Held in your hands</p>
-            <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
-              <div>
-                <h2 id="physical-heading" className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">The Physical Temple</h2>
-                <p className="mt-5 text-base leading-relaxed text-foreground/80">Separate handmade offerings for those who wish to hold the work in their hands. These are ordered from the Temple shop and are not included in digital membership.</p>
-                <p className="mt-5 text-xs uppercase tracking-[0.22em] text-primary">Every physical piece is handprinted and handmade</p>
-              </div>
-              <div className="divide-y divide-border/70 border-y border-border/70">
-                {[
-                  ["Snail Mail", "A$20 AUD / month", "A letter from Julie & Tash, a shared three-card collective reading, a journal page, and stickers for each card."],
-                  ["Journal Box", "A$50 AUD / month", "Fourteen double-sided journal pages, handmade covers in month one, monthly artwork, stickers, a letter, and a shared three-card reading."],
-                  ["Personalised Journal Box", "A$200 AUD / month", "The Journal Box with a personal three-card reading shaped around your submitted question, plus app access for the month paid."],
-                ].map(([title, price, body]) => (
-                  <div key={title} className="grid gap-2 py-6 sm:grid-cols-[1fr_auto] sm:gap-8">
-                    <div><h3 className="font-serif text-xl text-foreground">{title}</h3><p className="mt-2 text-sm leading-relaxed text-foreground/75">{body}</p></div>
-                    <p className="text-sm font-medium text-primary sm:text-right">{price}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 11. FAQ */}
+        {/* 10. FAQ */}
         <section
           aria-labelledby="faq-heading"
           className="px-5 py-16 md:px-8 md:py-28"
