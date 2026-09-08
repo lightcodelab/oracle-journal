@@ -30,13 +30,13 @@ export function RecognitionSection() {
           <div className="order-1 space-y-10 lg:order-2 lg:col-span-7">
             <div className="space-y-4">
               <p className="text-[0.7rem] uppercase tracking-[0.32em] text-primary">
-                The Temple may be for you if…
+                HOW TO KNOW IF
               </p>
               <h2
                 id="recognition-heading"
                 className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
               >
-                Perhaps you have been carrying more than anyone can see.
+                The Temple is for you:
               </h2>
             </div>
 
