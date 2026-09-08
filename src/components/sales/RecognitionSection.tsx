@@ -1,3 +1,5 @@
+import recognitionBanner from "@/assets/recognition-banner-1.png.asset.json";
+
 const lines = [
   "You keep saying yes because it seems easier than dealing with the disappointment, tension, or anger that might follow—then lie awake resentful that nobody seems to notice how much you are carrying.",
   "You can feel the room change before anyone says a word. You tell yourself you are overreacting, but your body has already gone tight, quiet, useful, or somewhere else entirely.",
