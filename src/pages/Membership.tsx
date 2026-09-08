@@ -297,7 +297,7 @@ const Membership = () => {
           aria-labelledby="promise-heading"
           className="px-5 py-16 md:px-8 md:py-28"
         >
-          <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-10 lg:grid-cols-[1fr_400px] lg:gap-16">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 items-stretch gap-10 lg:grid-cols-[1fr_400px] lg:gap-16">
             <div className="space-y-6">
               <h2
                 id="promise-heading"
@@ -325,9 +325,9 @@ const Membership = () => {
               </p>
             </div>
 
-            <div className="hidden lg:block">
+            <div className="hidden lg:block h-full">
               <div
-                className="aspect-[3/8] w-full overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl"
+                className="h-full w-full overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl"
                 role="img"
                 aria-label="Placeholder"
               >
