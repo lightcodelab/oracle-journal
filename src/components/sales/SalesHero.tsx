@@ -25,7 +25,7 @@ export function SalesHero({ cta, signIn }: SalesHeroProps) {
           transition={{ duration: 0.6 }}
           className="max-w-xl py-8 text-on-image [text-shadow:0_1px_18px_hsl(var(--brand-dark)/0.9)] md:max-w-[42%] md:py-10"
         >
-          <p className="mb-4 text-[0.65rem] uppercase tracking-[0.32em] text-on-image/85">
+          <p className="mb-2 text-[0.65rem] uppercase tracking-[0.32em] text-on-image/85">
             The Temple of Sustainment
           </p>
           <h1 className="font-serif text-[1.85rem] leading-tight text-on-image sm:text-[2.25rem] lg:text-[2.75rem]">
