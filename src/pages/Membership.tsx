@@ -297,7 +297,7 @@ const Membership = () => {
           aria-labelledby="promise-heading"
           className="px-5 py-16 md:px-8 md:py-28"
         >
-          <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-10 lg:grid-cols-[1fr_260px] lg:gap-16">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-10 lg:grid-cols-[1fr_400px] lg:gap-16">
             <div className="space-y-6">
               <h2
                 id="promise-heading"
