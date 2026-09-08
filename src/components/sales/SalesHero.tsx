@@ -28,7 +28,7 @@ export function SalesHero({ cta, signIn }: SalesHeroProps) {
           <p className="mb-4 text-[0.65rem] uppercase tracking-[0.32em] text-on-image/85">
             The Temple of Sustainment
           </p>
-          <h1 className="font-serif text-[1.85rem] leading-snug text-on-image sm:text-[2.25rem] lg:text-[2.75rem]">
+          <h1 className="font-serif text-[1.85rem] leading-tight text-on-image sm:text-[2.25rem] lg:text-[2.75rem]">
             You are not broken or a problem to solve.
           </h1>
           <div className="my-5 h-px w-16 bg-primary/80" aria-hidden />
