@@ -702,7 +702,7 @@ const Membership = () => {
             height={1088}
             className="absolute inset-0 -z-10 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 -z-10 bg-[hsl(var(--brand-dark)/0.72)]" aria-hidden />
+          <div className="absolute inset-0 -z-10 bg-[hsl(24_42%_14%/0.8)]" aria-hidden />
           <div className="mx-auto max-w-3xl px-5 py-24 text-center md:px-8 md:py-36">
             <h2
               id="final-heading"
