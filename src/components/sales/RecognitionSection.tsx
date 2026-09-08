@@ -53,10 +53,13 @@ export function RecognitionSection() {
           </div>
 
           {/* Image */}
-          <div className="flex aspect-[8/3] items-center justify-center overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl">
-            <span className="text-sm uppercase tracking-widest text-foreground/50">
-              Image placeholder
-            </span>
+          <div className="aspect-[8/3] overflow-hidden rounded-sm border border-border/50 shadow-2xl">
+            <img
+              src={recognitionBanner.url}
+              alt="A quiet sunlit room opening toward an olive grove, inviting a slower breath."
+              className="h-full w-full object-cover"
+              loading="lazy"
+            />
           </div>
         </div>
       </div>
