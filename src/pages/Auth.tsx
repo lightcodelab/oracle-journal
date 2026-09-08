@@ -117,6 +117,10 @@ const Auth = () => {
           sessionStorage.removeItem("pendingTrialPriceId");
           // Redirect to home/temple - the useMembership hook will pick up the pending checkout
           navigate("/");
+        } else if (sessionStorage.getItem("pendingCheckoutOffer")) {
+          // Membership sales-page signup: return to the sales page, which
+          // resumes Stripe checkout for the pending offer.
+          navigate("/", { replace: true });
         } else {
           sessionStorage.removeItem("postLoginRedirect");
           navigate(redirectTo, { replace: true });
