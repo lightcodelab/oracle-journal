@@ -27,20 +27,22 @@ export function MembershipCard({
           : "border-border/60 bg-card/40"
       }`}
     >
-      <p className="text-[0.68rem] uppercase tracking-[0.28em] text-primary">
-        {label}
-      </p>
-      <p className="mt-4 font-serif text-3xl text-foreground sm:text-4xl">
-        {price}
-      </p>
-      <p className="mt-1 text-sm text-muted-foreground">{cadence}</p>
-      <div className="my-6 h-px w-12 bg-primary/50" aria-hidden />
-      <ul className="space-y-3 text-sm leading-relaxed text-foreground/85">
-        {lines.map((line) => (
-          <li key={line}>{line}</li>
-        ))}
-      </ul>
-      {cta && <div className="mt-8">{cta}</div>}
+      <div className="flex-1">
+        <p className="text-[0.68rem] uppercase tracking-[0.28em] text-primary">
+          {label}
+        </p>
+        <p className="mt-4 font-serif text-3xl text-foreground sm:text-4xl">
+          {price}
+        </p>
+        <p className="mt-1 text-sm text-muted-foreground">{cadence}</p>
+        <div className="my-6 h-px w-12 bg-primary/50" aria-hidden />
+        <ul className="space-y-3 text-sm leading-relaxed text-foreground/85">
+          {lines.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
+      </div>
+      {cta && <div className="mt-auto pt-8">{cta}</div>}
       {footnote && (
         <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
           {footnote}
