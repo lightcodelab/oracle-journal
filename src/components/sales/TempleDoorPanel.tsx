@@ -27,12 +27,20 @@ export function TempleDoorPanel({
 }: TempleDoorPanelProps) {
   return (
     <article className="grid items-center gap-7 md:grid-cols-2 md:gap-14">
-      <div className={reverse ? "md:order-2" : undefined}>
+      <div
+        className={`flex items-center justify-center ${
+          reverse ? "md:order-2" : undefined
+        }`}
+      >
         <img
           src={image}
           alt={imageAlt}
           loading="lazy"
-          className="aspect-[4/3] w-full rounded-2xl border border-border/50 object-cover"
+          className={`w-full rounded-2xl border border-border/50 ${
+            contain
+              ? "object-contain"
+              : "aspect-[4/3] object-cover"
+          }`}
         />
       </div>
       <div className={reverse ? "md:order-1" : undefined}>
