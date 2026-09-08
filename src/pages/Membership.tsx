@@ -261,9 +261,12 @@ const Membership = () => {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-5 py-3 md:px-8">
           <a
             href="#top"
-            className="font-serif text-sm text-foreground/85 hover:text-foreground md:text-base"
+            className="flex items-center gap-1.5 text-sm text-muted-foreground"
           >
-            The Temple of Sustainment
+            <Home className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span className="font-medium hover:text-foreground transition-colors">
+              The Temple of Sustainment
+            </span>
           </a>
           <div className="flex items-center gap-4">
             {user ? (
