@@ -306,17 +306,17 @@ const Membership = () => {
               >
                 Not more information. A different relationship with your life.
               </h2>
-              <p className="text-base leading-relaxed text-foreground/85 sm:text-lg">
+              <p className="text-base leading-relaxed text-foreground/85">
                 The Temple does not ask you to transcend what hurts, think
                 positively, or become endlessly self-aware.
               </p>
-              <p className="text-base leading-relaxed text-foreground/85 sm:text-lg">
+              <p className="text-base leading-relaxed text-foreground/85">
                 It gives you a private and living place to recognise what is true,
                 receive support that meets the moment, try something small enough
                 to be real, and return to the evidence of your own life.
               </p>
 
-              <p className="max-w-2xl font-serif text-xl italic leading-relaxed text-foreground/90">
+              <p className="max-w-2xl text-base italic leading-relaxed text-foreground/90">
                 You do not need to become someone else. You need a place where
                 what is true can be witnessed and tended.
               </p>
