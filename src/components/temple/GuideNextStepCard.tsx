@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Compass } from "lucide-react";
-import guideLogoAsset from "@/assets/areekeera-guide-logo-8.png.asset.json";
+import guideLogoAsset from "@/assets/areekeera-guide-logo-8-2.png.asset.json";
 
 export function GuideNextStepCard() {
   return (
@@ -27,7 +27,7 @@ export function GuideNextStepCard() {
           </Button>
         </div>
       </div>
-      <div className="hidden sm:flex items-start justify-center shrink-0 pt-1">
+      <div className="hidden sm:flex items-center justify-center shrink-0">
         <img
           src={guideLogoAsset.url}
           alt="AreekeerA Guide"
