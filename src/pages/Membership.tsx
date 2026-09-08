@@ -376,7 +376,7 @@ const Membership = () => {
               <TempleDoorPanel
                 reverse
                 eyebrow="The Living Pattern Lab"
-                title="A private laboratory for what is true"
+                title="A private laboratory to experiment with life"
                 body="A private place to notice what is true, become curious about the meaning being made, practise a different choice, and gather evidence from what happens next."
                 steps={["Pause", "Perceive", "Practice"]}
                 image={livingPatternImage.url}
