@@ -126,7 +126,17 @@ const Membership = () => {
   useEffect(() => {
     // Any authenticated user landing on the public sales page should be
     // sent into the app, preserving a saved intended destination.
-    if (!authLoading && user) {
+    if (!authLoading && !offerLoading && user) {
+      // A visitor who clicked "Enter The Temple" before registering returns
+      // here after signup — resume their Stripe checkout straight away.
+      const pendingOffer = sessionStorage.getItem("pendingCheckoutOffer");
+      if (pendingOffer) {
+        sessionStorage.removeItem("pendingCheckoutOffer");
+        if (offer?.checkout_available) {
+          void startCheckout("pricing");
+          return;
+        }
+      }
       const saved = sessionStorage.getItem("postLoginRedirect");
       if (saved && saved.startsWith("/") && saved !== "/") {
         sessionStorage.removeItem("postLoginRedirect");
@@ -135,7 +145,8 @@ const Membership = () => {
         navigate("/temple", { replace: true });
       }
     }
-  }, [authLoading, memberLoading, user, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, offerLoading, offer, memberLoading, user, navigate]);
 
   const state: OfferState = offer?.state ?? "pre_launch";
   const priceAud = useMemo(() => {
