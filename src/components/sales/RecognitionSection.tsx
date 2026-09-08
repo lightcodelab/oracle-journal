@@ -1,3 +1,5 @@
+import recognitionBanner from "@/assets/recognition-banner-1.png.asset.json";
+
 const lines = [
   "You keep saying yes because it seems easier than dealing with the disappointment, tension, or anger that might follow—then lie awake resentful that nobody seems to notice how much you are carrying.",
   "You can feel the room change before anyone says a word. You tell yourself you are overreacting, but your body has already gone tight, quiet, useful, or somewhere else entirely.",
@@ -51,10 +53,13 @@ export function RecognitionSection() {
           </div>
 
           {/* Image */}
-          <div className="flex aspect-[8/3] items-center justify-center overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl">
-            <span className="text-sm uppercase tracking-widest text-foreground/50">
-              Image placeholder
-            </span>
+          <div className="aspect-[8/3] overflow-hidden rounded-sm border border-border/50 shadow-2xl">
+            <img
+              src={recognitionBanner.url}
+              alt="A quiet sunlit room opening toward an olive grove, inviting a slower breath."
+              className="h-full w-full object-cover"
+              loading="lazy"
+            />
           </div>
         </div>
       </div>
