@@ -314,13 +314,13 @@ const Membership = () => {
         {/* 4. Notice / Meet / Choose / Record / Return */}
         <section aria-labelledby="process-heading" className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-24">
           <div className="mx-auto max-w-6xl">
-            <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">A living practice</p>
-            <h2 id="process-heading" className="max-w-3xl font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">Recognition becomes a way of moving through life.</h2>
+            <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">OUR SIGNATURE METHOD</p>
+            <h2 id="process-heading" className="max-w-3xl font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">Living an ordinary life in&nbsp;extraordinary way begins with what you recognise in the moment.</h2>
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
               {[
                 ["Notice", "What is here in your body, emotions, relationships, and inner world?"],
                 ["Meet", "What story, protection, pattern, or old learning may be shaping this moment?"],
-                ["Choose", "What is one supported, workable response you can make from here?"],
+                ["Choose", "What is one supported, workable action you can take from here?"],
                 ["Record", "What happened when you tried the small thing that felt possible?"],
                 ["Return", "Come back without judgement, and let the evidence of your life teach you."],
               ].map(([title, body], index) => (
