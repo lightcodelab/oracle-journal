@@ -20,7 +20,7 @@ import { StickyMobileCTA } from "@/components/sales/StickyMobileCTA";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import finalThreshold from "@/assets/sales-final-threshold.jpg";
 import guidesPhoto from "@/assets/julie-tash-guides.jpg";
-import areekeeraThumbnail from "@/assets/areekeera-guide-logo-8-2.png.asset.json";
+import areekeeraThumbnail from "@/assets/areekeera-guide-sigil.png.asset.json";
 import livingPatternImage from "@/assets/living-pattern-banner.png.asset.json";
 import doorRemembrance from "@/assets/door-of-remembrance-4.png.asset.json";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
