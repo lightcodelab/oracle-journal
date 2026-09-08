@@ -290,10 +290,7 @@ const Membership = () => {
         {/* 1. Hero — the threshold */}
         <SalesHero cta={<EnterTemple placement="hero" />} />
 
-        {/* 2. Recognition */}
-        <RecognitionSection />
-
-        {/* 3. The real promise */}
+        {/* 2. The real promise */}
         <section
           aria-labelledby="promise-heading"
           className="px-5 py-16 md:px-8 md:py-28"
@@ -338,6 +335,9 @@ const Membership = () => {
             </div>
           </div>
         </section>
+
+        {/* 3. Recognition */}
+        <RecognitionSection />
 
         {/* 4. Notice / Meet / Choose / Record / Return */}
         <section aria-labelledby="process-heading" className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-24">
