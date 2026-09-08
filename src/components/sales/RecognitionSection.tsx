@@ -18,9 +18,9 @@ export function RecognitionSection() {
       className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-28"
     >
       <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-20">
+        <div className="grid grid-cols-1 gap-12">
           {/* Image */}
-          <div className="order-2 flex aspect-[4/5] items-center justify-center overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl lg:order-1 lg:col-span-5">
+          <div className="flex aspect-[8/3] items-center justify-center overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl">
             <span className="text-sm uppercase tracking-widest text-foreground/50">
               Image placeholder
             </span>
