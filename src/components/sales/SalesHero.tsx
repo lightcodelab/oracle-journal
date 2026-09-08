@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
-import heroImage from "@/assets/landing-page-banner.png.asset.json";
+import heroImage from "@/assets/landing-page-banner-v2.png.asset.json";
 
 interface SalesHeroProps {
   cta: ReactNode;
@@ -14,7 +14,7 @@ export function SalesHero({ cta, signIn }: SalesHeroProps) {
         src={heroImage.url}
         width={1672}
         height={941}
-        alt="A woman pauses at an open conservatory doorway overlooking a blue Tasmanian landscape, beside a lived-in timber table and garden plants."
+        alt="A woman stands at an open conservatory doorway looking out over a sunlit garden and distant water, beside a lived-in timber table and garden plants."
         fetchPriority="high"
         className="absolute inset-0 -z-10 h-full w-full object-cover object-[65%_center] md:object-center"
       />
