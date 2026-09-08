@@ -392,8 +392,8 @@ const Membership = () => {
               <TempleDoorPanel
                 reverse
                 eyebrow="The Door of Devotion"
-                title="Returning to your body and steadiness"
-                body="Guided meditations, energy-medicine practices, somatic rituals, recipes, and restorative resources for returning to your body, nervous system, and inner steadiness."
+                title="Returning to your body"
+                body="Guided meditations, energy-medicine practices, somatic rituals, recipes, and restorative resources for returning to your body, regulating your nervous system, and maintaining inner steadiness."
                 note="These are self-directed reflective and restorative practices. They do not diagnose, treat, or cure any health condition, and they do not replace medical or mental-health care."
                 image={doorDevotion.url}
                 imageAlt="The Door of Devotion, holding guided meditations and restorative practices."
