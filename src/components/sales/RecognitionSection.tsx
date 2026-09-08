@@ -17,43 +17,46 @@ export function RecognitionSection() {
       aria-labelledby="recognition-heading"
       className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-28"
     >
-      <div className="mx-auto max-w-5xl">
-        <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">
-          The Temple may be for you if…
-        </p>
-        <h2
-          id="recognition-heading"
-          className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
-        >
-          Perhaps you have been carrying more than anyone can see.
-        </h2>
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-foreground/85 sm:text-lg">
-          The Temple is for the woman who is perceptive, capable, and tired.
-        </p>
-
-        <div className="mt-12 grid items-start gap-10 md:mt-16 md:grid-cols-2 md:gap-12 lg:gap-16">
-          <div className="order-2 flex aspect-[4/5] items-center justify-center rounded-lg bg-muted md:order-1">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-20">
+          {/* Image */}
+          <div className="order-2 flex aspect-[4/5] items-center justify-center overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl lg:order-1 lg:col-span-5">
             <span className="text-sm uppercase tracking-widest text-foreground/50">
               Image placeholder
             </span>
           </div>
 
-          <ul className="order-1 space-y-5 md:order-2">
-            {lines.map((line) => (
-              <li
-                key={line}
-                className="list-disc pl-5 text-base leading-relaxed text-foreground/90 marker:text-primary"
+          {/* Content */}
+          <div className="order-1 space-y-10 lg:order-2 lg:col-span-7">
+            <div className="space-y-4">
+              <p className="text-[0.7rem] uppercase tracking-[0.32em] text-primary">
+                The Temple may be for you if…
+              </p>
+              <h2
+                id="recognition-heading"
+                className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
               >
-                {line}
-              </li>
-            ))}
-          </ul>
-        </div>
+                Perhaps you have been carrying more than anyone can see.
+              </h2>
+            </div>
 
-        <p className="mt-14 max-w-2xl text-base leading-relaxed text-foreground/85 sm:text-lg">
-          You do not need another identity to perform. You need conditions that
-          make a different response possible.
-        </p>
+            <div className="grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2">
+              {lines.map((line) => (
+                <div key={line} className="group">
+                  <div className="mb-4 h-px w-6 bg-primary/50" />
+                  <p className="font-serif text-base font-light italic leading-relaxed text-foreground/90">
+                    {line}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p className="max-w-2xl text-base leading-relaxed text-foreground/85 sm:text-lg">
+              You do not need another identity to perform. You need conditions
+              that make a different response possible.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );
