@@ -672,7 +672,7 @@ const Membership = () => {
             </p>
           </div>
         </section>
-        {/* 12. Final threshold */}
+        {/* 11. Final threshold */}
         <section
           aria-labelledby="final-heading"
           className="relative isolate overflow-hidden"
