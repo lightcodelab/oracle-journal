@@ -44,7 +44,7 @@ export function RecognitionSection() {
               {lines.map((line) => (
                 <div key={line} className="group">
                   <div className="mb-4 h-px w-6 bg-primary/50" />
-                  <p className="font-serif text-base font-light italic leading-relaxed text-foreground/90">
+                  <p className="font-serif text-base font-light leading-relaxed text-foreground/90">
                     {line}
                   </p>
                 </div>
