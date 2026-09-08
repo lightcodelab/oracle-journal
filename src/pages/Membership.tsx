@@ -604,7 +604,6 @@ const Membership = () => {
                   "Live readings, classes, workshops and replays.",
                   "Pause or cancel at any time from your account.",
                 ]}
-                cta={<EnterTemple placement="pricing" />}
               />
               {showFounding && (
                 <MembershipCard
@@ -624,6 +623,7 @@ const Membership = () => {
                       ? `Founding membership opens ${openingDate}.`
                       : undefined
                   }
+                  cta={<EnterTemple placement="pricing" />}
                 />
               )}
             </div>
