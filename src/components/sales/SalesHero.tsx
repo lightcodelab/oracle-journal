@@ -23,13 +23,13 @@ export function SalesHero({ cta, signIn }: SalesHeroProps) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-xl py-6 text-on-image [text-shadow:0_1px_18px_hsl(var(--brand-dark)/0.9)] md:max-w-[42%] md:py-8"
+          className="max-w-xl py-8 text-on-image [text-shadow:0_1px_18px_hsl(var(--brand-dark)/0.9)] md:max-w-[42%] md:py-10"
         >
-          <p className="mb-4 text-[0.7rem] uppercase tracking-[0.32em] text-on-image/85">
+          <p className="mb-4 text-[0.65rem] uppercase tracking-[0.32em] text-on-image/85">
             The Temple of Sustainment
           </p>
-          <h1 className="font-serif text-[2.15rem] leading-snug text-on-image sm:text-5xl lg:text-[3.4rem]">
-            You are not a problem to solve.
+          <h1 className="font-serif text-[1.85rem] leading-snug text-on-image sm:text-[2.25rem] lg:text-[2.75rem]">
+            You are not broken or a problem to solve.
           </h1>
           <div className="my-5 h-px w-16 bg-primary/80" aria-hidden />
           <p className="max-w-xl text-sm leading-relaxed text-on-image/95 sm:text-base">
