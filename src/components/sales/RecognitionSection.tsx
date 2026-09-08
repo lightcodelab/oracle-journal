@@ -6,10 +6,10 @@ const lines = [
   "You have a drawer full of journals, courses, readings, and practices — but when you are overwhelmed, unwell, heartbroken, or activated, you still do not know what to reach for first.",
   "Something small happens — a delayed reply, a tone of voice, a look on someone’s face — and suddenly you are back in the familiar certainty that you are too much, not enough, unsafe, unwanted, or about to be left.",
   "You are tired in a way sleep does not entirely touch. You suspect your body has been carrying things your mind has learned to work around, minimise, or explain away.",
-  "You keep trying to make one part of your life better — your health, your relationship, your work, your home, your confidence — while quietly knowing the pattern is woven through all of it but not having a clue where to start unravelling it.",
+  "You want your intuition honoured — but you also want to know the difference between a feeling, an old fear, a protective reflex, and what is actually true in this moment.",
   "You are standing between versions of yourself: between roles, relationships, homes, ways of working, or beliefs about who you have to be. You are waiting for certainty before you take the one honest step you already know is asking to be taken.",
   "You are exhausted by the idea of beginning again. By the perfect plan. By the dramatic reset. By becoming intensely devoted to your healing for three weeks, then wondering why the rest of your life still does not know how to hold you.",
-  "You want your intuition honoured — but you also want to know the difference between a feeling, an old fear, a protective reflex, and what is actually true in this moment.",
+  "You keep trying to make one part of your life better — your health, your relationship, your work, your home, your confidence — while quietly knowing the pattern is woven through all of it but not having a clue where to start unravelling it.",
   "You are ready to realise it's not about another beautiful idea about who you could become. You are looking for a way to stay with yourself long enough to love the life you are living in.",
 ];
 
