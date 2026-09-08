@@ -10,6 +10,7 @@ interface TempleDoorPanelProps {
   imageAlt: string;
   steps?: string[];
   reverse?: boolean;
+  contain?: boolean;
 }
 
 export function TempleDoorPanel({
@@ -22,6 +23,7 @@ export function TempleDoorPanel({
   imageAlt,
   steps,
   reverse = false,
+  contain = false,
 }: TempleDoorPanelProps) {
   return (
     <article className="grid items-center gap-7 md:grid-cols-2 md:gap-14">
