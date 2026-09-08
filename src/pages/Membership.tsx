@@ -95,6 +95,9 @@ const Membership = () => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: memberLoading } = useMemberState();
 
+  const foundingDeadlinePassed =
+    new Date() > new Date("2026-12-15T00:00:00+10:00");
+
   const [offer, setOffer] = useState<MembershipOffer | null>(null);
   const [offerLoading, setOfferLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
