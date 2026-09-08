@@ -23,25 +23,18 @@ export function SalesHero({ cta, signIn }: SalesHeroProps) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-xl text-on-image [text-shadow:0_1px_18px_hsl(var(--brand-dark)/0.9)] md:max-w-[42%]"
+          className="max-w-xl py-6 text-on-image [text-shadow:0_1px_18px_hsl(var(--brand-dark)/0.9)] md:max-w-[42%] md:py-8"
         >
           <p className="mb-4 text-[0.7rem] uppercase tracking-[0.32em] text-on-image/85">
             The Temple of Sustainment
           </p>
-          <h1 className="font-serif text-[2.15rem] leading-[1.12] text-on-image sm:text-5xl lg:text-[3.4rem]">
+          <h1 className="font-serif text-[2.15rem] leading-snug text-on-image sm:text-5xl lg:text-[3.4rem]">
             You are not a problem to solve.
           </h1>
           <div className="my-5 h-px w-16 bg-primary/80" aria-hidden />
           <p className="max-w-xl text-sm leading-relaxed text-on-image/95 sm:text-base">
-            You may already know why you do what you do. You may have read the
-            books, collected the practices, named the patterns—and still find
-            yourself overwhelmed, reacting from somewhere older, or unsure what
-            to do when life becomes too much.
-          </p>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-on-image/95 sm:text-base">
-            The Temple is a place to return to yourself: to notice what is here,
-            meet what sits beneath it, choose one supported next step, and learn
-            from what happens.
+            The Temple is a place to return to yourself. Notice what is here,
+            meet what sits beneath it, and choose one supported next step.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             {cta}
