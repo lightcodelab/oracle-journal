@@ -25,6 +25,7 @@ import livingPatternImage from "@/assets/living-pattern-banner.png.asset.json";
 import doorRemembrance from "@/assets/door-of-remembrance-4.png.asset.json";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
+import relationshipBanner from "@/assets/relationship-with-life-banner.png.asset.json";
 
 type OfferState = "pre_launch" | "founding" | "standard";
 
@@ -325,13 +326,14 @@ const Membership = () => {
               </p>
             </div>
 
-            <div className="hidden lg:block h-full">
-              <div
-                className="h-full w-full overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl"
-                role="img"
-                aria-label="Placeholder"
-              >
-                <div className="h-full w-full bg-muted/60" />
+            <div className="h-full min-h-[320px] lg:min-h-0">
+              <div className="h-full w-full overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl">
+                <img
+                  src={relationshipBanner.url}
+                  alt="A woman looking into an old mirror, meeting her own reflection with quiet presence."
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
               </div>
             </div>
           </div>
