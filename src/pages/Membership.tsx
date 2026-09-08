@@ -619,7 +619,7 @@ const Membership = () => {
                     "Founding members carry the Founder badge as recognition only; it does not change access.",
                   ]}
                   cta={
-                    foundingDeadlinePassed ? (
+                    !foundingDeadlinePassed ? (
                       <EnterTemple placement="pricing" />
                     ) : undefined
                   }
