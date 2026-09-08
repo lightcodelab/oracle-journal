@@ -95,6 +95,9 @@ const Membership = () => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: memberLoading } = useMemberState();
 
+  const foundingDeadlinePassed =
+    new Date() > new Date("2026-12-15T00:00:00+10:00");
+
   const [offer, setOffer] = useState<MembershipOffer | null>(null);
   const [offerLoading, setOfferLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
@@ -607,7 +610,11 @@ const Membership = () => {
                     "Cancelling permanently forfeits the founding rate; rejoining later uses the then-current standard price.",
                     "Founding members carry the Founder badge as recognition only; it does not change access.",
                   ]}
-                  cta={<EnterTemple placement="pricing" />}
+                  cta={
+                    foundingDeadlinePassed ? (
+                      <EnterTemple placement="pricing" />
+                    ) : undefined
+                  }
                   footnote={
                     state === "pre_launch"
                       ? `Founding membership opens ${openingDate}.`
