@@ -29,7 +29,7 @@ export function SalesHero({ cta, signIn }: SalesHeroProps) {
             The Temple of Sustainment
           </p>
           <h1 className="font-serif text-[2.15rem] leading-snug text-on-image sm:text-5xl lg:text-[3.4rem]">
-            You are not broken.
+            You are not a problem to solve.
           </h1>
           <div className="my-5 h-px w-16 bg-primary/80" aria-hidden />
           <p className="max-w-xl text-sm leading-relaxed text-on-image/95 sm:text-base">
