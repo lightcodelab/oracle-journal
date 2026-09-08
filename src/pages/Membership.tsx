@@ -25,7 +25,7 @@ import livingPatternImage from "@/assets/living-pattern-banner.png.asset.json";
 import doorRemembrance from "@/assets/door-of-remembrance-4.png.asset.json";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
-import relationshipBanner from "@/assets/relationship-with-life-banner.png.asset.json";
+import relationshipBanner from "@/assets/relationship-with-life-banner-v2.png.asset.json";
 
 type OfferState = "pre_launch" | "founding" | "standard";
 
