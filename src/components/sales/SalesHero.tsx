@@ -18,6 +18,10 @@ export function SalesHero({ cta, signIn }: SalesHeroProps) {
         fetchPriority="high"
         className="absolute inset-0 -z-10 h-full w-full object-cover object-[65%_center] md:object-center"
       />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-[5] bg-gradient-to-r from-[hsl(22_24%_8%/0.92)] via-[hsl(22_24%_8%/0.55)] via-50% to-transparent"
+      />
       <div className="mx-auto flex h-full min-h-[42rem] max-w-7xl items-end px-5 pb-10 pt-28 md:min-h-0 md:items-center md:px-8 md:py-12 lg:px-14">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
