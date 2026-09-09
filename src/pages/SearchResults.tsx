@@ -14,6 +14,19 @@ import type { ContentResource } from '@/hooks/useContentByLocation';
 
 type SearchResult = ContentResource & { doorBucket?: string | null };
 
+interface TempleRow {
+  kind: 'deck' | 'card' | 'course';
+  id: string;
+  title: string;
+  subtitle: string | null;
+  deck_id: string | null;
+  deck_name: string | null;
+  card_number: number | null;
+  image_url: string | null;
+  door: string | null;
+  tags: string[] | null;
+}
+
 const getPublicUrl = (bucket: string, path: string | null): string | null => {
   if (!path) return null;
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
