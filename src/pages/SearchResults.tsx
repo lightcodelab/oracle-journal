@@ -207,7 +207,7 @@ const SearchResults = () => {
         id: r.id,
         title: r.title,
         slug: `legacy-course-${r.id}`,
-        summary: r.description,
+        summary: htmlToPlainText(r.description),
         thumbnail_url: r.image_url || null,
         main_media_kind: 'none' as const,
         main_media_file_url: null,
