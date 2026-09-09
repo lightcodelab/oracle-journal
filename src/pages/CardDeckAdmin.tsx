@@ -850,6 +850,21 @@ const CardDeckAdmin = () => {
                 ))}
               </div>
 
+              {/* Card tags — power the Search tool */}
+              <div className="space-y-2 pt-4 border-t border-border">
+                <CourseTagPicker
+                  selectedTagIds={cardTagIds}
+                  onChange={setCardTagIds}
+                  label="Card Tags"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Tags make this individual card findable in Search. Aim for at least 5. They are
+                  saved together with the card when you press Save Changes.
+                </p>
+              </div>
+
+
+
               <div className="flex justify-end gap-2 pt-4 border-t border-border">
                 <Button variant="outline" onClick={() => {
                   const found = cards.find((c) => c.id === selectedCardId);
