@@ -39,6 +39,8 @@ const SearchResults = () => {
   const query = searchParams.get('q') || '';
   const [localQuery, setLocalQuery] = useState(query);
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [deckResults, setDeckResults] = useState<TempleRow[]>([]);
+  const [cardResults, setCardResults] = useState<TempleRow[]>([]);
   const [loading, setLoading] = useState(false);
   const { hasAccess, loading: tierLoading } = useTierAccess();
 
@@ -49,8 +51,11 @@ const SearchResults = () => {
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
+      setDeckResults([]);
+      setCardResults([]);
       return;
     }
+
 
     const search = async () => {
       setLoading(true);
