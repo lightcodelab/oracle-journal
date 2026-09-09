@@ -94,8 +94,14 @@ async function suggestTags(
     parsed = match ? JSON.parse(match[0]) : { items: [] };
   }
   const out: Record<string, string[]> = {};
+  const validKeys = new Set(items.map((i) => i.key));
   for (const entry of parsed?.items ?? []) {
-    const key = String(entry?.key ?? '');
+    const raw = String(entry?.key ?? '').trim();
+    // Models occasionally mangle long ids, so only accept keys we actually sent.
+    const key = validKeys.has(raw)
+      ? raw
+      : (items.find((i) => i.key.replace(/-/g, '') === raw.replace(/-/g, '')) ?? { key: '' }).key;
+    if (!key) continue;
     const tags = (entry?.tags ?? [])
       .map((t: unknown) => normaliseTag(String(t)))
       .filter((t: string | null): t is string => !!t);
