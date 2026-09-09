@@ -58,48 +58,25 @@ const SearchResults = () => {
         .or(`title.ilike.${searchPattern},summary.ilike.${searchPattern}`)
         .limit(50);
 
-      // Search legacy courses table by title/description (include location for door mapping)
-      const { data: coursesData } = await supabase
-        .from('courses')
-        .select(`
-          id, title, description, image_url, door_type,
-          location:content_categories!courses_location_id_fkey(id, page)
-        `)
-        .eq('is_published', true)
-        .or(`title.ilike.${searchPattern},description.ilike.${searchPattern}`)
-        .limit(50);
+      // Decks, individual cards and courses — matched on titles, body content,
+      // lesson content and any assigned tags (server-side).
+      const { data: templeRows } = await supabase.rpc('search_temple', { _q: query });
+      const temple = (templeRows || []) as TempleRow[];
 
-      // Find courses by matching tag names
-      const { data: matchingCourseTags } = await supabase
-        .from('course_tags')
-        .select('id')
-        .ilike('name', searchPattern);
+      const allCoursesData = temple
+        .filter((r) => r.kind === 'course')
+        .map((r) => ({
+          id: r.id,
+          title: r.title,
+          description: r.subtitle,
+          image_url: r.image_url,
+          door_type: r.door,
+          location: null as any,
+        }));
 
-      let tagCourseData: any[] = [];
-      if (matchingCourseTags && matchingCourseTags.length > 0) {
-        const tagIds = matchingCourseTags.map((t) => t.id);
-        const { data: assignments } = await supabase
-          .from('course_tag_assignments')
-          .select('course_id')
-          .in('tag_id', tagIds);
-        const directCourseIds = new Set((coursesData || []).map((c: any) => c.id));
-        const extraCourseIds = [...new Set((assignments || []).map((a) => a.course_id))]
-          .filter((id) => !directCourseIds.has(id));
-        if (extraCourseIds.length > 0) {
-          const { data } = await supabase
-            .from('courses')
-            .select(`
-              id, title, description, image_url, door_type,
-              location:content_categories!courses_location_id_fkey(id, page)
-            `)
-            .eq('is_published', true)
-            .in('id', extraCourseIds)
-            .limit(50);
-          tagCourseData = data || [];
-        }
-      }
+      setDeckResults(temple.filter((r) => r.kind === 'deck'));
+      setCardResults(temple.filter((r) => r.kind === 'card'));
 
-      const allCoursesData = [...(coursesData || []), ...tagCourseData];
 
       // Search healing_resources by title/summary (include location for door mapping)
       const { data: healingData } = await supabase
