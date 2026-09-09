@@ -18,15 +18,14 @@ import {
  *
  * A calm, revisitable teaching layer. It is never a gate: it stores nothing,
  * tracks no completion, has no score, streak, quiz, badge or deadline, and every
- * lens remains openable directly from here or from Home.
+ * the Pattern Record remains openable directly from here or from Home.
  *
  * No Arrival route, query, prefill or reference exists in this file.
  */
 
-const LENS_LINKS = [
-  { label: "Open Pause", to: "/living-pattern?lens=pause" },
-  { label: "Open Perceive", to: "/living-pattern?lens=perceive" },
-  { label: "Open Practice", to: "/living-pattern?lens=practice" },
+const PATTERN_LINKS = [
+  { label: "Start a Pattern Record", to: "/living-pattern" },
+  { label: "Open My Living Pattern", to: "/living-pattern/record" },
 ];
 
 const LivingPatternOrientation = () => {
@@ -98,11 +97,11 @@ const LivingPatternOrientation = () => {
 
         <div className="mt-6 rounded-lg border border-border/60 bg-card/60 p-4 sm:p-5">
           <p className="text-sm text-muted-foreground">
-            Read this whenever you like, in any order, and return to it any time. It is not
-            required before you begin, and nothing here is recorded.
+            Read this whenever you like and return at any time. It is not required before you
+            begin, and nothing on this page is recorded.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            {LENS_LINKS.map((l) => (
+            {PATTERN_LINKS.map((l) => (
               <Button key={l.to} asChild size="sm" variant="outline">
                 <Link to={l.to}>{l.label}</Link>
               </Button>
@@ -229,7 +228,7 @@ const LivingPatternOrientation = () => {
                 </div>
               ))}
 
-              {lesson.key === "practice" && (
+              {lesson.key === "return" && (
                 <div className="mt-5">
                   <p className="text-sm text-primary">Five honest returns</p>
                   <ul className="mt-2 space-y-2">
@@ -280,7 +279,7 @@ const LivingPatternOrientation = () => {
             ))}
           </div>
           <div className="mt-5 flex flex-wrap gap-2">
-            {LENS_LINKS.map((l) => (
+            {PATTERN_LINKS.map((l) => (
               <Button key={l.to} asChild size="sm" variant="outline">
                 <Link to={l.to}>{l.label}</Link>
               </Button>
