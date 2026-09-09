@@ -4,4 +4,4 @@
 - [x] Reorder and rebuild the landing-page sections
 - [x] Restore actionable pre-opening membership CTA
 - [x] Verify responsive layout, interaction paths, and build health
-- [ ] Rewrite the Living Pattern Orientation and Becoming course for the unified Pattern Record model
+- [x] Rewrite the Living Pattern Orientation and Becoming course for the unified Pattern Record model
