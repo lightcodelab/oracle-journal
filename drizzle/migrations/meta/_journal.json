@@ -78,6 +78,13 @@
       "when": 1788925651929,
       "tag": "0010_lpg1_pattern_records",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1788925701208,
+      "tag": "0011_affiliates_block_self_approval",
+      "breakpoints": true
     }
   ]
 }
