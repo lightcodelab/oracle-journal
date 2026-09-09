@@ -283,21 +283,92 @@ const SearchResults = () => {
           <div className="text-center py-12 text-muted-foreground">Searching…</div>
         )}
 
-        {!loading && query && results.length === 0 && (
+        {!loading && query && totalCount === 0 && (
           <div className="text-center py-12">
             <Search className="w-10 h-10 text-muted-foreground/40 mx-auto mb-4" />
             <p className="text-muted-foreground">No resources found for "{query}"</p>
           </div>
         )}
 
+        {!loading && totalCount > 0 && (
+          <p className="text-sm text-muted-foreground mb-6">
+            {totalCount} result{totalCount !== 1 ? 's' : ''} for "{query}"
+          </p>
+        )}
+
+        {!loading && deckResults.length > 0 && (
+          <section className="mb-10">
+            <h2 className="font-serif text-xl text-foreground mb-4">Card Decks</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {deckResults.map((deck) => (
+                <button
+                  key={deck.id}
+                  onClick={() => navigate(`/remembrance?deck=${deck.id}`)}
+                  className="text-left rounded-lg border border-border/60 bg-card p-4 hover:border-primary/60 transition-colors"
+                >
+                  <p className="font-serif text-lg text-foreground">{deck.title}</p>
+                  {deck.subtitle && (
+                    <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{deck.subtitle}</p>
+                  )}
+                  {deck.tags && deck.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-3">
+                      {deck.tags.slice(0, 4).map((t) => (
+                        <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>
+                      ))}
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {!loading && cardResults.length > 0 && (
+          <section className="mb-10">
+            <h2 className="font-serif text-xl text-foreground mb-4">
+              Cards <span className="text-sm text-muted-foreground font-sans">({cardResults.length})</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {cardResults.slice(0, visibleCards).map((card) => (
+                <button
+                  key={card.id}
+                  onClick={() => navigate(`/remembrance?deck=${card.deck_id}&card=${card.id}`)}
+                  className="text-left rounded-lg border border-border/60 bg-card p-4 hover:border-primary/60 transition-colors"
+                >
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                    {card.deck_name} · Card {card.card_number}
+                  </p>
+                  <p className="font-serif text-base text-foreground mt-1">{card.title}</p>
+                  {card.subtitle && (
+                    <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{card.subtitle}</p>
+                  )}
+                  {card.tags && card.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-3">
+                      {card.tags.slice(0, 4).map((t) => (
+                        <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>
+                      ))}
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+            {cardResults.length > visibleCards && (
+              <div className="flex justify-center mt-4">
+                <Button variant="outline" onClick={() => setVisibleCards((n) => n + 24)}>
+                  Show more cards
+                </Button>
+              </div>
+            )}
+          </section>
+        )}
+
         {!loading && results.length > 0 && (
           <>
-            <p className="text-sm text-muted-foreground mb-6">
-              {results.length} result{results.length !== 1 ? 's' : ''} for "{query}"
-            </p>
+            <h2 className="font-serif text-xl text-foreground mb-4">Teachings &amp; Courses</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {results.map((resource, index) => {
                 const locked = isLocked(resource);
+
                 const tierInfo = resource.doorBucket ? getRequiredTierForBucket(resource.doorBucket) : null;
                 return (
                   <div key={resource.id} className="relative">
