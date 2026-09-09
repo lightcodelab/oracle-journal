@@ -253,7 +253,7 @@ const CardDeckAdmin = () => {
 
   // Load draft when card changes
   useEffect(() => {
-    if (!selectedCardId) { setDraft(null); return; }
+    if (!selectedCardId) { setDraft(null); setCardTagIds([]); return; }
     const found = cards.find((c) => c.id === selectedCardId);
     if (found) {
       setDraft({
@@ -262,6 +262,20 @@ const CardDeckAdmin = () => {
       });
     }
   }, [selectedCardId, cards]);
+
+  // Load this card's tags
+  useEffect(() => {
+    if (!selectedCardId) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from('card_tag_assignments')
+        .select('tag_id')
+        .eq('card_id', selectedCardId);
+      if (!cancelled) setCardTagIds((data || []).map((r: any) => r.tag_id));
+    })();
+    return () => { cancelled = true; };
+  }, [selectedCardId]);
 
   const selectedDeck = decks.find((d) => d.id === selectedDeckId);
   const fields = useMemo<FieldDef[]>(() => {
