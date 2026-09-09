@@ -1249,6 +1249,42 @@ export type Database = {
           },
         ]
       }
+      card_tag_assignments: {
+        Row: {
+          card_id: string
+          created_at: string
+          id: string
+          tag_id: string
+        }
+        Insert: {
+          card_id: string
+          created_at?: string
+          id?: string
+          tag_id: string
+        }
+        Update: {
+          card_id?: string
+          created_at?: string
+          id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_tag_assignments_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "card_tag_assignments_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "course_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cards: {
         Row: {
           acknowledgement_content: string | null

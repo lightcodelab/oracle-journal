@@ -92,6 +92,13 @@
       "when": 1788925764588,
       "tag": "0012_pattern_records_user_cascade",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1788935958075,
+      "tag": "0013_create_card_tag_assignments",
+      "breakpoints": true
     }
   ]
 }
