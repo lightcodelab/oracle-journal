@@ -57,8 +57,9 @@ import DeepeningCourses from "./pages/DeepeningCourses";
 import MyPlaylists from "./pages/MyPlaylists";
 import LivingPatternLenses from "./pages/LivingPatternLenses";
 import LivingPatternOrientation from "./pages/LivingPatternOrientation";
-import LivingPatternExperiments from "./pages/LivingPatternExperiments";
+import MyFieldNotes from "./pages/MyFieldNotes";
 import LivingPatternExperiment from "./pages/LivingPatternExperiment";
+
 import LivingPatternPresence from "./pages/LivingPatternPresence";
 import LivingPatternMoments from "./pages/LivingPatternMoments";
 import LivingPatternPractice from "./pages/LivingPatternPractice";
