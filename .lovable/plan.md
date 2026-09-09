@@ -23,7 +23,7 @@ All three can also spin off an experiment (`living_experiments`) with a chosen "
 Secondary routes that also open pieces of this model: `/living-pattern/moments`, `/moments/:id`, `/patterns`, `/patterns/:id`, `/experiments`, `/experiments/:id`, `/orientation`, plus redirects `/pause`, `/presence`, `/perceive`, `/practice` (`src/App.tsx:150-162`).
 
 ### /living-pattern/record — My Living Pattern
-`src/pages/LivingPatternRecord.tsx` composes: Living Thread (chronological, keyset "go back further"), `ActivePatternsPanel`, `ThemesPanel`, experiments list, Field Notes shown as thread entries, and `InvitationsPanel`.
+`src/pages/LivingPatternRecord.tsx` switches between four views — Living Thread (chronological, keyset "go back further"), Active Patterns, My Themes, My Experiments — with the Invitations panel always shown beneath. Field Notes are not a top-level view: they sit inside each experiment's own page.
 
 ### Data and privacy
 14 private tables: `living_states`, `temple_moments`, `temple_moment_movements`, `living_patterns`, `living_pattern_evidence`, `living_experiments`, `living_field_notes`, `living_record_links`, `living_resource_tags`, `living_themes`, `living_theme_attachments`, `living_invitation_hides`, `living_media_attachments`, `living_media_deletions`.
