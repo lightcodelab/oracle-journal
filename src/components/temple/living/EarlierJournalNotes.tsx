@@ -51,11 +51,11 @@ export default function EarlierJournalNotes({
           </div>
         ))}
         <Link
-          to="/journal"
+          to="/field-notes"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
         >
           <BookOpen className="h-4 w-4" />
-          Open My Journal
+          Open My Field Notes
         </Link>
       </div>
     </details>
