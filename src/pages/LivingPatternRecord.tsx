@@ -6,8 +6,7 @@ import { useMemberState } from "@/hooks/useMemberState";
 import NavActions from "@/components/NavActions";
 import { Button } from "@/components/ui/button";
 import { useLivingThread, type ThreadRecord } from "@/hooks/useLivingThread";
-import { LIFECYCLE_LABELS, guideByKey } from "@/components/temple/living/experimentGuides";
-import { useOwnExperiments } from "@/hooks/useLivingExperiments";
+import { guideByKey } from "@/components/temple/living/experimentGuides";
 import CommonThemesPanel from "@/components/temple/living/CommonThemesPanel";
 import StateThreadEntry from "@/components/temple/living/StateThreadEntry";
 import {
@@ -92,7 +91,6 @@ const LivingPatternRecord = () => {
   const { records, loading: recordsLoading, error: recordsError } = usePatternRecords();
   const awaiting = useRecordsAwaitingReturn();
   const thread = useLivingThread(ready && view === "earlier");
-  const { experiments } = useOwnExperiments(ready && view === "earlier");
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
