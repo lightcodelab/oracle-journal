@@ -227,7 +227,7 @@ const LivingPatternExperiment = () => {
           className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          <span className="font-medium truncate">Back to my experiments</span>
+          <span className="font-medium truncate">Back to My Field Notes</span>
         </Link>
         <NavActions />
       </header>
