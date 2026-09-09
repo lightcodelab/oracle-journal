@@ -138,6 +138,7 @@ export const PATTERN_QUESTIONS: PatternQuestion[] = [
     field: "moment_text",
     movement: "Pause",
     kind: "text",
+    allowNotSure: false,
     question: "What happened?",
     helper: [
       "Just the moment itself — what was said, or done, or what you noticed.",
