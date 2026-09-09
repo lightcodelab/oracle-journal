@@ -244,10 +244,27 @@ const PatternRecordFlow = () => {
               <div className="space-y-3">
                 <p className="text-sm font-medium text-foreground">{current.chipsLabel}</p>
                 <Chips
-                  options={current.chips}
+                  options={
+                    current.field === "state_words" && !showAllStateWords
+                      ? current.chips.filter(
+                          (w) =>
+                            (PRIMARY_STATE_WORDS as readonly string[]).includes(w) ||
+                            answers.state_words.includes(w),
+                        )
+                      : current.chips
+                  }
                   selected={answers[chipField]}
                   onToggle={(v) => toggleChip(chipField, v)}
                 />
+                {current.field === "state_words" && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllStateWords((v) => !v)}
+                    className="text-sm text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground"
+                  >
+                    {showAllStateWords ? "Show fewer words" : "Show more words"}
+                  </button>
+                )}
                 {answers[chipField].filter((w) => !current.chips?.includes(w)).length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {answers[chipField]
@@ -320,7 +337,7 @@ const PatternRecordFlow = () => {
           </div>
         )}
 
-        {current.kind === "text" && (
+        {current.kind === "text" && current.allowNotSure !== false && (
           <button
             type="button"
             onClick={() => setField(current.field as keyof Answers, NOT_SURE as never)}
