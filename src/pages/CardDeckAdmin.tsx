@@ -757,6 +757,26 @@ const CardDeckAdmin = () => {
                 onChange={setDeckTagIds}
                 label="Deck Tags"
               />
+              <div className="space-y-2 pt-4 border-t border-border/60">
+                <Label>Suggested card tags</Label>
+                <p className="text-xs text-muted-foreground">
+                  Reads each card in this deck — its own writing, this deck's description and any
+                  matching companion lesson — and suggests at least 5 search tags per card. Cards
+                  that already have tags are left alone unless you choose to replace them. You can
+                  edit every suggestion afterwards on the card itself.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" size="sm" disabled={generatingTags} onClick={() => generateCardTags(false)}>
+                    {generatingTags ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Working…</>
+                    ) : 'Suggest tags for untagged cards'}
+                  </Button>
+                  <Button variant="ghost" size="sm" disabled={generatingTags} onClick={() => generateCardTags(true)}>
+                    Replace all tags in this deck
+                  </Button>
+                </div>
+              </div>
+
               <div className="flex justify-end pt-2 border-t border-border/60">
                 <Button onClick={handleSaveDeckSettings} disabled={savingDeck}>
                   {savingDeck ? (
