@@ -223,7 +223,7 @@ const LivingPatternExperiment = () => {
     <div className="min-h-screen bg-background">
       <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
         <Link
-          to="/living-pattern/experiments"
+          to="/field-notes"
           className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
@@ -547,7 +547,7 @@ const LivingPatternExperiment = () => {
 
             <div className="mt-8 flex flex-wrap gap-2 border-t border-border/60 pt-5">
               <Button asChild variant="ghost">
-                <Link to="/living-pattern/experiments">My experiments</Link>
+                <Link to="/field-notes">My Field Notes</Link>
               </Button>
               <Button asChild variant="ghost">
                 <Link to="/temple">Back to Home</Link>
