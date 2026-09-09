@@ -38,17 +38,23 @@ const getPublicUrl = (bucket: string, path: string | null): string | null => {
 
 const SearchResults = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const query = searchParams.get('q') || '';
   const [localQuery, setLocalQuery] = useState(query);
   const [results, setResults] = useState<SearchResult[]>([]);
   const [deckResults, setDeckResults] = useState<TempleRow[]>([]);
   const [cardResults, setCardResults] = useState<TempleRow[]>([]);
+  const [visibleCards, setVisibleCards] = useState(24);
   const [loading, setLoading] = useState(false);
   const { hasAccess, loading: tierLoading } = useTierAccess();
 
+  const totalCount = results.length + deckResults.length + cardResults.length;
+
   useEffect(() => {
     setLocalQuery(query);
+    setVisibleCards(24);
   }, [query]);
+
 
   useEffect(() => {
     if (!query.trim()) {
