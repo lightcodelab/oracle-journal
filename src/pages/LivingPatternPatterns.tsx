@@ -14,10 +14,10 @@ import { useOwnPatternRecords } from "@/hooks/useLivingPatterns";
 const LivingPatternPatterns = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { hasFullTempleAccess, isAdmin, loading: memberLoading } = useMemberState();
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
 
   const accessResolved = !authLoading && !memberLoading && !!user;
-  const enabled = accessResolved && hasFullTempleAccess && isAdmin;
+  const enabled = accessResolved && hasFullTempleAccess;
   const { patterns, loading, error } = useOwnPatternRecords(enabled);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const LivingPatternPatterns = () => {
     );
   }
 
-  if (!hasFullTempleAccess || !isAdmin) {
+  if (!hasFullTempleAccess) {
     return (
       <div className="min-h-screen bg-background">
         <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">

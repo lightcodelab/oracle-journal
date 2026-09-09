@@ -6,22 +6,27 @@ import { useMemberState } from "@/hooks/useMemberState";
 import NavActions from "@/components/NavActions";
 import { Button } from "@/components/ui/button";
 import { useLivingThread, type ThreadRecord } from "@/hooks/useLivingThread";
-import { useOwnExperiments } from "@/hooks/useLivingExperiments";
 import { LIFECYCLE_LABELS, guideByKey } from "@/components/temple/living/experimentGuides";
-import ActivePatternsPanel from "@/components/temple/living/ActivePatternsPanel";
-import ThemesPanel from "@/components/temple/living/ThemesPanel";
-import InvitationsPanel from "@/components/temple/living/InvitationsPanel";
+import { useOwnExperiments } from "@/hooks/useLivingExperiments";
+import CommonThemesPanel from "@/components/temple/living/CommonThemesPanel";
 import StateThreadEntry from "@/components/temple/living/StateThreadEntry";
-
-
+import {
+  CAPACITY_OPTIONS,
+  FAMILIARITY_OPTIONS,
+  labelFor,
+} from "@/components/temple/living/patternRecordContent";
+import {
+  usePatternRecords,
+  useRecordsAwaitingReturn,
+} from "@/hooks/usePatternRecords";
 
 /**
- * LP-F.0 — My Living Pattern: her private return path.
+ * My Living Pattern — her private return path.
  *
- * A calm chronological record of what she has already saved. Not a dashboard,
- * scorecard, streak, progress tracker, or interpretation layer. Owner-only via
- * the accepted `living_thread_page` and `living_experiments_list` RPCs. Nothing
- * here touches Arrival, generic Journal Notes, media, or sharing.
+ * Living Thread of Pattern Records, deterministic Common Themes, records
+ * awaiting a Return, and everything she saved under the earlier model, kept
+ * exactly as she wrote it. Owner-only, no interpretation, no scoring, no
+ * streaks, nothing overdue.
  */
 
 const KIND_LABELS: Record<ThreadRecord["kind"], string> = {
@@ -75,17 +80,19 @@ function recordHref(r: ThreadRecord): string | null {
   }
 }
 
+type View = "thread" | "themes" | "returns" | "earlier";
+
 const LivingPatternRecord = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { hasFullTempleAccess, isAdmin, loading: memberLoading } = useMemberState();
-  const [view, setView] = useState<"thread" | "patterns" | "themes" | "experiments">("thread");
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
+  const [view, setView] = useState<View>("thread");
 
-  const ready = !authLoading && !memberLoading && !!user && hasFullTempleAccess && isAdmin;
-  const thread = useLivingThread(ready && view === "thread");
-  const { experiments, loading: expLoading, error: expError } = useOwnExperiments(
-    ready && view === "experiments",
-  );
+  const ready = !authLoading && !memberLoading && !!user && hasFullTempleAccess;
+  const { records, loading: recordsLoading, error: recordsError } = usePatternRecords();
+  const awaiting = useRecordsAwaitingReturn();
+  const thread = useLivingThread(ready && view === "earlier");
+  const { experiments } = useOwnExperiments(ready && view === "earlier");
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -99,7 +106,7 @@ const LivingPatternRecord = () => {
     );
   }
 
-  if (!hasFullTempleAccess || !isAdmin) {
+  if (!hasFullTempleAccess) {
     return (
       <div className="min-h-screen bg-background">
         <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
@@ -110,9 +117,12 @@ const LivingPatternRecord = () => {
           <NavActions />
         </header>
         <main className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
-          <h1 className="font-serif text-3xl text-foreground mb-4">Your Living Pattern is private</h1>
+          <h1 className="font-serif text-3xl text-foreground mb-4">
+            Your Living Pattern is private
+          </h1>
           <p className="text-muted-foreground mb-8">
-            An active membership opens this record. Return to the entrance to see what is currently open.
+            An active membership opens this record. Return to the entrance to see what is currently
+            open.
           </p>
           <Button asChild size="lg">
             <Link to="/">Return to the entrance</Link>
@@ -122,18 +132,10 @@ const LivingPatternRecord = () => {
     );
   }
 
-  const lensLinks = (
-    <div className="mt-4 flex flex-wrap gap-2">
-      <Button asChild variant="outline" size="sm">
-        <Link to="/living-pattern?lens=pause">Open Pause</Link>
-      </Button>
-      <Button asChild variant="outline" size="sm">
-        <Link to="/living-pattern?lens=perceive">Open Perceive</Link>
-      </Button>
-      <Button asChild variant="outline" size="sm">
-        <Link to="/living-pattern?lens=practice">Open Practice</Link>
-      </Button>
-    </div>
+  const beginLink = (
+    <Button asChild className="mt-4">
+      <Link to="/living-pattern">Record a Pattern</Link>
+    </Button>
   );
 
   return (
@@ -150,20 +152,26 @@ const LivingPatternRecord = () => {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 pb-16 min-w-0">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">THE LIVING PATTERN LAB</p>
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+          THE LIVING PATTERN LAB
+        </p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">My Living Pattern</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground leading-relaxed">
-          A private record of what you have already saved, in the order life offered it. Nothing here
-          is measured, graded, or due. Read what you wish, and leave the rest.
+          A private record of the moments you have followed all the way through, in the order life
+          offered them. Nothing here is measured, graded, or due.
         </p>
 
-        <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="My Living Pattern views">
+        <div
+          className="mt-6 flex flex-wrap gap-2"
+          role="tablist"
+          aria-label="My Living Pattern views"
+        >
           {(
             [
               ["thread", "Living Thread"],
-              ["patterns", "Active Patterns"],
-              ["themes", "My Themes"],
-              ["experiments", "My Experiments"],
+              ["themes", "Common Themes"],
+              ["returns", "Awaiting a Return"],
+              ["earlier", "Earlier records"],
             ] as const
           ).map(([key, labelText]) => (
             <Button
@@ -179,33 +187,134 @@ const LivingPatternRecord = () => {
           ))}
         </div>
 
-
         {view === "thread" && (
           <section className="mt-8" aria-label="Living Thread">
-            {thread.loading && (
+            {recordsLoading && (
               <p className="text-muted-foreground flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Opening your record…
               </p>
             )}
-            {thread.error && !thread.loading && (
+            {recordsError && !recordsLoading && (
               <p role="alert" className="text-sm text-destructive">
-                {thread.error}
+                {recordsError}
               </p>
             )}
 
-            {!thread.loading && !thread.error && thread.records.length === 0 && (
+            {!recordsLoading && !recordsError && records.length === 0 && (
               <div className="rounded-xl border border-border/60 bg-card p-5 sm:p-6">
                 <p className="text-muted-foreground">
-                  Nothing has been recorded here yet. Whenever you would like to, you can begin with
-                  any lens — each one is whole on its own.
+                  No Pattern Records yet. Whenever a moment is worth following through, you can
+                  record it here.
                 </p>
-                {lensLinks}
+                {beginLink}
               </div>
+            )}
+
+            {!recordsLoading && records.length > 0 && (
+              <ul className="space-y-3">
+                {records.map((r) => (
+                  <li key={r.id}>
+                    <Link
+                      to={`/living-pattern/records/${r.id}`}
+                      className="block rounded-xl border border-border/60 bg-card p-4 sm:p-5 transition-colors hover:border-primary/50"
+                    >
+                      <p className="text-[0.7rem] uppercase tracking-[0.15em] text-primary">
+                        Pattern Record
+                      </p>
+                      <p className="mt-1 font-serif text-lg text-foreground break-words">
+                        {r.moment_text}
+                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground break-words">
+                        {formatWhen(r.occurred_at)}
+                        {r.state_words.length > 0 && ` · ${r.state_words.join(", ")}`}
+                      </p>
+                      <p className="mt-2 text-sm text-muted-foreground break-words">
+                        {labelFor(CAPACITY_OPTIONS, r.capacity)} ·{" "}
+                        {labelFor(FAMILIARITY_OPTIONS, r.familiarity)}
+                      </p>
+                      <p className="mt-2 text-sm text-muted-foreground break-words">
+                        {r.return_count > 0
+                          ? `${r.return_count} ${r.return_count === 1 ? "Return" : "Returns"} recorded`
+                          : "No Return yet — you can add one whenever life has answered back."}
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
+
+        {view === "themes" && <CommonThemesPanel />}
+
+        {view === "returns" && (
+          <section className="mt-8" aria-label="Awaiting a Return">
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              These are records where an experiment has had some time to breathe. This is an
+              invitation, not a task — nothing here is late.
+            </p>
+            {awaiting.loading && (
+              <p className="mt-4 text-muted-foreground flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Looking…
+              </p>
+            )}
+            {!awaiting.loading && awaiting.records.length === 0 && (
+              <p className="mt-4 text-muted-foreground">
+                Nothing is waiting. Every record you have saved has either been returned to, or is
+                still fresh.
+              </p>
+            )}
+            {!awaiting.loading && awaiting.records.length > 0 && (
+              <ul className="mt-4 space-y-3">
+                {awaiting.records.map((r) => (
+                  <li key={r.id}>
+                    <Link
+                      to={`/living-pattern/records/${r.id}`}
+                      className="block rounded-xl border border-border/60 bg-card p-4 sm:p-5 transition-colors hover:border-primary/50"
+                    >
+                      <p className="font-serif text-lg text-foreground break-words">
+                        {r.moment_text}
+                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground break-words">
+                        You planned: {r.experiment_text}
+                      </p>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        {formatWhen(r.occurred_at)}
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
+
+        {view === "earlier" && (
+          <section className="mt-8" aria-label="Earlier records">
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Everything you saved before the Living Pattern became one Pattern Record, kept exactly
+              as you wrote it.
+            </p>
+
+            {thread.loading && (
+              <p className="mt-4 text-muted-foreground flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Opening your record…
+              </p>
+            )}
+            {thread.error && !thread.loading && (
+              <p role="alert" className="mt-4 text-sm text-destructive">
+                {thread.error}
+              </p>
+            )}
+            {!thread.loading && !thread.error && thread.records.length === 0 && (
+              <p className="mt-4 text-muted-foreground">
+                There are no earlier records here.
+              </p>
             )}
 
             {!thread.loading && thread.records.length > 0 && (
               <>
-                <ul className="space-y-3">
+                <ul className="mt-4 space-y-3">
                   {thread.records.map((r) => {
                     const href = recordHref(r);
                     const inner = (
@@ -238,7 +347,6 @@ const LivingPatternRecord = () => {
                         )}
                       </li>
                     );
-
                   })}
                 </ul>
 
@@ -254,85 +362,43 @@ const LivingPatternRecord = () => {
                 )}
               </>
             )}
-          </section>
-        )}
 
-        {view === "experiments" && (
-          <section className="mt-8" aria-label="My Experiments">
-            {expLoading && (
-              <p className="text-muted-foreground flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Opening your record…
-              </p>
-            )}
-            {expError && !expLoading && (
-              <p role="alert" className="text-sm text-destructive">
-                {expError}
-              </p>
-            )}
-
-            {!expLoading && !expError && experiments.length === 0 && (
-              <div className="rounded-xl border border-border/60 bg-card p-5 sm:p-6">
-                <p className="text-muted-foreground">
-                  Nothing has been recorded here yet. An experiment is always optional — you can also
-                  simply keep what you have already noticed.
-                </p>
-                {lensLinks}
+            {experiments.length > 0 && (
+              <div className="mt-8">
+                <h2 className="font-serif text-xl text-foreground">Earlier experiments</h2>
+                <ul className="mt-3 space-y-3">
+                  {experiments.map((e) => {
+                    const guide = guideByKey(e.guide_key);
+                    const title =
+                      guide && guide.key !== "own"
+                        ? guide.title
+                        : e.own_experiment || "Your experiment";
+                    return (
+                      <li key={e.id}>
+                        <Link
+                          to={`/living-pattern/experiments/${e.id}`}
+                          className="block rounded-xl border border-border/60 bg-card p-4 sm:p-5 transition-colors hover:border-primary/50"
+                        >
+                          <p className="font-serif text-lg text-foreground break-words">{title}</p>
+                          <p className="mt-1 text-sm text-muted-foreground break-words">
+                            {LIFECYCLE_LABELS[e.lifecycle] ?? "Open"} · began{" "}
+                            {new Date(e.created_at).toLocaleDateString(undefined, {
+                              dateStyle: "medium",
+                            })}
+                          </p>
+                          <p className="mt-2 text-sm text-muted-foreground break-words">
+                            Your Field Notes for this experiment are kept inside it, unchanged.
+                          </p>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
             )}
-
-            {!expLoading && experiments.length > 0 && (
-              <ul className="space-y-3">
-                {experiments.map((e) => {
-                  const guide = guideByKey(e.guide_key);
-                  const title =
-                    guide && guide.key !== "own" ? guide.title : e.own_experiment || "Your experiment";
-                  const origin = e.state_id
-                    ? "Began from a State of Being"
-                    : e.moment_id
-                      ? "Began from a Moment of Meaning"
-                      : e.pattern_id
-                        ? "Began from a Pattern of Choosing"
-                        : null;
-                  return (
-                    <li key={e.id}>
-                      <Link
-                        to={`/living-pattern/experiments/${e.id}`}
-                        className="block rounded-xl border border-border/60 bg-card p-4 sm:p-5 transition-colors hover:border-primary/50"
-                      >
-                        <p className="font-serif text-lg text-foreground break-words">{title}</p>
-                        <p className="mt-1 text-sm text-muted-foreground break-words">
-                          {LIFECYCLE_LABELS[e.lifecycle] ?? "Open"} · began{" "}
-                          {new Date(e.created_at).toLocaleDateString(undefined, {
-                            dateStyle: "medium",
-                          })}
-                        </p>
-                        {origin && (
-                          <p className="mt-1 text-sm text-muted-foreground break-words">{origin}</p>
-                        )}
-                        <p className="mt-2 text-sm text-muted-foreground break-words">
-                          Try, Notice, and Return are kept together inside this experiment.
-                          {e.has_return ? "" : " A Return has not been written yet — that is not a failure."}
-                        </p>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
           </section>
         )}
-
-        {view === "patterns" && (
-          <ActivePatternsPanel enabled={ready && view === "patterns"} lensLinks={lensLinks} />
-        )}
-
-        {view === "themes" && (
-          <ThemesPanel enabled={ready && view === "themes"} lensLinks={lensLinks} />
-        )}
-
-        <InvitationsPanel enabled={ready} />
       </main>
-
     </div>
   );
 };

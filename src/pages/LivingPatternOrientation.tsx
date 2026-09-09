@@ -32,7 +32,7 @@ const LENS_LINKS = [
 const LivingPatternOrientation = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { hasFullTempleAccess, isAdmin, loading: memberLoading } = useMemberState();
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -46,7 +46,7 @@ const LivingPatternOrientation = () => {
     );
   }
 
-  if (!hasFullTempleAccess || !isAdmin) {
+  if (!hasFullTempleAccess) {
     return (
       <div className="min-h-screen bg-background">
         <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
