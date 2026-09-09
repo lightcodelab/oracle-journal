@@ -171,6 +171,7 @@ const CardDeckAdmin = () => {
     thumbnail_url: string | null;
   } | null>(null);
   const [deckTagIds, setDeckTagIds] = useState<string[]>([]);
+  const [cardTagIds, setCardTagIds] = useState<string[]>([]);
   const [savingDeck, setSavingDeck] = useState(false);
   const [uploadingDeckThumb, setUploadingDeckThumb] = useState(false);
 
