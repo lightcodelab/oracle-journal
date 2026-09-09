@@ -11,9 +11,9 @@
 export const EXAMPLE_DISCLAIMER =
   "Example only — adapt, skip, or write your own.";
 
-/** Shown beneath every three-part movement, in every lens. */
+/** Retained for the earlier-record screens, which remain available read-only. */
 export const GLOBAL_MOVEMENT_HELPER =
-  "Choose any question with energy today. You can move between these sections, skip any prompt, and save one true line. Nothing here needs to be completed in order.";
+  "These are earlier records from the previous Living Pattern format. Your new Pattern Records now hold Pause, Perceive and Practise together.";
 
 export const ORIENTATION_PROMISE = [
   "You do not need certainty before you live differently.",
@@ -21,9 +21,9 @@ export const ORIENTATION_PROMISE = [
 ];
 
 export const ORIENTATION_INVITATION = [
-  "Write one true thing.",
-  "Try one small thing, if you want to.",
-  "Return when life has given you more information.",
+  "Follow one real moment through Pause, Perceive and Practise.",
+  "Choose one small experiment rather than demanding a perfect answer.",
+  "Return later to record what life actually showed you.",
 ];
 
 export interface OrientationLesson {
@@ -52,185 +52,142 @@ export const ORIENTATION_LESSONS: OrientationLesson[] = [
   {
     key: "welcome",
     eyebrow: "Welcome",
-    title: "A living record, not a verdict",
+    title: "One moment, seen as a whole",
     copy: [
       "You do not need certainty before you live differently. You need enough curiosity to try one small thing, and enough tenderness to learn from what happens.",
-      "The Living Pattern is a private Conservatory laboratory. It is not a test, a treatment plan, a diary that has to be impressive, or a machine for proving that you are getting better. You are not the problem under inspection. You are learning about the conditions of your actual life: what is here, what your mind is making it mean, what choice is available, and what happens when you try something small.",
-      "You may come here when something is hard, beautiful, confusing, ordinary, or quietly different. You are not here to explain yourself perfectly. You are here to notice what is true enough to give yourself a little more choice.",
+      "The Living Pattern is a private practice for seeing the whole chain that shapes a response: Moment → State → Meaning → Prediction → Familiar Pattern → Choice → Identity → Experiment → Evidence.",
+      "You are not the problem under inspection. You are following one real moment closely enough to notice what happened, what was happening in you, what your mind made it mean, what it predicted, and what became possible next.",
     ],
     teach: [
       "Nothing is shared.",
       "No score, streak, diagnosis, or correct answer exists.",
-      "A record may be one sentence, a few chosen words, or no experiment at all.",
-      "Ease, delight, steadiness, and connection are as worthy of attention as friction.",
+      "The AreekeerA® Guide and Arrival do not read, interpret, or prefill your records.",
+      "“I'm not sure yet” is a complete answer wherever it is offered.",
     ],
-    close: "Let us begin with the smallest question: what is here?",
+    close: "The aim is not perfect self-awareness. It is enough clarity to have more choice.",
   },
   {
-    key: "lenses",
+    key: "whole-record",
     eyebrow: "Lesson 1",
-    title: "Choose the lens that meets the moment",
+    title: "Why the whole chain matters",
     copy: [
-      "These are three windows into the same life. They are not steps, and you never need to use all three.",
+      "A moment, a feeling, a story and a choice do not happen in isolation. They form a sequence, often so quickly that the ending can feel inevitable.",
+      "A Pattern Record keeps the sequence together. Pause, Perceive and Practise are movements within one record—not separate logs and not three different versions of the truth.",
     ],
     table: {
-      head: ["If you are noticing…", "Begin here", "What it helps with"],
+      head: ["Movement", "You notice", "What it makes visible"],
       rows: [
-        [
-          "How you are feeling, coping, or carrying the moment",
-          "Pause",
-          "Meet your present state and find one grounded next direction.",
-        ],
-        [
-          "Something that stood out and the meaning your mind began to make",
-          "Perceive",
-          "Separate what happened from what you are predicting, then gather more information.",
-        ],
-        [
-          "A choice you keep making or want to make more consciously",
-          "Practice",
-          "Name a current commitment and try one small expression of it.",
-        ],
+        ["Pause", "The moment, your state, your body and your capacity", "The conditions in which your response began"],
+        ["Perceive", "The meaning, prediction and familiar protection", "What your mind added and what the pattern may have been trying to prevent"],
+        ["Practise", "Your action, the version of you present and one experiment", "Where a more conscious choice can enter"],
+        ["Return", "What you tried and what actually happened", "Evidence from your life rather than fear, hope or self-judgement"],
       ],
     },
-    script:
-      "You do not need to diagnose yourself to choose a door. Ask only: “What is most alive for me right now?”",
-    enoughForToday: "Open the lens that feels closest. Write one sentence. Save it.",
+    script: "The sequence is not a verdict. It is a way to see where another choice might become possible.",
   },
   {
     key: "pause",
     eyebrow: "Lesson 2",
-    title: "Pause — meet the state, do not defeat it",
+    title: "Pause — begin with what happened",
     copy: [
-      "A state is information, not an identity. You do not have to make it disappear before you choose what comes next.",
+      "Pause begins with the camera-view version of the moment before asking what it meant. Then it makes room for your state, your body and the capacity you actually had.",
+      "A state is information, not an identity. Capacity is context, not a measurement of you. Neither has to disappear before you can continue.",
     ],
     movements: [
-      {
-        name: "Register",
-        body: "What is here in me? Name a feeling, body signal, capacity, or one word.",
-      },
-      {
-        name: "Receive",
-        body: "Can I let this be here for one moment without arguing with it or obeying it?",
-      },
-      { name: "Reorient", body: "What is one small, grounded direction from here?" },
+      { name: "Moment", body: "What happened—what was said, done, or noticed?" },
+      { name: "State", body: "What was happening in you?" },
+      { name: "Body", body: "Where did you feel it in your body?" },
+      { name: "Capacity", body: "How much capacity did you have in that moment?" },
     ],
-    script:
-      "This is here. It makes sense that it is here. I do not have to solve it in this minute.",
+    script: "This happened. This was happening in me. I can honour both without making either the whole story.",
     examples: [
       {
-        title: "A difficult moment",
+        title: "A delayed reply",
         lines: [
-          { label: "Register", body: "Activated. Tight chest. Some capacity, carefully." },
-          {
-            label: "Receive",
-            body: "I am anxious after that conversation. I do not need to decide what it means while my body is loud.",
-          },
-          {
-            label: "Reorient",
-            body: "Put my phone down, drink water, and give myself twenty minutes before replying.",
-          },
-        ],
-      },
-      {
-        title: "A good moment",
-        lines: [
-          { label: "Register", body: "Quietly well. Rested. More capacity than usual." },
-          { label: "Receive", body: "I want to let this count instead of rushing past it." },
-          { label: "Reorient", body: "Take a slow walk before opening my laptop." },
+          { label: "Moment", body: "A friend read my message yesterday and has not replied." },
+          { label: "State", body: "Anxious and braced." },
+          { label: "Body", body: "Tight chest and held breath." },
+          { label: "Capacity", body: "Some, carefully." },
         ],
       },
     ],
   },
   {
-    key: "presence",
+    key: "perceive",
     eyebrow: "Lesson 3",
-    title: "Perceive — make room between a moment and its story",
+    title: "Perceive — separate meaning from prediction",
     copy: [
-      "Feelings are real. A prediction attached to a feeling may or may not be complete. Perceive helps you hold both with kindness.",
+      "Meaning is the conclusion your mind made about the moment. Prediction is the future it began preparing for. Both may feel convincing; neither needs to be shamed or treated as the whole reality.",
+      "When a response feels familiar, the record asks what it may have been protecting. That question honours the intelligence of an old response without requiring you to repeat it.",
     ],
     teach: [
-      "You do not have to prove your story wrong.",
-      "“Story” does not mean lie. It means the meaning your mind is adding to incomplete information.",
-      "You do not need to excavate your past. The “where have I known this before?” prompt is optional.",
-      "“Protective part” is optional language. If it fits, ask: “What might my mind be trying to save me from?”",
+      "Writing a meaning down does not mean agreeing with it.",
+      "A prediction can be understandable and still be incomplete.",
+      "You do not need to excavate your history or explain where a pattern began.",
+      "If you are not sure whether it is familiar, “I'm not sure yet” is enough.",
     ],
     examples: [
       {
-        title: "A quiet misunderstanding",
+        title: "The same delayed reply",
         lines: [
-          { label: "What happened?", body: "A friend saw my message and has not replied." },
-          { label: "What am I making it mean?", body: "She is upset with me." },
-          { label: "What do I know?", body: "She has not replied yet." },
-          { label: "What am I filling in?", body: "That silence means rejection." },
-          {
-            label: "What else could be true?",
-            body: "She may be busy, tired, or deciding what to say.",
-          },
-          {
-            label: "Small experiment",
-            body: "If I still want clarity tomorrow, I will ask directly rather than rereading the silence.",
-          },
+          { label: "Meaning", body: "I had asked for too much." },
+          { label: "Prediction", body: "She would pull away and I would lose the friendship." },
+          { label: "Familiarity", body: "Very familiar." },
+          { label: "Protection", body: "Going quiet first protected me from being seen as needy." },
         ],
       },
     ],
-    enoughForToday: "“This happened. I am afraid it means ____. I do not know yet.”",
   },
   {
-    key: "practice",
+    key: "practise",
     eyebrow: "Lesson 4",
-    title: "Practice and Field Notes — choose a direction; return as a learner",
+    title: "Practise — let one choice become an experiment",
     copy: [
-      "A Pattern of Choosing is not a promise to become someone else. It is a private place to notice the direction your choices are taking you, and to decide whether you want to keep travelling that way.",
-      "An experiment is not a promise to follow through perfectly. It is a small way of learning from life rather than asking fear, hope, or certainty to predict everything for you.",
+      "Practise begins with what you actually did. It then asks who you were being—not as a permanent label, but as a description of the version of you present in that moment.",
+      "The final question is one small experiment. It is not a promise to become someone else. It is a way to let reality contribute new information.",
     ],
     teach: [
-      "“Identity” means the value or commitment a choice makes real now; it is not a permanent label.",
-      "A Pattern may be current-season-specific, uncertain, revised, re-chosen, or retired.",
-      "Re-choosing is not proof that you failed the first time. It is the practice itself.",
-      "This is an option to adapt, not a prescription. Choose another guide, make it smaller, or do nothing today.",
+      "Identity here describes a response; it does not define your whole self.",
+      "You may want to keep being her, choose differently this time, or not know yet.",
+      "A useful experiment is voluntary, specific, small enough to try, and easy to revise.",
+      "Its value is what you learn, not whether you perform it perfectly.",
     ],
-    guideNote:
-      "When a Guide appears, it is a starter script—not a recommendation about what you need. Choose the one that feels closest, adapt the words, make it smaller, choose another, or do nothing today.",
     examples: [
       {
-        title: "A current commitment",
+        title: "The choice inside the moment",
         lines: [
-          {
-            label: "What commitment are my choices making real right now?",
-            body: "I am making immediate availability real, even when it costs me.",
-          },
-          {
-            label: "What do I want to re-choose?",
-            body: "Reciprocal availability: I can care without answering at once.",
-          },
-          { label: "When…", body: "a request arrives and I feel tense," },
-          {
-            label: "I will…",
-            body: "say, “Let me check what I can hold and come back to you.”",
-          },
+          { label: "Action", body: "I went quiet and started making my message smaller." },
+          { label: "Identity", body: "The one who keeps the peace by disappearing." },
+          { label: "Continue?", body: "Not this time." },
+          { label: "Experiment", body: "I will leave the message as written and wait until tomorrow before deciding what the silence means." },
         ],
       },
+    ],
+  },
+  {
+    key: "return",
+    eyebrow: "Lesson 5",
+    title: "Return — let life answer back",
+    copy: [
+      "A Pattern Record is complete after Pause, Perceive and Practise. Return happens later, when there is something real to notice. It is an invitation, never an overdue task.",
+      "A Return asks what you tried, what actually happened, what you noticed in yourself, what happened to the prediction, what supported you, and what you want to carry forward.",
+    ],
+    teach: [
+      "The prediction may come true, partly come true, unfold differently, or remain uncertain.",
+      "Changing course, forgetting, stopping, or discovering the experiment was too large are all information.",
+      "One Return does not prove a universal truth. It adds one honest piece of evidence.",
+      "Common Themes count only the words and options you recorded; they do not interpret you.",
     ],
     table: {
-      head: ["Phase", "The question", "A valid answer"],
+      head: ["Return asks", "It is listening for", "A valid answer"],
       rows: [
-        ["Try", "What am I willing to test?", "“I will wait thirty minutes before I reply.”"],
-        [
-          "Notice",
-          "What is happening while life unfolds?",
-          "“The urge to answer immediately rose, then softened.”",
-        ],
-        [
-          "Return",
-          "What did life show me?",
-          "“Nothing bad happened. I still want a direct conversation next time.”",
-        ],
+        ["What did you try?", "The action you actually took", "“I waited until the next day.”"],
+        ["What actually happened?", "The observable result", "“She replied warmly that evening.”"],
+        ["What happened to the prediction?", "How expectation met reality", "“It did not happen as I expected.”"],
       ],
     },
-    enoughForToday:
-      "“I am not sure yet, but I want to notice what I say yes to when I am afraid of disappointing someone.”",
-    close: "You are not collecting proof that you are good at life. You are collecting a more truthful relationship with it.",
+    enoughForToday: "“I'm not sure yet” is evidence too. It means life has not answered clearly enough.",
+    close: "You are not collecting proof that you are good at life. You are letting your actual life have a voice.",
   },
 ];
 
