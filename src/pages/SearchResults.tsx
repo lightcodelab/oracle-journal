@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTierAccess, getRequiredTierForBucket } from '@/hooks/useTierAccess';
 import type { ContentResource } from '@/hooks/useContentByLocation';
+import { htmlToPlainText } from '@/lib/richText';
+
 
 type SearchResult = ContentResource & { doorBucket?: string | null };
 
