@@ -11,8 +11,23 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTierAccess, getRequiredTierForBucket } from '@/hooks/useTierAccess';
 import type { ContentResource } from '@/hooks/useContentByLocation';
+import { htmlToPlainText } from '@/lib/richText';
+
 
 type SearchResult = ContentResource & { doorBucket?: string | null };
+
+interface TempleRow {
+  kind: 'deck' | 'card' | 'course';
+  id: string;
+  title: string;
+  subtitle: string | null;
+  deck_id: string | null;
+  deck_name: string | null;
+  card_number: number | null;
+  image_url: string | null;
+  door: string | null;
+  tags: string[] | null;
+}
 
 const getPublicUrl = (bucket: string, path: string | null): string | null => {
   if (!path) return null;
@@ -23,21 +38,32 @@ const getPublicUrl = (bucket: string, path: string | null): string | null => {
 
 const SearchResults = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const query = searchParams.get('q') || '';
   const [localQuery, setLocalQuery] = useState(query);
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [deckResults, setDeckResults] = useState<TempleRow[]>([]);
+  const [cardResults, setCardResults] = useState<TempleRow[]>([]);
+  const [visibleCards, setVisibleCards] = useState(24);
   const [loading, setLoading] = useState(false);
   const { hasAccess, loading: tierLoading } = useTierAccess();
 
+  const totalCount = results.length + deckResults.length + cardResults.length;
+
   useEffect(() => {
     setLocalQuery(query);
+    setVisibleCards(24);
   }, [query]);
+
 
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
+      setDeckResults([]);
+      setCardResults([]);
       return;
     }
+
 
     const search = async () => {
       setLoading(true);
@@ -58,48 +84,25 @@ const SearchResults = () => {
         .or(`title.ilike.${searchPattern},summary.ilike.${searchPattern}`)
         .limit(50);
 
-      // Search legacy courses table by title/description (include location for door mapping)
-      const { data: coursesData } = await supabase
-        .from('courses')
-        .select(`
-          id, title, description, image_url, door_type,
-          location:content_categories!courses_location_id_fkey(id, page)
-        `)
-        .eq('is_published', true)
-        .or(`title.ilike.${searchPattern},description.ilike.${searchPattern}`)
-        .limit(50);
+      // Decks, individual cards and courses — matched on titles, body content,
+      // lesson content and any assigned tags (server-side).
+      const { data: templeRows } = await supabase.rpc('search_temple', { _q: query });
+      const temple = (templeRows || []) as TempleRow[];
 
-      // Find courses by matching tag names
-      const { data: matchingCourseTags } = await supabase
-        .from('course_tags')
-        .select('id')
-        .ilike('name', searchPattern);
+      const allCoursesData = temple
+        .filter((r) => r.kind === 'course')
+        .map((r) => ({
+          id: r.id,
+          title: r.title,
+          description: r.subtitle,
+          image_url: r.image_url,
+          door_type: r.door,
+          location: null as any,
+        }));
 
-      let tagCourseData: any[] = [];
-      if (matchingCourseTags && matchingCourseTags.length > 0) {
-        const tagIds = matchingCourseTags.map((t) => t.id);
-        const { data: assignments } = await supabase
-          .from('course_tag_assignments')
-          .select('course_id')
-          .in('tag_id', tagIds);
-        const directCourseIds = new Set((coursesData || []).map((c: any) => c.id));
-        const extraCourseIds = [...new Set((assignments || []).map((a) => a.course_id))]
-          .filter((id) => !directCourseIds.has(id));
-        if (extraCourseIds.length > 0) {
-          const { data } = await supabase
-            .from('courses')
-            .select(`
-              id, title, description, image_url, door_type,
-              location:content_categories!courses_location_id_fkey(id, page)
-            `)
-            .eq('is_published', true)
-            .in('id', extraCourseIds)
-            .limit(50);
-          tagCourseData = data || [];
-        }
-      }
+      setDeckResults(temple.filter((r) => r.kind === 'deck'));
+      setCardResults(temple.filter((r) => r.kind === 'card'));
 
-      const allCoursesData = [...(coursesData || []), ...tagCourseData];
 
       // Search healing_resources by title/summary (include location for door mapping)
       const { data: healingData } = await supabase
@@ -212,7 +215,7 @@ const SearchResults = () => {
         id: r.id,
         title: r.title,
         slug: `legacy-course-${r.id}`,
-        summary: r.description,
+        summary: htmlToPlainText(r.description),
         thumbnail_url: r.image_url || null,
         main_media_kind: 'none' as const,
         main_media_file_url: null,
@@ -288,21 +291,92 @@ const SearchResults = () => {
           <div className="text-center py-12 text-muted-foreground">Searching…</div>
         )}
 
-        {!loading && query && results.length === 0 && (
+        {!loading && query && totalCount === 0 && (
           <div className="text-center py-12">
             <Search className="w-10 h-10 text-muted-foreground/40 mx-auto mb-4" />
             <p className="text-muted-foreground">No resources found for "{query}"</p>
           </div>
         )}
 
+        {!loading && totalCount > 0 && (
+          <p className="text-sm text-muted-foreground mb-6">
+            {totalCount} result{totalCount !== 1 ? 's' : ''} for "{query}"
+          </p>
+        )}
+
+        {!loading && deckResults.length > 0 && (
+          <section className="mb-10">
+            <h2 className="font-serif text-xl text-foreground mb-4">Card Decks</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {deckResults.map((deck) => (
+                <button
+                  key={deck.id}
+                  onClick={() => navigate(`/remembrance?deck=${deck.id}`)}
+                  className="text-left rounded-lg border border-border/60 bg-card p-4 hover:border-primary/60 transition-colors"
+                >
+                  <p className="font-serif text-lg text-foreground">{deck.title}</p>
+                  {deck.subtitle && (
+                    <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{deck.subtitle}</p>
+                  )}
+                  {deck.tags && deck.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-3">
+                      {deck.tags.slice(0, 4).map((t) => (
+                        <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>
+                      ))}
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {!loading && cardResults.length > 0 && (
+          <section className="mb-10">
+            <h2 className="font-serif text-xl text-foreground mb-4">
+              Cards <span className="text-sm text-muted-foreground font-sans">({cardResults.length})</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {cardResults.slice(0, visibleCards).map((card) => (
+                <button
+                  key={card.id}
+                  onClick={() => navigate(`/remembrance?deck=${card.deck_id}&card=${card.id}`)}
+                  className="text-left rounded-lg border border-border/60 bg-card p-4 hover:border-primary/60 transition-colors"
+                >
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                    {card.deck_name} · Card {card.card_number}
+                  </p>
+                  <p className="font-serif text-base text-foreground mt-1">{card.title}</p>
+                  {card.subtitle && (
+                    <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{card.subtitle}</p>
+                  )}
+                  {card.tags && card.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-3">
+                      {card.tags.slice(0, 4).map((t) => (
+                        <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>
+                      ))}
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+            {cardResults.length > visibleCards && (
+              <div className="flex justify-center mt-4">
+                <Button variant="outline" onClick={() => setVisibleCards((n) => n + 24)}>
+                  Show more cards
+                </Button>
+              </div>
+            )}
+          </section>
+        )}
+
         {!loading && results.length > 0 && (
           <>
-            <p className="text-sm text-muted-foreground mb-6">
-              {results.length} result{results.length !== 1 ? 's' : ''} for "{query}"
-            </p>
+            <h2 className="font-serif text-xl text-foreground mb-4">Teachings &amp; Courses</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {results.map((resource, index) => {
                 const locked = isLocked(resource);
+
                 const tierInfo = resource.doorBucket ? getRequiredTierForBucket(resource.doorBucket) : null;
                 return (
                   <div key={resource.id} className="relative">

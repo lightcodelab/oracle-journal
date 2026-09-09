@@ -171,6 +171,7 @@ const CardDeckAdmin = () => {
     thumbnail_url: string | null;
   } | null>(null);
   const [deckTagIds, setDeckTagIds] = useState<string[]>([]);
+  const [cardTagIds, setCardTagIds] = useState<string[]>([]);
   const [savingDeck, setSavingDeck] = useState(false);
   const [uploadingDeckThumb, setUploadingDeckThumb] = useState(false);
 
@@ -252,7 +253,7 @@ const CardDeckAdmin = () => {
 
   // Load draft when card changes
   useEffect(() => {
-    if (!selectedCardId) { setDraft(null); return; }
+    if (!selectedCardId) { setDraft(null); setCardTagIds([]); return; }
     const found = cards.find((c) => c.id === selectedCardId);
     if (found) {
       setDraft({
@@ -262,12 +263,55 @@ const CardDeckAdmin = () => {
     }
   }, [selectedCardId, cards]);
 
+  // Load this card's tags
+  useEffect(() => {
+    if (!selectedCardId) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from('card_tag_assignments')
+        .select('tag_id')
+        .eq('card_id', selectedCardId);
+      if (!cancelled) setCardTagIds((data || []).map((r: any) => r.tag_id));
+    })();
+    return () => { cancelled = true; };
+  }, [selectedCardId]);
+
   const selectedDeck = decks.find((d) => d.id === selectedDeckId);
   const fields = useMemo<FieldDef[]>(() => {
     if (!selectedDeck) return [];
     // New decks created from this admin default to The Sacred Rewrite field structure.
     return DECK_FIELDS[selectedDeck.name] || DECK_FIELDS['The Sacred Rewrite'];
   }, [selectedDeck]);
+
+  const [generatingTags, setGeneratingTags] = useState(false);
+
+  const generateCardTags = async (overwrite: boolean) => {
+    if (!selectedDeckId) return;
+    setGeneratingTags(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-content-tags', {
+        body: { mode: 'cards', deck_id: selectedDeckId, overwrite },
+      });
+      if (error) throw error;
+      toast({
+        title: 'Tags suggested',
+        description: `${(data as any)?.tagged ?? 0} cards tagged. Open a card to edit its tags.`,
+      });
+      if (selectedCardId) {
+        const { data: rows } = await supabase
+          .from('card_tag_assignments')
+          .select('tag_id')
+          .eq('card_id', selectedCardId);
+        setCardTagIds((rows || []).map((r: any) => r.tag_id));
+      }
+    } catch (e: any) {
+      toast({ title: 'Could not suggest tags', description: e?.message ?? String(e), variant: 'destructive' });
+    } finally {
+      setGeneratingTags(false);
+    }
+  };
+
 
   const updateField = (f: FieldDef, value: string) => {
     if (!draft) return;
@@ -314,6 +358,15 @@ const CardDeckAdmin = () => {
 
       const { error } = await supabase.from('cards').update(payload).eq('id', draft.id);
       if (error) throw error;
+
+      // Sync this card's tags (used by Search)
+      await supabase.from('card_tag_assignments').delete().eq('card_id', draft.id);
+      if (cardTagIds.length > 0) {
+        const { error: tagErr } = await supabase
+          .from('card_tag_assignments')
+          .insert(cardTagIds.map((tag_id) => ({ card_id: draft.id, tag_id })));
+        if (tagErr) throw tagErr;
+      }
 
       toast({ title: 'Card saved', description: `${draft.card_title} updated.` });
       // Refresh local cache
@@ -733,6 +786,26 @@ const CardDeckAdmin = () => {
                 onChange={setDeckTagIds}
                 label="Deck Tags"
               />
+              <div className="space-y-2 pt-4 border-t border-border/60">
+                <Label>Suggested card tags</Label>
+                <p className="text-xs text-muted-foreground">
+                  Reads each card in this deck — its own writing, this deck's description and any
+                  matching companion lesson — and suggests at least 5 search tags per card. Cards
+                  that already have tags are left alone unless you choose to replace them. You can
+                  edit every suggestion afterwards on the card itself.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" size="sm" disabled={generatingTags} onClick={() => generateCardTags(false)}>
+                    {generatingTags ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Working…</>
+                    ) : 'Suggest tags for untagged cards'}
+                  </Button>
+                  <Button variant="ghost" size="sm" disabled={generatingTags} onClick={() => generateCardTags(true)}>
+                    Replace all tags in this deck
+                  </Button>
+                </div>
+              </div>
+
               <div className="flex justify-end pt-2 border-t border-border/60">
                 <Button onClick={handleSaveDeckSettings} disabled={savingDeck}>
                   {savingDeck ? (
@@ -825,6 +898,21 @@ const CardDeckAdmin = () => {
                   </div>
                 ))}
               </div>
+
+              {/* Card tags — power the Search tool */}
+              <div className="space-y-2 pt-4 border-t border-border">
+                <CourseTagPicker
+                  selectedTagIds={cardTagIds}
+                  onChange={setCardTagIds}
+                  label="Card Tags"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Tags make this individual card findable in Search. Aim for at least 5. They are
+                  saved together with the card when you press Save Changes.
+                </p>
+              </div>
+
+
 
               <div className="flex justify-end gap-2 pt-4 border-t border-border">
                 <Button variant="outline" onClick={() => {

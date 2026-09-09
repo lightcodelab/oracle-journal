@@ -1249,6 +1249,42 @@ export type Database = {
           },
         ]
       }
+      card_tag_assignments: {
+        Row: {
+          card_id: string
+          created_at: string
+          id: string
+          tag_id: string
+        }
+        Insert: {
+          card_id: string
+          created_at?: string
+          id?: string
+          tag_id: string
+        }
+        Update: {
+          card_id?: string
+          created_at?: string
+          id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_tag_assignments_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "card_tag_assignments_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "course_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cards: {
         Row: {
           acknowledgement_content: string | null
@@ -7996,6 +8032,21 @@ export type Database = {
       recompute_profile_active_member: {
         Args: { _user_id: string }
         Returns: undefined
+      }
+      search_temple: {
+        Args: { _q: string }
+        Returns: {
+          card_number: number
+          deck_id: string
+          deck_name: string
+          door: string
+          id: string
+          image_url: string
+          kind: string
+          subtitle: string
+          tags: string[]
+          title: string
+        }[]
       }
       stripe_webhook_complete_event: {
         Args: {
