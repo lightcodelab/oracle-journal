@@ -123,9 +123,15 @@ async function suggestTags(
 async function ensureTagIds(names: string[]): Promise<Map<string, string>> {
   const map = new Map<string, string>();
   if (names.length === 0) return map;
-  const { data: existing } = await admin.from('course_tags').select('id, name');
+  const existing: { id: string; name: string }[] = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await admin.from('course_tags').select('id, name').range(from, from + 999);
+    if (error) throw error;
+    existing.push(...((data ?? []) as any[]));
+    if ((data ?? []).length < 1000) break;
+  }
   const byLower = new Map<string, { id: string; name: string }>();
-  (existing ?? []).forEach((t: any) => byLower.set(t.name.toLowerCase(), t));
+  existing.forEach((t: any) => byLower.set(t.name.toLowerCase(), t));
 
   const missing: string[] = [];
   for (const name of names) {
