@@ -278,7 +278,7 @@ Deno.serve(async (req) => {
       if (rows.length) {
         const table = mode === 'cards' ? 'card_tag_assignments' : 'course_tag_assignments';
         const { error: insErr } = await admin.from(table).upsert(rows, {
-          onConflict: mode === 'cards' ? 'card_id,tag_id' : undefined,
+          onConflict: mode === 'cards' ? 'card_id,tag_id' : 'course_id,tag_id',
           ignoreDuplicates: true,
         });
         if (insErr && !String(insErr.message).includes('duplicate')) throw insErr;
