@@ -1,35 +1,59 @@
-import { useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, Home, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import NavActions from "@/components/NavActions";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import LivingPatternPause from "./LivingPatternPause";
-import LivingPatternPresence from "./LivingPatternPresence";
-import LivingPatternPractice from "./LivingPatternPractice";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { useMemberState } from "@/hooks/useMemberState";
+import PatternRecordFlow from "@/components/temple/living/PatternRecordFlow";
 import livingPatternBanner from "@/assets/living-pattern-banner.png.asset.json";
 
 /**
- * One private page holding all three Living Pattern lenses as tabs:
- * Pause, Perceive and Practice. Presentation only — each lens keeps its
- * own private form, saving and access behaviour.
+ * /living-pattern — one guided Pattern Record.
+ *
+ * Pause → Perceive → Practise are one coherent practice, completed in sequence
+ * before saving. Return is added later on the saved record. Private to its
+ * owner; no Arrival or AreekeerA® Guide connection, no generative AI.
  */
 
-const LENSES = ["pause", "perceive", "practice"] as const;
-type Lens = (typeof LENSES)[number];
-
-const isLens = (v: string | null): v is Lens =>
-  !!v && (LENSES as readonly string[]).includes(v);
-
 const LivingPatternLenses = () => {
-  const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
-  const raw = params.get("lens");
-  const lens: Lens = isLens(raw) ? raw : "pause";
+  const { user, loading: authLoading } = useAuth();
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
 
-  useEffect(() => {
-    if (raw === "presence") setParams({ lens: "perceive" }, { replace: true });
-  }, [raw, setParams]);
+  if (authLoading || memberLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-5 w-5 animate-spin text-primary" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  if (!user || !hasFullTempleAccess) {
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
+            <Home className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span className="font-medium truncate">The Temple of Sustainment</span>
+          </div>
+          <NavActions />
+        </header>
+        <main className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
+          <h1 className="font-serif text-3xl text-foreground mb-4">
+            Your Living Pattern is private
+          </h1>
+          <p className="text-muted-foreground mb-8">
+            An active membership opens this practice. Return to the entrance to see what is
+            currently open.
+          </p>
+          <Button asChild size="lg">
+            <Link to="/">Return to the entrance</Link>
+          </Button>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -65,49 +89,24 @@ const LivingPatternLenses = () => {
                 Your Living Pattern
               </p>
               <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl text-on-image drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] mt-1">
-                Pause, Perceive, Practice
+                One Pattern Record
               </h1>
               <p className="mt-3 font-sans text-sm sm:text-base text-on-image/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] leading-relaxed">
-                A private Conservatory laboratory for noticing what is true,
-                trying one small different thing, and gathering evidence from
-                what life shows you next.
+                Pause, Perceive, Practise — one moment followed all the way
+                through, so you can see the whole chain that shapes a response.
               </p>
             </div>
           </div>
         </motion.div>
 
-        <p className="text-center text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto mb-6">
-          These are not steps you must complete in sequence; choose to log
-          whatever is true in the moment.
+        <p className="text-center text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
+          These questions belong together: what happened, what your mind made of
+          it, and one small experiment you will try. Later, when life has
+          answered back, you return to the same record and add what it actually
+          showed you.
         </p>
 
-        <Tabs
-          value={lens}
-          onValueChange={(v) => setParams({ lens: v }, { replace: true })}
-          className="mt-6"
-        >
-          <TabsList className="w-full grid grid-cols-3 bg-primary text-primary-foreground">
-            <TabsTrigger value="pause" className="text-primary-foreground/90 data-[state=active]:bg-card data-[state=active]:text-foreground">
-              Pause
-            </TabsTrigger>
-            <TabsTrigger value="perceive" className="text-primary-foreground/90 data-[state=active]:bg-card data-[state=active]:text-foreground">
-              Perceive
-            </TabsTrigger>
-            <TabsTrigger value="practice" className="text-primary-foreground/90 data-[state=active]:bg-card data-[state=active]:text-foreground">
-              Practice
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="pause" className="mt-6">
-            <LivingPatternPause embedded />
-          </TabsContent>
-          <TabsContent value="perceive" className="mt-6">
-            <LivingPatternPresence embedded />
-          </TabsContent>
-          <TabsContent value="practice" className="mt-6">
-            <LivingPatternPractice embedded />
-          </TabsContent>
-        </Tabs>
+        <PatternRecordFlow />
 
         <p className="mt-10 text-sm text-muted-foreground">
           <button
