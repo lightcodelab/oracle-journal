@@ -63,7 +63,7 @@ async function suggestTags(
     `Return ONLY valid JSON of the shape {"items":[{"key":"...","tags":["...","..."]}]}.`,
     ``,
     `ITEMS:`,
-    ...items.map((i) => `--- key: ${i.key}\ntitle: ${i.label}\ncontent: ${i.text.slice(0, 2600)}`),
+    ...items.map((i, idx) => `--- key: k${idx}\ntitle: ${i.label}\ncontent: ${i.text.slice(0, 2600)}`),
   ].join('\n');
 
   const res = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -94,13 +94,10 @@ async function suggestTags(
     parsed = match ? JSON.parse(match[0]) : { items: [] };
   }
   const out: Record<string, string[]> = {};
-  const validKeys = new Set(items.map((i) => i.key));
   for (const entry of parsed?.items ?? []) {
-    const raw = String(entry?.key ?? '').trim();
-    // Models occasionally mangle long ids, so only accept keys we actually sent.
-    const key = validKeys.has(raw)
-      ? raw
-      : (items.find((i) => i.key.replace(/-/g, '') === raw.replace(/-/g, '')) ?? { key: '' }).key;
+    // Short aliases are used in the prompt so long ids can never come back mangled.
+    const match = String(entry?.key ?? '').trim().match(/^k(\d+)$/);
+    const key = match ? items[Number(match[1])]?.key : undefined;
     if (!key) continue;
     const tags = (entry?.tags ?? [])
       .map((t: unknown) => normaliseTag(String(t)))
