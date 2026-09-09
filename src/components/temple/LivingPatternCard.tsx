@@ -1,57 +1,12 @@
 import { Link } from "react-router-dom";
-import pauseImg from "@/assets/pause-img.png.asset.json";
 import presenceImg from "@/assets/presence-img.png.asset.json";
-import practiceImg from "@/assets/practice-img.png.asset.json";
 
 /**
- * Home doorway: "Logging My Living Pattern".
+ * Home doorway: the Living Pattern Lab.
  *
- * LP-E: Pause, Presence and Practice are all live, connected lenses — not
- * steps, not a sequence, not a checklist, and not progress.
+ * One coherent practice — Pause, Perceive, Practise in one Pattern Record, with
+ * a Return added later. Not three separate logs, not a tracker, not progress.
  */
-
-type Panel = {
-  key: string;
-  record: string;
-  practice: string;
-  description: string;
-  image: string;
-  action: string;
-  href: string;
-};
-
-const panels: Panel[] = [
-  {
-    key: "pause",
-    record: "States of Being",
-    practice: "PAUSE",
-    description: "Notice and tend the state you are in.",
-    image: pauseImg.url,
-    action: "Log a State of Being",
-    href: "/living-pattern?lens=pause",
-  },
-  {
-    key: "presence",
-    record: "Moments of Meaning",
-    practice: "PERCEIVE",
-    description: "Unpack the story your subconscious has been telling, so you can make more conscious choices.",
-    image: presenceImg.url,
-    action: "Log a Moment of Meaning",
-    href: "/living-pattern?lens=perceive",
-  },
-
-  {
-    key: "practice",
-    record: "Patterns of Choosing",
-    practice: "PRACTICE",
-    description:
-      "Consciously choose and sustain the commitments your actions are making real.",
-    image: practiceImg.url,
-    action: "Log a Pattern of Choosing",
-    href: "/living-pattern?lens=practice",
-  },
-];
-
 
 export function LivingPatternCard() {
   return (
@@ -66,25 +21,27 @@ export function LivingPatternCard() {
         >
           Your Living Pattern Lab
         </h2>
+
         <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
-            Your Living Pattern is a private Conservatory laboratory for
-            learning how you want to shape your life. Here, you can notice what
-            is true in a moment, become curious about the meaning your mind is
-            making, try one small different choice, and gather evidence from
-            what happens next. Over time, you will see the conditions that
-            steady you, the stories and habits that narrow your choices, the
-            commitments you want to strengthen, and the living evidence of a life
-            becoming more like your own.
+            Your Living Pattern is a private laboratory for seeing the whole chain
+            that shapes a response: the moment, the state you were in, the meaning
+            your mind made, the future it predicted, the familiar pattern beneath
+            it, and the choice you made. You follow one moment all the way
+            through, choose one small experiment, and later return to what life
+            actually showed you — so you are living from evidence rather than
+            from fear, hope, or self-judgement.
           </p>
 
           <div className="space-y-2 text-sm text-muted-foreground">
             <p>
-              <span className="font-semibold text-foreground">New to the Living Pattern?</span>
+              <span className="font-semibold text-foreground">
+                New to the Living Pattern?
+              </span>
               <br />
-              Start with the five-minute introduction. It will show you how to choose a lens, write a small enough entry, and use experiments without turning your life into homework.
-              <br />
-              You can also begin with any lens now.
+              Start with the short introduction. It shows you how one Pattern
+              Record works, and how a Return turns an experiment into evidence
+              without turning your life into homework.
             </p>
             <p>
               <Link
@@ -93,8 +50,7 @@ export function LivingPatternCard() {
               >
                 Start here: How to use your Living Pattern
               </Link>{" "}
-              — a short, private orientation you can read now, later, or never. You
-              may open any lens straight away.
+              — a short, private orientation you can read now, later, or never.
             </p>
             <p>
               To go deeper and understand why to use The Living Pattern,{" "}
@@ -109,59 +65,51 @@ export function LivingPatternCard() {
           </div>
         </div>
 
+        <article className="relative mt-6 overflow-hidden rounded-lg border border-border/50 w-full min-w-0 sm:aspect-[21/9] sm:min-h-[280px]">
+          <img
+            src={presenceImg.url}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div aria-hidden="true" className="absolute inset-0 bg-[#2a1a12]/40" />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-r from-[#2a1a12]/85 via-[#2a1a12]/55 to-transparent"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-t from-[#1f140e]/70 via-[#1f140e]/20 to-transparent"
+          />
 
-
-
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {panels.map((panel) => (
-            <article
-              key={panel.key}
-              className="relative overflow-hidden rounded-lg border border-border/50 w-full min-w-0 max-w-full sm:aspect-[4/3] sm:min-h-[280px] lg:min-h-[320px]"
-            >
-              <img
-                src={panel.image}
-                alt=""
-                aria-hidden="true"
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-[#2a1a12]/40"
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-r from-[#2a1a12]/80 via-[#2a1a12]/50 to-transparent"
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-[#1f140e]/70 via-[#1f140e]/20 to-transparent sm:from-[#1f140e]/60 sm:via-transparent"
-              />
-
-              <div className="relative flex h-full flex-col justify-end p-5 sm:p-6 lg:p-5 xl:p-6 max-w-full sm:max-w-[62%] lg:max-w-[90%] [text-shadow:0_1px_3px_rgba(0,0,0,0.45)]">
-                <p className="text-[0.65rem] lg:text-[0.6rem] tracking-[0.2em] uppercase text-primary">
-                  {panel.record}
-                </p>
-                <h3 className="mt-1 font-serif text-2xl sm:text-3xl lg:text-2xl tracking-wide text-on-image">
-                  {panel.practice}
-                </h3>
-                <p className="mt-2 text-sm sm:text-base lg:text-sm leading-relaxed text-on-image">
-                  {panel.description}
-                </p>
-                <div className="mt-4">
-                  <Link
-                    to={panel.href}
-                    className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                  >
-                    {panel.action}
-                  </Link>
-                </div>
-
-              </div>
-            </article>
-          ))}
-        </div>
-
+          <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 max-w-full sm:max-w-[62%] [text-shadow:0_1px_3px_rgba(0,0,0,0.45)]">
+            <p className="text-[0.65rem] tracking-[0.2em] uppercase text-primary">
+              Pause · Perceive · Practise
+            </p>
+            <h3 className="mt-1 font-serif text-2xl sm:text-3xl tracking-wide text-on-image">
+              One Pattern Record
+            </h3>
+            <p className="mt-2 text-sm sm:text-base leading-relaxed text-on-image">
+              Follow one moment all the way through, and choose one small
+              experiment. You can return to it later, when life has answered back.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link
+                to="/living-pattern"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              >
+                Record a Pattern
+              </Link>
+              <Link
+                to="/living-pattern/record"
+                className="inline-flex items-center justify-center rounded-md border border-on-image/50 px-4 py-2.5 text-sm font-medium text-on-image transition-colors hover:bg-on-image/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              >
+                My Living Pattern
+              </Link>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
   );
