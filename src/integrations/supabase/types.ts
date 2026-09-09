@@ -8033,6 +8033,21 @@ export type Database = {
         Args: { _user_id: string }
         Returns: undefined
       }
+      search_temple: {
+        Args: { _q: string }
+        Returns: {
+          card_number: number
+          deck_id: string
+          deck_name: string
+          door: string
+          id: string
+          image_url: string
+          kind: string
+          subtitle: string
+          tags: string[]
+          title: string
+        }[]
+      }
       stripe_webhook_complete_event: {
         Args: {
           _event_id: string
