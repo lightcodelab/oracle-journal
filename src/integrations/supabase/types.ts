@@ -4908,6 +4908,134 @@ export type Database = {
           },
         ]
       }
+      pattern_records: {
+        Row: {
+          action_text: string
+          body_cues: string[]
+          body_text: string
+          capacity: string
+          content_revision: number
+          continue_identity: string
+          created_at: string
+          experiment_text: string
+          familiarity: string
+          id: string
+          identity_text: string
+          initial_completed_at: string
+          meaning_text: string
+          moment_text: string
+          occurred_at: string
+          prediction_text: string
+          protection_text: string | null
+          schema_version: number
+          state_words: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_text: string
+          body_cues?: string[]
+          body_text: string
+          capacity: string
+          content_revision?: number
+          continue_identity: string
+          created_at?: string
+          experiment_text: string
+          familiarity: string
+          id?: string
+          identity_text: string
+          initial_completed_at?: string
+          meaning_text: string
+          moment_text: string
+          occurred_at?: string
+          prediction_text: string
+          protection_text?: string | null
+          schema_version?: number
+          state_words?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_text?: string
+          body_cues?: string[]
+          body_text?: string
+          capacity?: string
+          content_revision?: number
+          continue_identity?: string
+          created_at?: string
+          experiment_text?: string
+          familiarity?: string
+          id?: string
+          identity_text?: string
+          initial_completed_at?: string
+          meaning_text?: string
+          moment_text?: string
+          occurred_at?: string
+          prediction_text?: string
+          protection_text?: string | null
+          schema_version?: number
+          state_words?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pattern_returns: {
+        Row: {
+          carry_forward_text: string
+          content_revision: number
+          created_at: string
+          happened_text: string
+          id: string
+          noticed_text: string
+          prediction_outcome: string
+          record_id: string
+          recorded_at: string
+          schema_version: number
+          support_text: string | null
+          tried_text: string
+          updated_at: string
+        }
+        Insert: {
+          carry_forward_text: string
+          content_revision?: number
+          created_at?: string
+          happened_text: string
+          id?: string
+          noticed_text: string
+          prediction_outcome: string
+          record_id: string
+          recorded_at?: string
+          schema_version?: number
+          support_text?: string | null
+          tried_text: string
+          updated_at?: string
+        }
+        Update: {
+          carry_forward_text?: string
+          content_revision?: number
+          created_at?: string
+          happened_text?: string
+          id?: string
+          noticed_text?: string
+          prediction_outcome?: string
+          record_id?: string
+          recorded_at?: string
+          schema_version?: number
+          support_text?: string | null
+          tried_text?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pattern_returns_record_id_fkey"
+            columns: ["record_id"]
+            isOneToOne: false
+            referencedRelation: "pattern_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount_cents: number
@@ -7786,6 +7914,85 @@ export type Database = {
         Returns: string
       }
       mirror_withdraw_participation: { Args: never; Returns: undefined }
+      pattern_common_themes: { Args: { _limit?: number }; Returns: Json }
+      pattern_record_create: {
+        Args: {
+          _action_text?: string
+          _body_cues: string[]
+          _body_text: string
+          _capacity: string
+          _continue_identity?: string
+          _experiment_text?: string
+          _familiarity: string
+          _identity_text?: string
+          _meaning_text: string
+          _moment_text: string
+          _occurred_at?: string
+          _prediction_text: string
+          _protection_text?: string
+          _state_words: string[]
+        }
+        Returns: Json
+      }
+      pattern_record_get: { Args: { _id: string }; Returns: Json }
+      pattern_record_payload: { Args: { _record_id: string }; Returns: Json }
+      pattern_record_update: {
+        Args: {
+          _action_text?: string
+          _body_cues?: string[]
+          _body_text?: string
+          _capacity?: string
+          _continue_identity?: string
+          _expected_revision: number
+          _experiment_text?: string
+          _familiarity?: string
+          _id: string
+          _identity_text?: string
+          _meaning_text?: string
+          _moment_text?: string
+          _prediction_text?: string
+          _protection_text?: string
+          _state_words?: string[]
+        }
+        Returns: Json
+      }
+      pattern_records_awaiting_return: {
+        Args: { _min_age?: string }
+        Returns: Json
+      }
+      pattern_records_list: {
+        Args: {
+          _cursor_id?: string
+          _cursor_occurred_at?: string
+          _limit?: number
+        }
+        Returns: Json
+      }
+      pattern_return_create: {
+        Args: {
+          _carry_forward_text: string
+          _happened_text: string
+          _noticed_text: string
+          _prediction_outcome: string
+          _record_id: string
+          _support_text?: string
+          _tried_text: string
+        }
+        Returns: Json
+      }
+      pattern_return_update: {
+        Args: {
+          _carry_forward_text?: string
+          _expected_revision: number
+          _happened_text?: string
+          _id: string
+          _noticed_text?: string
+          _prediction_outcome?: string
+          _support_text?: string
+          _tried_text?: string
+        }
+        Returns: Json
+      }
       recompute_profile_active_member: {
         Args: { _user_id: string }
         Returns: undefined

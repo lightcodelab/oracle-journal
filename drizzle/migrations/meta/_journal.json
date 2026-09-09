@@ -71,6 +71,13 @@
       "when": 1788230823280,
       "tag": "0009_teardown_lpf1bpub_release_fixtures",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1788925651929,
+      "tag": "0010_lpg1_pattern_records",
+      "breakpoints": true
     }
   ]
 }
