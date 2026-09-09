@@ -284,6 +284,35 @@ const CardDeckAdmin = () => {
     return DECK_FIELDS[selectedDeck.name] || DECK_FIELDS['The Sacred Rewrite'];
   }, [selectedDeck]);
 
+  const [generatingTags, setGeneratingTags] = useState(false);
+
+  const generateCardTags = async (overwrite: boolean) => {
+    if (!selectedDeckId) return;
+    setGeneratingTags(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-content-tags', {
+        body: { mode: 'cards', deck_id: selectedDeckId, overwrite },
+      });
+      if (error) throw error;
+      toast({
+        title: 'Tags suggested',
+        description: `${(data as any)?.tagged ?? 0} cards tagged. Open a card to edit its tags.`,
+      });
+      if (selectedCardId) {
+        const { data: rows } = await supabase
+          .from('card_tag_assignments')
+          .select('tag_id')
+          .eq('card_id', selectedCardId);
+        setCardTagIds((rows || []).map((r: any) => r.tag_id));
+      }
+    } catch (e: any) {
+      toast({ title: 'Could not suggest tags', description: e?.message ?? String(e), variant: 'destructive' });
+    } finally {
+      setGeneratingTags(false);
+    }
+  };
+
+
   const updateField = (f: FieldDef, value: string) => {
     if (!draft) return;
     if (f.storage === 'column') {
