@@ -330,6 +330,15 @@ const CardDeckAdmin = () => {
       const { error } = await supabase.from('cards').update(payload).eq('id', draft.id);
       if (error) throw error;
 
+      // Sync this card's tags (used by Search)
+      await supabase.from('card_tag_assignments').delete().eq('card_id', draft.id);
+      if (cardTagIds.length > 0) {
+        const { error: tagErr } = await supabase
+          .from('card_tag_assignments')
+          .insert(cardTagIds.map((tag_id) => ({ card_id: draft.id, tag_id })));
+        if (tagErr) throw tagErr;
+      }
+
       toast({ title: 'Card saved', description: `${draft.card_title} updated.` });
       // Refresh local cache
       setCards((prev) => prev.map((c) => (c.id === draft.id ? { ...c, ...payload } as CardRow : c)));
