@@ -55,6 +55,7 @@ export const STATE_WORD_OPTIONS = [
   "Hurt",
   "Ashamed",
   "Steady",
+  "Connected",
   "Quietly well",
   "Relieved",
   "Grateful",
