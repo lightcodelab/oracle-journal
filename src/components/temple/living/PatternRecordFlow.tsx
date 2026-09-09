@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import {
   NOT_SURE,
   PATTERN_QUESTIONS,
+  PRIMARY_STATE_WORDS,
   SAVE_CONFIRMATION,
   SAVE_LABEL,
   type PatternQuestion,
@@ -96,6 +97,7 @@ const PatternRecordFlow = () => {
   const [answers, setAnswers] = useState<Answers>(EMPTY);
   const [index, setIndex] = useState(0);
   const [ownWord, setOwnWord] = useState("");
+  const [showAllStateWords, setShowAllStateWords] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
 
