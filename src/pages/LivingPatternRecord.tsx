@@ -363,39 +363,6 @@ const LivingPatternRecord = () => {
               </>
             )}
 
-            {experiments.length > 0 && (
-              <div className="mt-8">
-                <h2 className="font-serif text-xl text-foreground">Earlier experiments</h2>
-                <ul className="mt-3 space-y-3">
-                  {experiments.map((e) => {
-                    const guide = guideByKey(e.guide_key);
-                    const title =
-                      guide && guide.key !== "own"
-                        ? guide.title
-                        : e.own_experiment || "Your experiment";
-                    return (
-                      <li key={e.id}>
-                        <Link
-                          to={`/living-pattern/experiments/${e.id}`}
-                          className="block rounded-xl border border-border/60 bg-card p-4 sm:p-5 transition-colors hover:border-primary/50"
-                        >
-                          <p className="font-serif text-lg text-foreground break-words">{title}</p>
-                          <p className="mt-1 text-sm text-muted-foreground break-words">
-                            {LIFECYCLE_LABELS[e.lifecycle] ?? "Open"} · began{" "}
-                            {new Date(e.created_at).toLocaleDateString(undefined, {
-                              dateStyle: "medium",
-                            })}
-                          </p>
-                          <p className="mt-2 text-sm text-muted-foreground break-words">
-                            Your Field Notes for this experiment are kept inside it, unchanged.
-                          </p>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
           </section>
         )}
       </main>
