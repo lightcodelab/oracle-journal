@@ -40,6 +40,19 @@ const flattenText = (value: unknown, depth = 0): string => {
   return '';
 };
 
+const fetchAllRows = async (table: string, column: string): Promise<string[]> => {
+  const out: string[] = [];
+  const page = 1000;
+  for (let from = 0; ; from += page) {
+    const { data, error } = await admin.from(table).select(column).range(from, from + page - 1);
+    if (error) throw error;
+    const rows = data ?? [];
+    rows.forEach((r: any) => out.push(r[column]));
+    if (rows.length < page) break;
+  }
+  return out;
+};
+
 const stripHtml = (s: string) => s.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 
 async function suggestTags(
@@ -193,8 +206,7 @@ Deno.serve(async (req) => {
         if (text) lessonByTitle.set(key, text);
       });
 
-      const { data: existingAssignments } = await admin.from('card_tag_assignments').select('card_id');
-      const alreadyTagged = new Set((existingAssignments ?? []).map((r: any) => r.card_id));
+      const alreadyTagged = new Set(await fetchAllRows('card_tag_assignments', 'card_id'));
 
       items = (cards ?? [])
         .filter((c: any) => overwrite || !alreadyTagged.has(c.id))
@@ -232,10 +244,9 @@ Deno.serve(async (req) => {
         lessonsByCourse.set(l.course_id, arr);
       });
 
-      const { data: existingAssignments } = await admin.from('course_tag_assignments').select('course_id');
       const tagCounts = new Map<string, number>();
-      (existingAssignments ?? []).forEach((r: any) =>
-        tagCounts.set(r.course_id, (tagCounts.get(r.course_id) ?? 0) + 1),
+      (await fetchAllRows('course_tag_assignments', 'course_id')).forEach((id) =>
+        tagCounts.set(id, (tagCounts.get(id) ?? 0) + 1),
       );
 
       items = (courses ?? [])
