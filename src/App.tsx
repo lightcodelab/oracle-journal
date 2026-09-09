@@ -57,8 +57,9 @@ import DeepeningCourses from "./pages/DeepeningCourses";
 import MyPlaylists from "./pages/MyPlaylists";
 import LivingPatternLenses from "./pages/LivingPatternLenses";
 import LivingPatternOrientation from "./pages/LivingPatternOrientation";
-import LivingPatternExperiments from "./pages/LivingPatternExperiments";
+import MyFieldNotes from "./pages/MyFieldNotes";
 import LivingPatternExperiment from "./pages/LivingPatternExperiment";
+
 import LivingPatternPresence from "./pages/LivingPatternPresence";
 import LivingPatternMoments from "./pages/LivingPatternMoments";
 import LivingPatternPractice from "./pages/LivingPatternPractice";
@@ -153,8 +154,11 @@ const App = () => {
             <Route path="/living-pattern/records/:id" element={<PatternRecordDetail />} />
             <Route path="/living-pattern/orientation" element={<LivingPatternOrientation />} />
             <Route path="/living-pattern/pause" element={<Navigate to="/living-pattern" replace />} />
-            <Route path="/living-pattern/experiments" element={<LivingPatternExperiments />} />
+            <Route path="/field-notes" element={<MyFieldNotes />} />
+            <Route path="/field-notes/:id" element={<LivingPatternExperiment />} />
+            <Route path="/living-pattern/experiments" element={<Navigate to="/field-notes" replace />} />
             <Route path="/living-pattern/experiments/:id" element={<LivingPatternExperiment />} />
+
             <Route path="/living-pattern/presence" element={<Navigate to="/living-pattern" replace />} />
             <Route path="/living-pattern/perceive" element={<Navigate to="/living-pattern" replace />} />
             <Route path="/living-pattern/moments" element={<LivingPatternMoments />} />
