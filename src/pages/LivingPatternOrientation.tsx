@@ -32,7 +32,7 @@ const LENS_LINKS = [
 const LivingPatternOrientation = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { hasFullTempleAccess, isAdmin, loading: memberLoading } = useMemberState();
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");

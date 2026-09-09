@@ -46,7 +46,7 @@ const LivingPatternExperiment = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { hasFullTempleAccess, isAdmin, loading: memberLoading } = useMemberState();
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
 
   const [tab, setTab] = useState<Tab>("try");
   const [experiment, setExperiment] = useState<LivingExperiment | null>(null);
@@ -98,8 +98,8 @@ const LivingPatternExperiment = () => {
   }, [authLoading, user, navigate]);
 
   useEffect(() => {
-    if (!authLoading && !memberLoading && user && hasFullTempleAccess && isAdmin) void load();
-  }, [authLoading, memberLoading, user, hasFullTempleAccess, isAdmin, load]);
+    if (!authLoading && !memberLoading && user && hasFullTempleAccess) void load();
+  }, [authLoading, memberLoading, user, hasFullTempleAccess, load]);
 
   const tryNote = notes.find((n) => n.phase === "try") ?? null;
   const noticeNotes = notes.filter((n) => n.phase === "notice");

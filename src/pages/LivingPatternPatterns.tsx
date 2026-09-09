@@ -14,10 +14,10 @@ import { useOwnPatternRecords } from "@/hooks/useLivingPatterns";
 const LivingPatternPatterns = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { hasFullTempleAccess, isAdmin, loading: memberLoading } = useMemberState();
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
 
   const accessResolved = !authLoading && !memberLoading && !!user;
-  const enabled = accessResolved && hasFullTempleAccess && isAdmin;
+  const enabled = accessResolved && hasFullTempleAccess;
   const { patterns, loading, error } = useOwnPatternRecords(enabled);
 
   useEffect(() => {

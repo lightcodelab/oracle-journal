@@ -99,7 +99,7 @@ function Chips({
 const LivingPatternPause = ({ embedded = false }: { embedded?: boolean }) => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { hasFullTempleAccess, isAdmin, loading: memberLoading } = useMemberState();
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
 
   const [step, setStep] = useState<Step>(1);
   const [feelingWords, setFeelingWords] = useState<string[]>([]);
