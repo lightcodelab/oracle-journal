@@ -13,7 +13,7 @@ One guided **Pattern Record** (Pause → Perceive → Practise, all required) wi
 Also links to `/living-pattern/orientation` and the Becoming course. This three-panel structure is exactly the model being superseded.
 
 ### /living-pattern — the logging surface
-`src/pages/LivingPatternLenses.tsx` holds a banner and a three-tab bar (Pause / Perceive / Practice) that mounts three independent page components:
+`src/pages/LivingPatternLenses.tsx` holds a banner and a three-tab bar (Pause / Perceive / Practice) that mounts three independent page components. Its intro says outright: "These are not steps you must complete in sequence; choose to log whatever is true in the moment."
 - `LivingPatternPause.tsx` — steps Register / Receive / Reorient. Every field is labelled "(optional)". Save is enabled if **any one** field has content ("Add a word or a note anywhere in this Pause and it can be saved"). Writes a `living_states` row.
 - `LivingPatternPresence.tsx` — Register / Recognise / Recalibrate, optional label, optional links to a State or Pattern, optional Temple-support tag. Writes `temple_moments` + `temple_moment_movements`.
 - `LivingPatternPractice.tsx` — a named Pattern with commitment, a "When… I will…" rehearsal, plus evidence entries. Writes `living_patterns` / `living_pattern_evidence`.
