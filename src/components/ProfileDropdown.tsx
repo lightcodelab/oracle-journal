@@ -123,10 +123,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
         ]
       : []),
     {
-      label: 'My Journal',
+      label: 'My Field Notes',
       icon: <BookOpen className="w-4 h-4 mr-2" />,
-      route: '/journal',
+      route: '/field-notes',
     },
+
 
     {
       label: 'My Readings',
