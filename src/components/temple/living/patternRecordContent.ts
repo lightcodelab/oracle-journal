@@ -52,6 +52,7 @@ export const STATE_WORD_OPTIONS = [
   "Numb",
   "Irritated",
   "Anxious",
+  "Hurt",
   "Ashamed",
   "Steady",
   "Quietly well",
@@ -59,6 +60,22 @@ export const STATE_WORD_OPTIONS = [
   "Grateful",
   "Alive",
   "Clear",
+];
+
+/**
+ * The small starting set shown on "What was happening in you?". Everything
+ * else in STATE_WORD_OPTIONS sits behind "Show more" so the screen stays
+ * quiet; "Add your own word" is always available.
+ */
+export const PRIMARY_STATE_WORDS = [
+  "Activated",
+  "Anxious",
+  "Hurt",
+  "Heavy",
+  "Numb",
+  "Tired",
+  "Steady",
+  "Connected",
 ];
 
 export const BODY_CUE_OPTIONS = [
@@ -107,6 +124,13 @@ export interface PatternQuestion {
   cueField?: "state_note" | "body_cues";
   /** Only shown when the moment felt familiar. */
   conditional?: boolean;
+  /**
+   * False only for "What happened?" — a Pattern Record always begins with a
+   * brief factual description of a specific moment, so "I'm not sure yet" is
+   * not offered there. It remains a valid completed response on the insight
+   * questions.
+   */
+  allowNotSure?: boolean;
 }
 
 export const PATTERN_QUESTIONS: PatternQuestion[] = [
