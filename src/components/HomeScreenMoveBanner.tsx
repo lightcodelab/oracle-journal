@@ -126,7 +126,6 @@ const HomeScreenMoveBanner = () => {
   if (!mode) return null;
 
   const migration = mode === "migration";
-  const handheld = isHandheldDevice();
 
   return (
     <div
