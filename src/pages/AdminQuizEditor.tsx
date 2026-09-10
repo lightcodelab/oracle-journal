@@ -64,7 +64,7 @@ const AdminQuizEditor = () => {
   const [copied, setCopied] = useState(false);
 
   const linkOptions = [
-    { label: 'Custom domain (thetemple.lightcodelab.com)', value: 'https://thetemple.lightcodelab.com' },
+    { label: 'Custom domain (inside.thetempleofsustainment.com)', value: 'https://inside.thetempleofsustainment.com' },
     { label: 'Published (templeofsustainment.lovable.app)', value: 'https://templeofsustainment.lovable.app' },
     { label: 'Current preview', value: typeof window !== 'undefined' ? window.location.origin : '' },
   ].filter((o) => o.value);
