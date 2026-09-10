@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { EncryptionProvider } from "@/hooks/useEncryption";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import Temple from "./pages/Temple";
 import ImportCards from "./pages/ImportCards";
 import NotFound from "./pages/NotFound";
