@@ -23,6 +23,27 @@ interface CardDetailProps {
 export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isStarterDeck = false, deckId, hideActions = false }: CardDetailProps) => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [companionLessonPath, setCompanionLessonPath] = useState<string | null>(null);
+  const [linkedResources, setLinkedResources] = useState<LinkableResource[]>([]);
+
+  // Linked resources chosen for this card in the Card Deck uploader
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const links = await fetchCardResourceLinks(card.id);
+      if (!active || links.length === 0) {
+        if (active) setLinkedResources([]);
+        return;
+      }
+      const all = await fetchLinkableResources();
+      const map = new Map(all.map((r) => [linkKey(r.kind, r.id), r]));
+      const resolved = links
+        .map((l) => map.get(linkKey(l.resource_kind, l.resource_id)))
+        .filter(Boolean) as LinkableResource[];
+      if (active) setLinkedResources(resolved);
+    })();
+    return () => { active = false; };
+  }, [card.id]);
+
 
   // Helper to get content from either JSON structure or legacy fields
   const getContent = (key: string): string | undefined => {
