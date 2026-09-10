@@ -156,8 +156,7 @@ const HomeScreenMoveBanner = () => {
             {migration
               ? "If you have The Temple saved to your phone Home Screen, please replace the old icon with the new one so it continues to open directly into The Temple."
               : "Add The Temple to your Home Screen for an easier way back."}{" "}
-            {(
-              <button
+            <button
                 type="button"
                 onClick={() => setShowHow((v) => !v)}
                 aria-expanded={showHow}
