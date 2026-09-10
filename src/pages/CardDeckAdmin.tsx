@@ -277,6 +277,18 @@ const CardDeckAdmin = () => {
     return () => { cancelled = true; };
   }, [selectedCardId]);
 
+  // Load this card's linked resources
+  useEffect(() => {
+    if (!selectedCardId) { setCardLinks([]); return; }
+    let cancelled = false;
+    (async () => {
+      const rows = await fetchCardResourceLinks(selectedCardId);
+      if (!cancelled) setCardLinks(rows.map((r) => ({ kind: r.resource_kind, id: r.resource_id })));
+    })();
+    return () => { cancelled = true; };
+  }, [selectedCardId]);
+
+
   const selectedDeck = decks.find((d) => d.id === selectedDeckId);
   const fields = useMemo<FieldDef[]>(() => {
     if (!selectedDeck) return [];
