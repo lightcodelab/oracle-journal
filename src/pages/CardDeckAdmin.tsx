@@ -14,6 +14,9 @@ import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { compressImage } from '@/lib/imageCompression';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CourseTagPicker from '@/components/admin/CourseTagPicker';
+import CardResourceLinkPicker, { type SelectedLink } from '@/components/admin/CardResourceLinkPicker';
+import { fetchCardResourceLinks, saveCardResourceLinks } from '@/lib/cardResourceLinks';
+
 import { Image as ImageIcon, X as XIcon } from 'lucide-react';
 import {
   Dialog,
@@ -172,6 +175,8 @@ const CardDeckAdmin = () => {
   } | null>(null);
   const [deckTagIds, setDeckTagIds] = useState<string[]>([]);
   const [cardTagIds, setCardTagIds] = useState<string[]>([]);
+  const [cardLinks, setCardLinks] = useState<SelectedLink[]>([]);
+
   const [savingDeck, setSavingDeck] = useState(false);
   const [uploadingDeckThumb, setUploadingDeckThumb] = useState(false);
 
@@ -277,6 +282,18 @@ const CardDeckAdmin = () => {
     return () => { cancelled = true; };
   }, [selectedCardId]);
 
+  // Load this card's linked resources
+  useEffect(() => {
+    if (!selectedCardId) { setCardLinks([]); return; }
+    let cancelled = false;
+    (async () => {
+      const rows = await fetchCardResourceLinks(selectedCardId);
+      if (!cancelled) setCardLinks(rows.map((r) => ({ kind: r.resource_kind, id: r.resource_id })));
+    })();
+    return () => { cancelled = true; };
+  }, [selectedCardId]);
+
+
   const selectedDeck = decks.find((d) => d.id === selectedDeckId);
   const fields = useMemo<FieldDef[]>(() => {
     if (!selectedDeck) return [];
@@ -367,6 +384,10 @@ const CardDeckAdmin = () => {
           .insert(cardTagIds.map((tag_id) => ({ card_id: draft.id, tag_id })));
         if (tagErr) throw tagErr;
       }
+
+      // Sync linked resources shown on the card page
+      await saveCardResourceLinks(draft.id, cardLinks);
+
 
       toast({ title: 'Card saved', description: `${draft.card_title} updated.` });
       // Refresh local cache
@@ -911,6 +932,17 @@ const CardDeckAdmin = () => {
                   saved together with the card when you press Save Changes.
                 </p>
               </div>
+
+              {/* Linked resources shown on the card page */}
+              <div className="space-y-2 pt-4 border-t border-border">
+                <Label>Linked Resources for deepening the experience</Label>
+                <CardResourceLinkPicker value={cardLinks} onChange={setCardLinks} />
+                <p className="text-xs text-muted-foreground">
+                  Search any existing resource or course by name and add it. These appear on the card
+                  page under "Linked Resources for deepening the experience". Saved with Save Changes.
+                </p>
+              </div>
+
 
 
 

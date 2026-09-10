@@ -1249,6 +1249,41 @@ export type Database = {
           },
         ]
       }
+      card_resource_links: {
+        Row: {
+          card_id: string
+          created_at: string
+          display_order: number
+          id: string
+          resource_id: string
+          resource_kind: string
+        }
+        Insert: {
+          card_id: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          resource_id: string
+          resource_kind: string
+        }
+        Update: {
+          card_id?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          resource_id?: string
+          resource_kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_resource_links_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       card_tag_assignments: {
         Row: {
           card_id: string
