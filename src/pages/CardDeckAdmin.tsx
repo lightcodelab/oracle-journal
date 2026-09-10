@@ -172,6 +172,8 @@ const CardDeckAdmin = () => {
   } | null>(null);
   const [deckTagIds, setDeckTagIds] = useState<string[]>([]);
   const [cardTagIds, setCardTagIds] = useState<string[]>([]);
+  const [cardLinks, setCardLinks] = useState<SelectedLink[]>([]);
+
   const [savingDeck, setSavingDeck] = useState(false);
   const [uploadingDeckThumb, setUploadingDeckThumb] = useState(false);
 
