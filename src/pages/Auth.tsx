@@ -426,7 +426,56 @@ const Auth = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {isSignupMode ? (
+            {forgotMode ? (
+              // Password recovery mode
+              resetEmailSent ? (
+                <div className="space-y-4 text-center">
+                  <p className="text-sm text-foreground/80 leading-relaxed">
+                    If an account exists for <span className="font-medium">{email}</span>, a password reset link is on its way. Please check your inbox and spam folder.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      setForgotMode(false);
+                      setResetEmailSent(false);
+                    }}
+                  >
+                    Back to sign in
+                  </Button>
+                </div>
+              ) : (
+                <form onSubmit={handleForgotPassword} className="space-y-4">
+                  <p className="text-sm text-foreground/70 leading-relaxed">
+                    Enter your email and we'll send you a link to choose a new password.
+                  </p>
+                  <div className="space-y-2">
+                    <Label htmlFor="forgot-email">Email</Label>
+                    <Input
+                      id="forgot-email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? "Sending..." : "Send reset link"}
+                  </Button>
+                  <p className="text-center text-sm text-muted-foreground mt-4">
+                    <button
+                      type="button"
+                      onClick={() => setForgotMode(false)}
+                      className="text-primary hover:underline"
+                    >
+                      Back to sign in
+                    </button>
+                  </p>
+                </form>
+              )
+            ) : isSignupMode ? (
               // Signup-only mode for trial flow
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
@@ -518,7 +567,16 @@ const Auth = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signin-password">Password</Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="signin-password">Password</Label>
+                    <button
+                      type="button"
+                      onClick={() => setForgotMode(true)}
+                      className="text-xs text-primary hover:underline"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
                   <div className="relative">
                     <Input
                       id="signin-password"
