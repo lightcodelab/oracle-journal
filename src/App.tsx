@@ -75,6 +75,7 @@ import FeatureSuggestions from "./pages/FeatureSuggestions";
 import BugReports from "./pages/BugReports";
 import InstallAppProvider from "./components/InstallAppDialog";
 import NewsletterBanner from "./components/NewsletterBanner";
+import HomeScreenMoveBanner from "./components/HomeScreenMoveBanner";
 import AffiliateRedirect from "./pages/AffiliateRedirect";
 import AffiliatePortal from "./pages/AffiliatePortal";
 import AdminAffiliates from "./pages/AdminAffiliates";
