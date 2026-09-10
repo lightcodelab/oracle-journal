@@ -66,7 +66,11 @@ const HomeScreenMoveBanner = () => {
       return;
     }
 
-    const needsMigration = oldSignal || rememberedOldArrival;
+    // During the migration window every signed-in member sees the migration
+    // banner, regardless of how they arrived. Old-address signals are kept but
+    // are no longer required.
+    const needsMigration =
+      isWithinMigrationWindow() || oldSignal || rememberedOldArrival;
 
     let next: BannerMode | null = null;
     if (needsMigration) {
