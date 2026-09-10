@@ -4,8 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import HomeScreenInstructions, {
   isHandheldDevice,
   isStandaloneDisplay,
-  NEW_TEMPLE_ADDRESS,
 } from "@/components/temple/HomeScreenInstructions";
+import { isWithinMigrationWindow } from "@/lib/homeScreenMigration";
 
 const INSTALL_DISMISSED_KEY = "temple-homescreen-install-dismissed";
 const MIGRATION_SNOOZE_KEY = "temple-homescreen-migration-snooze-until";
