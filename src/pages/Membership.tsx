@@ -19,13 +19,13 @@ import type { FaqItem } from "@/components/sales/FAQAccordion";
 import { StickyMobileCTA } from "@/components/sales/StickyMobileCTA";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import finalThreshold from "@/assets/sales-final-threshold.jpg";
-import guidesPhoto from "@/assets/julie-tash-guides.jpg";
-import areekeeraThumbnail from "@/assets/areekeera-guide-sigil.png.asset.json";
-import livingPatternImage from "@/assets/living-pattern-banner.png.asset.json";
-import doorRemembrance from "@/assets/door-of-remembrance-4.png.asset.json";
+import guidesPhoto from "@/assets/julie-tash-guides.webp";
+import areekeeraThumbnail from "@/assets/areekeera-guide-sigil.webp";
+import livingPatternImage from "@/assets/living-pattern-banner.webp";
+import doorRemembrance from "@/assets/door-of-remembrance-4.webp";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
-import relationshipBanner from "@/assets/relationship-with-life-banner-v2.png.asset.json";
+import relationshipBanner from "@/assets/relationship-with-life-banner-v2.webp";
 
 type OfferState = "pre_launch" | "founding" | "standard";
 
@@ -326,7 +326,7 @@ const Membership = () => {
             <div className="h-full min-h-[320px] lg:min-h-0">
               <div className="h-full w-full overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl">
                 <img
-                  src={relationshipBanner.url}
+                  src={relationshipBanner}
                   alt="A woman looking into an old mirror, meeting her own reflection with quiet presence."
                   className="h-full w-full object-cover"
                   loading="lazy"
@@ -386,7 +386,7 @@ const Membership = () => {
                 eyebrow="The AreekeerA® Guide"
                 title="Not sure what you need today?"
                 body="Tell The AreekeerA® Guide what life feels like right now. It provides you a small, sequenced pathway through The Temple resources — what to try, in what order, and why it may meet this particular moment."
-                image={areekeeraThumbnail.url}
+                image={areekeeraThumbnail}
                 imageAlt="The AreekeerA Guide inside The Temple, where a member describes what life feels like right now."
                 contain
               />
@@ -396,14 +396,14 @@ const Membership = () => {
                 title="A private laboratory to experiment with life"
                 body="A private place to notice what is true, become curious about the meaning being made, practise a different choice, and gather evidence from what happens next."
                 steps={["Pause", "Perceive", "Practice"]}
-                image={livingPatternImage.url}
+                image={livingPatternImage}
                 imageAlt="The Living Pattern Lab inside The Temple, with its Pause, Perceive and Practice lenses."
               />
               <TempleDoorPanel
                 eyebrow="The Door of Remembrance"
                 title="Rituals, card decks, and courses"
                 body="For exploring the patterns, stories, beliefs, inherited meanings, and protector roles shaping your life."
-                image={doorRemembrance.url}
+                image={doorRemembrance}
                 imageAlt="The Door of Remembrance, holding rituals, card decks and courses."
               />
               <TempleDoorPanel

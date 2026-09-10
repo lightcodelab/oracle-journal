@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import doorRemembrance from "@/assets/door-of-remembrance-4.png.asset.json";
+import doorRemembrance from "@/assets/door-of-remembrance-4.webp";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { SearchTheTempleCard } from "./SearchTheTempleCard";
 import { BookHeart, ListMusic, LineChart, Sparkles, HeartPulse, Sprout } from "lucide-react";
 
 const doors = [
-  { name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance.url, label: "RITUALS, CARD DECKS & COURSES", description: "Explore the patterns, stories and inheritances shaping you." },
+  { name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance, label: "RITUALS, CARD DECKS & COURSES", description: "Explore the patterns, stories and inheritances shaping you." },
   { name: "The Door of Devotion", href: "/devotion", image: doorDevotion.url, label: "AREEKEERA HEALING TEMPLATES & MEDITATIONS", description: "Return to yourself through guided meditation and restorative practice." },
   { name: "The Door of Communion", href: "/communion", image: doorCommunion.url, label: "LIVE READINGS, CLASSES, WORKSHOPS & REPLAYS", description: "Find connection, reflection and support within our community." },
 ];

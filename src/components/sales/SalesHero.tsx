@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
-import heroImage from "@/assets/landing-page-banner-v2.png.asset.json";
+import heroImage from "@/assets/landing-page-banner-v2.webp";
 
 interface SalesHeroProps {
   cta: ReactNode;
@@ -11,7 +11,7 @@ export function SalesHero({ cta, signIn }: SalesHeroProps) {
   return (
     <section className="relative isolate min-h-[42rem] overflow-hidden md:mx-auto md:my-8 md:aspect-video md:min-h-0 md:max-w-[1600px]">
       <img
-        src={heroImage.url}
+        src={heroImage}
         width={1672}
         height={941}
         alt="A woman stands at an open conservatory doorway looking out over a sunlit garden and distant water, beside a lived-in timber table and garden plants."

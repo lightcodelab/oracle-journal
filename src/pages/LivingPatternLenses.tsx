@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useMemberState } from "@/hooks/useMemberState";
 import PatternRecordFlow from "@/components/temple/living/PatternRecordFlow";
-import livingPatternBanner from "@/assets/living-pattern-banner.png.asset.json";
+import livingPatternBanner from "@/assets/living-pattern-banner.webp";
 
 /**
  * /living-pattern — one guided Pattern Record.
@@ -76,7 +76,7 @@ const LivingPatternLenses = () => {
           className="relative w-full overflow-hidden rounded-lg mb-8"
         >
           <img
-            src={livingPatternBanner.url}
+            src={livingPatternBanner}
             alt=""
             aria-hidden
             className="w-full h-[180px] sm:h-[240px] md:h-[300px] object-cover object-center"
