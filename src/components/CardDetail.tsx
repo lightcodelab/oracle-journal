@@ -344,7 +344,31 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         </>
       )}
 
+      {/* Linked resources for deepening the experience */}
+      {linkedResources.length > 0 && (
+        <div className="bg-card border border-border rounded-lg p-6">
+          <h3 className="font-serif text-xl text-foreground mb-4">
+            Linked Resources for deepening the experience
+          </h3>
+          <ul className="space-y-2">
+            {linkedResources.map((r) => (
+              <li key={`${r.kind}:${r.id}`}>
+                <Link
+                  to={r.path}
+                  className="flex items-center gap-2 text-foreground/90 hover:text-primary font-sans transition-colors"
+                >
+                  <ArrowRight className="w-4 h-4 text-primary shrink-0" />
+                  <span>{r.title}</span>
+                  <span className="text-xs text-muted-foreground">· {r.typeLabel}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Reflection footer: staging Field Notes, otherwise generic Journal Notes */}
+
       <ReflectionFooter
         resourceFamily="card"
         resourceId={card.id}
