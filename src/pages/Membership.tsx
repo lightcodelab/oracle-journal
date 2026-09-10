@@ -326,7 +326,7 @@ const Membership = () => {
             <div className="h-full min-h-[320px] lg:min-h-0">
               <div className="h-full w-full overflow-hidden rounded-sm border border-border/50 bg-muted shadow-2xl">
                 <img
-                  src={relationshipBanner.url}
+                  src={relationshipBanner}
                   alt="A woman looking into an old mirror, meeting her own reflection with quiet presence."
                   className="h-full w-full object-cover"
                   loading="lazy"
@@ -386,7 +386,7 @@ const Membership = () => {
                 eyebrow="The AreekeerA® Guide"
                 title="Not sure what you need today?"
                 body="Tell The AreekeerA® Guide what life feels like right now. It provides you a small, sequenced pathway through The Temple resources — what to try, in what order, and why it may meet this particular moment."
-                image={areekeeraThumbnail.url}
+                image={areekeeraThumbnail}
                 imageAlt="The AreekeerA Guide inside The Temple, where a member describes what life feels like right now."
                 contain
               />
@@ -396,14 +396,14 @@ const Membership = () => {
                 title="A private laboratory to experiment with life"
                 body="A private place to notice what is true, become curious about the meaning being made, practise a different choice, and gather evidence from what happens next."
                 steps={["Pause", "Perceive", "Practice"]}
-                image={livingPatternImage.url}
+                image={livingPatternImage}
                 imageAlt="The Living Pattern Lab inside The Temple, with its Pause, Perceive and Practice lenses."
               />
               <TempleDoorPanel
                 eyebrow="The Door of Remembrance"
                 title="Rituals, card decks, and courses"
                 body="For exploring the patterns, stories, beliefs, inherited meanings, and protector roles shaping your life."
-                image={doorRemembrance.url}
+                image={doorRemembrance}
                 imageAlt="The Door of Remembrance, holding rituals, card decks and courses."
               />
               <TempleDoorPanel

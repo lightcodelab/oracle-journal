@@ -76,7 +76,7 @@ const LivingPatternLenses = () => {
           className="relative w-full overflow-hidden rounded-lg mb-8"
         >
           <img
-            src={livingPatternBanner.url}
+            src={livingPatternBanner}
             alt=""
             aria-hidden
             className="w-full h-[180px] sm:h-[240px] md:h-[300px] object-cover object-center"
