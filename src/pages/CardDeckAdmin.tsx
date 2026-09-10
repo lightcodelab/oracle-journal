@@ -368,6 +368,10 @@ const CardDeckAdmin = () => {
         if (tagErr) throw tagErr;
       }
 
+      // Sync linked resources shown on the card page
+      await saveCardResourceLinks(draft.id, cardLinks);
+
+
       toast({ title: 'Card saved', description: `${draft.card_title} updated.` });
       // Refresh local cache
       setCards((prev) => prev.map((c) => (c.id === draft.id ? { ...c, ...payload } as CardRow : c)));
