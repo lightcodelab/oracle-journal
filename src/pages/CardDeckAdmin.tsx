@@ -912,6 +912,17 @@ const CardDeckAdmin = () => {
                 </p>
               </div>
 
+              {/* Linked resources shown on the card page */}
+              <div className="space-y-2 pt-4 border-t border-border">
+                <Label>Linked Resources for deepening the experience</Label>
+                <CardResourceLinkPicker value={cardLinks} onChange={setCardLinks} />
+                <p className="text-xs text-muted-foreground">
+                  Search any existing resource or course by name and add it. These appear on the card
+                  page under "Linked Resources for deepening the experience". Saved with Save Changes.
+                </p>
+              </div>
+
+
 
 
               <div className="flex justify-end gap-2 pt-4 border-t border-border">
