@@ -127,7 +127,7 @@ const Temple = () => {
           <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-sm text-muted-foreground">
             <Home className="h-3.5 w-3.5" aria-hidden="true" />
             <span className="font-medium hover:text-foreground transition-colors">
-              The Temple of Sustainment
+              THE TEMPLE of Sustainment
             </span>
           </div>
           <div className="absolute top-4 right-4 z-20">
@@ -168,7 +168,7 @@ const Temple = () => {
         <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-sm text-muted-foreground">
           <Home className="h-3.5 w-3.5" aria-hidden="true" />
           <span className="font-medium hover:text-foreground transition-colors">
-            The Temple of Sustainment
+            THE TEMPLE of Sustainment
           </span>
         </div>
         <div className="absolute top-4 right-4 z-20">
@@ -199,7 +199,7 @@ const Temple = () => {
         <div className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
           <Home className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           <span className="font-medium truncate">
-            The Temple of Sustainment
+            THE TEMPLE of Sustainment
           </span>
         </div>
         <NavActions />
