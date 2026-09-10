@@ -104,6 +104,7 @@ const App = () => {
           <Toaster />
           <Sonner />
           <InstallAppProvider>
+          <HomeScreenMoveBanner />
           <NewsletterBanner />
         <BrowserRouter>
           <ThemeScope />
