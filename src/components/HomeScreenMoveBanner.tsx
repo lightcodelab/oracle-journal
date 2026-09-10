@@ -154,11 +154,9 @@ const HomeScreenMoveBanner = () => {
               {migration ? "The Temple has a new home." : "Keep The Temple close."}
             </span>{" "}
             {migration
-              ? handheld
-                ? "You're entering through our old address. Replace your old Home Screen icon with the new one so The Temple continues to open directly from your phone."
-                : `You're entering through our old address. The Temple now lives at ${NEW_TEMPLE_ADDRESS} — please update your saved link.`
+              ? "If you have The Temple saved to your phone Home Screen, please replace the old icon with the new one so it continues to open directly into The Temple."
               : "Add The Temple to your Home Screen for an easier way back."}{" "}
-            {(handheld || !migration) && (
+            {(
               <button
                 type="button"
                 onClick={() => setShowHow((v) => !v)}
