@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { EncryptionProvider } from "@/hooks/useEncryption";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import Temple from "./pages/Temple";
 import ImportCards from "./pages/ImportCards";
 import NotFound from "./pages/NotFound";
@@ -121,6 +122,7 @@ const App = () => {
             <Route path="/remembrance/courses/:slug" element={<DevotionCoursePage />} />
             <Route path="/remembrance/course/:courseId" element={<DevotionCoursePage />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/import-cards" element={<ImportCards />} />
             <Route path="/devotion" element={<DoorOfDevotion />} />
             <Route path="/devotion/healing-bot" element={<Navigate to="/devotion/areekeera" replace />} />
