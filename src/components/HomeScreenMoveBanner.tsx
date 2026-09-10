@@ -4,8 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import HomeScreenInstructions, {
   isHandheldDevice,
   isStandaloneDisplay,
-  NEW_TEMPLE_ADDRESS,
 } from "@/components/temple/HomeScreenInstructions";
+import { isWithinMigrationWindow } from "@/lib/homeScreenMigration";
 
 const INSTALL_DISMISSED_KEY = "temple-homescreen-install-dismissed";
 const MIGRATION_SNOOZE_KEY = "temple-homescreen-migration-snooze-until";
@@ -66,7 +66,11 @@ const HomeScreenMoveBanner = () => {
       return;
     }
 
-    const needsMigration = oldSignal || rememberedOldArrival;
+    // During the migration window every signed-in member sees the migration
+    // banner, regardless of how they arrived. Old-address signals are kept but
+    // are no longer required.
+    const needsMigration =
+      isWithinMigrationWindow() || oldSignal || rememberedOldArrival;
 
     let next: BannerMode | null = null;
     if (needsMigration) {
@@ -122,7 +126,6 @@ const HomeScreenMoveBanner = () => {
   if (!mode) return null;
 
   const migration = mode === "migration";
-  const handheld = isHandheldDevice();
 
   return (
     <div
@@ -150,12 +153,9 @@ const HomeScreenMoveBanner = () => {
               {migration ? "The Temple has a new home." : "Keep The Temple close."}
             </span>{" "}
             {migration
-              ? handheld
-                ? "You're entering through our old address. Replace your old Home Screen icon with the new one so The Temple continues to open directly from your phone."
-                : `You're entering through our old address. The Temple now lives at ${NEW_TEMPLE_ADDRESS} — please update your saved link.`
+              ? "If you have The Temple saved to your phone Home Screen, please replace the old icon with the new one so it continues to open directly into The Temple."
               : "Add The Temple to your Home Screen for an easier way back."}{" "}
-            {(handheld || !migration) && (
-              <button
+            <button
                 type="button"
                 onClick={() => setShowHow((v) => !v)}
                 aria-expanded={showHow}
@@ -166,8 +166,7 @@ const HomeScreenMoveBanner = () => {
                 }`}
               >
                 {showHow ? "Hide instructions" : "Show me how"}
-              </button>
-            )}
+            </button>
           </p>
 
           {showHow && (
