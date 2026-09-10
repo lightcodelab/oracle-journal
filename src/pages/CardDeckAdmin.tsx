@@ -14,6 +14,9 @@ import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { compressImage } from '@/lib/imageCompression';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CourseTagPicker from '@/components/admin/CourseTagPicker';
+import CardResourceLinkPicker, { type SelectedLink } from '@/components/admin/CardResourceLinkPicker';
+import { fetchCardResourceLinks, saveCardResourceLinks } from '@/lib/cardResourceLinks';
+
 import { Image as ImageIcon, X as XIcon } from 'lucide-react';
 import {
   Dialog,
