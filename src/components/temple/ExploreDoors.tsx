@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import doorRemembrance from "@/assets/door-of-remembrance-4.png.asset.json";
+import doorRemembrance from "@/assets/door-of-remembrance-4.webp";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
 import { Button } from "@/components/ui/button";

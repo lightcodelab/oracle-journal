@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
-import heroImage from "@/assets/landing-page-banner-v2.png.asset.json";
+import heroImage from "@/assets/landing-page-banner-v2.webp";
 
 interface SalesHeroProps {
   cta: ReactNode;

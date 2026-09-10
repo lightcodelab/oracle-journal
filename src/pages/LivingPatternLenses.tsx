@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useMemberState } from "@/hooks/useMemberState";
 import PatternRecordFlow from "@/components/temple/living/PatternRecordFlow";
-import livingPatternBanner from "@/assets/living-pattern-banner.png.asset.json";
+import livingPatternBanner from "@/assets/living-pattern-banner.webp";
 
 /**
  * /living-pattern — one guided Pattern Record.
