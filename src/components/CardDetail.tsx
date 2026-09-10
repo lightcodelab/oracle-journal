@@ -10,6 +10,8 @@ import ReflectionFooter from "@/components/temple/living/ReflectionFooter";
 import SaveReadingDialog from "./SaveReadingDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
+import { fetchCardResourceLinks, fetchLinkableResources, linkKey, type LinkableResource } from "@/lib/cardResourceLinks";
+
 
 interface CardDetailProps {
   card: OracleCard;
