@@ -266,7 +266,7 @@ const Membership = () => {
           >
             <Home className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
             <span className="font-medium hover:text-foreground transition-colors">
-              The Temple of Sustainment
+              THE TEMPLE of Sustainment
             </span>
           </a>
           <div className="flex items-center gap-4">

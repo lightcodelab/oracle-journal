@@ -84,7 +84,7 @@ const PatternRecordDetail = () => {
         <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
             <Home className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            <span className="font-medium truncate">The Temple of Sustainment</span>
+            <span className="font-medium truncate">THE TEMPLE of Sustainment</span>
           </div>
           <NavActions />
         </header>
