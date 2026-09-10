@@ -167,8 +167,7 @@ const HomeScreenMoveBanner = () => {
                 }`}
               >
                 {showHow ? "Hide instructions" : "Show me how"}
-              </button>
-            )}
+            </button>
           </p>
 
           {showHow && (
