@@ -716,7 +716,7 @@ const CardDeckAdmin = () => {
                       : 'Pick a deck first'
                   } />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper" className="max-h-[60vh] overflow-y-auto">
                   {cards.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
                       Card {c.card_number}
