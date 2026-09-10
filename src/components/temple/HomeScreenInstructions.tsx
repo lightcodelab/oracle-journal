@@ -68,7 +68,7 @@ const HomeScreenInstructions = ({
 
   return (
     <div className={className}>
-      <Tabs value={undefined} defaultValue={defaultTab} key={defaultTab}>
+      <Tabs defaultValue={defaultTab} key={defaultTab}>
         <TabsList className="grid w-full max-w-sm grid-cols-2">
           <TabsTrigger value="iphone" className="gap-1.5">
             <Apple className="h-4 w-4" aria-hidden="true" /> iPhone / iPad
