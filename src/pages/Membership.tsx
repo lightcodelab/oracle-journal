@@ -128,32 +128,36 @@ const Membership = () => {
   useEffect(() => {
     // Any authenticated user landing on the public sales page should be
     // sent into the app, preserving a saved intended destination.
-    if (!authLoading && !offerLoading && user) {
-      // A visitor who clicked "Enter THE TEMPLE" before registering returns
-      // here after signup — resume their Stripe checkout straight away.
-      const pendingOffer = sessionStorage.getItem("pendingCheckoutOffer");
-      if (pendingOffer) {
-        sessionStorage.removeItem("pendingCheckoutOffer");
-        const pendingCadence =
-          sessionStorage.getItem("pendingCheckoutCadence") === "yearly"
-            ? "yearly"
-            : "monthly";
-        sessionStorage.removeItem("pendingCheckoutCadence");
-        if (offer?.checkout_available) {
-          void startCheckout("pricing", pendingCadence);
-          return;
-        }
-      }
-      const saved = sessionStorage.getItem("postLoginRedirect");
-      if (saved && saved.startsWith("/") && saved !== "/") {
-        sessionStorage.removeItem("postLoginRedirect");
-        navigate(saved, { replace: true });
-      } else if (!memberLoading) {
-        navigate("/temple", { replace: true });
+    if (authLoading || !user) return;
+
+    // A visitor who clicked "Enter THE TEMPLE" before registering returns
+    // here after signup — resume their Stripe checkout straight away. Only
+    // this case needs the offer lookup, so an ordinary signed-in member is
+    // never held on this page while pricing loads.
+    const pendingOffer = sessionStorage.getItem("pendingCheckoutOffer");
+    if (pendingOffer) {
+      if (offerLoading) return;
+      sessionStorage.removeItem("pendingCheckoutOffer");
+      const pendingCadence =
+        sessionStorage.getItem("pendingCheckoutCadence") === "yearly"
+          ? "yearly"
+          : "monthly";
+      sessionStorage.removeItem("pendingCheckoutCadence");
+      if (offer?.checkout_available) {
+        void startCheckout("pricing", pendingCadence);
+        return;
       }
     }
+
+    const saved = sessionStorage.getItem("postLoginRedirect");
+    if (saved && saved.startsWith("/") && saved !== "/") {
+      sessionStorage.removeItem("postLoginRedirect");
+      navigate(saved, { replace: true });
+    } else {
+      navigate("/temple", { replace: true });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, offerLoading, offer, memberLoading, user, navigate]);
+  }, [authLoading, offerLoading, offer, user, navigate]);
 
   const state: OfferState = offer?.state ?? "pre_launch";
   const priceAud = useMemo(() => {
