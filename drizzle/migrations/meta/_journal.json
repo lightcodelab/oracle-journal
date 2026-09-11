@@ -141,6 +141,13 @@
       "when": 1789106336268,
       "tag": "0019_search_temple_lower_fuzzy_threshold",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1789106376949,
+      "tag": "0020_profiles_block_self_membership_updates",
+      "breakpoints": true
     }
   ]
 }
