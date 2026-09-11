@@ -302,7 +302,7 @@ const Membership = () => {
         {/* 2. The real promise */}
         <section
           aria-labelledby="promise-heading"
-          className="px-5 py-16 md:px-8 md:py-28"
+          className="px-5 py-8 md:px-8 md:py-14"
         >
           <div className="mx-auto grid max-w-6xl grid-cols-1 items-stretch gap-10 lg:grid-cols-[1fr_400px] lg:gap-16">
             <div className="space-y-6">
@@ -349,7 +349,7 @@ const Membership = () => {
         <RecognitionSection />
 
         {/* 4. Notice / Meet / Choose / Record / Return */}
-        <section aria-labelledby="process-heading" className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-24">
+        <section aria-labelledby="process-heading" className="border-y border-border/60 bg-muted/30 px-5 py-8 md:px-8 md:py-12">
           <div className="mx-auto max-w-6xl">
             <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">OUR SIGNATURE METHOD</p>
             <h2 id="process-heading" className="max-w-3xl font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">Living an ordinary life in&nbsp;extraordinary way begins with what you recognise in the moment.</h2>
@@ -375,7 +375,7 @@ const Membership = () => {
         {/* 5. What awaits inside */}
         <section
           aria-labelledby="inside-heading"
-          className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-28"
+          className="border-y border-border/60 bg-muted/30 px-5 py-8 md:px-8 md:py-14"
         >
           <div className="mx-auto max-w-6xl">
             <div className="max-w-3xl">
@@ -453,7 +453,7 @@ const Membership = () => {
         {/* 5. Why this is different */}
         <section
           aria-labelledby="different-heading"
-          className="px-5 py-16 md:px-8 md:py-28"
+          className="px-5 py-8 md:px-8 md:py-14"
         >
           <div className="mx-auto max-w-4xl">
             <h2
@@ -498,7 +498,7 @@ const Membership = () => {
         {/* The women and Method behind THE TEMPLE */}
         <section
           aria-labelledby="guides-heading"
-          className="px-5 py-16 md:px-8 md:py-24"
+          className="px-5 py-8 md:px-8 md:py-12"
         >
           <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-3">
             <div>
@@ -553,7 +553,7 @@ const Membership = () => {
         {(TESTIMONIALS.length > 0 || isAdmin) && (
           <section
             aria-labelledby="proof-heading"
-            className="px-5 py-16 md:px-8 md:py-28"
+            className="px-5 py-8 md:px-8 md:py-14"
           >
             <div className="mx-auto max-w-5xl">
               <h2
@@ -592,7 +592,7 @@ const Membership = () => {
         <section
           id="membership"
           aria-labelledby="membership-heading"
-          className="scroll-mt-20 border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-28"
+          className="scroll-mt-20 border-y border-border/60 bg-muted/30 px-5 py-8 md:px-8 md:py-14"
         >
           <div className="mx-auto max-w-5xl">
             {TESTIMONIALS.length > 0 && (
@@ -723,7 +723,7 @@ const Membership = () => {
         {/* 10. FAQ */}
         <section
           aria-labelledby="faq-heading"
-          className="px-5 py-16 md:px-8 md:py-28"
+          className="px-5 py-8 md:px-8 md:py-14"
         >
           <div className="mx-auto max-w-3xl">
             <h2
@@ -761,7 +761,7 @@ const Membership = () => {
             className="absolute inset-0 -z-10 h-full w-full object-cover"
           />
           <div className="absolute inset-0 -z-10 bg-[hsl(22_24%_8%/0.86)]" aria-hidden />
-          <div className="mx-auto max-w-3xl px-5 py-24 text-center md:px-8 md:py-36">
+          <div className="mx-auto max-w-3xl px-5 py-12 text-center md:px-8 md:py-18">
             <h2
               id="final-heading"
               className="font-serif text-[1.9rem] leading-tight text-on-image sm:text-4xl"

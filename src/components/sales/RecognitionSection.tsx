@@ -17,7 +17,7 @@ export function RecognitionSection() {
   return (
     <section
       aria-labelledby="recognition-heading"
-      className="border-y border-border/60 bg-muted/30 px-5 py-16 md:px-8 md:py-28"
+      className="border-y border-border/60 bg-muted/30 px-5 py-8 md:px-8 md:py-14"
     >
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 gap-12">
