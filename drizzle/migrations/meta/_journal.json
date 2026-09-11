@@ -155,6 +155,13 @@
       "when": 1789107284269,
       "tag": "0021_search_temple_word_prefix_matching",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1789107366936,
+      "tag": "0022_search_temple_word_boundary_phrase",
+      "breakpoints": true
     }
   ]
 }
