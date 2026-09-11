@@ -743,7 +743,7 @@ const Membership = () => {
               restorative practices. It does not diagnose, treat, or replace
               medical, mental-health, emergency, or crisis care, and makes no
               promise of cure or guaranteed relief. All prices shown in AUD,
-              billed monthly.
+              billed monthly or yearly.
             </p>
           </div>
         </section>
