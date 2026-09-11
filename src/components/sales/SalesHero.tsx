@@ -9,7 +9,7 @@ interface SalesHeroProps {
 
 export function SalesHero({ cta, signIn }: SalesHeroProps) {
   return (
-    <section className="relative isolate min-h-[42rem] overflow-hidden md:mx-auto md:my-8 md:aspect-video md:min-h-0 md:max-w-[1600px]">
+    <section className="relative isolate min-h-[42rem] overflow-hidden md:mx-auto md:mt-0 md:mb-8 md:aspect-video md:min-h-0 md:max-w-[1600px]">
       <img
         src={heroImage}
         width={1672}
