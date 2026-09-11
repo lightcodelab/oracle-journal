@@ -94,7 +94,10 @@ const SearchResults = () => {
     const search = async () => {
       setLoading(true);
 
-      const searchPattern = `%${query}%`;
+      const patterns = buildPatterns(query);
+      const titleSummaryFilter = orFilter(['title', 'summary'], patterns);
+      const nameFilter = orFilter(['name'], patterns);
+
 
       // Search content_resources by title/summary (include location for door mapping)
       const { data: contentData } = await supabase
@@ -107,7 +110,7 @@ const SearchResults = () => {
           location:content_categories!content_resources_location_id_fkey(id, page)
         `)
         .eq('status', 'published')
-        .or(`title.ilike.${searchPattern},summary.ilike.${searchPattern}`)
+        .or(titleSummaryFilter)
         .limit(50);
 
       // Decks, individual cards and courses — matched on titles, body content,
@@ -140,20 +143,20 @@ const SearchResults = () => {
           location:content_categories!healing_resources_location_id_fkey(id, page)
         `)
         .eq('status', 'published')
-        .or(`title.ilike.${searchPattern},summary.ilike.${searchPattern}`)
+        .or(titleSummaryFilter)
         .limit(50);
 
       // Find matching symptom IDs
       const { data: matchingSymptoms } = await supabase
         .from('symptoms')
         .select('id')
-        .ilike('name', searchPattern);
+        .or(nameFilter);
 
       // Find matching condition IDs
       const { data: matchingConditions } = await supabase
         .from('conditions')
         .select('id')
-        .ilike('name', searchPattern);
+        .or(nameFilter);
 
       // Collect resource IDs from title/summary matches
       const directHealingIds = new Set((healingData || []).map((r: any) => r.id));
