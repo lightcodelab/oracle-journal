@@ -29,12 +29,38 @@ interface TempleRow {
   tags: string[] | null;
 }
 
+const STOP_WORDS = new Set([
+  'the','and','for','with','that','this','was','are','you','your','yours','from','have','has','had',
+  'feel','feels','feeling','felt','but','not','all','any','when','what','why','how','can','get','got',
+  'just','like','really','very','been','being','about','into','out','over','keep','keeps','kept',
+  'always','still','they','them','their','she','her','who','because','than','then','there','here',
+  'some','much','more','most','also','only','even','ever','never','make','makes','made','want',
+  'wants','wanted','need','needs','needed',
+]);
+
+// Build the list of ilike patterns: the full phrase plus each meaningful word,
+// so "I feel stuck" finds the same results as "stuck".
+const buildPatterns = (q: string): string[] => {
+  const phrase = q.trim();
+  const words = phrase
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((w) => w.length >= 3 && !STOP_WORDS.has(w));
+  return [...new Set([phrase.toLowerCase(), ...words])]
+    .filter((t) => t.length >= 2)
+    .map((t) => `%${t}%`);
+};
+
+const orFilter = (fields: string[], patterns: string[]) =>
+  patterns.flatMap((p) => fields.map((f) => `${f}.ilike.${p}`)).join(',');
+
 const getPublicUrl = (bucket: string, path: string | null): string | null => {
   if (!path) return null;
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
   const { data } = supabase.storage.from(bucket).getPublicUrl(path);
   return data.publicUrl;
 };
+
 
 const SearchResults = () => {
   const [searchParams, setSearchParams] = useSearchParams();
