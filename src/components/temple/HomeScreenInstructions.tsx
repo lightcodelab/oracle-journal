@@ -100,6 +100,11 @@ const HomeScreenInstructions = ({
         </TabsContent>
 
         <TabsContent value="android" className="mt-4 text-sm">
+          <p className="mb-3 text-xs text-muted-foreground">
+            For the most reliable shortcut, please use <strong>Google Chrome</strong>.
+            Samsung Internet can create a small app package that triggers a security
+            warning or fails to load.
+          </p>
           <ol className="list-decimal space-y-2 pl-5">
             {replacingOldIcon && (
               <li>
@@ -115,7 +120,7 @@ const HomeScreenInstructions = ({
             </li>
             <li>
               Tap <strong>Add to Home screen</strong> or <strong>Install app</strong>, then
-              confirm.
+              confirm. If you see a Play Protect warning, tap <strong>Install anyway</strong>.
             </li>
             <li>Open THE TEMPLE from your new icon and sign in once if asked.</li>
           </ol>
