@@ -127,8 +127,6 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       icon: <BookOpen className="w-4 h-4 mr-2" />,
       route: '/field-notes',
     },
-
-
     {
       label: 'My Readings',
       icon: <Sparkles className="w-4 h-4 mr-2" />,
@@ -144,6 +142,9 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       icon: <ListMusic className="w-4 h-4 mr-2" />,
       route: '/playlists',
     },
+  ];
+
+  const engagementItems = [
     {
       label: 'Affiliate Program',
       icon: <Share2 className="w-4 h-4 mr-2" />,
@@ -194,6 +195,17 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           </>
         )}
         {menuItems.map((item) => (
+          <DropdownMenuItem
+            key={item.route}
+            onClick={() => navigate(item.route)}
+            className="cursor-pointer"
+          >
+            {item.icon}
+            {item.label}
+          </DropdownMenuItem>
+        ))}
+        <DropdownMenuSeparator />
+        {engagementItems.map((item) => (
           <DropdownMenuItem
             key={item.route}
             onClick={() => navigate(item.route)}
