@@ -42,10 +42,25 @@ serve(async (req) => {
       commissionModel,
       mode: requestedMode,
       as_of: requestedAsOf,
+      cadence: requestedCadence,
     } = await req.json().catch(() => ({}));
     // NOTE: `priceId` is intentionally NOT read from the client. The
-    // server selects the Stripe Price ID from app_settings via a
-    // security-definer RPC. Any priceId sent by the client is ignored.
+    // server selects the Stripe Price ID from app_settings (monthly) or
+    // encrypted env secrets (yearly). Any priceId sent by the client is
+    // ignored.
+    const cadence: "monthly" | "yearly" =
+      requestedCadence === "yearly" ? "yearly" : "monthly";
+
+    // Yearly Price IDs live in encrypted secrets (live + test).
+    const yearlyPriceIdFor = (tier: string, mode: "test" | "live") => {
+      const envName =
+        `STRIPE_${tier.toUpperCase()}_YEARLY_PRICE_ID_${mode.toUpperCase()}`;
+      const value = Deno.env.get(envName);
+      if (!value) {
+        throw new Error(`No yearly Stripe price configured (${envName})`);
+      }
+      return value;
+    };
 
     // ---------------------------------------------------------------
     // Server-authoritative price selection and environment resolution.
@@ -100,7 +115,39 @@ serve(async (req) => {
     let stripePriceId: string;
     let offerTier: string;
 
-    if (stripeMode === "test" && requestedAsOf) {
+    if (cadence === "yearly") {
+      // Yearly checkout: resolve the current tier/availability through the
+      // same server-authoritative RPC, then pick the yearly Price ID from
+      // encrypted secrets so the client can never inject one.
+      if (stripeMode === "test" && requestedAsOf) {
+        const { data: simOffer, error: simErr } = await supabaseAdmin.rpc(
+          "admin_test_get_membership_offer_at",
+          { _as_of: requestedAsOf, _mode: "test" }
+        );
+        if (simErr || !simOffer) {
+          console.error("Simulated-time offer resolution failed:", simErr);
+          throw new Error("Simulated-time offer resolution failed");
+        }
+        offerTier = (simOffer as Record<string, unknown>).offer as string;
+        if (offerTier === "pre_launch") {
+          throw new Error("membership_not_available: checkout is not open");
+        }
+        stripePriceId = yearlyPriceIdFor(offerTier, "test");
+        console.log("Simulated-time yearly offer:", offerTier, "as_of:", requestedAsOf);
+      } else {
+        const { data: offer, error: offerError } = await supabaseAdmin.rpc(
+          "get_stripe_price_id_for_current_offer",
+          { _mode: stripeMode }
+        );
+        if (offerError || !offer) {
+          console.error("Offer resolution failed:", offerError);
+          throw new Error("Membership pricing is not currently available.");
+        }
+        offerTier = (offer as Record<string, unknown>).tier as string;
+        stripePriceId = yearlyPriceIdFor(offerTier, stripeMode);
+        console.log("Server-selected yearly offer:", offerTier, "mode:", stripeMode);
+      }
+    } else if (stripeMode === "test" && requestedAsOf) {
       // Admin-only simulated-time path. The RPC itself enforces admin
       // role and mode=test; we still resolve the concrete Price ID
       // server-side from app_settings so the client cannot inject one.
