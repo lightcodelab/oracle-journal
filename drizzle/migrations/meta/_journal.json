@@ -127,6 +127,13 @@
       "when": 1789105730879,
       "tag": "0017_enable_fuzzy_search",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1789106298871,
+      "tag": "0018_search_temple_any_terms_fuzzy",
+      "breakpoints": true
     }
   ]
 }
