@@ -665,6 +665,9 @@ const Membership = () => {
                     ? "Billed yearly in AUD"
                     : "Billed monthly in AUD"
                 }
+                savings={
+                  billing === "yearly" ? "Save $100/year" : undefined
+                }
                 lines={[
                   "Full access to every Door and every practice inside THE TEMPLE.",
                   "The AreekeerA® Guide, the Living Pattern Lab, courses, card decks and readings.",
@@ -690,6 +693,9 @@ const Membership = () => {
                     billing === "yearly"
                       ? "Billed yearly in AUD"
                       : "Billed monthly in AUD"
+                  }
+                  savings={
+                    billing === "yearly" ? "Save $70/year" : undefined
                   }
                   lines={[
                     "Available until 14 December 2026.",
