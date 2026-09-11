@@ -30,7 +30,7 @@ export function ScheduledAccess({ startsAt }: { startsAt: string | null }) {
           Your Temple access is scheduled
         </h1>
         <p className="text-muted-foreground mb-2">
-          Your time-limited access to The Temple has not yet begun. Please
+          Your time-limited access to THE TEMPLE has not yet begun. Please
           return at the scheduled start to enter.
         </p>
         {when && (

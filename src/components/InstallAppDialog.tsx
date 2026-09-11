@@ -41,9 +41,9 @@ export const InstallAppProvider = ({ children }: { children: ReactNode }) => {
       <Dialog open={open} onOpenChange={(v) => { if (!v) handleDismiss(); }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-lg">Add The Temple to your Home Screen</DialogTitle>
+            <DialogTitle className="text-lg">Add THE TEMPLE to your Home Screen</DialogTitle>
             <DialogDescription>
-              Keep The Temple of Sustainment one tap away on your phone or tablet.
+              Keep THE TEMPLE of Sustainment one tap away on your phone or tablet.
             </DialogDescription>
           </DialogHeader>
 

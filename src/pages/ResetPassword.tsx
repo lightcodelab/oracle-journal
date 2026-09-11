@@ -136,7 +136,7 @@ const ResetPassword = () => {
               </div>
             ) : done ? (
               <p className="text-sm text-foreground/80 text-center leading-relaxed">
-                Your password has been updated. Taking you back to The Temple…
+                Your password has been updated. Taking you back to THE TEMPLE…
               </p>
             ) : (
               <form onSubmit={handleUpdatePassword} className="space-y-4">

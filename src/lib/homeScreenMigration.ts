@@ -2,8 +2,8 @@
  * Single place to configure the Home Screen migration window.
  *
  * During this window every signed-in member (who is not already running the
- * installed app from the new address) sees the gold "The Temple has a new home"
- * banner. After it passes, only the quiet "Keep The Temple close" install
+ * installed app from the new address) sees the gold "THE TEMPLE has a new home"
+ * banner. After it passes, only the quiet "Keep THE TEMPLE close" install
  * prompt remains for eligible phones/tablets.
  */
 

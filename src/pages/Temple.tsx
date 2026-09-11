@@ -44,7 +44,7 @@ function SeasonalSection({ enabled }: { enabled: boolean }) {
         id="seasonal-heading"
         className="font-serif text-2xl text-foreground mb-3"
       >
-        New or seasonal in The Temple
+        New or seasonal in THE TEMPLE
       </h2>
       <RecommendationGrid items={data} />
     </section>
@@ -106,7 +106,7 @@ const Temple = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-primary font-serif text-xl">
-          Opening The Temple…
+          Opening THE TEMPLE…
         </div>
       </div>
     );
@@ -141,7 +141,7 @@ const Temple = () => {
               We couldn't confirm your access
             </h1>
             <p className="text-muted-foreground mb-8">
-              Something went wrong while checking your access to The Temple.
+              Something went wrong while checking your access to THE TEMPLE.
               Please try again in a moment.
             </p>
             <Button onClick={() => window.location.reload()} size="lg">
@@ -176,7 +176,7 @@ const Temple = () => {
         </div>
         <div className="max-w-2xl mx-auto px-4 pt-24 pb-16 text-center">
           <h1 className="font-serif text-3xl sm:text-4xl text-foreground mb-4">
-            The Temple awaits
+            THE TEMPLE awaits
           </h1>
           <p className="text-muted-foreground mb-2">
             An active membership opens the whole Temple — every practice, every

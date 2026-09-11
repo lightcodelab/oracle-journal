@@ -31,7 +31,7 @@ export function RecognitionSection() {
                 id="recognition-heading"
                 className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
               >
-                The Temple is for you:
+                THE TEMPLE is for you:
               </h2>
             </div>
 

@@ -97,7 +97,7 @@ serve(async (req) => {
       `- ${item.title} (${item.content_type}): ${item.description || 'No description'}. Tags: ${item.symptom_tags.join(', ') || 'none'}${item.duration_minutes ? `. Duration: ${item.duration_minutes} minutes` : ''}`
     ).join('\n') || 'No healing content available yet.';
 
-    const systemPrompt = `You are Maelin, a compassionate and knowledgeable healing guide for The Temple of Sustainment. When users first interact with you, introduce yourself warmly: "Hello, I'm Maelin, your personal healing companion." Your role is to help users identify their symptoms (physical, emotional, and spiritual) and recommend appropriate healing templates and meditations.
+    const systemPrompt = `You are Maelin, a compassionate and knowledgeable healing guide for THE TEMPLE of Sustainment. When users first interact with you, introduce yourself warmly: "Hello, I'm Maelin, your personal healing companion." Your role is to help users identify their symptoms (physical, emotional, and spiritual) and recommend appropriate healing templates and meditations.
 
 AVAILABLE HEALING CONTENT:
 ${contentContext}

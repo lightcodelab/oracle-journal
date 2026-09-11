@@ -19,7 +19,7 @@ export function SearchTheTempleCard() {
   return (
     <div className="rounded-lg border border-border/50 bg-card/50 p-8 h-full flex flex-col">
       <h3 className="font-serif text-2xl text-foreground mb-1">
-        Search The Temple
+        Search THE TEMPLE
       </h3>
       <p className="text-sm text-muted-foreground mb-5">
         Find teachings, resources, and pathways by symptom, resources name, or keyword. Use this if you can't remember the resources name, or you know your symptoms but not which resources will help.
@@ -33,7 +33,7 @@ export function SearchTheTempleCard() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
-            aria-label="Search The Temple"
+            aria-label="Search THE TEMPLE"
           />
         </div>
         <Button type="submit" variant="secondary" disabled={!searchQuery.trim()}>

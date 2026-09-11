@@ -33,9 +33,9 @@ export function ExpiredAccess({ expiresAt }: { expiresAt: string | null }) {
           Your Temple access period has ended
         </h1>
         <p className="text-muted-foreground mb-2">
-          Your time-limited access to The Temple has now come to a close. If
+          Your time-limited access to THE TEMPLE has now come to a close. If
           you would like to continue exploring the practices, resources and
-          gatherings within The Temple, you can join as a member.
+          gatherings within THE TEMPLE, you can join as a member.
         </p>
         {when && (
           <p className="text-xs text-muted-foreground mb-8">
@@ -43,7 +43,7 @@ export function ExpiredAccess({ expiresAt }: { expiresAt: string | null }) {
           </p>
         )}
         <Button asChild size="lg">
-          <Link to="/">Join The Temple</Link>
+          <Link to="/">Join THE TEMPLE</Link>
         </Button>
       </main>
     </div>
