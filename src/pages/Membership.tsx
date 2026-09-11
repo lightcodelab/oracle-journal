@@ -74,7 +74,7 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Can I cancel?",
     answer:
-      "Yes. You can pause or cancel your membership at any time from your account. Pausing stops your billing and holds your account while you take a break; cancelling ends your membership and your access to Temple content immediately, and you can rejoin later. Membership is billed monthly in AUD.",
+      "Yes. You can pause or cancel your membership at any time from your account. Pausing stops your billing and holds your account while you take a break; cancelling ends your membership and your access to Temple content immediately, and you can rejoin later. Membership is billed monthly or yearly in AUD.",
   },
 ];
 
@@ -622,32 +622,75 @@ const Membership = () => {
               </p>
             )}
 
-            <div className="mt-12 grid gap-6 md:grid-cols-2">
+            <div
+              className="mt-12 inline-flex items-center rounded-full border border-border/60 bg-card/40 p-1"
+              role="group"
+              aria-label="Billing period"
+            >
+              {(["monthly", "yearly"] as const).map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setBilling(option)}
+                  aria-pressed={billing === option}
+                  className={`rounded-full px-5 py-2 text-sm transition-colors ${
+                    billing === option
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {option === "monthly" ? "Monthly" : "Yearly"}
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-8 grid gap-6 md:grid-cols-2">
               <MembershipCard
                 label="Membership"
                 price={
                   foundingDeadlinePassed ? (
-                    `${standardPrice} / month`
+                    billing === "yearly"
+                      ? "$500 AUD / year"
+                      : `${standardPrice} / month`
                   ) : (
                     <span className="line-through opacity-60">
-                      {standardPrice} / month
+                      {billing === "yearly"
+                        ? "$500 AUD / year"
+                        : `${standardPrice} / month`}
                     </span>
                   )
                 }
-                cadence="Billed monthly in AUD"
+                cadence={
+                  billing === "yearly"
+                    ? "Billed yearly in AUD"
+                    : "Billed monthly in AUD"
+                }
                 lines={[
                   "Full access to every Door and every practice inside THE TEMPLE.",
                   "The AreekeerA® Guide, the Living Pattern Lab, courses, card decks and readings.",
                   "Live readings, classes, workshops and replays.",
                   "Pause or cancel at any time from your account.",
                 ]}
+                cta={
+                  foundingDeadlinePassed ? (
+                    <EnterTemple placement="pricing" />
+                  ) : undefined
+                }
               />
               {showFounding && (
                 <MembershipCard
                   highlight
                   label="Founding Beta"
-                  price="$35 AUD / month"
-                  cadence="Billed monthly in AUD"
+                  price={
+                    billing === "yearly"
+                      ? "$350 AUD / year"
+                      : "$35 AUD / month"
+                  }
+                  cadence={
+                    billing === "yearly"
+                      ? "Billed yearly in AUD"
+                      : "Billed monthly in AUD"
+                  }
                   lines={[
                     "Available until 14 December 2026.",
                     "Your founding rate remains while your membership stays active.",
