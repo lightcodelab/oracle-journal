@@ -680,7 +680,7 @@ const Membership = () => {
               {showFounding && (
                 <MembershipCard
                   highlight
-                  label="Founding Beta"
+                  label="Founding Member"
                   price={
                     billing === "yearly"
                       ? "$350 AUD / year"
