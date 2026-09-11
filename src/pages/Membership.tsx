@@ -352,7 +352,7 @@ const Membership = () => {
         <section aria-labelledby="process-heading" className="border-y border-border/60 bg-muted/30 px-5 py-8 md:px-8 md:py-12">
           <div className="mx-auto max-w-6xl">
             <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">OUR SIGNATURE METHOD</p>
-            <h2 id="process-heading" className="max-w-3xl font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">Living an ordinary life in&nbsp;extraordinary way begins with what you recognise in the moment.</h2>
+            <h2 id="process-heading" className="max-w-3xl font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">Living an ordinary life in an extraordinary way begins with what you recognise in the moment.</h2>
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
               {[
                 ["Notice", "What is here in your body, emotions, relationships, and inner world?"],
