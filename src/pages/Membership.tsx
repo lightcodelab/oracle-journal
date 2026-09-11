@@ -102,6 +102,7 @@ const Membership = () => {
   const [offer, setOffer] = useState<MembershipOffer | null>(null);
   const [offerLoading, setOfferLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
 
   useEffect(() => {
     trackSalesEvent("sales_page_view");
@@ -133,8 +134,13 @@ const Membership = () => {
       const pendingOffer = sessionStorage.getItem("pendingCheckoutOffer");
       if (pendingOffer) {
         sessionStorage.removeItem("pendingCheckoutOffer");
+        const pendingCadence =
+          sessionStorage.getItem("pendingCheckoutCadence") === "yearly"
+            ? "yearly"
+            : "monthly";
+        sessionStorage.removeItem("pendingCheckoutCadence");
         if (offer?.checkout_available) {
-          void startCheckout("pricing");
+          void startCheckout("pricing", pendingCadence);
           return;
         }
       }
@@ -160,16 +166,18 @@ const Membership = () => {
 
   const startCheckout = async (
     placement: "hero" | "midpage" | "final" | "pricing",
+    cadence: "monthly" | "yearly" = billing,
   ) => {
     if (placement === "hero") trackSalesEvent("hero_enter_temple_clicked");
     if (placement === "midpage") trackSalesEvent("midpage_enter_temple_clicked");
     if (placement === "final") trackSalesEvent("final_enter_temple_clicked");
 
     if (!offer?.checkout_available) return;
-    trackSalesEvent("membership_checkout_started", { placement });
+    trackSalesEvent("membership_checkout_started", { placement, cadence });
 
     if (!user) {
       sessionStorage.setItem("pendingCheckoutOffer", offer.tier);
+      sessionStorage.setItem("pendingCheckoutCadence", cadence);
       navigate("/auth?mode=signup");
       return;
     }
@@ -183,6 +191,7 @@ const Membership = () => {
             affiliateCode: ref?.code ?? null,
             affiliateLinkCode: ref?.linkCode ?? null,
             commissionModel: ref?.commissionModel ?? null,
+            cadence,
           },
         },
       );
