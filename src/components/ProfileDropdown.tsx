@@ -180,7 +180,7 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           <ChevronDown className="hidden sm:inline-block w-3 h-3 ml-1" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain">
+      <DropdownMenuContent align="end" className="w-48">
         {isAdmin && (
           <>
             <DropdownMenuItem 
