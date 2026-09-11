@@ -26,10 +26,10 @@ export function ExploreDoors() {
   return (
     <section aria-labelledby="explore-heading" className="mb-12">
       <h2 id="explore-heading" className="font-serif text-2xl text-foreground mb-1">
-        Explore The Temple
+        Explore THE TEMPLE
       </h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Three pathways for exploring The Temple. Every pathway is open to every active member.
+        Three pathways for exploring THE TEMPLE. Every pathway is open to every active member.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {doors.map((door, i) => (

@@ -15,7 +15,7 @@ CREATE TABLE public.temple_moments (
 );
 
 COMMENT ON TABLE public.temple_moments IS
-  'Private per-member Moment parent record for "Bring a Moment to The Temple". No status/completion/progress modelling: stopping after any Movement is a valid end state.';
+  'Private per-member Moment parent record for "Bring a Moment to THE TEMPLE". No status/completion/progress modelling: stopping after any Movement is a valid end state.';
 
 -- Owner-scoped chronological listing (load/list a member''s Moments newest-first).
 CREATE INDEX temple_moments_user_occurred_at_idx

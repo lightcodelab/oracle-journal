@@ -231,7 +231,7 @@ Your response MUST include:
 `
       : '';
 
-    const systemPrompt = `You are AreekeerA, a trauma-informed healing protocol guide for The Temple of Sustainment. You help users create personalized healing protocols based on their symptoms and goals.
+    const systemPrompt = `You are AreekeerA, a trauma-informed healing protocol guide for THE TEMPLE of Sustainment. You help users create personalized healing protocols based on their symptoms and goals.
 
 ${escalationInstructions}
 

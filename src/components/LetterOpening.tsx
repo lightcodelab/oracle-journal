@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 const SESSION_KEY = "temple_letter_opened";
 
 /**
- * A sealed letter that cracks open before the member lands in The Temple.
+ * A sealed letter that cracks open before the member lands in THE TEMPLE.
  * Plays once per browser session for signed-in members.
  */
 export default function LetterOpening() {
@@ -61,7 +61,7 @@ export default function LetterOpening() {
               transition={{ duration: 3.8, times: [0, 0.5, 0.82], ease: "easeOut" }}
             >
               <span className="font-serif text-xl sm:text-2xl text-foreground/80 tracking-wide">
-                Enter The Temple
+                Enter THE TEMPLE
               </span>
             </motion.div>
 

@@ -39,7 +39,7 @@ export function WelcomeHome({ displayName, showFounderBadge, foundingSince }: We
               id="temple-welcome-heading"
               className="font-serif text-2xl sm:text-3xl md:text-4xl text-on-image leading-tight"
             >
-              The Temple awaits{hasName ? `, ${displayName}` : ""}
+              THE TEMPLE awaits{hasName ? `, ${displayName}` : ""}
             </h1>
           </div>
         </div>

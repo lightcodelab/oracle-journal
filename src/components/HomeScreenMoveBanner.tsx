@@ -18,7 +18,7 @@ type BannerMode = "migration" | "install";
 /**
  * Thin, dismissible Home Screen banner for signed-in members.
  *
- * - migration: member reached The Temple through the old address (detected via
+ * - migration: member reached THE TEMPLE through the old address (detected via
  *   referrer or `?from=old`, remembered locally so guidance recurs).
  * - install: member on the new address, on a phone/tablet, not running the
  *   installed Home Screen app.
@@ -150,11 +150,11 @@ const HomeScreenMoveBanner = () => {
             }`}
           >
             <span className="font-medium">
-              {migration ? "The Temple has a new home." : "Keep The Temple close."}
+              {migration ? "THE TEMPLE has a new home." : "Keep THE TEMPLE close."}
             </span>{" "}
             {migration
-              ? "If you have The Temple saved to your phone Home Screen, please replace the old icon with the new one so it continues to open directly into The Temple."
-              : "Add The Temple to your Home Screen for an easier way back."}{" "}
+              ? "If you have THE TEMPLE saved to your phone Home Screen, please replace the old icon with the new one so it continues to open directly into THE TEMPLE."
+              : "Add THE TEMPLE to your Home Screen for an easier way back."}{" "}
             <button
                 type="button"
                 onClick={() => setShowHow((v) => !v)}

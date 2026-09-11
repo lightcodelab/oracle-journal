@@ -309,7 +309,7 @@ const MyAccount = () => {
               <div className="p-4 rounded-lg border bg-primary/5 border-primary/20">
                 <h3 className="font-medium mb-2">Your Access</h3>
                 <p className="text-sm text-muted-foreground">
-                  You have full access to The Temple
+                  You have full access to THE TEMPLE
                   {manualFullAccess.expiresAt
                     ? ` until ${new Date(manualFullAccess.expiresAt).toLocaleString(undefined, { dateStyle: "long", timeStyle: "short" })}`
                     : ""}

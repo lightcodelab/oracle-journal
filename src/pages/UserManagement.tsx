@@ -409,7 +409,7 @@ Temporary password: ${createdDetails.password}
 
 You will be prompted to change your password when you first sign in.
 
-You have full access to The Temple until ${createdDetails.endsAt}.
+You have full access to THE TEMPLE until ${createdDetails.endsAt}.
 
 If you'd like to continue after this date, you can become a member at ${SITE_CONFIG.productionDomain}`;
     await navigator.clipboard.writeText(text);
@@ -446,7 +446,7 @@ Here are your login details for the Temple of Sustainment:
 Login page: ${loginUrl}
 Email: ${u.email}
 
-You have full access to The Temple until ${expiry}.
+You have full access to THE TEMPLE until ${expiry}.
 
 If you'd like to continue after this date, you can become a member at ${SITE_CONFIG.productionDomain}`;
     await navigator.clipboard.writeText(text);
@@ -483,7 +483,7 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-serif text-foreground">User Management</h1>
-            <p className="text-muted-foreground mt-1">Grant time-limited full access to The Temple for 1:1 clients</p>
+            <p className="text-muted-foreground mt-1">Grant time-limited full access to THE TEMPLE for 1:1 clients</p>
           </div>
 
           <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetCreateForm(); }}>

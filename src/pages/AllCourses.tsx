@@ -66,7 +66,7 @@ const AllCourses = () => {
         >
           <h1 className="font-serif text-3xl sm:text-4xl text-foreground mb-3">All Courses</h1>
           <p className="text-muted-foreground font-sans max-w-2xl">
-            Every course offering in The Temple, gathered in one place. Filter by category to find
+            Every course offering in THE TEMPLE, gathered in one place. Filter by category to find
             the path you are ready for.
           </p>
         </motion.div>

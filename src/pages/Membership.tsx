@@ -59,17 +59,17 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Do I need to be spiritual to belong here?",
     answer:
-      "No. The Temple makes room for intuitive, emotional, embodied, relational, and practical ways of knowing. You decide what is meaningful and useful in your own life.",
+      "No. THE TEMPLE makes room for intuitive, emotional, embodied, relational, and practical ways of knowing. You decide what is meaningful and useful in your own life.",
   },
   {
     question: "What if I am already overwhelmed?",
     answer:
-      "You do not need to do everything. The Temple is designed for return. Start with one small resource, one card, one reflection, or one practice that meets the moment you are in.",
+      "You do not need to do everything. THE TEMPLE is designed for return. Start with one small resource, one card, one reflection, or one practice that meets the moment you are in.",
   },
   {
     question: "Is this medical or mental-health treatment?",
     answer:
-      "No. The Temple offers self-directed reflective, spiritual, and restorative practices. It does not diagnose, treat, or replace medical, mental-health, emergency, or crisis care.",
+      "No. THE TEMPLE offers self-directed reflective, spiritual, and restorative practices. It does not diagnose, treat, or replace medical, mental-health, emergency, or crisis care.",
   },
   {
     question: "Can I cancel?",
@@ -128,7 +128,7 @@ const Membership = () => {
     // Any authenticated user landing on the public sales page should be
     // sent into the app, preserving a saved intended destination.
     if (!authLoading && !offerLoading && user) {
-      // A visitor who clicked "Enter The Temple" before registering returns
+      // A visitor who clicked "Enter THE TEMPLE" before registering returns
       // here after signup — resume their Stripe checkout straight away.
       const pendingOffer = sessionStorage.getItem("pendingCheckoutOffer");
       if (pendingOffer) {
@@ -246,7 +246,7 @@ const Membership = () => {
         ) : (
           <DoorOpen className="mr-2 h-4 w-4" aria-hidden />
         )}
-        Enter The Temple
+        Enter THE TEMPLE
       </Button>
     );
   };
@@ -304,7 +304,7 @@ const Membership = () => {
                 Not more information. A different relationship with your life.
               </h2>
               <p className="text-base leading-relaxed text-foreground/85">
-                The Temple does not ask you to transcend what hurts, think
+                THE TEMPLE does not ask you to transcend what hurts, think
                 positively, or become endlessly self-aware.
               </p>
               <p className="text-base leading-relaxed text-foreground/85">
@@ -385,9 +385,9 @@ const Membership = () => {
               <TempleDoorPanel
                 eyebrow="The AreekeerA® Guide"
                 title="Not sure what you need today?"
-                body="Tell The AreekeerA® Guide what life feels like right now. It provides you a small, sequenced pathway through The Temple resources — what to try, in what order, and why it may meet this particular moment."
+                body="Tell The AreekeerA® Guide what life feels like right now. It provides you a small, sequenced pathway through THE TEMPLE resources — what to try, in what order, and why it may meet this particular moment."
                 image={areekeeraThumbnail}
-                imageAlt="The AreekeerA Guide inside The Temple, where a member describes what life feels like right now."
+                imageAlt="The AreekeerA Guide inside THE TEMPLE, where a member describes what life feels like right now."
                 contain
               />
               <TempleDoorPanel
@@ -397,7 +397,7 @@ const Membership = () => {
                 body="A private place to notice what is true, become curious about the meaning being made, practise a different choice, and gather evidence from what happens next."
                 steps={["Pause", "Perceive", "Practice"]}
                 image={livingPatternImage}
-                imageAlt="The Living Pattern Lab inside The Temple, with its Pause, Perceive and Practice lenses."
+                imageAlt="The Living Pattern Lab inside THE TEMPLE, with its Pause, Perceive and Practice lenses."
               />
               <TempleDoorPanel
                 eyebrow="The Door of Remembrance"
@@ -454,7 +454,7 @@ const Membership = () => {
               You do not need to heal perfectly to live differently.
             </h2>
             <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
-              The Temple is not built around the fantasy that one insight, one
+              THE TEMPLE is not built around the fantasy that one insight, one
               card, one meditation, or one decision will solve a life.
             </p>
             <p className="mt-6 font-serif text-2xl text-foreground">
@@ -486,7 +486,7 @@ const Membership = () => {
           </div>
         </section>
 
-        {/* The women and Method behind The Temple */}
+        {/* The women and Method behind THE TEMPLE */}
         <section
           aria-labelledby="guides-heading"
           className="px-5 py-16 md:px-8 md:py-24"
@@ -497,11 +497,11 @@ const Membership = () => {
                 id="guides-heading"
                 className="mb-6 font-serif text-[1.7rem] leading-tight text-foreground sm:text-3xl"
               >
-                The women and Method behind The Temple
+                The women and Method behind THE TEMPLE
               </h2>
               <img
                 src={guidesPhoto}
-                alt="Julie and Tash Lewin, the guides of The Temple of Sustainment"
+                alt="Julie and Tash Lewin, the guides of THE TEMPLE of Sustainment"
                 loading="lazy"
                 className="w-full rounded-2xl object-cover grayscale"
               />
@@ -596,7 +596,7 @@ const Membership = () => {
               id="membership-heading"
               className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
             >
-              Enter The Temple.
+              Enter THE TEMPLE.
             </h2>
             <p className="mt-6 max-w-3xl text-base leading-relaxed text-foreground/85 sm:text-lg">
               Your membership gives you full access to every Door, every
@@ -627,7 +627,7 @@ const Membership = () => {
                 }
                 cadence="Billed monthly in AUD"
                 lines={[
-                  "Full access to every Door and every practice inside The Temple.",
+                  "Full access to every Door and every practice inside THE TEMPLE.",
                   "The AreekeerA® Guide, the Living Pattern Lab, courses, card decks and readings.",
                   "Live readings, classes, workshops and replays.",
                   "Pause or cancel at any time from your account.",
@@ -681,7 +681,7 @@ const Membership = () => {
               }
             />
             <p className="mt-12 text-xs leading-relaxed text-muted-foreground">
-              The Temple offers self-directed reflective, spiritual, and
+              THE TEMPLE offers self-directed reflective, spiritual, and
               restorative practices. It does not diagnose, treat, or replace
               medical, mental-health, emergency, or crisis care, and makes no
               promise of cure or guaranteed relief. All prices shown in AUD,

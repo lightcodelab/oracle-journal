@@ -51,7 +51,7 @@ interface HomeScreenInstructionsProps {
 }
 
 /**
- * Single source of truth for "add The Temple to your Home Screen" guidance.
+ * Single source of truth for "add THE TEMPLE to your Home Screen" guidance.
  * Used by the top banner and reusable by the Orientation experience.
  */
 const HomeScreenInstructions = ({
@@ -95,7 +95,7 @@ const HomeScreenInstructions = ({
               Scroll down and tap <strong>Add to Home Screen</strong>, then tap{" "}
               <strong>Add</strong>.
             </li>
-            <li>Open The Temple from your new icon and sign in once if asked.</li>
+            <li>Open THE TEMPLE from your new icon and sign in once if asked.</li>
           </ol>
         </TabsContent>
 
@@ -117,13 +117,13 @@ const HomeScreenInstructions = ({
               Tap <strong>Add to Home screen</strong> or <strong>Install app</strong>, then
               confirm.
             </li>
-            <li>Open The Temple from your new icon and sign in once if asked.</li>
+            <li>Open THE TEMPLE from your new icon and sign in once if asked.</li>
           </ol>
         </TabsContent>
       </Tabs>
 
       <p className="mt-3 text-xs text-muted-foreground">
-        Nothing inside The Temple changes — your membership, courses, Pattern Records,
+        Nothing inside THE TEMPLE changes — your membership, courses, Pattern Records,
         Field Notes and saved work all stay exactly as they are.
       </p>
     </div>
