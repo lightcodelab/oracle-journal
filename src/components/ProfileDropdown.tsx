@@ -168,7 +168,7 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
     <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
       <GlobalSearch />
       <ThemeModeToggle />
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
