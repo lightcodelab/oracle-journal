@@ -54,22 +54,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    // The auth state must settle exactly once, as soon as we know whether a
+    // session exists. Profile and role lookups run in the background so a slow
+    // or failed network call can never leave the app stuck on a loading screen
+    // (which previously caused redirect loops on cold launches of the
+    // installed home-screen app).
+    let settled = false;
+    const settle = () => {
+      if (settled) return;
+      settled = true;
+      setLoading(false);
+    };
+
+    const loadProfileFlags = (userId: string) => {
+      void checkMustChangePassword(userId);
+      void checkAdminRole(userId);
+    };
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        settle();
 
-        if (session?.user && event === "SIGNED_IN") {
+        if (session?.user && (event === "SIGNED_IN" || event === "INITIAL_SESSION")) {
           // Defer Supabase calls out of the auth callback
-          setTimeout(() => {
-            Promise.all([
-              checkMustChangePassword(session.user.id),
-              checkAdminRole(session.user.id),
-            ]).finally(() => setLoading(false));
-          }, 0);
-        } else if (!session?.user) {
-          setLoading(false);
+          setTimeout(() => loadProfileFlags(session.user.id), 0);
         }
 
         if (event === "SIGNED_OUT") {
@@ -83,18 +94,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      settle();
+      if (session?.user) loadProfileFlags(session.user.id);
+    }).catch(settle);
 
-      if (session?.user) {
-        Promise.all([
-          checkMustChangePassword(session.user.id),
-          checkAdminRole(session.user.id),
-        ]).finally(() => setLoading(false));
-      } else {
-        setLoading(false);
-      }
-    });
+    // Last-resort guard: never leave the app in a permanent loading state.
+    const timeout = setTimeout(settle, 8000);
 
-    return () => subscription.unsubscribe();
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handlePasswordChanged = () => {

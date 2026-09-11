@@ -70,7 +70,9 @@ const Temple = () => {
   // Redirect anonymous users. Do not run any member queries until we know who the user is.
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate("/auth");
+      // replace: true so a signed-out launch cannot build a back-and-forth
+      // history stack between the sign-in screen and this page.
+      navigate("/auth", { replace: true });
     }
   }, [authLoading, user, navigate]);
 
