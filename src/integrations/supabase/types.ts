@@ -8078,11 +8078,14 @@ export type Database = {
           id: string
           image_url: string
           kind: string
+          score: number
           subtitle: string
           tags: string[]
           title: string
         }[]
       }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
       stripe_webhook_complete_event: {
         Args: {
           _event_id: string
