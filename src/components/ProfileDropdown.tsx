@@ -204,6 +204,17 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
             {item.label}
           </DropdownMenuItem>
         ))}
+        <DropdownMenuSeparator />
+        {engagementItems.map((item) => (
+          <DropdownMenuItem
+            key={item.route}
+            onClick={() => navigate(item.route)}
+            className="cursor-pointer"
+          >
+            {item.icon}
+            {item.label}
+          </DropdownMenuItem>
+        ))}
         <DropdownMenuItem
           onClick={openInstallDialog}
           className="cursor-pointer"
