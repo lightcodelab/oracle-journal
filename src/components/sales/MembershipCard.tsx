@@ -4,6 +4,7 @@ interface MembershipCardProps {
   label: string;
   price: ReactNode;
   cadence?: string;
+  savings?: ReactNode;
   highlight?: boolean;
   lines: string[];
   cta?: ReactNode;
@@ -14,6 +15,7 @@ export function MembershipCard({
   label,
   price,
   cadence = "per month",
+  savings,
   highlight = false,
   lines,
   cta,
@@ -35,6 +37,9 @@ export function MembershipCard({
           {price}
         </p>
         <p className="mt-1 text-sm text-muted-foreground">{cadence}</p>
+        {savings && (
+          <p className="mt-2 text-sm font-medium text-primary">{savings}</p>
+        )}
         <div className="my-6 h-px w-12 bg-primary/50" aria-hidden />
         <ul className="space-y-3 text-sm leading-relaxed text-foreground/85">
           {lines.map((line) => (
