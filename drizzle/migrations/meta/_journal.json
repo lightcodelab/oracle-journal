@@ -148,6 +148,20 @@
       "when": 1789106376949,
       "tag": "0020_profiles_block_self_membership_updates",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1789107284269,
+      "tag": "0021_search_temple_word_prefix_matching",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1789107366936,
+      "tag": "0022_search_temple_word_boundary_phrase",
+      "breakpoints": true
     }
   ]
 }
