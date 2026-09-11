@@ -240,6 +240,7 @@ serve(async (req) => {
           supabase_user_id: user.id,
           plan_code: offerTier === "founding" ? "founding" : "standard",
           offer_tier: offerTier,
+          cadence,
           ...affMeta,
         },
       },
@@ -249,6 +250,7 @@ serve(async (req) => {
         supabase_user_id: user.id,
         plan_code: offerTier === "founding" ? "founding" : "standard",
         offer_tier: offerTier,
+        cadence,
         ...affMeta,
       },
     });
