@@ -472,7 +472,7 @@ const Membership = () => {
           className="px-5 py-8 md:px-8 md:py-14"
         >
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 lg:grid-cols-[1fr_400px] lg:gap-16">
-            <div>
+            <div className="order-2 lg:order-1">
               <h2
                 id="cost-heading"
                 className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
@@ -553,7 +553,7 @@ const Membership = () => {
                 <EnterTemple placement="midpage" />
               </div>
             </div>
-            <div className="flex items-start justify-center">
+            <div className="order-1 flex items-start justify-center lg:order-2">
               <picture className="w-full">
                 <source
                   media="(min-width: 1024px)"
