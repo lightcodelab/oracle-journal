@@ -28,6 +28,7 @@ import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asse
 import relationshipBanner from "@/assets/relationship-with-life-banner-v2.webp";
 import appMockupGif from "@/assets/app-mockup-v3.gif.asset.json";
 import whatItCostsImage from "@/assets/what-it-costs.png.asset.json";
+import whatItCostsHorizontal from "@/assets/what-it-costs-h.png.asset.json";
 
 type OfferState = "pre_launch" | "founding" | "standard";
 
