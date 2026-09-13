@@ -582,7 +582,7 @@ const Membership = () => {
             >
               You do not need to heal perfectly to live differently.
             </h2>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               THE TEMPLE is not built around the fantasy that one insight, one
               card, one meditation, or one decision will solve a life.
             </p>
@@ -598,18 +598,18 @@ const Membership = () => {
               ].map((line) => (
                 <li
                   key={line}
-                  className="border-l border-primary/40 pl-6 text-base leading-relaxed text-foreground/85 sm:text-lg"
+                  className="border-l border-primary/40 pl-6 text-sm leading-relaxed text-foreground/85 sm:text-base"
                 >
                   {line}
                 </li>
               ))}
             </ul>
-            <p className="mt-10 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-10 text-sm leading-relaxed text-foreground/85 sm:text-base">
               Over time, you begin to see what steadies you, what narrows your
               choices, what your life is asking for, and what becoming more like
               yourself actually looks like in practice.
             </p>
-            <p className="mt-10 max-w-2xl text-base leading-relaxed italic text-foreground/85 sm:text-lg">
+            <p className="mt-10 max-w-2xl text-sm leading-relaxed italic text-foreground/85 sm:text-base">
               Change becomes possible when the conditions around a woman change.
             </p>
           </div>
