@@ -26,6 +26,7 @@ import doorRemembrance from "@/assets/door-of-remembrance-4.webp";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
 import relationshipBanner from "@/assets/relationship-with-life-banner-v2.webp";
+import appMockupGif from "@/assets/app-mockup-v3.gif.asset.json";
 
 type OfferState = "pre_launch" | "founding" | "standard";
 
@@ -392,6 +393,15 @@ const Membership = () => {
               >
                 A Temple with many doors. One living practice.
               </h2>
+            </div>
+
+            <div className="mt-10">
+              <img
+                src={appMockupGif.url}
+                alt="Screen recording of THE TEMPLE member experience on a phone"
+                loading="lazy"
+                className="w-full rounded-2xl border border-border/50"
+              />
             </div>
 
             <div className="mt-14 space-y-16 md:mt-20 md:space-y-24">
