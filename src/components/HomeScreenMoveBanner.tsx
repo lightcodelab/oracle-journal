@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { X, Home } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import HomeScreenInstructions, {
   isHandheldDevice,
   isStandaloneDisplay,
 } from "@/components/temple/HomeScreenInstructions";
 import { isWithinMigrationWindow } from "@/lib/homeScreenMigration";
+import { useAuth } from "@/hooks/useAuth";
 
 const INSTALL_DISMISSED_KEY = "temple-homescreen-install-dismissed";
 const MIGRATION_SNOOZE_KEY = "temple-homescreen-migration-snooze-until";
@@ -27,9 +27,13 @@ type BannerMode = "migration" | "install";
 const HomeScreenMoveBanner = () => {
   const [mode, setMode] = useState<BannerMode | null>(null);
   const [showHow, setShowHow] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
-    let cancelled = false;
+    if (!user) {
+      setMode(null);
+      return;
+    }
 
     const standalone = isStandaloneDisplay();
     const handheld = isHandheldDevice();
@@ -93,19 +97,9 @@ const HomeScreenMoveBanner = () => {
 
     if (!next) return;
 
-    (async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (cancelled || !session) return;
-      setMode(next);
-      setShowHow(false);
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    setMode(next);
+    setShowHow(false);
+  }, [user]);
 
   const dismiss = () => {
     try {

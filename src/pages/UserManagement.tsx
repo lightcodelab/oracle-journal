@@ -111,7 +111,8 @@ function formatWindow(g: ManualUser): string {
 
 const UserManagement = () => {
   const navigate = useNavigate();
-  const { isAdmin, loading: authLoading } = useAuth();
+  const { isAdmin, loading: baseAuthLoading, rolesLoading } = useAuth();
+  const authLoading = baseAuthLoading || rolesLoading;
   const { toast } = useToast();
 
   const [users, setUsers] = useState<ManualUser[]>([]);

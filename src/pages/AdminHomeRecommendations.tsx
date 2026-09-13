@@ -78,7 +78,8 @@ function fromLocalInput(v: string): string | null {
 
 export default function AdminHomeRecommendations() {
   const navigate = useNavigate();
-  const { user, isAdmin, loading: authLoading } = useAuth();
+  const { user, isAdmin, loading: baseAuthLoading, rolesLoading } = useAuth();
+  const authLoading = baseAuthLoading || rolesLoading;
   const [rows, setRows] = useState<Row[]>([]);
   const [resources, setResources] = useState<ResourceOption[]>([]);
   const [loading, setLoading] = useState(true);

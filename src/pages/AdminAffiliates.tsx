@@ -21,7 +21,8 @@ const cents = (c: number) =>
   `$${(c / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
 const AdminAffiliates = () => {
-  const { user, isAdmin, loading: authLoading } = useAuth();
+  const { user, isAdmin, loading: baseAuthLoading, rolesLoading } = useAuth();
+  const authLoading = baseAuthLoading || rolesLoading;
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);

@@ -30,6 +30,13 @@ interface CommunionCategory {
 
 const categories: CommunionCategory[] = [
   {
+    id: 'all-sessions',
+    title: 'All Sessions',
+    description: 'Browse all upcoming live sessions in one place with calendar and grid views.',
+    route: '/all-live-sessions',
+    image: imgAllSessions.url,
+  },
+  {
     id: 'mirror-exchange',
     title: 'The Mirror Exchange',
     description: 'A peer-held space where another member can hold the mirror while you listen for your own revelation.',
@@ -63,13 +70,6 @@ const categories: CommunionCategory[] = [
     description: 'Join guided meditation sessions for inner peace and spiritual connection.',
     route: '/communion/live-meditations',
     image: imgMeditations.url,
-  },
-  {
-    id: 'all-sessions',
-    title: 'All Sessions',
-    description: 'Browse all upcoming live sessions in one place with calendar and grid views.',
-    route: '/all-live-sessions',
-    image: imgAllSessions.url,
   },
   {
     id: 'live-replays',

@@ -203,7 +203,8 @@ const LivingPatternPractice = ({ embedded = false }: { embedded?: boolean }) => 
       if (saved) {
         const updated = await updatePattern(saved.id, saved.content_revision, {
           label: derivedLabel(),
-          commitment: commitment.trim() || null,
+          // Empty string clears a previously saved commitment.
+          commitment: commitment.trim(),
           content,
         });
         setSaved(updated);

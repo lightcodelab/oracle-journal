@@ -79,7 +79,9 @@ export async function updatePattern(
     _id: id,
     _expected_revision: expectedRevision,
     _label: patch.label?.trim() ?? null,
-    _commitment: patch.commitment ?? null,
+    // An empty string clears the commitment; NULL means "leave unchanged".
+    _commitment:
+      patch.commitment === undefined ? null : (patch.commitment ?? ""),
     _content: patch.content ?? null,
     _rechoose: patch.rechoose ?? false,
     _retire: patch.retire ?? false,
