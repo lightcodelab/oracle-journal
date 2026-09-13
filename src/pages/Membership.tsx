@@ -476,25 +476,25 @@ const Membership = () => {
             >
               The cost of waiting
             </h2>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               You do not need another dramatic beginning.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               But you cannot keep living like this.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               You cannot keep losing another evening to a reaction you only understand after the damage is done—after the text you sent, the argument you escalated, the boundary you abandoned, the work you avoided, the thing you swallowed, the person you pushed away, or the way you turned against yourself again.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               You cannot keep treating every flare, conflict, shutdown, spiral, and difficult decision as an isolated emergency.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               Because it is not isolated.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               It is a pattern.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               And every time you are too exhausted, activated, frightened, busy, or unsure to meet it, the old story gets to make the choice for you.
             </p>
             <ul className="mt-8 space-y-5">
@@ -507,43 +507,43 @@ const Membership = () => {
               ].map((line) => (
                 <li
                   key={line}
-                  className="border-l border-primary/40 pl-6 text-base leading-relaxed text-foreground/85 sm:text-lg"
+                  className="border-l border-primary/40 pl-6 text-sm leading-relaxed text-foreground/85 sm:text-base"
                 >
                   {line}
                 </li>
               ))}
             </ul>
-            <p className="mt-10 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-10 text-sm leading-relaxed text-foreground/85 sm:text-base">
               You may have spent years collecting insight—books, practices, courses, readings, breakthroughs, language for every wound—while still having no structure to catch the moment before the old pattern takes the wheel.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               And then you promise yourself: next time.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               Next time, I will pause.
             </p>
-            <p className="mt-2 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-2 text-sm leading-relaxed text-foreground/85 sm:text-base">
               Next time, I will not send the message.
             </p>
-            <p className="mt-2 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-2 text-sm leading-relaxed text-foreground/85 sm:text-base">
               Next time, I will say no.
             </p>
-            <p className="mt-2 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-2 text-sm leading-relaxed text-foreground/85 sm:text-base">
               Next time, I will listen to my body.
             </p>
-            <p className="mt-2 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-2 text-sm leading-relaxed text-foreground/85 sm:text-base">
               Next time, I will choose differently.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               But next time keeps arriving with the same nervous system, the same history, the same automatic protections—and no place to put the moment while it is happening.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               This is what THE TEMPLE is for.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               Not to rescue you from your life.
             </p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               To help you stop handing it over to the patterns that have already taken enough from you.
             </p>
             <div className="mt-10">
