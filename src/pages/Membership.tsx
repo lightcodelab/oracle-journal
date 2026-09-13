@@ -589,7 +589,7 @@ const Membership = () => {
             <p className="mt-6 font-serif text-2xl text-foreground">
               It is built around return.
             </p>
-            <ul className="mt-8 space-y-5">
+            <ul className="mt-6 space-y-5">
               {[
                 "Return when the same reaction appears.",
                 "Return when a symptom or season asks for more care.",
@@ -604,12 +604,12 @@ const Membership = () => {
                 </li>
               ))}
             </ul>
-            <p className="mt-10 text-sm leading-relaxed text-foreground/85 sm:text-base">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
               Over time, you begin to see what steadies you, what narrows your
               choices, what your life is asking for, and what becoming more like
               yourself actually looks like in practice.
             </p>
-            <p className="mt-10 max-w-2xl text-sm leading-relaxed italic text-foreground/85 sm:text-base">
+            <p className="mt-6 max-w-2xl text-sm leading-relaxed italic text-foreground/85 sm:text-base">
               Change becomes possible when the conditions around a woman change.
             </p>
           </div>
