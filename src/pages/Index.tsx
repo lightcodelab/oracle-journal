@@ -146,6 +146,16 @@ const Index = () => {
     };
   }, [user, decks, resumeDeckId, resumeCardId, selectedCard?.id]);
 
+  // Open a deck directly via /remembrance?deck=<id> (e.g. from Search).
+  useEffect(() => {
+    if (!resumeDeckId || resumeCardId || decks.length === 0) return;
+    if (selectedDeck?.id === resumeDeckId) return;
+    const deck = decks.find((d) => d.id === resumeDeckId);
+    if (!deck) return;
+    setSelectedDeck(deck);
+    setHasPremiumAccess(true);
+  }, [decks, resumeDeckId, resumeCardId, selectedDeck?.id]);
+
   const handleSelectDeck = async (deckId: string) => {
     const deck = decks.find(d => d.id === deckId);
     if (!deck || !user) return;
