@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { htmlToPlainText } from "@/lib/richText";
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import ProfileDropdown from '@/components/ProfileDropdown';
@@ -268,7 +269,7 @@ const DevotionCourses = () => {
                           </h3>
                           {course.description && (
                             <p className="text-muted-foreground text-sm line-clamp-3">
-                              {course.description}
+                              {htmlToPlainText(course.description)}
                             </p>
                           )}
                         </div>

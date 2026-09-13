@@ -9,6 +9,8 @@ interface AuthContextType {
   loading: boolean;
   mustChangePassword: boolean;
   isAdmin: boolean;
+  /** True until the signed-in member's role/profile flags have been read. */
+  rolesLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -17,6 +19,7 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   mustChangePassword: false,
   isAdmin: false,
+  rolesLoading: true,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -27,6 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [mustChangePassword, setMustChangePassword] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [flagsLoaded, setFlagsLoaded] = useState(false);
 
   const checkAdminRole = async (userId: string) => {
     const { data, error } = await supabase
@@ -67,8 +71,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const loadProfileFlags = (userId: string) => {
-      void checkMustChangePassword(userId);
-      void checkAdminRole(userId);
+      setFlagsLoaded(false);
+      void Promise.all([
+        checkMustChangePassword(userId),
+        checkAdminRole(userId),
+      ]).finally(() => setFlagsLoaded(true));
     };
 
     // Set up auth state listener FIRST
@@ -86,6 +93,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (event === "SIGNED_OUT") {
           setMustChangePassword(false);
           setIsAdmin(false);
+          setFlagsLoaded(true);
         }
       }
     );
@@ -96,10 +104,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(session?.user ?? null);
       settle();
       if (session?.user) loadProfileFlags(session.user.id);
+      else setFlagsLoaded(true);
     }).catch(settle);
 
     // Last-resort guard: never leave the app in a permanent loading state.
-    const timeout = setTimeout(settle, 8000);
+    const timeout = setTimeout(() => {
+      settle();
+      setFlagsLoaded(true);
+    }, 8000);
 
     return () => {
       clearTimeout(timeout);
@@ -112,7 +124,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, mustChangePassword, isAdmin }}>
+    <AuthContext.Provider value={{
+        user,
+        session,
+        loading,
+        mustChangePassword,
+        isAdmin,
+        rolesLoading: loading || (!!user && !flagsLoaded),
+      }}>
       {children}
       <ForcePasswordChange 
         open={mustChangePassword && !!user} 
