@@ -464,7 +464,95 @@ const Membership = () => {
           </div>
         </section>
 
-        {/* 5. Why this is different */}
+        {/* 5. The cost of waiting */}
+        <section
+          aria-labelledby="cost-heading"
+          className="px-5 py-8 md:px-8 md:py-14"
+        >
+          <div className="mx-auto max-w-4xl">
+            <h2
+              id="cost-heading"
+              className="font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl"
+            >
+              The cost of waiting
+            </h2>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              You do not need another dramatic beginning.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              But you cannot keep living like this.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              You cannot keep losing another evening to a reaction you only understand after the damage is done—after the text you sent, the argument you escalated, the boundary you abandoned, the work you avoided, the thing you swallowed, the person you pushed away, or the way you turned against yourself again.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              You cannot keep treating every flare, conflict, shutdown, spiral, and difficult decision as an isolated emergency.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              Because it is not isolated.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              It is a pattern.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              And every time you are too exhausted, activated, frightened, busy, or unsure to meet it, the old story gets to make the choice for you.
+            </p>
+            <ul className="mt-8 space-y-5">
+              {[
+                "It chooses whether you speak or stay silent.",
+                "Whether you rest or push until your body forces you to stop.",
+                "Whether you ask for what you need or make yourself smaller to keep the peace.",
+                "Whether you believe the fear, obey the prediction, and call it intuition.",
+                "Whether another day becomes evidence that this is simply who you are.",
+              ].map((line) => (
+                <li
+                  key={line}
+                  className="border-l border-primary/40 pl-6 text-base leading-relaxed text-foreground/85 sm:text-lg"
+                >
+                  {line}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-10 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              You may have spent years collecting insight—books, practices, courses, readings, breakthroughs, language for every wound—while still having no structure to catch the moment before the old pattern takes the wheel.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              And then you promise yourself: next time.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              Next time, I will pause.
+            </p>
+            <p className="mt-2 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              Next time, I will not send the message.
+            </p>
+            <p className="mt-2 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              Next time, I will say no.
+            </p>
+            <p className="mt-2 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              Next time, I will listen to my body.
+            </p>
+            <p className="mt-2 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              Next time, I will choose differently.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              But next time keeps arriving with the same nervous system, the same history, the same automatic protections—and no place to put the moment while it is happening.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              This is what THE TEMPLE is for.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              Not to rescue you from your life.
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">
+              To help you stop handing it over to the patterns that have already taken enough from you.
+            </p>
+            <div className="mt-10">
+              <EnterTemple placement="midpage" />
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Why this is different */}
         <section
           aria-labelledby="different-heading"
           className="px-5 py-8 md:px-8 md:py-14"
