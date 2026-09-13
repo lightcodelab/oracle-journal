@@ -32,16 +32,20 @@ export function TempleDoorPanel({
           reverse ? "md:order-2" : undefined
         }`}
       >
-        <img
-          src={image}
-          alt={imageAlt}
-          loading="lazy"
-          className={`w-full rounded-2xl border border-border/50 ${
-            contain
-              ? "object-contain"
-              : "aspect-[4/3] object-cover"
+        <div
+          className={`flex w-full items-center justify-center rounded-2xl border border-border/50 bg-muted/30 ${
+            contain ? "aspect-[4/3]" : "aspect-[4/3]"
           }`}
-        />
+        >
+          <img
+            src={image}
+            alt={imageAlt}
+            loading="lazy"
+            className={`h-full w-full rounded-2xl ${
+              contain ? "object-contain" : "object-cover"
+            }`}
+          />
+        </div>
       </div>
       <div className={reverse ? "md:order-1" : undefined}>
         {eyebrow && (
