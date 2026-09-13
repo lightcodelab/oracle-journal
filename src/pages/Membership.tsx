@@ -609,7 +609,7 @@ const Membership = () => {
               choices, what your life is asking for, and what becoming more like
               yourself actually looks like in practice.
             </p>
-            <p className="mt-10 max-w-2xl font-serif text-lg italic text-foreground/90">
+            <p className="mt-10 max-w-2xl text-base leading-relaxed italic text-foreground/85 sm:text-lg">
               Change becomes possible when the conditions around a woman change.
             </p>
           </div>
