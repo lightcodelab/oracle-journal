@@ -28,6 +28,7 @@ import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asse
 import relationshipBanner from "@/assets/relationship-with-life-banner-v2.webp";
 import appMockupGif from "@/assets/app-mockup-v3.gif.asset.json";
 import whatItCostsImage from "@/assets/what-it-costs.png.asset.json";
+import whatItCostsHorizontal from "@/assets/what-it-costs-h.png.asset.json";
 
 type OfferState = "pre_launch" | "founding" | "standard";
 
@@ -553,12 +554,18 @@ const Membership = () => {
               </div>
             </div>
             <div className="flex items-start justify-center">
-              <img
-                src={whatItCostsImage.url}
-                alt="A woman sitting quietly at a wooden table, writing, with tall arched doors open to olive trees and distant hills"
-                loading="lazy"
-                className="w-full rounded-2xl"
-              />
+              <picture className="w-full">
+                <source
+                  media="(min-width: 1024px)"
+                  srcSet={whatItCostsImage.url}
+                />
+                <img
+                  src={whatItCostsHorizontal.url}
+                  alt="A woman sitting quietly at a wooden table, writing, with tall arched doors open to olive trees and distant hills"
+                  loading="lazy"
+                  className="w-full rounded-2xl"
+                />
+              </picture>
             </div>
           </div>
         </section>
