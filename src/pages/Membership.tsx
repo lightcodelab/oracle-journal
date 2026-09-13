@@ -400,7 +400,7 @@ const Membership = () => {
                 src={appMockupGif.url}
                 alt="Screen recording of THE TEMPLE member experience on a phone"
                 loading="lazy"
-                className="w-full rounded-2xl border border-border/50"
+                className="w-full rounded-2xl"
               />
             </div>
 
