@@ -331,11 +331,9 @@ const Membership = () => {
                 Not more information. A different relationship with your life.
               </h2>
               <p className="whitespace-pre-line text-base leading-relaxed text-foreground/85">
-                {`THE TEMPLE does not ask you to transcend what hurts, think positively, or become endlessly self-aware.
-
+THE TEMPLE does not ask you to transcend what hurts, think positively, or become endlessly self-aware.
 
 You know there is more beneath what your body and your life have been carrying. 
-
 
 You can know where the pain began and still not know what to do when it takes over. You may already suspect that a symptom, flare, shutdown, conflict or repeated struggle is not happening in isolation.
 
@@ -343,15 +341,11 @@ You may be able to point to the pain. Perhaps you can trace part of it to a chi
 
 But recognising where something may have begun is not the same as seeing how it is shaping this moment. 
 
-
 Not while your body is reacting, the familiar fear feels completely true, or the old response has already begun making the choice. 
 Not while your chest is tight.
 Not while you are saying yes again.
 Not while a look on someone's face has already become proof that you are unwanted.
 Not while your body is asking for something and you cannot tell whether to listen, push through or panic.
-
-
-
 
 THE TEMPLE gives you a private, living place to begin with what you can see — even if all you can see at first is what hurts.
 
