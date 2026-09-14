@@ -1,17 +1,18 @@
 import recognitionBanner from "@/assets/recognition-banner-1-v2.png.asset.json";
 
 const lines = [
-  "You keep saying yes because it seems easier than dealing with the disappointment, tension, or anger that might follow — then lie awake resentful that nobody seems to notice how much you are carrying.",
-  "You can feel the room change before anyone says a word. You tell yourself you are overreacting, but your body has already gone tight, quiet, useful, or somewhere else entirely.",
-  "You have a drawer full of journals, courses, readings, and practices — but when you are overwhelmed, unwell, heartbroken, or activated, you still do not know what to reach for first.",
-  "Something small happens — a delayed reply, a tone of voice, a look on someone’s face — and suddenly you are back in the familiar certainty that you are too much, not enough, unsafe, unwanted, or about to be left.",
-  "You are tired in a way sleep does not entirely touch. You suspect your body has been carrying things your mind has learned to work around, minimise, or explain away.",
-  "You want your intuition honoured — but you also want to know the difference between a feeling, an old fear, a protective reflex, and what is actually true in this moment.",
-  "You are standing between versions of yourself: between roles, relationships, homes, ways of working, or beliefs about who you have to be. You are waiting for certainty before you take the one honest step you already know is asking to be taken.",
-  "You are exhausted by the idea of beginning again. By the perfect plan. By the dramatic reset. By becoming intensely devoted to your healing for three weeks, then wondering why the rest of your life still does not know how to hold you.",
-  "You keep trying to make one part of your life better — your health, your relationship, your work, your home, your confidence — while quietly knowing the pattern is woven through all of it but not having a clue where to start unravelling it.",
-  "You are ready to realise it's not about another beautiful idea about who you could become. You are looking for a way to stay with yourself long enough to love the life you are living in.",
+  "You can name what hurts, but the explanation you have been given does not feel like the whole story. You suspect your physical experience may sit alongside something emotional, relational, traumatic or energetic, but you do not know how to explore that without blaming yourself or turning your body into the enemy.",
+  "You can point to the childhood, relationship, loss or difficult chapter that changed you. What you cannot always see is how it is still moving through an ordinary Tuesday — through what you tolerate, fear, avoid, expect or do without thinking.",
+  "You keep saying yes because it seems easier than dealing with the disappointment, tension or anger that might follow. Later, you lie awake resentful that nobody noticed how much you were carrying.",
+  "Something small happens — a delayed reply, a tone of voice, a look on someone's face — and suddenly you are back in the familiar certainty that you are too much, not enough, unwanted or about to be left.",
+  "You understand your reaction beautifully once it is over. In the middle of it, the understanding disappears and the old response moves faster than thought.",
+  "You are tired in a way sleep does not entirely touch. Your body keeps asking for attention, but you do not know which signal is meaningful, what it may be connected to or what kind of support to reach for first.",
+  "You have collected journals, courses, readings and practices that made sense when you found them. When you are overwhelmed, unwell, heartbroken or activated, none of it seems close enough to use.",
+  "You want your intuition honoured. You also want help telling the difference between a present knowing, an old fear and a protective response that has mistaken this moment for another one.",
+  "You keep trying to fix one part of your life — your health, relationship, work, confidence or home — while sensing that the same thread may be running through all of it.",
+  "You are exhausted by dramatic beginnings. You do not want another version of yourself to perform. You want a way to stay with the life you are already living long enough to see what is true and make a different response possible.",
 ];
+
 
 export function RecognitionSection() {
   return (

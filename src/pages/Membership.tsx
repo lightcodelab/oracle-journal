@@ -401,23 +401,24 @@ const Membership = () => {
         <section aria-labelledby="process-heading" className="border-y border-border/60 bg-muted/30 px-5 py-8 md:px-8 md:py-12">
           <div className="mx-auto max-w-6xl">
             <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary-strong">OUR SIGNATURE METHOD</p>
-            <h2 id="process-heading" className="max-w-3xl font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">Living an ordinary life in an extraordinary way begins with what you recognise in the moment.</h2>
+            <h2 id="process-heading" className="max-w-3xl font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">Living an ordinary life in an extraordinary way begins by noticing what is happening before you explain it away.</h2>
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
               {[
-                ["Notice", "What is here in your body, emotions, relationships, and inner world?"],
-                ["Meet", "What story, protection, pattern, or old learning may be shaping this moment?"],
-                ["Choose", "What is one supported, workable action you can take from here?"],
-                ["Record", "What happened when you tried the small thing that felt possible?"],
-                ["Return", "Come back without judgement, and let the evidence of your life teach you."],
+                ["Notice", "What is happening in your body, emotions, relationships or inner world right now?\n\nYou do not need to understand it yet. Begin with what you can see, feel or name."],
+                ["Meet", "What might this moment be connected to?\n\nWhat has your body or behaviour learned to expect? What might this response be trying to prevent, preserve or protect?"],
+                ["Choose", "What is one supported, workable thing you can do from here?\n\nNot the perfect response. The next honest one."],
+                ["Record", "Keep hold of the moment, the choice you made and what you thought might happen next.\n\nWhat disappears in memory can become visible when it has somewhere to live."],
+                ["Return", "Come back to what happened.\n\nDid the old prediction come true? What helped? What made the choice harder? What does the evidence of your own life ask you to carry forward?"],
               ].map(([title, body], index) => (
                 <div key={title} className="border-t border-primary/45 pt-5">
                   <p className="font-serif text-sm text-primary-strong">0{index + 1}</p>
                   <h3 className="mt-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground">{title}</h3>
-                  <p className="mt-4 text-sm leading-relaxed text-foreground/80">{body}</p>
+                  <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-foreground/80">{body}</p>
                 </div>
               ))}
             </div>
-            <p className="mt-12 max-w-3xl font-serif text-lg italic text-foreground/90">Record what happened and return—not to judge yourself, but to learn.</p>
+            <p className="mt-12 max-w-3xl whitespace-pre-line text-sm italic leading-relaxed text-foreground/90 sm:text-base">Notice. Meet. Choose. Record. Return.{"\n\n"}This is how a pattern stops being a verdict and becomes something you can enter into relationship with.</p>
+
           </div>
         </section>
 
@@ -452,7 +453,7 @@ const Membership = () => {
               <TempleDoorPanel
                 eyebrow="The AreekeerA® Guide"
                 title="Not sure what you need today?"
-                body="Tell The AreekeerA® Guide what life feels like right now. It provides you a small, sequenced pathway through THE TEMPLE resources — what to try, in what order, and why it may meet this particular moment."
+                body={"You do not have to diagnose the moment before asking for support.\n\nTell the AreekeerA® Guide what life feels like right now — physically, emotionally, relationally, mentally, spiritually or energetically. It reflects what you have said and offers a short, sequenced pathway through THE TEMPLE: what you could try first, what may come next, and why those resources may meet this particular moment."}
                 image={areekeeraThumbnail}
                 imageAlt="The AreekeerA Guide inside THE TEMPLE, where a member describes what life feels like right now."
                 contain
@@ -461,23 +462,23 @@ const Membership = () => {
                 reverse
                 eyebrow="The Living Pattern Lab"
                 title="A private laboratory to experiment with life"
-                body="A private place to notice what is true, become curious about the meaning being made, practise a different choice, and gather evidence from what happens next."
+                body={"A private place to see what keeps happening — and experiment with what happens next.\n\nBegin with the moment itself. What happened? What was happening in you? What did your body do? What did the moment seem to mean?\n\nFrom there, you can notice what the response may have been protecting, practise one different choice, and return later to the evidence of what actually happened.\n\nYou do not need to know your pattern before you begin. The record helps you see it over time."}
                 steps={["Pause", "Perceive", "Practice"]}
                 image={livingPatternImage}
                 imageAlt="The Living Pattern Lab inside THE TEMPLE, with its Pause, Perceive and Practice lenses."
               />
               <TempleDoorPanel
                 eyebrow="The Door of Remembrance"
-                title="Rituals, card decks, and courses"
-                body="For exploring the patterns, stories, beliefs, inherited meanings, and protector roles shaping your life."
+                title="Card decks, rituals, and courses for understanding what shaped you"
+                body="Explore the stories, beliefs, inherited meanings and protective roles that may be moving through your life. Not so you can explain yourself forever, but so what was once automatic can become something you can meet and choose within."
                 image={doorRemembrance}
                 imageAlt="The Door of Remembrance, holding rituals, card decks and courses."
               />
               <TempleDoorPanel
                 reverse
                 eyebrow="The Door of Devotion"
-                title="Returning to your body"
-                body="Guided meditations, energy-medicine practices, somatic rituals, recipes, and restorative resources for returning to your body, regulating your nervous system, and maintaining inner steadiness."
+                title="Practices for returning to your body"
+                body={"Guided meditations, energy-medicine practices, somatic rituals, recipes and restorative resources help you meet the body you are in and support inner steadiness without asking you to force your way through what is here.\n\nThese are self-directed reflective and restorative practices. They do not diagnose, treat or cure any health condition, and they do not replace medical or mental-health care."}
                 note="These are self-directed reflective and restorative practices. They do not diagnose, treat, or cure any health condition, and they do not replace medical or mental-health care."
                 image={doorDevotion.url}
                 imageAlt="The Door of Devotion, holding guided meditations and restorative practices."
