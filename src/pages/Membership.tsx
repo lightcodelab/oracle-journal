@@ -308,7 +308,7 @@ const Membership = () => {
                 Sign in
               </button>
             )}
-            <EnterTemple placement="hero" size="default" className="hidden sm:inline-flex" />
+            <EnterTemple placement="hero" size="default" className="hidden sm:inline-flex" showPricingFirst />
           </div>
         </div>
       </header>
