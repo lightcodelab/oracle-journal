@@ -338,9 +338,9 @@ You know there is more beneath what your body and your life have been carrying.�
 You may already suspect that a symptom, flare, shutdown, conflict or repeated struggle isn't happening in isolation.
 
 
-However, you can know where the pain began and still not know what to do when it takes over. 
+You can know where the pain began and still not know what to do when it takes over. 
 
-You may be able to point to the pain, maybe even trace part of it to a childhood that taught you to stay useful, quiet or watchful. To a relationship that changed what you expect from love. To grief, fear or an experience your body still seems to remember, even when your mind is trying to move on.
+You may be able to point to the pain. Perhaps you can trace part of it to a childhood that taught you to stay useful, quiet or watchful. To a relationship that changed what you expect from love. To grief, fear or an experience your body still seems to remember, even when your mind is trying to move on.
 
 But recognising where something may have begun is not the same as seeing how it is shaping this moment. 
 
