@@ -331,31 +331,28 @@ const Membership = () => {
                 Not more information. A different relationship with your life.
               </h2>
               <p className="whitespace-pre-line text-base leading-relaxed text-foreground/85">
-                THE TEMPLE does not ask you to transcend what hurts, think positively, or become endlessly self-aware. 
+                THE TEMPLE does not ask you to transcend what hurts, think positively, or become endlessly self-aware.  
 
 
-                You can know where the pain began and still not know what to do when it takes over. 
+                You can know where the pain began and still not know what to do when it takes over.  You may already suspect that a symptom, flare, shutdown, conflict or repeated struggle is not happening in isolation.  
 
 
-                You may already suspect that a symptom, flare, shutdown, conflict or repeated struggle is not happening in isolation. 
+                Perhaps you can trace part of it to a childhood that taught you to stay useful, quiet or watchful. To a relationship that changed what you expect from love. To grief, fear or an experience your body still seems to remember, even when your mind is trying to move on.  
 
 
-                Perhaps you can trace part of it to a childhood that taught you to stay useful, quiet or watchful. To a relationship that changed what you expect from love. To grief, fear or an experience your body still seems to remember, even when your mind is trying to move on. 
+                But recognising where something may have begun is not the same as seeing how it is shaping this moment.  
 
 
-                But recognising where something may have begun is not the same as seeing how it is shaping this moment. 
+                Not while your chest is tight.  
+                Not while you are saying yes again.  
+                Not while a look on someone's face has already become proof that you are unwanted.  
+                Not while your body is asking for something and you cannot tell whether to listen, push through or panic.  
 
 
-                Not while your chest is tight. 
-                Not while you are saying yes again. 
-                Not while a look on someone's face has already become proof that you are unwanted. 
-                Not while your body is asking for something and you cannot tell whether to listen, push through or panic. 
+                THE TEMPLE gives you a private, living place to begin with what you can see — even if all you can see at first is what hurts.  
 
 
-                THE TEMPLE gives you a private, living place to begin with what you can see — even if all you can see at first is what hurts. 
-
-
-                From there, you can become curious about what may be connected, receive support that meets your actual capacity, try something small enough to be real, and return to what happened. 
+                From there, you can become curious about what may be connected, receive support that meets your actual capacity, try something small enough to be real, and return to what happened.  
 
 
                 You do not need to arrive knowing your pattern. You need somewhere it can become visible.
