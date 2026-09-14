@@ -331,11 +331,14 @@ const Membership = () => {
                 Not more information. A different relationship with your life.
               </h2>
               <p className="whitespace-pre-line text-base leading-relaxed text-foreground/85">
-                {`THE TEMPLE does not ask you to transcend what hurts, think positively, or become endlessly self-aware.
+                 {`THE TEMPLE does not ask you to transcend what hurts, think positively, or become endlessly self-aware.
 
 You know there is more beneath what your body and your life have been carrying. 
 
-You can know where the pain began and still not know what to do when it takes over. You may already suspect that a symptom, flare, shutdown, conflict or repeated struggle is not happening in isolation.
+You may already suspect that a symptom, flare, shutdown, conflict or repeated struggle isn't happening in isolation.
+
+
+You can know where the pain began and still not know what to do when it takes over. 
 
 You may be able to point to the pain. Perhaps you can trace part of it to a childhood that taught you to stay useful, quiet or watchful. To a relationship that changed what you expect from love. To grief, fear or an experience your body still seems to remember, even when your mind is trying to move on.
 
@@ -351,7 +354,7 @@ THE TEMPLE gives you a private, living place to begin with what you can see — 
 
 From there, you can become curious about what may be connected, receive support that meets your actual capacity, try something small enough to be real, and return to what happened.
 
- You do not need to arrive knowing your pattern. You need somewhere it can become visible.`}
+You do not need to arrive knowing your pattern. You need somewhere it can become visible.`}
               </p>
               <p className="text-base leading-relaxed text-foreground/85">
                 
