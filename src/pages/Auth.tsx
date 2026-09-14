@@ -625,7 +625,8 @@ const Auth = () => {
           </CardContent>
         </Card>
       </motion.div>
-    </div>
+    </main>
+
   );
 };
 
