@@ -43,10 +43,10 @@ export function SessionCalendar({ sessions, onSessionClick }: SessionCalendarPro
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-serif">{format(currentMonth, 'MMMM yyyy')}</h2>
         <div className="flex gap-2">
-          <Button
+          <Button aria-label="Previous month"
             variant="outline"
             size="icon"
-            onClick={() = aria-label="Previous month"> setCurrentMonth(subMonths(currentMonth, 1))}
+            onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -57,10 +57,10 @@ export function SessionCalendar({ sessions, onSessionClick }: SessionCalendarPro
           >
             Today
           </Button>
-          <Button
+          <Button aria-label="Next month"
             variant="outline"
             size="icon"
-            onClick={() = aria-label="Next month"> setCurrentMonth(addMonths(currentMonth, 1))}
+            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

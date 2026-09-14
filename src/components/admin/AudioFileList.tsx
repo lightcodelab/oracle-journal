@@ -49,24 +49,24 @@ const AudioFileList = ({ audioFiles, onChange, getPublicUrl }: AudioFileListProp
         <div key={idx} className="flex items-center gap-3 p-3 bg-muted rounded-md">
           {/* Reorder arrows */}
           <div className="flex flex-col gap-0.5 shrink-0">
-            <Button
+            <Button aria-label="Move up"
               type="button"
               variant="ghost"
               size="icon"
               className="h-6 w-6"
               disabled={idx === 0}
-              onClick={() = aria-label="Move up"> moveUp(idx)}
+              onClick={() => moveUp(idx)}
               title="Move up"
             >
               <ArrowUp className="w-3.5 h-3.5" />
             </Button>
-            <Button
+            <Button aria-label="Move down"
               type="button"
               variant="ghost"
               size="icon"
               className="h-6 w-6"
               disabled={idx === audioFiles.length - 1}
-              onClick={() = aria-label="Move down"> moveDown(idx)}
+              onClick={() => moveDown(idx)}
               title="Move down"
             >
               <ArrowDown className="w-3.5 h-3.5" />

@@ -207,11 +207,11 @@ const MyPlaylists = () => {
           <div className="space-y-3">
             <div className="flex items-center justify-between mb-2">
               <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Playlists</h2>
-              <Button
+              <Button aria-label="Add"
                 variant="ghost"
                 size="icon"
                 className="h-7 w-7"
-                onClick={() = aria-label="Add"> setShowCreateInput(true)}
+                onClick={() => setShowCreateInput(true)}
               >
                 <Plus className="w-4 h-4" />
               </Button>
@@ -274,7 +274,7 @@ const MyPlaylists = () => {
                             autoFocus
                             onKeyDown={(e) => e.key === 'Enter' && handleRename(pl.id)}
                           />
-                          <Button size="icon" className="h-7 w-7 shrink-0" onClick={() = aria-label="Save"> handleRename(pl.id)}>
+                          <Button aria-label="Save" size="icon" className="h-7 w-7 shrink-0" onClick={() => handleRename(pl.id)}>
                             <Check className="w-3 h-3" />
                           </Button>
                         </div>
@@ -286,19 +286,19 @@ const MyPlaylists = () => {
                             <p className="text-xs text-muted-foreground">{pl.track_count} tracks</p>
                           </div>
                           <div className="hidden group-hover:flex gap-0.5" onClick={(e) => e.stopPropagation()}>
-                            <Button
+                            <Button aria-label="Edit"
                               variant="ghost"
                               size="icon"
                               className="h-6 w-6"
-                              onClick={() = aria-label="Edit"> { setEditingId(pl.id); setEditName(pl.name); }}
+                              onClick={() => { setEditingId(pl.id); setEditName(pl.name); }}
                             >
                               <Pencil className="w-3 h-3" />
                             </Button>
-                            <Button
+                            <Button aria-label="Delete"
                               variant="ghost"
                               size="icon"
                               className="h-6 w-6 text-destructive"
-                              onClick={() = aria-label="Delete"> setDeleteTarget(pl.id)}
+                              onClick={() => setDeleteTarget(pl.id)}
                             >
                               <Trash2 className="w-3 h-3" />
                             </Button>
@@ -369,11 +369,11 @@ const MyPlaylists = () => {
                           )}
                         </div>
 
-                        <Button
+                        <Button aria-label="Delete"
                           variant="ghost"
                           size="icon"
                           className="h-7 w-7 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive shrink-0"
-                          onClick={() = aria-label="Delete"> handleRemoveTrack(track.id)}
+                          onClick={() => handleRemoveTrack(track.id)}
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
@@ -458,7 +458,7 @@ const MyPlaylists = () => {
                   <Button variant="ghost" size="icon" className="h-10 w-10" onClick={togglePlayPause} aria-label="Play or pause">
                     {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={nextTrack} disabled={currentTrackIndex === null || currentTrackIndex  aria-label="Next track">= tracks.length - 1}>
+                  <Button aria-label="Next track" variant="ghost" size="icon" className="h-9 w-9" onClick={nextTrack} disabled={currentTrackIndex === null || currentTrackIndex >= tracks.length - 1}>
                     <SkipForward className="w-4 h-4" />
                   </Button>
                 </div>
