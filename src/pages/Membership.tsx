@@ -401,23 +401,24 @@ const Membership = () => {
         <section aria-labelledby="process-heading" className="border-y border-border/60 bg-muted/30 px-5 py-8 md:px-8 md:py-12">
           <div className="mx-auto max-w-6xl">
             <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary-strong">OUR SIGNATURE METHOD</p>
-            <h2 id="process-heading" className="max-w-3xl font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">Living an ordinary life in an extraordinary way begins with what you recognise in the moment.</h2>
+            <h2 id="process-heading" className="max-w-3xl font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">Living an ordinary life in an extraordinary way begins by noticing what is happening before you explain it away.</h2>
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
               {[
-                ["Notice", "What is here in your body, emotions, relationships, and inner world?"],
-                ["Meet", "What story, protection, pattern, or old learning may be shaping this moment?"],
-                ["Choose", "What is one supported, workable action you can take from here?"],
-                ["Record", "What happened when you tried the small thing that felt possible?"],
-                ["Return", "Come back without judgement, and let the evidence of your life teach you."],
+                ["Notice", "What is happening in your body, emotions, relationships or inner world right now?\n\nYou do not need to understand it yet. Begin with what you can see, feel or name."],
+                ["Meet", "What might this moment be connected to?\n\nWhat has your body or behaviour learned to expect? What might this response be trying to prevent, preserve or protect?"],
+                ["Choose", "What is one supported, workable thing you can do from here?\n\nNot the perfect response. The next honest one."],
+                ["Record", "Keep hold of the moment, the choice you made and what you thought might happen next.\n\nWhat disappears in memory can become visible when it has somewhere to live."],
+                ["Return", "Come back to what happened.\n\nDid the old prediction come true? What helped? What made the choice harder? What does the evidence of your own life ask you to carry forward?"],
               ].map(([title, body], index) => (
                 <div key={title} className="border-t border-primary/45 pt-5">
                   <p className="font-serif text-sm text-primary-strong">0{index + 1}</p>
                   <h3 className="mt-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground">{title}</h3>
-                  <p className="mt-4 text-sm leading-relaxed text-foreground/80">{body}</p>
+                  <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-foreground/80">{body}</p>
                 </div>
               ))}
             </div>
-            <p className="mt-12 max-w-3xl font-serif text-lg italic text-foreground/90">Record what happened and return—not to judge yourself, but to learn.</p>
+            <p className="mt-12 max-w-3xl whitespace-pre-line text-sm italic leading-relaxed text-foreground/90 sm:text-base">Notice. Meet. Choose. Record. Return.{"\n\n"}This is how a pattern stops being a verdict and becomes something you can enter into relationship with.</p>
+
           </div>
         </section>
 
