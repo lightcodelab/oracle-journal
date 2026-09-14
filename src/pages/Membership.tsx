@@ -464,7 +464,7 @@ You do not need to arrive knowing your pattern. You need somewhere it can become
                 reverse
                 eyebrow="The Door of Devotion"
                 title="Practices for returning to your body"
-                body={"Guided meditations, energy-medicine practices, somatic rituals, recipes and restorative resources help you meet the body you are in and support inner steadiness without asking you to force your way through what is here.\n\nThese are self-directed reflective and restorative practices. They do not diagnose, treat or cure any health condition, and they do not replace medical or mental-health care."}
+                body={"Guided meditations, energy-medicine practices, somatic rituals, recipes and restorative resources help you meet the body you are in and support inner steadiness without asking you to force your way through what is here.\n"}
                 note="These are self-directed reflective and restorative practices. They do not diagnose, treat, or cure any health condition, and they do not replace medical or mental-health care."
                 image={doorDevotion.url}
                 imageAlt="The Door of Devotion, holding guided meditations and restorative practices."
