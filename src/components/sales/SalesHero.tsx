@@ -37,9 +37,8 @@ export function SalesHero({ cta, signIn }: SalesHeroProps) {
           </h1>
           <div className="my-5 h-px w-16 bg-primary/80" aria-hidden />
           <p className="max-w-xl text-sm leading-relaxed text-on-image/95">
-            THE TEMPLE is a living practice for meeting what is happening in
-            your body, your relationships and your inner world, understanding
-            what may sit beneath it, and choosing one supported next step.
+            THE TEMPLE is a place to return to yourself. Notice what is here,
+            meet what sits beneath it, and choose a supported next step.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             {cta}
