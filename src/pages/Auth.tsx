@@ -5,7 +5,7 @@ import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
@@ -387,7 +387,7 @@ const Auth = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <main className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -395,6 +395,8 @@ const Auth = () => {
         className="w-full max-w-md"
       >
         <div className="text-center mb-8">
+          <h1 className="sr-only">THE TEMPLE of Sustainment</h1>
+
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -407,7 +409,7 @@ const Auth = () => {
               className="w-full h-32 sm:h-40 object-cover object-center rounded-lg"
             />
           </motion.div>
-          <p className="text-foreground/70 text-sm leading-relaxed max-w-sm mx-auto">
+          <p className="text-muted-foreground text-sm leading-relaxed max-w-sm mx-auto">
             {isSignupMode 
               ? "Create your account to access our digital card decks, courses, and more."
               : "Sign in to access our digital card decks, AreekeerA® Templates, Energy Hygiene Resources, Guided Meditations, Courses, and a Digital Journal."
@@ -417,7 +419,7 @@ const Auth = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>{forgotMode ? "Reset Your Password" : isSignupMode ? "Create Your Account" : "Welcome Back"}</CardTitle>
+            <h2 className="text-2xl font-semibold leading-none tracking-tight">{forgotMode ? "Reset Your Password" : isSignupMode ? "Create Your Account" : "Welcome Back"}</h2>
             <CardDescription>
               {forgotMode
                 ? "We'll email you a secure reset link"
@@ -470,7 +472,7 @@ const Auth = () => {
                     <button
                       type="button"
                       onClick={() => setForgotMode(false)}
-                      className="text-primary hover:underline"
+                      className="text-primary-strong hover:underline"
                     >
                       Back to sign in
                     </button>
@@ -516,6 +518,7 @@ const Auth = () => {
                     />
                     <button
                       type="button"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     >
@@ -548,7 +551,7 @@ const Auth = () => {
                   <button 
                     type="button"
                     onClick={() => navigate("/auth")}
-                    className="text-primary hover:underline"
+                    className="text-primary-strong hover:underline"
                   >
                     Sign in
                   </button>
@@ -574,7 +577,7 @@ const Auth = () => {
                     <button
                       type="button"
                       onClick={() => setForgotMode(true)}
-                      className="text-xs text-primary hover:underline"
+                      className="text-xs text-primary-strong hover:underline"
                     >
                       Forgot password?
                     </button>
@@ -591,6 +594,7 @@ const Auth = () => {
                     />
                     <button
                       type="button"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     >
@@ -613,7 +617,7 @@ const Auth = () => {
                   <button 
                     type="button"
                     onClick={() => navigate("/")}
-                    className="text-primary hover:underline"
+                    className="text-primary-strong hover:underline"
                   >
                     View memberships
                   </button>
@@ -623,7 +627,8 @@ const Auth = () => {
           </CardContent>
         </Card>
       </motion.div>
-    </div>
+    </main>
+
   );
 };
 
