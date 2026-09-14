@@ -333,16 +333,25 @@ const Membership = () => {
               <p className="whitespace-pre-line text-base leading-relaxed text-foreground/85">
                 {`THE TEMPLE does not ask you to transcend what hurts, think positively, or become endlessly self-aware.
 
+
+You know there is more beneath what your body and your life have been carrying. a0
+
+
 You can know where the pain began and still not know what to do when it takes over. You may already suspect that a symptom, flare, shutdown, conflict or repeated struggle is not happening in isolation.
 
-Perhaps you can trace part of it to a childhood that taught you to stay useful, quiet or watchful. To a relationship that changed what you expect from love. To grief, fear or an experience your body still seems to remember, even when your mind is trying to move on.
+You may be able to point to the pain. a0Perhaps you can trace part of it to a childhood that taught you to stay useful, quiet or watchful. To a relationship that changed what you expect from love. To grief, fear or an experience your body still seems to remember, even when your mind is trying to move on.
 
-But recognising where something may have begun is not the same as seeing how it is shaping this moment.
+But recognising where something may have begun is not the same as seeing how it is shaping this moment. a0
 
+
+Not while your body is reacting, the familiar fear feels completely true, or the old response has already begun making the choice. a0
 Not while your chest is tight.
 Not while you are saying yes again.
 Not while a look on someone's face has already become proof that you are unwanted.
 Not while your body is asking for something and you cannot tell whether to listen, push through or panic.
+
+
+
 
 THE TEMPLE gives you a private, living place to begin with what you can see — even if all you can see at first is what hurts.
 
