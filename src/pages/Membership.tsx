@@ -486,7 +486,7 @@ const Membership = () => {
               <TempleDoorPanel
                 eyebrow="The Door of Communion"
                 title="Live gatherings and the Mirror Exchange"
-                body="Live readings, classes, workshops, replays, and the Mirror Exchange: a peer-held space where another member can hold the mirror while you listen for your own revelation."
+                body="Enter live readings, classes, workshops and replays, or meet another member inside the Mirror Exchange — a peer-held space where somebody can hold the mirror without trying to fix you, while you listen for what becomes clearer when it is finally spoken aloud."
                 image={doorCommunion.url}
                 imageAlt="The Door of Communion, holding live readings, classes, workshops and replays."
               />
@@ -518,7 +518,7 @@ const Membership = () => {
                 But you cannot keep living like this.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
-                You cannot keep losing another evening to a reaction you only understand after the damage is done—after the text you sent, the argument you escalated, the boundary you abandoned, the work you avoided, the thing you swallowed, the person you pushed away, or the way you turned against yourself again.
+                You cannot keep losing another evening to a reaction you only understand after the damage is done — after the text you sent, the argument you escalated, the boundary you abandoned, the work you avoided, the thing you swallowed, the person you pushed away, or the way you turned against yourself again.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
                 You cannot keep treating every flare, conflict, shutdown, spiral, and difficult decision as an isolated emergency.
@@ -527,7 +527,7 @@ const Membership = () => {
                 Because it is not isolated.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
-                It is a pattern.
+                t is part of something that repeats, even if you cannot see its whole shape yet.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
                 And every time you are too exhausted, activated, frightened, busy, or unsure to meet it, the old story gets to make the choice for you.
@@ -549,7 +549,16 @@ const Membership = () => {
                 ))}
               </ul>
               <p className="mt-10 text-sm leading-relaxed text-foreground/85 sm:text-base">
-                You may have spent years collecting insight—books, practices, courses, readings, breakthroughs, language for every wound—while still having no structure to catch the moment before the old pattern takes the wheel.
+                Perhaps you have spent years collecting insight—books, practices, courses, readings and breakthroughs — while still having no structure to catch the moment before the old response takes over.
+
+
+
+Or perhaps you do not have the language for any of it yet.
+
+
+
+
+You only know that the same pain keeps returning. The same situations keep undoing you. Your body reacts before you understand why. You keep reaching the other side of the moment and wondering how you ended up here again.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
                 And then you promise yourself: next time.
@@ -570,7 +579,7 @@ const Membership = () => {
                 Next time, I will choose differently.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
-                But next time keeps arriving with the same nervous system, the same history, the same automatic protections—and no place to put the moment while it is happening.
+                But next time keeps arriving with the same pressure, the same history, the same responses that know how to move faster than thought—and still no place to put the moment while it is happening.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
                 This is what THE TEMPLE is for.
@@ -579,7 +588,7 @@ const Membership = () => {
                 Not to rescue you from your life.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
-                To help you stop handing it over to the patterns that have already taken enough from you.
+                To help you stop handing it over to what has already taken enough from you.
               </p>
               <div className="mt-10">
                 <EnterTemple placement="midpage" showPricingFirst />
@@ -637,12 +646,10 @@ const Membership = () => {
               ))}
             </ul>
             <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
-              Over time, you begin to see what steadies you, what narrows your
-              choices, what your life is asking for, and what becoming more like
-              yourself actually looks like in practice.
+              Over time, you begin to see what steadies you, what narrows your choices, what repeats and what is changing. Not because somebody else declared the meaning of your life, but because you have a record of what you noticed, what you tried and what happened next.
             </p>
             <p className="mt-6 max-w-2xl text-sm leading-relaxed italic text-foreground/85 sm:text-base">
-              Change becomes possible when the conditions around a woman change.
+              That is how self-trust is built: not through another promise to do better, but through a relationship with your own evidence.
             </p>
           </div>
         </section>
@@ -680,7 +687,7 @@ const Membership = () => {
               <p>
                 The AreekeerA<sup>®</sup> Method listens to symptoms and patterns
                 in the context of a woman's physical, emotional, relational,
-                neurological and energetic history—without reducing her to a
+                neurological and energetic history — without reducing her to a
                 problem that needs to be overpowered.
               </p>
             </div>
@@ -693,9 +700,13 @@ const Membership = () => {
                 in the present.
               </p>
               <p>
-                Together, Julie and Tash hold intuitive, embodied and practical
-                ways of knowing alongside ordinary human life. Their work asks
-                for curiosity, safety and evidence—not force or bypassing.
+                Together, Julie and Tash hold intuitive, embodied and practical ways of knowing alongside ordinary human life. 
+
+
+
+Their work does not hand you a verdict about what your pain means.
+
+It gives you ways to become curious, listen, notice what repeats, try something different and let the evidence of your own life have a voice.
               </p>
             </div>
           </div>
@@ -760,10 +771,14 @@ const Membership = () => {
               Enter THE TEMPLE.
             </h2>
             <p className="mt-6 max-w-3xl text-base leading-relaxed text-foreground/85 sm:text-lg">
-              Your membership gives you full access to every Door, every
-              practice, every course, the Living Pattern Lab, card decks, live
-              offerings and replays, and the support available for the season you
-              are actually in.
+              Your membership gives you full access to every Door and every practice inside THE TEMPLE, including The AreekeerA® Guide, the Living Pattern Lab, courses, card decks and readings, live readings, classes, workshops and replays.
+
+
+
+
+You do not need to decide which part of you belongs here first.
+
+Begin with what is asking for your attention. The Guide can help you find the next doorway when you are not sure where to start.
             </p>
             <p className="mt-5 font-serif text-xl italic text-foreground/90">
               A living place to return to.
