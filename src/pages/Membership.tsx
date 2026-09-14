@@ -513,7 +513,7 @@ You do not need to arrive knowing your pattern. You need somewhere it can become
                 Because it is not isolated.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
-                t is part of something that repeats, even if you cannot see its whole shape yet.
+                It is part of something that repeats, even if you cannot see its whole shape yet.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
                 And every time you are too exhausted, activated, frightened, busy, or unsure to meet it, the old story gets to make the choice for you.
