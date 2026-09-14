@@ -419,7 +419,7 @@ const Auth = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>{forgotMode ? "Reset Your Password" : isSignupMode ? "Create Your Account" : "Welcome Back"}</CardTitle>
+            <h2 className="text-2xl font-semibold leading-none tracking-tight">{forgotMode ? "Reset Your Password" : isSignupMode ? "Create Your Account" : "Welcome Back"}</h2>
             <CardDescription>
               {forgotMode
                 ? "We'll email you a secure reset link"
