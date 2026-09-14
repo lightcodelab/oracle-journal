@@ -61,7 +61,7 @@ export function TempleDoorPanel({
             {lead}
           </p>
         )}
-        <p className="mt-4 text-base leading-relaxed text-foreground/85">
+        <p className="mt-4 whitespace-pre-line text-base leading-relaxed text-foreground/85">
           {body}
         </p>
         {steps && (

@@ -462,23 +462,23 @@ const Membership = () => {
                 reverse
                 eyebrow="The Living Pattern Lab"
                 title="A private laboratory to experiment with life"
-                body="A private place to notice what is true, become curious about the meaning being made, practise a different choice, and gather evidence from what happens next."
+                body={"A private place to see what keeps happening — and experiment with what happens next.\n\nBegin with the moment itself. What happened? What was happening in you? What did your body do? What did the moment seem to mean?\n\nFrom there, you can notice what the response may have been protecting, practise one different choice, and return later to the evidence of what actually happened.\n\nYou do not need to know your pattern before you begin. The record helps you see it over time."}
                 steps={["Pause", "Perceive", "Practice"]}
                 image={livingPatternImage}
                 imageAlt="The Living Pattern Lab inside THE TEMPLE, with its Pause, Perceive and Practice lenses."
               />
               <TempleDoorPanel
                 eyebrow="The Door of Remembrance"
-                title="Rituals, card decks, and courses"
-                body="For exploring the patterns, stories, beliefs, inherited meanings, and protector roles shaping your life."
+                title="Card decks, rituals, and courses for understanding what shaped you"
+                body="Explore the stories, beliefs, inherited meanings and protective roles that may be moving through your life. Not so you can explain yourself forever, but so what was once automatic can become something you can meet and choose within."
                 image={doorRemembrance}
                 imageAlt="The Door of Remembrance, holding rituals, card decks and courses."
               />
               <TempleDoorPanel
                 reverse
                 eyebrow="The Door of Devotion"
-                title="Returning to your body"
-                body="Guided meditations, energy-medicine practices, somatic rituals, recipes, and restorative resources for returning to your body, regulating your nervous system, and maintaining inner steadiness."
+                title="Practices for returning to your body"
+                body={"Guided meditations, energy-medicine practices, somatic rituals, recipes and restorative resources help you meet the body you are in and support inner steadiness without asking you to force your way through what is here.\n\nThese are self-directed reflective and restorative practices. They do not diagnose, treat or cure any health condition, and they do not replace medical or mental-health care."}
                 note="These are self-directed reflective and restorative practices. They do not diagnose, treat, or cure any health condition, and they do not replace medical or mental-health care."
                 image={doorDevotion.url}
                 imageAlt="The Door of Devotion, holding guided meditations and restorative practices."
