@@ -395,6 +395,8 @@ const Auth = () => {
         className="w-full max-w-md"
       >
         <div className="text-center mb-8">
+          <h1 className="sr-only">THE TEMPLE of Sustainment</h1>
+
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
