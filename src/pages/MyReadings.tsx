@@ -254,6 +254,7 @@ const MyReadings = () => {
                     {/* Action Buttons Overlay */}
                     <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                       <Button
+                        aria-label="Edit reading"
                         variant="secondary"
                         size="icon"
                         className="h-8 w-8 bg-background/90 backdrop-blur"
@@ -357,6 +358,7 @@ const MyReadings = () => {
                       {/* Action Buttons Overlay */}
                       <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button
+                          aria-label="Edit reading"
                           variant="secondary"
                           size="icon"
                           className="h-8 w-8 bg-background/90 backdrop-blur"
