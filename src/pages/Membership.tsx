@@ -358,7 +358,7 @@ const Membership = () => {
         {/* 4. Notice / Meet / Choose / Record / Return */}
         <section aria-labelledby="process-heading" className="border-y border-border/60 bg-muted/30 px-5 py-8 md:px-8 md:py-12">
           <div className="mx-auto max-w-6xl">
-            <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">OUR SIGNATURE METHOD</p>
+            <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary-strong">OUR SIGNATURE METHOD</p>
             <h2 id="process-heading" className="max-w-3xl font-serif text-[1.9rem] leading-tight text-foreground sm:text-4xl">Living an ordinary life in an extraordinary way begins with what you recognise in the moment.</h2>
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
               {[
@@ -369,7 +369,7 @@ const Membership = () => {
                 ["Return", "Come back without judgement, and let the evidence of your life teach you."],
               ].map(([title, body], index) => (
                 <div key={title} className="border-t border-primary/45 pt-5">
-                  <p className="font-serif text-sm text-primary">0{index + 1}</p>
+                  <p className="font-serif text-sm text-primary-strong">0{index + 1}</p>
                   <h3 className="mt-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground">{title}</h3>
                   <p className="mt-4 text-sm leading-relaxed text-foreground/80">{body}</p>
                 </div>
@@ -386,7 +386,7 @@ const Membership = () => {
         >
           <div className="mx-auto max-w-6xl">
             <div className="max-w-3xl">
-              <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary">
+              <p className="mb-5 text-[0.7rem] uppercase tracking-[0.32em] text-primary-strong">
                 What awaits inside
               </p>
               <h2
@@ -690,7 +690,7 @@ const Membership = () => {
                 </div>
               ) : (
                 <div className="mt-8 rounded-2xl border border-dashed border-primary/50 bg-card/40 p-7">
-                  <p className="text-[0.68rem] uppercase tracking-[0.28em] text-primary">
+                  <p className="text-[0.68rem] uppercase tracking-[0.28em] text-primary-strong">
                     Visible to admins only
                   </p>
                   <p className="mt-3 text-base leading-relaxed text-foreground/85">

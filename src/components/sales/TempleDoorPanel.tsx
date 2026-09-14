@@ -49,7 +49,7 @@ export function TempleDoorPanel({
       </div>
       <div className={reverse ? "md:order-1" : undefined}>
         {eyebrow && (
-          <p className="mb-3 text-[0.68rem] uppercase tracking-[0.28em] text-primary">
+          <p className="mb-3 text-[0.68rem] uppercase tracking-[0.28em] text-primary-strong">
             {eyebrow}
           </p>
         )}
@@ -69,7 +69,7 @@ export function TempleDoorPanel({
             {steps.map((step) => (
               <li
                 key={step}
-                className="rounded-full border border-primary/40 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-primary"
+                className="rounded-full border border-primary/40 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-primary-strong"
               >
                 {step}
               </li>

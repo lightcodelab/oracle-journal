@@ -30,7 +30,7 @@ export function MembershipCard({
       }`}
     >
       <div className="flex-1">
-        <p className="text-[0.68rem] uppercase tracking-[0.28em] text-primary">
+        <p className="text-[0.68rem] uppercase tracking-[0.28em] text-primary-strong">
           {label}
         </p>
         <p className="mt-4 font-serif text-3xl text-foreground sm:text-4xl">
@@ -38,7 +38,7 @@ export function MembershipCard({
         </p>
         <p className="mt-1 text-sm text-muted-foreground">{cadence}</p>
         {savings && (
-          <p className="mt-2 text-sm font-medium text-primary">{savings}</p>
+          <p className="mt-2 text-sm font-medium text-primary-strong">{savings}</p>
         )}
         <div className="my-6 h-px w-12 bg-primary/50" aria-hidden />
         <ul className="space-y-3 text-sm leading-relaxed text-foreground/85">

@@ -24,7 +24,7 @@ export function RecognitionSection() {
           {/* Content */}
           <div className="space-y-10">
             <div className="space-y-4">
-              <p className="text-[0.7rem] uppercase tracking-[0.32em] text-primary">
+              <p className="text-[0.7rem] uppercase tracking-[0.32em] text-primary-strong">
                 HOW TO KNOW IF
               </p>
               <h2
