@@ -234,16 +234,27 @@ const Membership = () => {
     placement,
     size = "lg",
     className,
+    showPricingFirst = false,
   }: {
     placement: "hero" | "midpage" | "final" | "pricing";
     size?: "default" | "lg";
     className?: string;
+    showPricingFirst?: boolean;
   }) => {
     return (
       <Button
         size={size}
         className={className}
         onClick={() => {
+          if (showPricingFirst) {
+            if (placement === "hero") trackSalesEvent("hero_enter_temple_clicked");
+            if (placement === "midpage") trackSalesEvent("midpage_enter_temple_clicked");
+            if (placement === "final") trackSalesEvent("final_enter_temple_clicked");
+            document
+              .getElementById("membership")
+              ?.scrollIntoView({ behavior: "smooth" });
+            return;
+          }
           if (state === "pre_launch") {
             if (placement === "hero") trackSalesEvent("hero_enter_temple_clicked");
             if (placement === "midpage") trackSalesEvent("midpage_enter_temple_clicked");
@@ -262,7 +273,7 @@ const Membership = () => {
         ) : (
           <DoorOpen className="mr-2 h-4 w-4" aria-hidden />
         )}
-        Enter THE TEMPLE
+        {showPricingFirst ? "See what awaits inside" : "Enter THE TEMPLE"}
       </Button>
     );
   };
@@ -304,7 +315,7 @@ const Membership = () => {
 
       <main id="top">
         {/* 1. Hero — the threshold */}
-        <SalesHero cta={<EnterTemple placement="hero" />} />
+        <SalesHero cta={<EnterTemple placement="hero" showPricingFirst />} />
 
         {/* 2. The real promise */}
         <section
@@ -450,18 +461,7 @@ const Membership = () => {
             </div>
 
             <div className="mt-16 text-center">
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => {
-                  trackSalesEvent("midpage_enter_temple_clicked");
-                  document
-                    .getElementById("membership")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                See what awaits inside
-              </Button>
+              <EnterTemple placement="midpage" showPricingFirst />
             </div>
           </div>
         </section>
@@ -550,7 +550,7 @@ const Membership = () => {
                 To help you stop handing it over to the patterns that have already taken enough from you.
               </p>
               <div className="mt-10">
-                <EnterTemple placement="midpage" />
+                <EnterTemple placement="midpage" showPricingFirst />
               </div>
             </div>
             <div className="order-1 flex items-start justify-center lg:order-2">
@@ -894,7 +894,7 @@ const Membership = () => {
               and enough tenderness to learn from what happens.
             </p>
             <div className="mt-10 flex justify-center">
-              <EnterTemple placement="final" />
+              <EnterTemple placement="final" showPricingFirst />
             </div>
           </div>
         </section>
@@ -902,7 +902,7 @@ const Membership = () => {
       </main>
 
       <StickyMobileCTA>
-        <EnterTemple placement="final" className="w-full" />
+        <EnterTemple placement="final" className="w-full" showPricingFirst />
       </StickyMobileCTA>
     </div>
   );

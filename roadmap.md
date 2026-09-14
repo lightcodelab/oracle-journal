@@ -5,3 +5,5 @@
 - [x] Restore actionable pre-opening membership CTA
 - [x] Verify responsive layout, interaction paths, and build health
 - [x] Rewrite the Living Pattern Orientation and Becoming course for the unified Pattern Record model
+- [x] Route public-page calls to action through membership pricing before signup
+- [x] Clarify the account-to-payment step on account creation
