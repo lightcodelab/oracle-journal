@@ -330,7 +330,7 @@ const Membership = () => {
               >
                 Not more information. A different relationship with your life.
               </h2>
-              <p className="text-base leading-relaxed text-foreground/85">
+              <p className="whitespace-pre-line text-base leading-relaxed text-foreground/85">
                 THE TEMPLE does not ask you to transcend what hurts, think positively, or become endlessly self-aware. 
 
 
