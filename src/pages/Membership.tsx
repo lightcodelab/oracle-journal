@@ -534,7 +534,7 @@ You do not need to arrive knowing your pattern. You need somewhere it can become
                   </li>
                 ))}
               </ul>
-              <p className="mt-10 text-sm leading-relaxed text-foreground/85 sm:text-base">
+              <p className="mt-10 whitespace-pre-line text-sm leading-relaxed text-foreground/85 sm:text-base">
                  {`Perhaps you have spent years collecting insight—books, practices, courses, readings and breakthroughs — while still having no structure to catch the moment before the old response takes over. 
 
 
