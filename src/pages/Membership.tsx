@@ -535,7 +535,7 @@ You do not need to arrive knowing your pattern. You need somewhere it can become
                 ))}
               </ul>
               <p className="mt-10 whitespace-pre-line text-sm leading-relaxed text-foreground/85 sm:text-base">
-                 {`Perhaps you have spent years collecting insight—books, practices, courses, readings and breakthroughs — while still having no structure to catch the moment before the old response takes over. 
+                  {`Perhaps you have spent years collecting insight — books, practices, courses, readings and breakthroughs — while still having no structure to catch the moment before the old response takes over. 
 
 
 Or perhaps you do not have the language for any of it yet. 
@@ -566,7 +566,7 @@ wondering how you ended up here again.`}
                 Next time, I will choose differently.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
-                But next time keeps arriving with the same pressure, the same history, the same responses that know how to move faster than thought—and still no place to put the moment while it is happening.
+                But next time keeps arriving with the same pressure, the same history, the same responses that know how to move faster than thought — and still no place to put the moment while it is happening.
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
                 This is what THE TEMPLE is for.
