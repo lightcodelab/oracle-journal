@@ -535,16 +535,17 @@ You do not need to arrive knowing your pattern. You need somewhere it can become
                 ))}
               </ul>
               <p className="mt-10 text-sm leading-relaxed text-foreground/85 sm:text-base">
-                Perhaps you have spent years collecting insight—books, practices, courses, readings and breakthroughs — while still having no structure to catch the moment before the old response takes over.
+                 {`Perhaps you have spent years collecting insight—books, practices, courses, readings and breakthroughs — while still having no structure to catch the moment before the old response takes over. 
 
 
-
-Or perhaps you do not have the language for any of it yet.
-
+Or perhaps you do not have the language for any of it yet. 
 
 
-
-You only know that the same pain keeps returning. The same situations keep undoing you. Your body reacts before you understand why. You keep reaching the other side of the moment and wondering how you ended up here again.
+You only know that the same pain keeps returning. 
+The same situations keep undoing you. 
+Your body reacts before you understand why. 
+You keep reaching the other side of the moment and 
+wondering how you ended up here again.`}
               </p>
               <p className="mt-6 text-sm leading-relaxed text-foreground/85 sm:text-base">
                 And then you promise yourself: next time.
