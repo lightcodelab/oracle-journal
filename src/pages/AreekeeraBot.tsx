@@ -908,7 +908,7 @@ const AreekeeraBot = () => {
                           )}
                           <p className="text-sm italic text-primary/80">Why: {step.reason}</p>
                         </div>
-                        <Button variant="outline" size="icon">
+                        <Button variant="outline" size="icon" aria-label="Play">
                           <Play className="w-4 h-4" />
                         </Button>
                       </div>

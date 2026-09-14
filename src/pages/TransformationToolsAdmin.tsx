@@ -302,9 +302,9 @@ const FieldsEditor = ({ toolId, fields, onChanged }: { toolId: string; fields: T
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs text-muted-foreground">#{i + 1}</span>
               <div className="flex gap-1">
-                <Button size="icon" variant="ghost" onClick={() => move(i, -1)} disabled={i === 0}><ArrowUp className="w-3.5 h-3.5" /></Button>
-                <Button size="icon" variant="ghost" onClick={() => move(i, 1)} disabled={i === fields.length - 1}><ArrowDown className="w-3.5 h-3.5" /></Button>
-                <Button size="icon" variant="ghost" onClick={() => removeField(f.id)}><Trash2 className="w-3.5 h-3.5" /></Button>
+                <Button aria-label="Move up" size="icon" variant="ghost" onClick={() => move(i, -1)} disabled={i === 0}><ArrowUp className="w-3.5 h-3.5" /></Button>
+                <Button aria-label="Move down" size="icon" variant="ghost" onClick={() => move(i, 1)} disabled={i === fields.length - 1}><ArrowDown className="w-3.5 h-3.5" /></Button>
+                <Button aria-label="Delete" size="icon" variant="ghost" onClick={() => removeField(f.id)}><Trash2 className="w-3.5 h-3.5" /></Button>
               </div>
             </div>
             <div className="grid sm:grid-cols-3 gap-2">

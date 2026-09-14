@@ -77,6 +77,7 @@ import BugReports from "./pages/BugReports";
 import InstallAppProvider from "./components/InstallAppDialog";
 import NewsletterBanner from "./components/NewsletterBanner";
 import HomeScreenMoveBanner from "./components/HomeScreenMoveBanner";
+import SkipToContent from "./components/SkipToContent";
 import AffiliateRedirect from "./pages/AffiliateRedirect";
 import AffiliatePortal from "./pages/AffiliatePortal";
 import AdminAffiliates from "./pages/AdminAffiliates";
@@ -102,6 +103,7 @@ const App = () => {
       <AuthProvider>
        <ThemeModeProvider>
         <EncryptionProvider>
+          <SkipToContent />
           <Toaster />
           <Sonner />
           <InstallAppProvider>

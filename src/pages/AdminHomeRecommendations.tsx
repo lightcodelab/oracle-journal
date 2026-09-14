@@ -298,10 +298,10 @@ export default function AdminHomeRecommendations() {
                       onCheckedChange={() => toggleActive(r)}
                       aria-label="Active"
                     />
-                    <Button size="icon" variant="ghost" onClick={() => openEdit(r)}>
+                    <Button aria-label="Edit" size="icon" variant="ghost" onClick={() => openEdit(r)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button
+                    <Button aria-label="Delete"
                       size="icon"
                       variant="ghost"
                       onClick={() => remove(r.id)}

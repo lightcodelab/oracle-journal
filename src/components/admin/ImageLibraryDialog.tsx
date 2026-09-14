@@ -96,7 +96,7 @@ export default function ImageLibraryDialog({ open, onOpenChange, onSelect }: Ima
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <Button type="button" variant="outline" size="icon" onClick={load} title="Refresh">
+          <Button type="button" variant="outline" size="icon" onClick={load} title="Refresh" aria-label="Refresh">
             <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} />
           </Button>
         </div>

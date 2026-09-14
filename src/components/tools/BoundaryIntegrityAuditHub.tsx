@@ -529,14 +529,14 @@ const LibrarySection = () => {
             {list.map((s) => (
               <div key={s.id} className="flex items-start gap-2 border-b border-border pb-2 last:border-0">
                 <p className="flex-1 text-sm">{s.text}</p>
-                <Button variant="ghost" size="icon" onClick={() => fav.mutate(s)}>
+                <Button aria-label="Toggle favourite" variant="ghost" size="icon" onClick={() => fav.mutate(s)}>
                   <Star className={`h-4 w-4 ${s.is_favourite ? "fill-primary text-primary" : ""}`} />
                 </Button>
-                <Button variant="ghost" size="icon" onClick={() => copy(s.text)}>
+                <Button aria-label="Copy to clipboard" variant="ghost" size="icon" onClick={() => copy(s.text)}>
                   <Copy className="h-4 w-4" />
                 </Button>
                 {!s.is_seed && (
-                  <Button variant="ghost" size="icon" onClick={() => del.mutate(s.id)}>
+                  <Button aria-label="Delete" variant="ghost" size="icon" onClick={() => del.mutate(s.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 )}
