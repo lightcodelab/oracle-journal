@@ -424,7 +424,7 @@ const Auth = () => {
               {forgotMode
                 ? "We'll email you a secure reset link"
                 : isSignupMode 
-                ? "Sign up to get started"
+                ? "Create your account first. You’ll then be taken to the secure payment page to choose your membership."
                 : "Sign in to your account"
               }
             </CardDescription>
