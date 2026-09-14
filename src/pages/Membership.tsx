@@ -453,7 +453,7 @@ const Membership = () => {
               <TempleDoorPanel
                 eyebrow="The AreekeerA® Guide"
                 title="Not sure what you need today?"
-                body="Tell The AreekeerA® Guide what life feels like right now. It provides you a small, sequenced pathway through THE TEMPLE resources — what to try, in what order, and why it may meet this particular moment."
+                body={"You do not have to diagnose the moment before asking for support.\n\nTell the AreekeerA® Guide what life feels like right now — physically, emotionally, relationally, mentally, spiritually or energetically. It reflects what you have said and offers a short, sequenced pathway through THE TEMPLE: what you could try first, what may come next, and why those resources may meet this particular moment."}
                 image={areekeeraThumbnail}
                 imageAlt="The AreekeerA Guide inside THE TEMPLE, where a member describes what life feels like right now."
                 contain
