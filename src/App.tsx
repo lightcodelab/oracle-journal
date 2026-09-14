@@ -102,6 +102,7 @@ const App = () => {
       <AuthProvider>
        <ThemeModeProvider>
         <EncryptionProvider>
+          <SkipToContent />
           <Toaster />
           <Sonner />
           <InstallAppProvider>
