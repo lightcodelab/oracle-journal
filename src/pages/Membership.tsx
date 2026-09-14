@@ -331,22 +331,53 @@ const Membership = () => {
                 Not more information. A different relationship with your life.
               </h2>
               <p className="text-base leading-relaxed text-foreground/85">
-                THE TEMPLE does not ask you to transcend what hurts, think
-                positively, or become endlessly self-aware.
+                THE TEMPLE does not ask you to transcend what hurts, think positively, or become endlessly self-aware. You can know where the pain began and still not know what to do when it takes over.
+
+
+
+                You may already suspect that a symptom, flare, shutdown, conflict or repeated struggle is not happening in isolation.
+
+
+
+
+                Perhaps you can trace part of it to a childhood that taught you to stay useful, quiet or watchful. To a relationship that changed what you expect from love. To grief, fear or an experience your body still seems to remember, even when your mind is trying to move on.
+
+
+
+
+                But recognising where something may have begun is not the same as seeing how it is shaping this moment.
+
+
+
+
+                Not while your chest is tight. Not while you are saying yes again. Not while a look on someone's face has already become proof that you are unwanted. Not while your body is asking for something and you cannot tell whether to listen, push through or panic.
+
+
+
+
+                THE TEMPLE gives you a private, living place to begin with what you can see — even if all you can see at first is what hurts.
+
+
+
+
+                From there, you can become curious about what may be connected, receive support that meets your actual capacity, try something small enough to be real, and return to what happened.
+
+                You do not need to arrive knowing your pattern.
+
+
+
+
+                You need somewhere it can become visible.
               </p>
               <p className="text-base leading-relaxed text-foreground/85">
-                It gives you a private and living place to recognise what is true,
-                receive support that meets the moment, try something small enough
-                to be real, and return to the evidence of your own life.
+                
               </p>
 
               <p className="max-w-2xl text-base italic leading-relaxed text-foreground/90">
-                You do not need to become someone else. You need a place where
-                what is true can be witnessed and tended.
+                
               </p>
               <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
-                Recognition comes before integration. Integration comes before
-                congruent action.
+                
               </p>
             </div>
 
