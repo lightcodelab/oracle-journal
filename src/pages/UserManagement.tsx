@@ -653,24 +653,24 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
                           <Badge variant={badgeVariant} className={cn(u.state === "revoked" && "text-destructive border-destructive/40")}>
                             {u.state.charAt(0).toUpperCase() + u.state.slice(1)}
                           </Badge>
-                          <Button variant="ghost" size="icon" title="Copy login details" onClick={() => copyUserLogin(u)}>
+                          <Button variant="ghost" size="icon" title="Copy login details" onClick={() = aria-label="Copy login details"> copyUserLogin(u)}>
                             {copiedUserId === u.user_id ? <Check className="w-4 h-4 text-primary" /> : <Send className="w-4 h-4 text-muted-foreground" />}
                           </Button>
-                          <Button variant="ghost" size="icon" title="Reset password" onClick={() => openReset(u)}>
+                          <Button variant="ghost" size="icon" title="Reset password" onClick={() = aria-label="Reset password"> openReset(u)}>
                             <KeyRound className="w-4 h-4 text-muted-foreground" />
                           </Button>
-                          <Button variant="ghost" size="icon" title="Edit name" onClick={() => openEdit(u)}>
+                          <Button variant="ghost" size="icon" title="Edit name" onClick={() = aria-label="Edit name"> openEdit(u)}>
                             <Pencil className="w-4 h-4 text-muted-foreground" />
                           </Button>
                           {u.state !== "revoked" && (
-                            <Button variant="ghost" size="icon" title="Extend / renew access" onClick={() => openExtend(u)}>
+                            <Button variant="ghost" size="icon" title="Extend / renew access" onClick={() = aria-label="Extend / renew access"> openExtend(u)}>
                               <CalendarPlus className="w-4 h-4 text-muted-foreground" />
                             </Button>
                           )}
                           {(u.state === "active" || u.state === "scheduled") && (
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="icon" title="Revoke access immediately" disabled={revokingId === u.grant_id}>
+                                <Button variant="ghost" size="icon" title="Revoke access immediately" disabled={revokingId === u.grant_id} aria-label="Revoke access immediately">
                                   {revokingId === u.grant_id ? <Loader2 className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4 text-destructive" />}
                                 </Button>
                               </AlertDialogTrigger>

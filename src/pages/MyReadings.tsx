@@ -265,7 +265,7 @@ const MyReadings = () => {
                         variant="secondary"
                         size="icon"
                         className="h-8 w-8 bg-background/90 backdrop-blur text-destructive hover:text-destructive"
-                        onClick={(e) => { e.stopPropagation(); handleDeleteClick(reading.id); }}
+                        onClick={(e) = aria-label="Delete"> { e.stopPropagation(); handleDeleteClick(reading.id); }}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -368,7 +368,7 @@ const MyReadings = () => {
                           variant="secondary"
                           size="icon"
                           className="h-8 w-8 bg-background/90 backdrop-blur text-destructive hover:text-destructive"
-                          onClick={() => handleDeleteClick(reading.id)}
+                          onClick={() = aria-label="Delete"> handleDeleteClick(reading.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

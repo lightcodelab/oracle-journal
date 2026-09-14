@@ -211,7 +211,7 @@ const MyPlaylists = () => {
                 variant="ghost"
                 size="icon"
                 className="h-7 w-7"
-                onClick={() => setShowCreateInput(true)}
+                onClick={() = aria-label="Add"> setShowCreateInput(true)}
               >
                 <Plus className="w-4 h-4" />
               </Button>
@@ -274,7 +274,7 @@ const MyPlaylists = () => {
                             autoFocus
                             onKeyDown={(e) => e.key === 'Enter' && handleRename(pl.id)}
                           />
-                          <Button size="icon" className="h-7 w-7 shrink-0" onClick={() => handleRename(pl.id)}>
+                          <Button size="icon" className="h-7 w-7 shrink-0" onClick={() = aria-label="Save"> handleRename(pl.id)}>
                             <Check className="w-3 h-3" />
                           </Button>
                         </div>
@@ -290,7 +290,7 @@ const MyPlaylists = () => {
                               variant="ghost"
                               size="icon"
                               className="h-6 w-6"
-                              onClick={() => { setEditingId(pl.id); setEditName(pl.name); }}
+                              onClick={() = aria-label="Edit"> { setEditingId(pl.id); setEditName(pl.name); }}
                             >
                               <Pencil className="w-3 h-3" />
                             </Button>
@@ -298,7 +298,7 @@ const MyPlaylists = () => {
                               variant="ghost"
                               size="icon"
                               className="h-6 w-6 text-destructive"
-                              onClick={() => setDeleteTarget(pl.id)}
+                              onClick={() = aria-label="Delete"> setDeleteTarget(pl.id)}
                             >
                               <Trash2 className="w-3 h-3" />
                             </Button>
@@ -373,7 +373,7 @@ const MyPlaylists = () => {
                           variant="ghost"
                           size="icon"
                           className="h-7 w-7 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive shrink-0"
-                          onClick={() => handleRemoveTrack(track.id)}
+                          onClick={() = aria-label="Delete"> handleRemoveTrack(track.id)}
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
@@ -452,13 +452,13 @@ const MyPlaylists = () => {
                 </div>
 
                 <div className="flex items-center gap-1 shrink-0">
-                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={prevTrack} disabled={currentTrackIndex === 0}>
+                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={prevTrack} disabled={currentTrackIndex === 0} aria-label="Previous track">
                     <SkipBack className="w-4 h-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-10 w-10" onClick={togglePlayPause}>
+                  <Button variant="ghost" size="icon" className="h-10 w-10" onClick={togglePlayPause} aria-label="Play or pause">
                     {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={nextTrack} disabled={currentTrackIndex === null || currentTrackIndex >= tracks.length - 1}>
+                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={nextTrack} disabled={currentTrackIndex === null || currentTrackIndex  aria-label="Next track">= tracks.length - 1}>
                     <SkipForward className="w-4 h-4" />
                   </Button>
                 </div>

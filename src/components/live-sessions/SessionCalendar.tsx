@@ -46,7 +46,7 @@ export function SessionCalendar({ sessions, onSessionClick }: SessionCalendarPro
           <Button
             variant="outline"
             size="icon"
-            onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+            onClick={() = aria-label="Previous month"> setCurrentMonth(subMonths(currentMonth, 1))}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -60,7 +60,7 @@ export function SessionCalendar({ sessions, onSessionClick }: SessionCalendarPro
           <Button
             variant="outline"
             size="icon"
-            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+            onClick={() = aria-label="Next month"> setCurrentMonth(addMonths(currentMonth, 1))}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

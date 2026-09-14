@@ -55,7 +55,7 @@ const AudioFileList = ({ audioFiles, onChange, getPublicUrl }: AudioFileListProp
               size="icon"
               className="h-6 w-6"
               disabled={idx === 0}
-              onClick={() => moveUp(idx)}
+              onClick={() = aria-label="Move up"> moveUp(idx)}
               title="Move up"
             >
               <ArrowUp className="w-3.5 h-3.5" />
@@ -66,7 +66,7 @@ const AudioFileList = ({ audioFiles, onChange, getPublicUrl }: AudioFileListProp
               size="icon"
               className="h-6 w-6"
               disabled={idx === audioFiles.length - 1}
-              onClick={() => moveDown(idx)}
+              onClick={() = aria-label="Move down"> moveDown(idx)}
               title="Move down"
             >
               <ArrowDown className="w-3.5 h-3.5" />
