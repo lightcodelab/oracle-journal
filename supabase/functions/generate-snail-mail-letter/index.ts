@@ -6,20 +6,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const MONTH_THEMES: Record<number, { title: string; emotion: string; deckWeights: Record<string, number> }> = {
-  1:  { title: "The Echo — Who have you been performing?", emotion: "Recognition of the false self", deckWeights: { "The Sacred Rewrite": 3, "AreekeerA": 2 } },
-  2:  { title: "The Inheritance — What did you carry that was never yours?", emotion: "Ancestral patterns", deckWeights: { "AreekeerA": 3, "Magic not Logic": 2 } },
-  3:  { title: "The Body Remembers — Where does the story live in you?", emotion: "Somatic awareness", deckWeights: { "The Art of Self-Healing": 3, "AreekeerA": 2 } },
-  4:  { title: "The Threshold — What are you ready to release?", emotion: "Letting go", deckWeights: { "The Sacred Rewrite": 3, "Magic not Logic": 2 } },
-  5:  { title: "The Soft Animal — How do you come home to yourself?", emotion: "Self-tenderness", deckWeights: { "The Art of Self-Healing": 3, "The Sacred Rewrite": 2 } },
-  6:  { title: "The Midpoint Mirror — Halfway. What's shifting?", emotion: "Reflection + recalibration", deckWeights: { "The Sacred Rewrite": 2, "AreekeerA": 2, "Magic not Logic": 2, "The Art of Self-Healing": 2 } },
-  7:  { title: "The Voice — What have you been afraid to say?", emotion: "Truth-telling", deckWeights: { "Magic not Logic": 3, "The Sacred Rewrite": 2 } },
-  8:  { title: "The Boundary — Where does your yes live? Your no?", emotion: "Sovereignty", deckWeights: { "AreekeerA": 3, "The Art of Self-Healing": 2 } },
-  9:  { title: "The Longing — What is your heart actually asking for?", emotion: "Desire as compass", deckWeights: { "Magic not Logic": 3, "The Sacred Rewrite": 2 } },
-  10: { title: "The Offering — What are you here to give?", emotion: "Purpose", deckWeights: { "AreekeerA": 3, "Magic not Logic": 2 } },
-  11: { title: "The Gratitude — What has held you?", emotion: "Receiving + reverence", deckWeights: { "The Sacred Rewrite": 2, "AreekeerA": 2, "Magic not Logic": 2, "The Art of Self-Healing": 2 } },
-  12: { title: "The Becoming — Who are you now?", emotion: "Integration + benediction", deckWeights: { "The Sacred Rewrite": 3, "AreekeerA": 2, "Magic not Logic": 1, "The Art of Self-Healing": 1 } },
-};
+import { MONTH_THEMES } from "../_shared/remembranceThemes.ts";
 
 function flattenCardContent(card: any): string {
   const parts: string[] = [];

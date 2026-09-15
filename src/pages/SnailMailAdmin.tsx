@@ -13,12 +13,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Sparkles, Printer, Mail } from "lucide-react";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import ProfileDropdown from "@/components/ProfileDropdown";
+import { REMEMBRANCE_THEMES } from "@/lib/remembranceThemes";
 
-const MONTH_TITLES: Record<number, string> = {
-  1: "The Echo", 2: "The Inheritance", 3: "The Body Remembers", 4: "The Threshold",
-  5: "The Soft Animal", 6: "The Midpoint Mirror", 7: "The Voice", 8: "The Boundary",
-  9: "The Longing", 10: "The Offering", 11: "The Gratitude", 12: "The Becoming",
-};
+const MONTH_TITLES: Record<number, string> = Object.fromEntries(
+  REMEMBRANCE_THEMES.map((t) => [t.month, t.shortTitle]),
+) as Record<number, string>;
 
 type Subscriber = {
   id: string; full_name: string; email: string | null; postal_address: string;

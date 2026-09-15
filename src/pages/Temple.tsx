@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { WelcomeHome } from "@/components/temple/WelcomeHome";
 import { ContinueJourney } from "@/components/temple/ContinueJourney";
 import { LivingPatternCard } from "@/components/temple/LivingPatternCard";
+import { RemembranceLettersCard } from "@/components/temple/RemembranceLettersCard";
 import { BeginPractice } from "@/components/temple/BeginPractice";
 import { ExploreDoors } from "@/components/temple/ExploreDoors";
 import { GuideNextStepCard } from "@/components/temple/GuideNextStepCard";
@@ -219,6 +220,7 @@ const Temple = () => {
         </section>
         <ContinueJourney enabled={hasFullAccess} />
         {isAdmin && <LivingPatternCard />}
+        {hasFullAccess && <RemembranceLettersCard />}
         <BeginPractice />
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />

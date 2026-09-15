@@ -25,7 +25,8 @@ import {
   Smartphone,
   LineChart,
   Share2,
-  Compass
+  Compass,
+  Mail
 } from 'lucide-react';
 import { useInstallApp } from '@/components/InstallAppDialog';
 import GlobalSearch from '@/components/GlobalSearch';
@@ -126,6 +127,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       label: 'My Field Notes',
       icon: <BookOpen className="w-4 h-4 mr-2" />,
       route: '/field-notes',
+    },
+    {
+      label: 'My Remembrance Letters',
+      icon: <Mail className="w-4 h-4 mr-2" />,
+      route: '/remembrance-letters',
     },
     {
       label: 'My Readings',

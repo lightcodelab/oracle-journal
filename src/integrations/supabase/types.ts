@@ -5867,6 +5867,158 @@ export type Database = {
           },
         ]
       }
+      remembrance_job_state: {
+        Row: {
+          job_name: string
+          last_result: Json | null
+          last_run_at: string | null
+          locked_until: string | null
+          paused_at: string | null
+          paused_reason: string | null
+          updated_at: string
+        }
+        Insert: {
+          job_name: string
+          last_result?: Json | null
+          last_run_at?: string | null
+          locked_until?: string | null
+          paused_at?: string | null
+          paused_reason?: string | null
+          updated_at?: string
+        }
+        Update: {
+          job_name?: string
+          last_result?: Json | null
+          last_run_at?: string | null
+          locked_until?: string | null
+          paused_at?: string | null
+          paused_reason?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      remembrance_letters: {
+        Row: {
+          card_ids: string[]
+          card_snapshot: Json
+          content: string
+          created_at: string
+          email_sent_at: string | null
+          generated_at: string
+          id: string
+          model_used: string | null
+          month_number: number
+          practices: Json
+          theme: string
+          user_id: string
+        }
+        Insert: {
+          card_ids?: string[]
+          card_snapshot?: Json
+          content: string
+          created_at?: string
+          email_sent_at?: string | null
+          generated_at?: string
+          id?: string
+          model_used?: string | null
+          month_number: number
+          practices?: Json
+          theme: string
+          user_id: string
+        }
+        Update: {
+          card_ids?: string[]
+          card_snapshot?: Json
+          content?: string
+          created_at?: string
+          email_sent_at?: string | null
+          generated_at?: string
+          id?: string
+          model_used?: string | null
+          month_number?: number
+          practices?: Json
+          theme?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      remembrance_pilgrims: {
+        Row: {
+          created_at: string
+          current_month: number
+          id: string
+          joined_at: string
+          next_letter_due_at: string | null
+          paused_reason: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_month?: number
+          id?: string
+          joined_at?: string
+          next_letter_due_at?: string | null
+          paused_reason?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_month?: number
+          id?: string
+          joined_at?: string
+          next_letter_due_at?: string | null
+          paused_reason?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      remembrance_reflections: {
+        Row: {
+          asking_to_be_seen: string
+          created_at: string
+          how_i_will_live_it: string
+          id: string
+          invited_to_shift: string
+          letter_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          asking_to_be_seen?: string
+          created_at?: string
+          how_i_will_live_it?: string
+          id?: string
+          invited_to_shift?: string
+          letter_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          asking_to_be_seen?: string
+          created_at?: string
+          how_i_will_live_it?: string
+          id?: string
+          invited_to_shift?: string
+          letter_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "remembrance_reflections_letter_id_fkey"
+            columns: ["letter_id"]
+            isOneToOne: true
+            referencedRelation: "remembrance_letters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       resource_media: {
         Row: {
           created_at: string | null
@@ -8173,6 +8325,16 @@ export type Database = {
       recompute_profile_active_member: {
         Args: { _user_id: string }
         Returns: undefined
+      }
+      remembrance_join: { Args: never; Returns: Json }
+      remembrance_save_reflection: {
+        Args: {
+          _asking_to_be_seen: string
+          _how_i_will_live_it: string
+          _invited_to_shift: string
+          _letter_id: string
+        }
+        Returns: Json
       }
       search_temple: {
         Args: { _q: string }

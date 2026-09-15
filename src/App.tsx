@@ -59,6 +59,7 @@ import MyPlaylists from "./pages/MyPlaylists";
 import LivingPatternLenses from "./pages/LivingPatternLenses";
 import LivingPatternOrientation from "./pages/LivingPatternOrientation";
 import MyFieldNotes from "./pages/MyFieldNotes";
+import MyRemembranceLetters from "./pages/MyRemembranceLetters";
 import LivingPatternExperiment from "./pages/LivingPatternExperiment";
 
 import LivingPatternPresence from "./pages/LivingPatternPresence";
@@ -163,6 +164,7 @@ const App = () => {
             <Route path="/living-pattern/orientation" element={<LivingPatternOrientation />} />
             <Route path="/living-pattern/pause" element={<Navigate to="/living-pattern" replace />} />
             <Route path="/field-notes" element={<MyFieldNotes />} />
+            <Route path="/remembrance-letters" element={<MyRemembranceLetters />} />
             <Route path="/field-notes/:id" element={<LivingPatternExperiment />} />
             <Route path="/living-pattern/experiments" element={<Navigate to="/field-notes" replace />} />
             <Route path="/living-pattern/experiments/:id" element={<LivingPatternExperiment />} />
