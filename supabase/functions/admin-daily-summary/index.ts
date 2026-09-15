@@ -88,14 +88,30 @@ serve(async (req) => {
 
   const results: Record<string, string> = {}
   for (const recipient of list) {
+    const key = `admin-daily-summary-${from.toISOString().slice(0, 10)}-${recipient}`
     try {
       const result = await sendTemplateEmail('admin-daily-summary', recipient, {
         templateData,
-        idempotencyKey: `admin-daily-summary-${from.toISOString().slice(0, 10)}-${recipient}`,
+        idempotencyKey: key,
       })
       results[recipient] = result.sent ? 'sent' : result.reason
     } catch (err) {
-      console.error('daily summary failed', recipient, err)
+      // A previous attempt for this key failed permanently (e.g. the sender
+      // domain was not verified yet). Retry once with a fresh key.
+      if ((err as { code?: string }).code === 'run_failed') {
+        try {
+          const retry = await sendTemplateEmail('admin-daily-summary', recipient, {
+            templateData,
+            idempotencyKey: `${key}-r${Date.now()}`,
+          })
+          results[recipient] = retry.sent ? 'sent' : retry.reason
+          continue
+        } catch (retryErr) {
+          console.error('daily summary retry failed', recipient, retryErr)
+        }
+      } else {
+        console.error('daily summary failed', recipient, err)
+      }
       results[recipient] = 'failed'
     }
   }
