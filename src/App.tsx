@@ -112,6 +112,7 @@ const App = () => {
           <NewsletterBanner />
         <BrowserRouter>
           <ThemeScope />
+          <main id="main-content" tabIndex={-1}>
           <Routes>
             <Route path="/" element={<Membership />} />
             <Route path="/membership" element={<Navigate to="/" replace />} />
