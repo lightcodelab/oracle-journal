@@ -12,6 +12,7 @@ import {
   type RemembranceLetter,
 } from "@/hooks/useRemembranceLetters";
 import { REMEMBRANCE_REFLECTION_QUESTIONS, themeForMonth } from "@/lib/remembranceThemes";
+import remembranceLettersHomeAsset from "@/assets/remembrance-letters-home.png.asset.json";
 
 /**
  * My Remembrance Letters — the member's own year-long Sacred Undoing pilgrimage.
@@ -207,16 +208,28 @@ const MyRemembranceLetters = () => {
           <p className="mt-8 text-destructive">{error}</p>
         ) : !pilgrim ? (
           <section className="mt-6 rounded-xl border border-border bg-card p-6">
-            <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
-              Twelve letters, one each month, written for you alone. Each one draws four cards for
-              that month's theme and reads them together, then leaves you a few small practices and
-              three questions to write into. You begin whenever you choose, and your next letter
-              arrives thirty days later.
-            </p>
-            <Button className="mt-6" size="lg" onClick={beginPilgrimage} disabled={joining}>
-              {joining ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
-              Begin the Pilgrimage
-            </Button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
+              <div>
+                <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
+                  Twelve letters, one each month, written for you alone. Each one draws four cards for
+                  that month's theme and reads them together, then leaves you a few small practices and
+                  three questions to write into. You begin whenever you choose, and your next letter
+                  arrives thirty days later.
+                </p>
+                <Button className="mt-6" size="lg" onClick={beginPilgrimage} disabled={joining}>
+                  {joining ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
+                  Begin the Pilgrimage
+                </Button>
+              </div>
+              <div className="overflow-hidden rounded-lg border border-border">
+                <img
+                  src={remembranceLettersHomeAsset.url}
+                  alt="A woman reading a handwritten letter by warm morning light"
+                  loading="lazy"
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+            </div>
           </section>
         ) : letters.length === 0 ? (
           <section className="mt-6 rounded-xl border border-border bg-card p-6">
