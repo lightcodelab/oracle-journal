@@ -71,7 +71,7 @@ export const DeckSelection = ({
         >
           <DoorHeader image={remembranceHeader.url} title="The Door of Remembrance" />
           <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
-            <span className="font-bold text-primary">A space to remember who you are beneath distortion, protection, and pattern.</span>
+            <span className="font-bold text-primary-strong">A space to remember who you are beneath distortion, protection, and pattern.</span>
             <br />
             Begin at the foundation. Return whenever you need to.
           </p>
@@ -254,15 +254,15 @@ export const DeckSelection = ({
                     </div>
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <h3 className="font-serif text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                        <h2 className="font-serif text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2">
                           {deck.name}
-                        </h3>
+                        </h2>
                         <div className="text-muted-foreground group-hover:text-primary transition-colors shrink-0">
                           <Sparkles className="w-4 h-4" />
                         </div>
                       </div>
                       {deck.theme && (
-                        <p className="text-sm text-muted-foreground/80 line-clamp-1 mb-1">
+                        <p className="text-sm text-muted-foreground line-clamp-1 mb-1">
                           {deck.theme}
                         </p>
                       )}
@@ -316,7 +316,7 @@ export const DeckSelection = ({
             <p>Integrate through Alchemy.</p>
             <p>Return as often as needed.</p>
           </div>
-          <p className="text-muted-foreground/70 font-sans text-sm italic mt-6">
+          <p className="text-muted-foreground font-sans text-sm italic mt-6">
             There is no finish line here — only deepening truth.
           </p>
         </div>

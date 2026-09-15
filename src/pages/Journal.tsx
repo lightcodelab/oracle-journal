@@ -267,6 +267,7 @@ const JournalContent = () => {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-6">
+        <h1 className="sr-only">My Journal</h1>
         <AnimatePresence mode="wait">
           {viewMode === 'list' ? (
             <motion.div
@@ -287,7 +288,7 @@ const JournalContent = () => {
                   />
                 </div>
                 <Select value={filterType} onValueChange={(v) => setFilterType(v as FilterType)}>
-                  <SelectTrigger className="w-full sm:w-40">
+                  <SelectTrigger className="w-full sm:w-40" aria-label="Filter entries">
                     <Filter className="h-4 w-4 mr-2" />
                     <SelectValue />
                   </SelectTrigger>

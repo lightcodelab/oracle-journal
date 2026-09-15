@@ -106,7 +106,7 @@ const DoorOfDevotion = () => {
         <PageBreadcrumb items={[{ label: 'The Door of Devotion', icon: DoorOpen }]} />
         <div className="flex items-center gap-3">
           {tierName && (
-            <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 hidden sm:flex">
+            <Badge variant="outline" className="text-primary-strong border-primary/30 bg-primary/5 hidden sm:flex">
               <Sparkles className="w-3 h-3 mr-1" />
               {tierName}
             </Badge>
@@ -125,7 +125,7 @@ const DoorOfDevotion = () => {
         >
           <DoorHeader image={devotionHeader.url} title="The Door of Devotion" />
            <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto mb-6">
-              <span className="font-bold text-primary">A space to restore your body, regulate your nervous system, and return to yourself.</span>
+              <span className="font-bold text-primary-strong">A space to restore your body, regulate your nervous system, and return to yourself.</span>
               <br />
               Guided meditations and Energetic Healing for embodied repair.
             </p>

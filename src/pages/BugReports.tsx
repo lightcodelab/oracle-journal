@@ -141,7 +141,7 @@ const BugReports = () => {
         <NavActions />
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl font-serif text-foreground">Bug Reports</h2>
@@ -265,14 +265,14 @@ const BugReports = () => {
                           <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{report.description}</p>
                         )}
                         {report.steps_to_reproduce && (
-                          <p className="text-xs text-muted-foreground/70 mt-1 line-clamp-2">
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                             <span className="font-medium">Steps:</span> {report.steps_to_reproduce}
                           </p>
                         )}
                         {report.page_url && (
-                          <p className="text-xs text-muted-foreground/60 mt-1">Page: {report.page_url}</p>
+                          <p className="text-xs text-muted-foreground mt-1">Page: {report.page_url}</p>
                         )}
-                        <p className="text-xs text-muted-foreground/60 mt-2">
+                        <p className="text-xs text-muted-foreground mt-2">
                           {new Date(report.created_at).toLocaleDateString()}
                         </p>
                         {isAdmin && report.admin_notes && (
@@ -299,7 +299,7 @@ const BugReports = () => {
             })}
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 };

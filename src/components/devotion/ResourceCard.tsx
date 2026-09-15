@@ -103,7 +103,7 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
                 <Pencil className="w-3 h-3 mr-1" />
                 Edit
               </Button>
-              <Badge className="bg-amber-500 hover:bg-amber-600 text-white text-xs">
+              <Badge className="bg-amber-500 hover:bg-amber-600 text-amber-950 text-xs">
                 Draft
               </Badge>
             </div>
@@ -113,9 +113,9 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
         {/* Content */}
         <div className="p-5">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <h3 className="font-serif text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2">
+            <h2 className="font-serif text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2">
               {resource.title}
-            </h3>
+            </h2>
             <div className="text-muted-foreground group-hover:text-primary transition-colors shrink-0">
               {resource.is_course ? <BookOpen className="w-4 h-4" /> : getMediaIcon()}
             </div>

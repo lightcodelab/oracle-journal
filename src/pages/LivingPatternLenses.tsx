@@ -39,7 +39,7 @@ const LivingPatternLenses = () => {
           </div>
           <NavActions />
         </header>
-        <main className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
+        <div className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
           <h1 className="font-serif text-3xl text-foreground mb-4">
             Your Living Pattern is private
           </h1>
@@ -50,7 +50,7 @@ const LivingPatternLenses = () => {
           <Button asChild size="lg">
             <Link to="/">Return to the entrance</Link>
           </Button>
-        </main>
+        </div>
       </div>
     );
   }
@@ -112,7 +112,7 @@ const LivingPatternLenses = () => {
           <button
             type="button"
             onClick={() => navigate("/living-pattern/record")}
-            className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground"
+            className="text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground"
           >
             Open My Living Pattern
           </button>{" "}

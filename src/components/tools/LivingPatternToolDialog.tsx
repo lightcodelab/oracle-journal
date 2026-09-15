@@ -36,7 +36,7 @@ export const LivingPatternToolDialog = ({ lens, open, onClose }: LivingPatternTo
         </div>
 
         <div className="space-y-3 pt-2">
-          <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+          <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">
             Your Living Pattern
           </p>
           <h1 className="font-serif text-3xl">Pause, Perceive, Practice</h1>

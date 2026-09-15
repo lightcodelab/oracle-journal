@@ -61,7 +61,7 @@ const PatternReturnForm = ({
 
   return (
     <div className="rounded-xl border border-border/70 bg-card/70 p-5 sm:p-7">
-      <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">Return</p>
+      <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">Return</p>
       <h2 className="mt-2 font-serif text-2xl text-foreground">
         What did life actually show you?
       </h2>
@@ -117,7 +117,7 @@ const PatternReturnForm = ({
                   <button
                     type="button"
                     onClick={() => setDraft((d) => ({ ...d, [q.field]: NOT_SURE }))}
-                    className="mt-2 text-sm text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground"
+                    className="mt-2 text-sm text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground"
                   >
                     {NOT_SURE}
                   </button>

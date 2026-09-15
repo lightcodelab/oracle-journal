@@ -161,7 +161,7 @@ const DevotionSectionPage = () => {
         ]} />
         <div className="flex items-center gap-3">
           {tierName && (
-            <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 hidden sm:flex">
+            <Badge variant="outline" className="text-primary-strong border-primary/30 bg-primary/5 hidden sm:flex">
               <Sparkles className="w-3 h-3 mr-1" />
               {tierName}
             </Badge>
@@ -217,7 +217,7 @@ const DevotionSectionPage = () => {
             <p className="text-muted-foreground font-sans">
               Content for this section is coming soon.
             </p>
-            <p className="text-sm text-muted-foreground/70 mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               Check back later for new resources.
             </p>
           </motion.div>

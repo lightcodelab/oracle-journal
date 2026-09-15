@@ -23,10 +23,11 @@ const GlobalSearch = () => {
       <Button
         variant="ghost"
         size="sm"
-        className="text-foreground/70 hover:text-foreground"
+        className="text-foreground hover:text-primary"
         onClick={() => setIsOpen(true)}
+        aria-label="Search THE TEMPLE"
       >
-        <Search className="w-4 h-4" />
+        <Search className="w-4 h-4" aria-hidden="true" />
       </Button>
     );
   }
@@ -49,8 +50,8 @@ const GlobalSearch = () => {
           }
         }}
       />
-      <Button type="submit" variant="ghost" size="sm" className="text-foreground/70 hover:text-foreground">
-        <Search className="w-4 h-4" />
+      <Button type="submit" variant="ghost" size="sm" className="text-foreground hover:text-primary" aria-label="Search">
+        <Search className="w-4 h-4" aria-hidden="true" />
       </Button>
     </form>
   );

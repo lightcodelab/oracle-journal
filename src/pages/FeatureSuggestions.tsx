@@ -68,7 +68,7 @@ const SuggestionCard = ({ s, isAdmin, onVote, onStatusChange, onDelete }: {
         {s.description && (
           <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{s.description}</p>
         )}
-        <p className="text-xs text-muted-foreground/60 mt-2">
+        <p className="text-xs text-muted-foreground mt-2">
           {new Date(s.created_at).toLocaleDateString()}
         </p>
       </div>
@@ -216,7 +216,7 @@ const FeatureSuggestions = () => {
         <NavActions />
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl font-serif text-foreground">Feature Suggestions</h2>
@@ -296,7 +296,7 @@ const FeatureSuggestions = () => {
             )}
           </>
         )}
-      </main>
+      </div>
     </div>
   );
 };

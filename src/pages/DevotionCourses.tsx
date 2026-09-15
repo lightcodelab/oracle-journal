@@ -160,7 +160,7 @@ const DevotionCourses = () => {
         />
         <div className="flex items-center gap-3">
           {tierName && (
-            <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 hidden sm:flex">
+            <Badge variant="outline" className="text-primary-strong border-primary/30 bg-primary/5 hidden sm:flex">
               <Sparkles className="w-3 h-3 mr-1" />
               {tierName}
             </Badge>
@@ -216,7 +216,7 @@ const DevotionCourses = () => {
             <p className="text-muted-foreground font-sans text-lg">
               New practices are being prepared for you.
             </p>
-            <p className="text-muted-foreground/70 font-sans text-sm mt-2">
+            <p className="text-muted-foreground font-sans text-sm mt-2">
               Check back soon.
             </p>
           </motion.div>

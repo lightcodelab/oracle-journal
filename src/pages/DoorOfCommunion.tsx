@@ -176,7 +176,7 @@ export default function DoorOfCommunion() {
         <PageBreadcrumb items={[{ label: 'Door of Communion' }]} />
         <div className="flex items-center gap-3">
           {tierName && (
-            <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 hidden sm:flex">
+            <Badge variant="outline" className="text-primary-strong border-primary/30 bg-primary/5 hidden sm:flex">
               <Sparkles className="w-3 h-3 mr-1" />
               {tierName}
             </Badge>
@@ -195,7 +195,7 @@ export default function DoorOfCommunion() {
         >
           <DoorHeader image={communionHeader.url} title="The Door of Communion" />
           <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
-            <span className="font-bold text-primary">A space to connect through live sessions, readings, and shared experiences.</span>
+            <span className="font-bold text-primary-strong">A space to connect through live sessions, readings, and shared experiences.</span>
             <br />
             Come whenever you need support or to be around other humans.
           </p>
@@ -233,9 +233,9 @@ export default function DoorOfCommunion() {
                     className="absolute inset-0 bg-gradient-to-t from-[hsl(28_45%_6%/0.92)] via-[hsl(28_40%_10%/0.55)] to-transparent"
                   />
                   <div className="absolute inset-x-0 bottom-0 p-5">
-                    <h3 className="font-serif text-2xl text-[hsl(38_60%_94%)] mb-1.5">
+                    <h2 className="font-serif text-2xl text-[hsl(38_60%_94%)] mb-1.5">
                       {category.title}
-                    </h3>
+                    </h2>
                     <p className="text-sm leading-relaxed text-[hsl(36_35%_86%)]">
                       {category.description}
                     </p>

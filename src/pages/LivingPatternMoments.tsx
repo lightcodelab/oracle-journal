@@ -42,7 +42,7 @@ const LivingPatternMoments = () => {
           </div>
           <NavActions />
         </header>
-        <main className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
+        <div className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
           <h1 className="font-serif text-3xl text-foreground mb-4">Your Living Pattern is private</h1>
           <p className="text-muted-foreground mb-8">
             An active membership opens this record.
@@ -50,7 +50,7 @@ const LivingPatternMoments = () => {
           <Button asChild size="lg">
             <Link to="/">Return to the entrance</Link>
           </Button>
-        </main>
+        </div>
       </div>
     );
   }
@@ -68,8 +68,8 @@ const LivingPatternMoments = () => {
         <NavActions />
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 pb-16">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">Moments of Meaning</p>
+      <div className="max-w-3xl mx-auto px-4 pb-16">
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">Moments of Meaning</p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">My Moments</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground leading-relaxed">
           Yours alone. Return to any of them whenever you have more information, or leave them
@@ -128,7 +128,7 @@ const LivingPatternMoments = () => {
             );
           })}
         </ul>
-      </main>
+      </div>
     </div>
   );
 };

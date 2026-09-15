@@ -104,7 +104,7 @@ export default function JournalEntryCard({
           <span className="text-muted-foreground">
             {getContextIcon(entry.context_type)}
           </span>
-          <h3 className="font-medium text-foreground truncate">{title}</h3>
+          <h2 className="font-medium text-foreground truncate">{title}</h2>
         </div>
 
         {/* Actions - Always visible */}
@@ -119,8 +119,9 @@ export default function JournalEntryCard({
                   isHovered || isSelected ? "opacity-100" : "opacity-50"
                 )}
                 onClick={(e) => e.stopPropagation()}
+                aria-label="Entry options"
               >
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">

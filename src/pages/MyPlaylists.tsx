@@ -193,7 +193,7 @@ const MyPlaylists = () => {
         </div>
       </header>
 
-      <main className="container max-w-5xl px-4 py-8">
+      <div className="container max-w-5xl px-4 py-8">
         <div className="text-center mb-8">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
             <ListMusic className="w-8 h-8 text-primary" />
@@ -346,6 +346,11 @@ const MyPlaylists = () => {
                           onClick={() => (currentTrackIndex === idx && isPlaying ? togglePlayPause() : playTrack(idx))}
                           className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 hover:bg-primary/20 transition-colors"
                           disabled={!track.audio_url}
+                          aria-label={
+                            currentTrackIndex === idx && isPlaying
+                              ? `Pause ${track.title ?? "track"}`
+                              : `Play ${track.title ?? "track"}`
+                          }
                         >
                           {currentTrackIndex === idx && isPlaying ? (
                             <Pause className="w-3.5 h-3.5 text-primary" />
@@ -476,7 +481,7 @@ const MyPlaylists = () => {
             />
           </motion.div>
         )}
-      </main>
+      </div>
 
       {/* Delete confirmation */}
       <AlertDialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>

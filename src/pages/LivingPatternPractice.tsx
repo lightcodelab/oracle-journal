@@ -314,7 +314,7 @@ const LivingPatternPractice = ({ embedded = false }: { embedded?: boolean }) => 
           </div>
           <NavActions />
         </header>
-        <main className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
+        <div className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
           <h1 className="font-serif text-3xl text-foreground mb-4">
             Your Living Pattern is private
           </h1>
@@ -325,7 +325,7 @@ const LivingPatternPractice = ({ embedded = false }: { embedded?: boolean }) => 
           <Button asChild size="lg">
             <Link to="/">Return to the entrance</Link>
           </Button>
-        </main>
+        </div>
       </div>
     );
   }
@@ -345,8 +345,8 @@ const LivingPatternPractice = ({ embedded = false }: { embedded?: boolean }) => 
         </header>
       )}
 
-      <main className={embedded ? "max-w-3xl mx-auto pb-4" : "max-w-3xl mx-auto px-4 pb-16"}>
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+      <div className={embedded ? "max-w-3xl mx-auto pb-4" : "max-w-3xl mx-auto px-4 pb-16"}>
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">
           Patterns of Choosing
         </p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">Practice</h1>
@@ -525,7 +525,7 @@ const LivingPatternPractice = ({ embedded = false }: { embedded?: boolean }) => 
           <div className="mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6 space-y-4">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <h2 className="font-serif text-2xl text-foreground">This Pattern, today</h2>
-              <span className="text-xs tracking-[0.15em] uppercase text-primary">
+              <span className="text-xs tracking-[0.15em] uppercase text-primary-strong">
                 {lifecycleLabel(saved)}
               </span>
             </div>
@@ -798,7 +798,7 @@ const LivingPatternPractice = ({ embedded = false }: { embedded?: boolean }) => 
             </p>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 };

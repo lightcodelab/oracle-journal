@@ -216,7 +216,7 @@ export default function LiveSessionJoin() {
 
             <div className="text-center">
               <p className="text-sm text-muted-foreground mb-2">Room opens in</p>
-              <p className="font-mono text-3xl font-bold text-primary">
+              <p className="font-mono text-3xl font-bold text-primary-strong">
                 {countdownText}
               </p>
             </div>

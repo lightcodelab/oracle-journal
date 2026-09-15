@@ -88,14 +88,14 @@ const PatternRecordDetail = () => {
           </div>
           <NavActions />
         </header>
-        <main className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
+        <div className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
           <h1 className="font-serif text-3xl text-foreground mb-4">
             Your Living Pattern is private
           </h1>
           <Button asChild size="lg">
             <Link to="/">Return to the entrance</Link>
           </Button>
-        </main>
+        </div>
       </div>
     );
   }
@@ -115,7 +115,7 @@ const PatternRecordDetail = () => {
         <NavActions />
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 pb-16">
+      <div className="max-w-3xl mx-auto px-4 pb-16">
         {loading && (
           <p className="text-muted-foreground flex items-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Opening your record…
@@ -129,7 +129,7 @@ const PatternRecordDetail = () => {
 
         {record && (
           <>
-            <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+            <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">
               Pattern Record
             </p>
             <h1 className="mt-1 font-serif text-2xl sm:text-3xl text-foreground leading-snug break-words">
@@ -215,7 +215,7 @@ const PatternRecordDetail = () => {
             </section>
           </>
         )}
-      </main>
+      </div>
     </div>
   );
 };

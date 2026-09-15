@@ -55,7 +55,7 @@ const LivingPatternOrientation = () => {
           </div>
           <NavActions />
         </header>
-        <main className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
+        <div className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
           <h1 className="font-serif text-3xl text-foreground mb-4">Your Living Pattern is private</h1>
           <p className="text-muted-foreground mb-8">
             An active membership opens this record. Return to the entrance to see what is currently
@@ -64,7 +64,7 @@ const LivingPatternOrientation = () => {
           <Button asChild size="lg">
             <Link to="/">Return to the entrance</Link>
           </Button>
-        </main>
+        </div>
       </div>
     );
   }
@@ -82,8 +82,8 @@ const LivingPatternOrientation = () => {
         <NavActions />
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 pb-20">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">Start here</p>
+      <div className="max-w-3xl mx-auto px-4 pb-20">
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">Start here</p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">
           Learning the Living Pattern
         </h1>
@@ -129,7 +129,7 @@ const LivingPatternOrientation = () => {
               aria-labelledby={`lesson-${lesson.key}-heading`}
               className="scroll-mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6"
             >
-              <p className="text-[0.65rem] tracking-[0.2em] uppercase text-primary">
+              <p className="text-[0.65rem] tracking-[0.2em] uppercase text-primary-strong">
                 {lesson.eyebrow}
               </p>
               <h2
@@ -213,7 +213,7 @@ const LivingPatternOrientation = () => {
                   key={ex.title}
                   className="mt-5 rounded-lg border border-border/60 bg-background/40 p-4"
                 >
-                  <p className="text-xs tracking-[0.14em] uppercase text-primary">
+                  <p className="text-xs tracking-[0.14em] uppercase text-primary-strong">
                     Fictional example — {ex.title}
                   </p>
                   <div className="mt-2.5 space-y-2">
@@ -246,7 +246,7 @@ const LivingPatternOrientation = () => {
 
               {lesson.enoughForToday && (
                 <div className="mt-5 rounded-md border border-border/60 p-3.5">
-                  <p className="text-xs tracking-[0.14em] uppercase text-primary">
+                  <p className="text-xs tracking-[0.14em] uppercase text-primary-strong">
                     What is enough for today?
                   </p>
                   <p className="mt-1.5 text-sm leading-relaxed text-foreground break-words">
@@ -289,7 +289,7 @@ const LivingPatternOrientation = () => {
             </Button>
           </div>
         </section>
-      </main>
+      </div>
     </div>
   );
 };

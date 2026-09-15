@@ -199,7 +199,7 @@ const MyAccount = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container max-w-4xl px-4 py-12">
+      <div className="container max-w-4xl px-4 py-12">
         <div className="text-center mb-8">
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
             <CreditCard className="w-10 h-10 text-primary" />
@@ -253,13 +253,13 @@ const MyAccount = () => {
             <CardTitle className="text-lg flex items-center gap-2">
               Current Membership
               {isActiveMember && (
-                <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">
+                <Badge variant="outline" className="text-primary-strong border-primary/30 bg-primary/5">
                   <Sparkles className="w-3 h-3 mr-1" />
                   {subscriptionStatus === "trialing" ? "Trial" : "Active"}
                 </Badge>
               )}
               {!isActiveMember && hasManualAccess && (
-                <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">
+                <Badge variant="outline" className="text-primary-strong border-primary/30 bg-primary/5">
                   <Check className="w-3 h-3 mr-1" />
                   Active
                 </Badge>
@@ -291,8 +291,8 @@ const MyAccount = () => {
                   <h3 className="font-medium mb-2">{tierName}</h3>
                   <ul className="space-y-1">
                     {TIER_FEATURES[memberTierCode]?.map((feature) => (
-                      <li key={feature} className={`text-sm flex items-center gap-2 ${isPaused ? 'text-muted-foreground/60' : 'text-muted-foreground'}`}>
-                        <Check className={`w-4 h-4 ${isPaused ? 'text-muted-foreground/60' : 'text-primary'}`} />
+                      <li key={feature} className={`text-sm flex items-center gap-2 ${isPaused ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
+                        <Check className={`w-4 h-4 ${isPaused ? 'text-muted-foreground' : 'text-primary'}`} />
                         {feature}
                       </li>
                     ))}
@@ -665,7 +665,7 @@ const MyAccount = () => {
             </CardContent>
           </Card>
         )}
-      </main>
+      </div>
     </div>
   );
 };

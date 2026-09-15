@@ -57,7 +57,7 @@ const AllCourses = () => {
         <ProfileDropdown />
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 pb-12">
+      <div className="max-w-6xl mx-auto px-4 pb-12">
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -88,7 +88,7 @@ const AllCourses = () => {
                   }`}
                 >
                   {cat.name}
-                  <span className="ml-1.5 text-xs text-muted-foreground/70">{cat.count}</span>
+                  <span className="ml-1.5 text-xs text-muted-foreground">{cat.count}</span>
                 </button>
               );
             })}
@@ -109,7 +109,7 @@ const AllCourses = () => {
         ) : visible.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-muted-foreground font-sans">No courses in this category yet.</p>
-            <p className="text-sm text-muted-foreground/70 mt-2">Check back later for new courses.</p>
+            <p className="text-sm text-muted-foreground mt-2">Check back later for new courses.</p>
           </div>
         ) : (
           <div className={visible.length === 1
@@ -126,7 +126,7 @@ const AllCourses = () => {
             ))}
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 };

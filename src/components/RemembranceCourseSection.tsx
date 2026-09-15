@@ -66,7 +66,7 @@ const RemembranceCourseSection = () => {
           <p className="text-muted-foreground font-sans">
             Courses for this section are coming soon.
           </p>
-          <p className="text-sm text-muted-foreground/70 mt-2">
+          <p className="text-sm text-muted-foreground mt-2">
             Check back later for new content.
           </p>
         </motion.div>

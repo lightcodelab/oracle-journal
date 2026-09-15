@@ -568,7 +568,7 @@ const DevotionResourcePage = () => {
         ]} />
         <div className="flex items-center gap-3">
           {tierName && (
-            <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 hidden sm:flex">
+            <Badge variant="outline" className="text-primary-strong border-primary/30 bg-primary/5 hidden sm:flex">
               <Sparkles className="w-3 h-3 mr-1" />
               {tierName}
             </Badge>
@@ -598,7 +598,7 @@ const DevotionResourcePage = () => {
         >
           <div className="flex items-center gap-2 mb-3">
             {isAdmin && resource.status === 'draft' && (
-              <Badge className="bg-amber-500 hover:bg-amber-600 text-white">
+              <Badge className="bg-amber-500 hover:bg-amber-600 text-amber-950">
                 Draft
               </Badge>
             )}

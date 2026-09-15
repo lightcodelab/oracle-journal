@@ -155,7 +155,7 @@ const HomeScreenMoveBanner = () => {
                 aria-expanded={showHow}
                 className={`underline ${
                   migration
-                    ? "text-primary-foreground/90 hover:text-primary-foreground"
+                    ? "text-primary-foreground font-medium hover:text-primary-foreground"
                     : "text-primary hover:text-primary/80"
                 }`}
               >

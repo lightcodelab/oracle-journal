@@ -12,7 +12,7 @@ export function LivingPatternCard() {
   return (
     <section aria-labelledby="living-pattern-heading" className="mb-12">
       <div className="rounded-xl border border-border/60 bg-card p-5 sm:p-6 md:p-8">
-        <p className="text-[0.65rem] sm:text-xs tracking-[0.22em] uppercase text-primary">
+        <p className="text-[0.65rem] sm:text-xs tracking-[0.22em] uppercase text-primary-strong">
           A private place to notice
         </p>
         <h2
@@ -46,7 +46,7 @@ export function LivingPatternCard() {
             <p>
               <Link
                 to="/living-pattern/orientation"
-                className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+                className="text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
               >
                 Start here: How to use your Living Pattern
               </Link>{" "}
@@ -56,7 +56,7 @@ export function LivingPatternCard() {
               To go deeper and understand why to use The Living Pattern,{" "}
               <Link
                 to="/remembrance/course/ba0869d1-128d-4e5b-8c1a-e4c7a6d7f17a"
-                className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+                className="text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
               >
                 access the Becoming course now
               </Link>
@@ -84,7 +84,7 @@ export function LivingPatternCard() {
           />
 
           <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 max-w-full sm:max-w-[62%] [text-shadow:0_1px_3px_rgba(0,0,0,0.45)]">
-            <p className="text-[0.65rem] tracking-[0.2em] uppercase text-primary">
+            <p className="text-[0.65rem] tracking-[0.2em] uppercase text-primary-strong">
               Pause · Perceive · Practise
             </p>
             <h3 className="mt-1 font-serif text-2xl sm:text-3xl tracking-wide text-on-image">

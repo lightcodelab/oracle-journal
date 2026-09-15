@@ -112,6 +112,7 @@ const App = () => {
           <NewsletterBanner />
         <BrowserRouter>
           <ThemeScope />
+          <main id="main-content" tabIndex={-1}>
           <Routes>
             <Route path="/" element={<Membership />} />
             <Route path="/membership" element={<Navigate to="/" replace />} />
@@ -205,6 +206,7 @@ const App = () => {
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </main>
         </BrowserRouter>
         </InstallAppProvider>
         </EncryptionProvider>

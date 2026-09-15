@@ -313,7 +313,7 @@ const Membership = () => {
         </div>
       </header>
 
-      <main id="top">
+      <div id="top">
         {/* 1. Hero — the threshold */}
         <SalesHero cta={<EnterTemple placement="hero" showPricingFirst />} />
 
@@ -933,7 +933,7 @@ Begin with what is asking for your attention. The Guide can help you find the ne
           </div>
         </section>
 
-      </main>
+      </div>
 
       <StickyMobileCTA>
         <EnterTemple placement="final" className="w-full" showPricingFirst />

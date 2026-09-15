@@ -210,7 +210,7 @@ const PatternRecordFlow = () => {
   return (
     <div className="rounded-xl border border-border/70 bg-card/70 p-5 sm:p-8">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">
           {current.movement}
         </p>
         <p className="text-xs text-muted-foreground">
@@ -260,7 +260,7 @@ const PatternRecordFlow = () => {
                   <button
                     type="button"
                     onClick={() => setShowAllStateWords((v) => !v)}
-                    className="text-sm text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground"
+                    className="text-sm text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground"
                   >
                     {showAllStateWords ? "Show fewer words" : "Show more words"}
                   </button>
@@ -341,7 +341,7 @@ const PatternRecordFlow = () => {
           <button
             type="button"
             onClick={() => setField(current.field as keyof Answers, NOT_SURE as never)}
-            className="text-sm text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground"
+            className="text-sm text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground"
           >
             {NOT_SURE}
           </button>
