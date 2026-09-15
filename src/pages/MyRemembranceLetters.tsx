@@ -201,7 +201,7 @@ const MyRemembranceLetters = () => {
       <div className={cn("ml-0", showSidebar && (navCollapsed ? "md:ml-16" : "md:ml-72"))}>
         <header
           className={cn(
-            "max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3",
+            "max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3 border-b border-border",
             showSidebar && "pl-14 md:pl-4"
           )}
         >
