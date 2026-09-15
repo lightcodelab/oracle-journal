@@ -22,19 +22,19 @@ export const MONTH_THEMES: Record<number, RemembranceTheme> = {
     title: "The Echo — Who have you been performing?",
     shortTitle: "The Echo",
     emotion: "Recognition of the false self",
-    deckWeights: { "The Sacred Rewrite": 3, "AreekeerA": 2 },
+    deckWeights: { "The Sacred Rewrite": 3, "AreekeerA Energy Medicine": 2 },
   },
   2: {
     title: "The Inheritance — What did you carry that was never yours?",
     shortTitle: "The Inheritance",
     emotion: "Ancestral patterns",
-    deckWeights: { "AreekeerA": 3, "Magic not Logic": 2 },
+    deckWeights: { "AreekeerA Energy Medicine": 3, "Magic not Logic": 2 },
   },
   3: {
     title: "The Body Remembers — Where does the story live in you?",
     shortTitle: "The Body Remembers",
     emotion: "Somatic awareness",
-    deckWeights: { "The Art of Self-Healing": 3, "AreekeerA": 2 },
+    deckWeights: { "The Art of Self-Healing": 3, "AreekeerA Energy Medicine": 2 },
   },
   4: {
     title: "The Threshold — What are you ready to release?",
@@ -54,7 +54,7 @@ export const MONTH_THEMES: Record<number, RemembranceTheme> = {
     emotion: "Reflection + recalibration",
     deckWeights: {
       "The Sacred Rewrite": 2,
-      "AreekeerA": 2,
+      "AreekeerA Energy Medicine": 2,
       "Magic not Logic": 2,
       "The Art of Self-Healing": 2,
     },
@@ -69,7 +69,7 @@ export const MONTH_THEMES: Record<number, RemembranceTheme> = {
     title: "The Boundary — Where does your yes live? Your no?",
     shortTitle: "The Boundary",
     emotion: "Sovereignty",
-    deckWeights: { "AreekeerA": 3, "The Art of Self-Healing": 2 },
+    deckWeights: { "AreekeerA Energy Medicine": 3, "The Art of Self-Healing": 2 },
   },
   9: {
     title: "The Longing — What is your heart actually asking for?",
@@ -81,7 +81,7 @@ export const MONTH_THEMES: Record<number, RemembranceTheme> = {
     title: "The Offering — What are you here to give?",
     shortTitle: "The Offering",
     emotion: "Purpose",
-    deckWeights: { "AreekeerA": 3, "Magic not Logic": 2 },
+    deckWeights: { "AreekeerA Energy Medicine": 3, "Magic not Logic": 2 },
   },
   11: {
     title: "The Gratitude — What has held you?",
@@ -89,7 +89,7 @@ export const MONTH_THEMES: Record<number, RemembranceTheme> = {
     emotion: "Receiving + reverence",
     deckWeights: {
       "The Sacred Rewrite": 2,
-      "AreekeerA": 2,
+      "AreekeerA Energy Medicine": 2,
       "Magic not Logic": 2,
       "The Art of Self-Healing": 2,
     },
@@ -100,7 +100,7 @@ export const MONTH_THEMES: Record<number, RemembranceTheme> = {
     emotion: "Integration + benediction",
     deckWeights: {
       "The Sacred Rewrite": 3,
-      "AreekeerA": 2,
+      "AreekeerA Energy Medicine": 2,
       "Magic not Logic": 1,
       "The Art of Self-Healing": 1,
     },
