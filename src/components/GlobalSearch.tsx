@@ -25,8 +25,9 @@ const GlobalSearch = () => {
         size="sm"
         className="text-foreground/70 hover:text-foreground"
         onClick={() => setIsOpen(true)}
+        aria-label="Search THE TEMPLE"
       >
-        <Search className="w-4 h-4" />
+        <Search className="w-4 h-4" aria-hidden="true" />
       </Button>
     );
   }
