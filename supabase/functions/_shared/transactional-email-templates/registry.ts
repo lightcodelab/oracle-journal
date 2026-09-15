@@ -3,6 +3,7 @@ import { template as affiliateApprovedTemplate } from './affiliate-approved.tsx'
 import { template as adminNewSignupTemplate } from './admin-new-signup.tsx'
 import { template as adminNewPaymentTemplate } from './admin-new-payment.tsx'
 import { template as adminDailySummaryTemplate } from './admin-daily-summary.tsx'
+import { template as remembranceLetterReadyTemplate } from './remembrance-letter-ready.tsx'
 
 export interface TemplateEntry {
   component: ComponentType<any>
