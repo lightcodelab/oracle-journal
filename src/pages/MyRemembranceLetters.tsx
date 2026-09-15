@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Home, Loader2 } from "lucide-react";
+import { ArrowLeft, Home, Loader2, Mail } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useMemberState } from "@/hooks/useMemberState";
 import NavActions from "@/components/NavActions";
