@@ -103,7 +103,7 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
                 <Pencil className="w-3 h-3 mr-1" />
                 Edit
               </Button>
-              <Badge className="bg-amber-500 hover:bg-amber-600 text-white text-xs">
+              <Badge className="bg-amber-500 hover:bg-amber-600 text-amber-950 text-xs">
                 Draft
               </Badge>
             </div>

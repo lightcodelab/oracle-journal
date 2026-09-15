@@ -253,13 +253,13 @@ const MyAccount = () => {
             <CardTitle className="text-lg flex items-center gap-2">
               Current Membership
               {isActiveMember && (
-                <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">
+                <Badge variant="outline" className="text-primary-strong border-primary/30 bg-primary/5">
                   <Sparkles className="w-3 h-3 mr-1" />
                   {subscriptionStatus === "trialing" ? "Trial" : "Active"}
                 </Badge>
               )}
               {!isActiveMember && hasManualAccess && (
-                <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">
+                <Badge variant="outline" className="text-primary-strong border-primary/30 bg-primary/5">
                   <Check className="w-3 h-3 mr-1" />
                   Active
                 </Badge>

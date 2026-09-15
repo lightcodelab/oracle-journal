@@ -61,7 +61,7 @@ export function LiveAndSupport({ enabled }: { enabled: boolean }) {
         >
           <Card className="h-full bg-card/70 border-border/60 hover:border-primary/40 transition-colors">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 text-primary mb-2">
+              <div className="flex items-center gap-2 text-primary-strong mb-2">
                 <Calendar className="h-4 w-4" aria-hidden />
                 <span className="text-xs uppercase tracking-wider">
                   {nextSession ? "Next live session" : "Live offerings"}
@@ -91,7 +91,7 @@ export function LiveAndSupport({ enabled }: { enabled: boolean }) {
         >
           <Card className="h-full bg-card/70 border-border/60 hover:border-primary/40 transition-colors">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 text-primary mb-2">
+              <div className="flex items-center gap-2 text-primary-strong mb-2">
                 <Film className="h-4 w-4" aria-hidden />
                 <span className="text-xs uppercase tracking-wider">Live replays</span>
               </div>
@@ -109,7 +109,7 @@ export function LiveAndSupport({ enabled }: { enabled: boolean }) {
         >
           <Card className="h-full bg-card/70 border-border/60 hover:border-primary/40 transition-colors">
             <CardContent className="p-4">
-              <div className="flex items-center gap-2 text-primary mb-2">
+              <div className="flex items-center gap-2 text-primary-strong mb-2">
                 <User className="h-4 w-4" aria-hidden />
                 <span className="text-xs uppercase tracking-wider">Account</span>
               </div>

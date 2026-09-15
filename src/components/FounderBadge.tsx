@@ -22,7 +22,7 @@ export function FounderBadge({ since, className, size = "sm" }: FounderBadgeProp
     <span
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border font-medium tracking-wide",
-        "border-primary/50 bg-primary/15 text-primary",
+        "border-primary/50 bg-primary/15 text-primary-strong",
         size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-3 py-1 text-xs",
         className,
       )}
