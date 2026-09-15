@@ -210,7 +210,13 @@ const MyRemembranceLetters = () => {
           <section className="mt-6 rounded-xl border border-border bg-card p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
               <div>
-                <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
+                <p className="text-[0.65rem] sm:text-xs tracking-[0.22em] uppercase text-primary-strong">
+                  A year-long Sacred Undoing pilgrimage
+                </p>
+                <h2 className="mt-2 font-serif text-2xl sm:text-3xl text-foreground">
+                  My Remembrance Letters
+                </h2>
+                <p className="mt-4 text-sm sm:text-base leading-relaxed text-muted-foreground">
                   Twelve letters, one each month, written for you alone. Each one draws four cards for
                   that month's theme and reads them together, then leaves you a few small practices and
                   three questions to write into. You begin whenever you choose, and your next letter
