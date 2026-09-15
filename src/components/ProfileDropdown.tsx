@@ -128,6 +128,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       route: '/field-notes',
     },
     {
+      label: 'My Remembrance Letters',
+      icon: <Mail className="w-4 h-4 mr-2" />,
+      route: '/remembrance-letters',
+    },
+    {
       label: 'My Readings',
       icon: <Sparkles className="w-4 h-4 mr-2" />,
       route: '/readings',
