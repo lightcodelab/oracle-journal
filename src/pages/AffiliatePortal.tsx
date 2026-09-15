@@ -214,7 +214,7 @@ const AffiliatePortal = () => {
                   <>
                     Default commission: <strong>{settings.default_signup_pct}%</strong> on signup or{" "}
                     <strong>{settings.default_recurring_pct}%</strong> recurring. Minimum payout{" "}
-                    {cents(settings.min_payout_cents)} {settings.currency.toUpperCase()}.
+                    {cents(settings.min_payout_cents)} AUD.
                   </>
                 )}
               </CardDescription>
