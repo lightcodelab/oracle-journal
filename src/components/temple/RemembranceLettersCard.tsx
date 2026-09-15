@@ -88,6 +88,12 @@ export function RemembranceLettersCard() {
               loading="lazy"
               className="w-full h-auto object-cover"
             />
+            {pilgrim && hasUnread ? (
+              <div className="mt-3 inline-flex items-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-3 py-2 text-sm text-primary">
+                <Mail className="h-4 w-4" aria-hidden="true" />
+                <span className="font-medium">Your new letter is available now</span>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
