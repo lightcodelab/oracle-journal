@@ -61,6 +61,7 @@ export const EmailChangeEmail = ({
           If you didn't request this change, please secure your account
           immediately.
         </Text>
+        <Text style={footer}>With Love, Julie & Tash,  THE TEMPLE of Sustainment</Text>
       </Container>
     </Body>
   </Html>

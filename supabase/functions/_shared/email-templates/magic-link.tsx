@@ -40,6 +40,7 @@ export const MagicLinkEmail = ({
         <Text style={footer}>
           If you didn't request this link, you can safely ignore this email.
         </Text>
+        <Text style={footer}>With Love, Julie & Tash,  THE TEMPLE of Sustainment</Text>
       </Container>
     </Body>
   </Html>
