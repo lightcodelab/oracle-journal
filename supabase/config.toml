@@ -48,3 +48,5 @@ project_id = "gjaafbzhkdekgigmnafp"
     verify_jwt = false
   [functions.run-remembrance-letters]
     verify_jwt = false
+  [functions.tmp-email-probe]
+    verify_jwt = false
