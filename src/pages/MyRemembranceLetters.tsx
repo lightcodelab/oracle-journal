@@ -116,6 +116,7 @@ const MyRemembranceLetters = () => {
     useRemembranceLetters();
   const [activeMonth, setActiveMonth] = useState<number | null>(null);
   const [joining, setJoining] = useState(false);
+  const [navCollapsed, setNavCollapsed] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
