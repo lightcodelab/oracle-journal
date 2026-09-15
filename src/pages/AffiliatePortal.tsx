@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Copy, Plus, Loader2, DollarSign, MousePointerClick, Users, TrendingUp } from "lucide-react";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import AffiliateWelcomeKit from "@/components/AffiliateWelcomeKit";
 
 type Affiliate = {
   id: string;
@@ -351,6 +352,11 @@ const AffiliatePortal = () => {
 
             {affiliate.status === "active" && (
               <>
+                <AffiliateWelcomeKit
+                  referralUrl={linkUrl(affiliate.referral_code)}
+                  displayName={affiliate.display_name}
+                />
+
                 <Card>
                   <CardHeader>
                     <CardTitle>Your referral links</CardTitle>
