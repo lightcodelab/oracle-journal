@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Sparkles, Printer, Mail } from "lucide-react";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import ProfileDropdown from "@/components/ProfileDropdown";
+import { REMEMBRANCE_THEMES } from "@/lib/remembranceThemes";
 
 const MONTH_TITLES: Record<number, string> = Object.fromEntries(
   REMEMBRANCE_THEMES.map((t) => [t.month, t.shortTitle]),
