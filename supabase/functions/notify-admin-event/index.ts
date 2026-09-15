@@ -105,14 +105,29 @@ serve(async (req) => {
 
   const results: Record<string, string> = {}
   for (const recipient of recipients) {
+    const key = `${template}-${ref}-${recipient}`
     try {
       const result = await sendTemplateEmail(template, recipient, {
         templateData,
-        idempotencyKey: `${template}-${ref}-${recipient}`,
+        idempotencyKey: key,
       })
       results[recipient] = result.sent ? 'sent' : result.reason
     } catch (err) {
-      console.error('admin notification failed', recipient, err)
+      // A previous attempt for this key failed permanently. Retry once fresh.
+      if ((err as { code?: string }).code === 'run_failed') {
+        try {
+          const retry = await sendTemplateEmail(template, recipient, {
+            templateData,
+            idempotencyKey: `${key}-r${Date.now()}`,
+          })
+          results[recipient] = retry.sent ? 'sent' : retry.reason
+          continue
+        } catch (retryErr) {
+          console.error('admin notification retry failed', recipient, retryErr)
+        }
+      } else {
+        console.error('admin notification failed', recipient, err)
+      }
       results[recipient] = 'failed'
     }
   }
