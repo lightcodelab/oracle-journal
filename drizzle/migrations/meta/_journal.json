@@ -176,6 +176,13 @@
       "when": 1789435400976,
       "tag": "0024_launch_stats_service_role_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1789435419591,
+      "tag": "0025_launch_stats_use_guard",
+      "breakpoints": true
     }
   ]
 }
