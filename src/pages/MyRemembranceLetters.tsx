@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Home, Loader2, Mail } from "lucide-react";
+import { ArrowLeft, Home, Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useMemberState } from "@/hooks/useMemberState";
 import NavActions from "@/components/NavActions";
@@ -11,8 +11,9 @@ import {
   useRemembranceLetters,
   type RemembranceLetter,
 } from "@/hooks/useRemembranceLetters";
-import { REMEMBRANCE_REFLECTION_QUESTIONS, themeForMonth } from "@/lib/remembranceThemes";
+import { REMEMBRANCE_REFLECTION_QUESTIONS } from "@/lib/remembranceThemes";
 import remembranceLettersHomeAsset from "@/assets/remembrance-letters-home.png.asset.json";
+import RemembranceLettersNav from "@/components/RemembranceLettersNav";
 
 /**
  * My Remembrance Letters — the member's own year-long Sacred Undoing pilgrimage.
