@@ -161,12 +161,13 @@ export async function generateRemembranceLetter(
   const theme = MONTH_THEMES[month];
   if (!theme) throw new Error("Invalid month");
 
-  const { data: profile } = await admin
+  const { data: profile, error: profileError } = await admin
     .from("profiles")
-    .select("full_name, display_name, email")
+    .select("full_name, email")
     .eq("id", userId)
     .maybeSingle();
-  const rawName: string = profile?.display_name || profile?.full_name || "";
+  if (profileError) console.error("profile lookup failed:", profileError);
+  const rawName: string = profile?.full_name || "";
   const firstName = rawName.trim().split(/\s+/)[0] || "friend";
 
   const { drawn, deckMap } = await drawCards(admin, theme.deckWeights);
@@ -304,9 +305,12 @@ Write the full ~800 word letter now, then the PRACTICES block.`;
 
   // Announce the letter. A failure here must not lose the letter itself.
   const recipient = profile?.email;
+  if (!recipient) {
+    console.error("no email address on file for", userId, "- letter saved without notification");
+  }
   if (recipient) {
     try {
-      await sendTemplateEmail("remembrance-letter-ready", recipient, {
+      const result = await sendTemplateEmail("remembrance-letter-ready", recipient, {
         templateData: {
           name: firstName,
           monthNumber: month,
@@ -316,10 +320,14 @@ Write the full ~800 word letter now, then the PRACTICES block.`;
         },
         idempotencyKey: `remembrance-letter-${userId}-${month}`,
       });
-      await admin
-        .from("remembrance_letters")
-        .update({ email_sent_at: new Date().toISOString() })
-        .eq("id", inserted.id);
+      if (result.sent) {
+        await admin
+          .from("remembrance_letters")
+          .update({ email_sent_at: new Date().toISOString() })
+          .eq("id", inserted.id);
+      } else {
+        console.log("letter email skipped:", result.reason);
+      }
     } catch (e) {
       console.error("remembrance letter email failed:", e);
     }
