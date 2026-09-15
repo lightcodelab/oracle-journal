@@ -112,7 +112,7 @@ const MyRemembranceLetters = () => {
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
   const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
-  const { pilgrim, letters, reflections, loading, error, join, saveReflection } =
+  const { pilgrim, letters, reflections, loading, error, join, saveReflection, markRead } =
     useRemembranceLetters();
   const [activeMonth, setActiveMonth] = useState<number | null>(null);
   const [joining, setJoining] = useState(false);
@@ -127,6 +127,13 @@ const MyRemembranceLetters = () => {
       setActiveMonth(letters[letters.length - 1].month_number);
     }
   }, [letters, activeMonth]);
+
+  useEffect(() => {
+    const active = letters.find((l) => l.month_number === activeMonth);
+    if (active && !active.read_at) {
+      void markRead(active.id);
+    }
+  }, [activeMonth, letters, markRead]);
 
   const activeLetter = useMemo(
     () => letters.find((l) => l.month_number === activeMonth) ?? null,

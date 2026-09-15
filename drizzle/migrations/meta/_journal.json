@@ -204,6 +204,13 @@
       "when": 1789446380758,
       "tag": "0028_remembrance_letters_pilgrimage",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1789458143984,
+      "tag": "0029_remembrance_letter_read_status",
+      "breakpoints": true
     }
   ]
 }

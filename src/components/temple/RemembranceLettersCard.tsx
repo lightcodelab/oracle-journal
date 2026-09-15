@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRemembranceLetters } from "@/hooks/useRemembranceLetters";
@@ -16,8 +16,14 @@ import remembranceLettersHomeAsset from "@/assets/remembrance-letters-home.png.a
 
 export function RemembranceLettersCard() {
   const { toast } = useToast();
-  const { pilgrim, loading, join } = useRemembranceLetters();
+  const { pilgrim, letters, loading, join } = useRemembranceLetters();
   const [joining, setJoining] = useState(false);
+
+  const hasUnread = useMemo(() => {
+    if (!letters.length) return false;
+    const latest = letters[letters.length - 1];
+    return !latest.read_at;
+  }, [letters]);
 
   const beginPilgrimage = async () => {
     setJoining(true);
@@ -64,6 +70,12 @@ export function RemembranceLettersCard() {
               This is a twelve-month container, not a single reading. Your first letter is written
               the moment you begin, and the next one thirty days later.
             </p>
+            {pilgrim && hasUnread ? (
+              <div className="mt-5 inline-flex items-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-3 py-2 text-sm text-primary">
+                <Mail className="h-4 w-4" aria-hidden="true" />
+                <span className="font-medium">Your new letter is available now</span>
+              </div>
+            ) : null}
             {pilgrim ? (
               <Button asChild className="mt-6" size="lg">
                 <Link to="/remembrance-letters">Access your letters</Link>

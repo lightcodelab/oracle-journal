@@ -34,6 +34,7 @@ export interface RemembranceLetter {
   content: string;
   practices: string[];
   generated_at: string;
+  read_at: string | null;
 }
 
 export interface RemembrancePilgrim {
@@ -76,6 +77,7 @@ export function useRemembranceLetters() {
           content: l.content,
           practices: Array.isArray(l.practices) ? l.practices : [],
           generated_at: l.generated_at,
+          read_at: l.read_at ?? null,
         })),
       );
       const map: Record<string, RemembranceReflection> = {};
@@ -126,5 +128,20 @@ export function useRemembranceLetters() {
     [],
   );
 
-  return { pilgrim, letters, reflections, loading, error, reload: load, join, saveReflection };
+  const markRead = useCallback(
+    async (letterId: string) => {
+      const { data, error: rpcError } = await supabase.rpc("remembrance_mark_read", {
+        _letter_id: letterId,
+      });
+      if (rpcError) throw rpcError;
+      const row = data as unknown as RemembranceLetter;
+      setLetters((prev) =>
+        prev.map((l) => (l.id === letterId ? { ...l, read_at: row.read_at } : l))
+      );
+      return row;
+    },
+    [],
+  );
+
+  return { pilgrim, letters, reflections, loading, error, reload: load, join, saveReflection, markRead };
 }

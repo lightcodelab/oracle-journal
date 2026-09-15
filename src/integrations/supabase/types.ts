@@ -5909,6 +5909,7 @@ export type Database = {
           model_used: string | null
           month_number: number
           practices: Json
+          read_at: string | null
           theme: string
           user_id: string
         }
@@ -5923,6 +5924,7 @@ export type Database = {
           model_used?: string | null
           month_number: number
           practices?: Json
+          read_at?: string | null
           theme: string
           user_id: string
         }
@@ -5937,6 +5939,7 @@ export type Database = {
           model_used?: string | null
           month_number?: number
           practices?: Json
+          read_at?: string | null
           theme?: string
           user_id?: string
         }
@@ -8327,6 +8330,7 @@ export type Database = {
         Returns: undefined
       }
       remembrance_join: { Args: never; Returns: Json }
+      remembrance_mark_read: { Args: { _letter_id: string }; Returns: Json }
       remembrance_save_reflection: {
         Args: {
           _asking_to_be_seen: string
