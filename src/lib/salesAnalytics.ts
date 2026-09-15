@@ -75,7 +75,7 @@ async function recordEvent(event: SalesEvent, params: EventParams) {
       utm_medium: trim(search.get("utm_medium"), 120),
       utm_campaign: trim(search.get("utm_campaign"), 120),
       affiliate_code: trim(getStoredAffiliateRef()?.code ?? null, 64),
-      metadata: params as Record<string, unknown>,
+      metadata: params as unknown as Record<string, never>,
     });
   } catch {
     // Analytics must never break the page.
