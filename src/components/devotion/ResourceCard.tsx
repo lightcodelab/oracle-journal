@@ -115,7 +115,7 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
           <div className="flex items-start justify-between gap-2 mb-2">
             <h2 className="font-serif text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2">
               {resource.title}
-            </h3>
+            </h2>
             <div className="text-muted-foreground group-hover:text-primary transition-colors shrink-0">
               {resource.is_course ? <BookOpen className="w-4 h-4" /> : getMediaIcon()}
             </div>
