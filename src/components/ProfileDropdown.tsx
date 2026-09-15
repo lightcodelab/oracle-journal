@@ -174,7 +174,7 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
         <Button
           variant="ghost"
           size="sm"
-          className="text-foreground/70 hover:text-foreground px-2 sm:px-3"
+          className="text-foreground hover:text-primary px-2 sm:px-3"
         >
           <User className="w-4 h-4 sm:mr-2" />
           <span className="hidden sm:inline">My Profile</span>

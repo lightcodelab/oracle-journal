@@ -13,7 +13,7 @@ const ThemeModeToggle = () => {
       onClick={toggleMode}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="text-foreground/70 hover:text-foreground gap-1.5"
+      className="text-foreground hover:text-primary gap-1.5"
     >
       {isDark ? (
         <>
