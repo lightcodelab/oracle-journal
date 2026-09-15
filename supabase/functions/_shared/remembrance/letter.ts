@@ -305,9 +305,12 @@ Write the full ~800 word letter now, then the PRACTICES block.`;
 
   // Announce the letter. A failure here must not lose the letter itself.
   const recipient = profile?.email;
+  if (!recipient) {
+    console.error("no email address on file for", userId, "- letter saved without notification");
+  }
   if (recipient) {
     try {
-      await sendTemplateEmail("remembrance-letter-ready", recipient, {
+      const result = await sendTemplateEmail("remembrance-letter-ready", recipient, {
         templateData: {
           name: firstName,
           monthNumber: month,
