@@ -223,10 +223,10 @@ ${toneExemplars}
 STRUCTURE OF THE LETTER (must hit every element, ~800 words total):
 1. Salutation: "Dear ${firstName},"
 2. Opening that disarms — a universal-specific moment (bathroom mirror, unfinished conversation, the moment after applause). 2-3 sentences.
-3. Card 1 reveal — names the wound/theme. Reference card by title.
-4. Card 2 reveal — reframes the past.
-5. Card 3 reveal — pragmatic daily practice they can actually do this month.
-6. Card 4 reveal — one intention/action.
+3. Card 1 reveal — names the wound/theme. Reference the card by its exact title, in the order given.
+4. Card 2 reveal — reframes the past. Exact title, in order.
+5. Card 3 reveal — pragmatic daily practice they can actually do this month. Exact title, in order.
+6. Card 4 reveal — one intention/action. Exact title, in order.
 7. Synthesis paragraph — weave all 4 cards into one story specific to this month's theme.
 8. Embodiment ritual — sensory, physical, doable this week.
 9. Tender sign-off — "With you, / The Remembrance Letters" or a similar variation.
@@ -238,7 +238,9 @@ RULES:
 - Use the recipient's first name 2-3 times max, always tenderly.
 - Never use "journey", "manifest", "high vibe", "your truth", "trust the process".
 - Forbidden: "Altar Rituals".
-- Always write AreekeerA® with the registered trademark symbol when naming the deck.
+- CARD ACCURACY IS CRITICAL: use only the four cards given below, with their exact titles, in the exact order given, and never invent a card. When you name the deck a card comes from, use exactly the deck named with that card — never attribute a card to a deck it does not belong to.
+- Write AreekeerA® with the registered trademark symbol whenever you name that deck (its full name is the AreekeerA Energy Medicine deck), and only when a card genuinely comes from it.
+- Do not use markdown emphasis such as *asterisks*; name card titles in plain text.
 - Refer to the space as THE TEMPLE.
 - Avoid generic affirmations. Specificity = intimacy.
 - Output ONLY the letter body then the PRACTICES block. No preamble, no markdown headers, no meta-commentary.`;
