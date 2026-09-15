@@ -50,7 +50,7 @@ export function RemembranceLettersCard() {
         {!pilgrim ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
             <div>
-              <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.16em] uppercase text-primary-strong">
+              <p className="text-[0.6rem] sm:text-[0.7rem] tracking-[0.16em] uppercase text-primary-strong whitespace-nowrap">
                 A year-long Sacred Undoing pilgrimage
               </p>
               <h2
