@@ -50,8 +50,8 @@ const GlobalSearch = () => {
           }
         }}
       />
-      <Button type="submit" variant="ghost" size="sm" className="text-foreground/70 hover:text-foreground">
-        <Search className="w-4 h-4" />
+      <Button type="submit" variant="ghost" size="sm" className="text-foreground/70 hover:text-foreground" aria-label="Search">
+        <Search className="w-4 h-4" aria-hidden="true" />
       </Button>
     </form>
   );
