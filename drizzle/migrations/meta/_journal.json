@@ -211,6 +211,13 @@
       "when": 1789458143984,
       "tag": "0029_remembrance_letter_read_status",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1789460699631,
+      "tag": "0030_security_hardening_policies_and_function_grants",
+      "breakpoints": true
     }
   ]
 }
