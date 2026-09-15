@@ -57,7 +57,7 @@ const Email = ({ name, referralCode, referralUrl, portalUrl }: Props) => (
           Keep your referral code somewhere safe: <strong>{referralCode}</strong>. If you ever have
           questions, simply reply to this email.
         </Text>
-        <Text style={small}>With warmth, THE TEMPLE of Sustainment</Text>
+        <Text style={small}>With Love, Julie & Tash,  THE TEMPLE of Sustainment</Text>
       </Container>
     </Body>
   </Html>

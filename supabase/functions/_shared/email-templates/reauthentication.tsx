@@ -29,6 +29,7 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
           This code will expire shortly. If you didn't request this, you can
           safely ignore this email.
         </Text>
+        <Text style={footer}>With Love, Julie & Tash,  THE TEMPLE of Sustainment</Text>
       </Container>
     </Body>
   </Html>

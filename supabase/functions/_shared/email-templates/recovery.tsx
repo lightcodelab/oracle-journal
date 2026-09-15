@@ -41,6 +41,7 @@ export const RecoveryEmail = ({
           If you didn't request a password reset, you can safely ignore this
           email. Your password will not be changed.
         </Text>
+        <Text style={footer}>With Love, Julie & Tash,  THE TEMPLE of Sustainment</Text>
       </Container>
     </Body>
   </Html>
