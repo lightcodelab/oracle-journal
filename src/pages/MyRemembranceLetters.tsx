@@ -195,13 +195,6 @@ const MyRemembranceLetters = () => {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 pb-20">
-        <p className="text-[0.65rem] sm:text-xs tracking-[0.22em] uppercase text-primary-strong">
-          A year-long Sacred Undoing pilgrimage
-        </p>
-        <h1 className="mt-2 font-serif text-3xl sm:text-4xl text-foreground">
-          My Remembrance Letters
-        </h1>
-
         {loading ? (
           <p className="mt-8 text-muted-foreground">Gathering your letters…</p>
         ) : error ? (
@@ -210,7 +203,7 @@ const MyRemembranceLetters = () => {
           <section className="mt-6 rounded-xl border border-border bg-card p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
               <div>
-                <p className="text-[0.65rem] sm:text-xs tracking-[0.22em] uppercase text-primary-strong">
+                <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.16em] uppercase text-primary-strong">
                   A year-long Sacred Undoing pilgrimage
                 </p>
                 <h2 className="mt-2 font-serif text-2xl sm:text-3xl text-foreground">
