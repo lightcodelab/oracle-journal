@@ -11,6 +11,15 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
+  // Internal scheduled job: require the shared admin secret before any writes.
+  const expectedSecret = Deno.env.get('ADMIN_NOTIFY_SECRET')
+  if (!expectedSecret || req.headers.get('x-admin-notify-secret') !== expectedSecret) {
+    return new Response(JSON.stringify({ success: false, error: 'forbidden' }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 403,
+    })
+  }
+
   console.log('Starting scheduled content publish check...')
 
   try {
