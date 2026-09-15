@@ -65,6 +65,10 @@ export function RemembranceLettersCard() {
                 three questions to write into. You begin whenever you choose, and your next letter
                 arrives thirty days later.
               </p>
+              <p className="mt-3 text-xs italic text-muted-foreground">
+                This is a twelve-month container, not a single reading. Your first letter is written
+                the moment you begin, and the next one thirty days later.
+              </p>
               <Button className="mt-6" size="lg" onClick={beginPilgrimage} disabled={joining}>
                 {joining ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" /> : null}
                 Begin the Pilgrimage
