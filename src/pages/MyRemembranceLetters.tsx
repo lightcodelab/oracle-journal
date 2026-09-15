@@ -327,7 +327,7 @@ const MyRemembranceLetters = () => {
                     })}
                   </p>
 
-                  <div className="mt-5 whitespace-pre-line font-serif text-base sm:text-lg leading-relaxed text-foreground">
+                  <div className="mt-5 whitespace-pre-line font-serif text-base sm:text-lg leading-snug text-foreground">
                     {activeLetter.content}
                   </div>
 
