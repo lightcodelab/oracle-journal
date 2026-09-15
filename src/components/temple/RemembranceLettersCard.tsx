@@ -81,15 +81,17 @@ export function RemembranceLettersCard() {
               </Button>
             )}
           </div>
-          <div className="overflow-hidden rounded-lg border border-border md:max-w-[260px]">
-            <img
-              src={remembranceLettersHomeAsset.url}
-              alt="A woman reading a handwritten letter by warm morning light"
-              loading="lazy"
-              className="w-full h-auto object-cover"
-            />
+          <div className="flex flex-col items-start gap-3">
+            <div className="overflow-hidden rounded-lg border border-border md:max-w-[260px]">
+              <img
+                src={remembranceLettersHomeAsset.url}
+                alt="A woman reading a handwritten letter by warm morning light"
+                loading="lazy"
+                className="w-full h-auto object-cover"
+              />
+            </div>
             {pilgrim && hasUnread ? (
-              <div className="mt-3 inline-flex items-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-3 py-2 text-sm text-primary">
+              <div className="inline-flex items-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-3 py-2 text-sm text-primary">
                 <Mail className="h-4 w-4" aria-hidden="true" />
                 <span className="font-medium">Your new letter is available now</span>
               </div>
