@@ -47,28 +47,41 @@ function flattenCardContent(card: any): string {
   return parts.join("\n\n").slice(0, 4000);
 }
 
+/**
+ * Draws four cards. Every deck that holds cards is eligible, and each deck can
+ * contribute at most one card, so a reading always spans the decks rather than
+ * leaning on a single one. The month's deck weights only set the order in which
+ * decks are visited, so the theme's primary decks tend to land as cards 1 and 2.
+ */
 async function drawCards(admin: any, deckWeights: Record<string, number>) {
   const { data: decks } = await admin.from("decks").select("id,name");
   const deckMap: Record<string, string> = {};
   (decks ?? []).forEach((d: any) => (deckMap[d.name] = d.id));
 
+  // Weighted shuffle over every deck: themed decks get their weight, all others 1.
+  const deckOrder = Object.keys(deckMap)
+    .map((name) => ({
+      name,
+      key: Math.random() / Math.max(0.0001, deckWeights[name] ?? 1),
+    }))
+    .sort((a, b) => a.key - b.key)
+    .map((d) => d.name);
+
   const drawn: any[] = [];
   const usedIds = new Set<string>();
-  const weightedDecks = Object.entries(deckWeights)
-    .flatMap(([name, w]) => Array(w).fill(name))
-    .filter((name) => deckMap[name]);
 
-  for (let i = 0; i < 4 && weightedDecks.length > 0; i++) {
-    const deckName = weightedDecks[Math.floor(Math.random() * weightedDecks.length)];
+  for (const deckName of deckOrder) {
+    if (drawn.length >= 4) break;
     const { data: deckCards } = await admin.from("cards").select("*").eq("deck_id", deckMap[deckName]);
     const available = (deckCards ?? []).filter((c: any) => !usedIds.has(c.id));
     if (available.length === 0) continue;
     const pick = available[Math.floor(Math.random() * available.length)];
-    pick.deck_name = pick.deck_name ?? deckName;
+    pick.deck_name = deckName;
     drawn.push(pick);
     usedIds.add(pick.id);
   }
 
+  // Fewer decks than cards needed: top up from anywhere, still no repeats.
   if (drawn.length < 4) {
     const { data: anyCards } = await admin.from("cards").select("*").limit(300);
     const remaining = (anyCards ?? []).filter((c: any) => !usedIds.has(c.id));
