@@ -4,11 +4,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, Upload, Settings, Video, ImageDown, Loader2, BookOpen, Users, Layers, Mail, Sparkles, Share2, ClipboardList, Home } from 'lucide-react';
+import { Calendar, Upload, Settings, Video, ImageDown, Loader2, BookOpen, Users, Layers, Mail, Sparkles, Share2, ClipboardList, Home, LineChart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 const adminTasks = [
+  {
+    title: 'Launch Dashboard',
+    description: 'New sign-ups, sales page traffic, button clicks, payments, revenue, and referral sources',
+    icon: LineChart,
+    href: '/admin/launch',
+  },
   {
     title: 'Manage Live Sessions',
     description: 'Create, edit, and manage live readings, classes, and workshops',

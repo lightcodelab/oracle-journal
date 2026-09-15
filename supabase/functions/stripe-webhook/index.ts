@@ -526,6 +526,22 @@ async function handleInvoicePaid(
     });
   }
 
+  await notifyAdmins({
+    kind: "payment",
+    user_id: userIdToUse,
+    amount_cents: invoice.amount_paid,
+    currency: invoice.currency,
+    plan_code: (invoice.lines?.data?.[0]?.price?.nickname ??
+      invoice.lines?.data?.[0]?.description ??
+      undefined) as string | undefined,
+    cadence: invoice.lines?.data?.[0]?.price?.recurring?.interval === "year"
+      ? "yearly"
+      : invoice.lines?.data?.[0]?.price?.recurring?.interval === "month"
+        ? "monthly"
+        : undefined,
+    event_ref: invoice.id,
+  });
+
   console.log(`Invoice paid for user ${userIdToUse}: ${invoice.id}`);
 }
 

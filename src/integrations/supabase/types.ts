@@ -3437,6 +3437,51 @@ export type Database = {
         }
         Relationships: []
       }
+      launch_events: {
+        Row: {
+          affiliate_code: string | null
+          created_at: string
+          event: string
+          id: string
+          metadata: Json
+          path: string | null
+          referrer: string | null
+          referrer_host: string | null
+          session_id: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          affiliate_code?: string | null
+          created_at?: string
+          event: string
+          id?: string
+          metadata?: Json
+          path?: string | null
+          referrer?: string | null
+          referrer_host?: string | null
+          session_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          affiliate_code?: string | null
+          created_at?: string
+          event?: string
+          id?: string
+          metadata?: Json
+          path?: string | null
+          referrer?: string | null
+          referrer_host?: string | null
+          session_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
       lesson_audio_files: {
         Row: {
           created_at: string
@@ -7497,6 +7542,10 @@ export type Database = {
       }
       admin_inspect_test_entitlements: {
         Args: { _user_id: string }
+        Returns: Json
+      }
+      admin_launch_stats: {
+        Args: { _from?: string; _to?: string }
         Returns: Json
       }
       admin_reset_test_webhook_event: {
