@@ -129,7 +129,7 @@ const PatternRecordDetail = () => {
 
         {record && (
           <>
-            <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+            <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">
               Pattern Record
             </p>
             <h1 className="mt-1 font-serif text-2xl sm:text-3xl text-foreground leading-snug break-words">

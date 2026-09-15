@@ -69,7 +69,7 @@ const LivingPatternMoments = () => {
       </header>
 
       <div className="max-w-3xl mx-auto px-4 pb-16">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">Moments of Meaning</p>
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">Moments of Meaning</p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">My Moments</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground leading-relaxed">
           Yours alone. Return to any of them whenever you have more information, or leave them

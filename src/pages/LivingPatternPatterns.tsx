@@ -69,7 +69,7 @@ const LivingPatternPatterns = () => {
       </header>
 
       <div className="max-w-3xl mx-auto px-4 pb-16">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">
           Patterns of Choosing
         </p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">My Patterns</h1>
@@ -110,7 +110,7 @@ const LivingPatternPatterns = () => {
                     <p className="text-xs text-muted-foreground">
                       {new Date(p.chosen_at).toLocaleDateString()}
                     </p>
-                    <span className="text-xs tracking-[0.15em] uppercase text-primary">
+                    <span className="text-xs tracking-[0.15em] uppercase text-primary-strong">
                       {state}
                     </span>
                   </div>

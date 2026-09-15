@@ -346,7 +346,7 @@ const LivingPatternPractice = ({ embedded = false }: { embedded?: boolean }) => 
       )}
 
       <div className={embedded ? "max-w-3xl mx-auto pb-4" : "max-w-3xl mx-auto px-4 pb-16"}>
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">
           Patterns of Choosing
         </p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">Practice</h1>
@@ -525,7 +525,7 @@ const LivingPatternPractice = ({ embedded = false }: { embedded?: boolean }) => 
           <div className="mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6 space-y-4">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <h2 className="font-serif text-2xl text-foreground">This Pattern, today</h2>
-              <span className="text-xs tracking-[0.15em] uppercase text-primary">
+              <span className="text-xs tracking-[0.15em] uppercase text-primary-strong">
                 {lifecycleLabel(saved)}
               </span>
             </div>

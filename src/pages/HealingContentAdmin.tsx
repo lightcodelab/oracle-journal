@@ -551,7 +551,7 @@ const HealingContentAdmin = () => {
           </Card>
           <Card>
             <CardContent className="p-4">
-              <p className="text-2xl font-bold text-primary">{content.filter(c => c.is_published).length}</p>
+              <p className="text-2xl font-bold text-primary-strong">{content.filter(c => c.is_published).length}</p>
               <p className="text-sm text-muted-foreground">Published</p>
             </CardContent>
           </Card>

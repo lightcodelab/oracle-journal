@@ -61,7 +61,7 @@ const PatternReturnForm = ({
 
   return (
     <div className="rounded-xl border border-border/70 bg-card/70 p-5 sm:p-7">
-      <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">Return</p>
+      <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">Return</p>
       <h2 className="mt-2 font-serif text-2xl text-foreground">
         What did life actually show you?
       </h2>

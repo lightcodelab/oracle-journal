@@ -233,7 +233,7 @@ const LivingPatternExperiment = () => {
       </header>
 
       <div className="max-w-3xl mx-auto px-4 pb-16">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">
           Field Notes for Your Experiments
         </p>
         <h1 className="font-serif text-2xl sm:text-3xl text-foreground mt-1 break-words">

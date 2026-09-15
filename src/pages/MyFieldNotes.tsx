@@ -81,7 +81,7 @@ const MyFieldNotes = () => {
       </header>
 
       <div className="max-w-3xl mx-auto px-4 pb-16">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">Private notes</p>
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">Private notes</p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">My Field Notes</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground leading-relaxed">
           Notes you wrote beneath a resource or card, and whatever you noticed afterwards. Nothing

@@ -774,7 +774,7 @@ const AreekeeraBot = () => {
                           I understand that these physical sensations have been identified as part of an anxiety response 
                           and have been cleared of underlying medical emergencies by a healthcare professional.
                         </p>
-                        <p className="text-xs text-muted-foreground/70 italic">
+                        <p className="text-xs text-muted-foreground italic">
                           Some physical symptoms (such as chest tightness, palpitations, or shortness of breath) 
                           can indicate serious medical conditions. This protocol is designed for anxiety-related 
                           symptoms only.

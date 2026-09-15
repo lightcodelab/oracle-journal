@@ -210,7 +210,7 @@ const PatternRecordFlow = () => {
   return (
     <div className="rounded-xl border border-border/70 bg-card/70 p-5 sm:p-8">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">
           {current.movement}
         </p>
         <p className="text-xs text-muted-foreground">

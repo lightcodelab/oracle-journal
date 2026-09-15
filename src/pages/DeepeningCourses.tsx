@@ -151,7 +151,7 @@ const DeepeningCourses = () => {
             className="text-center py-16"
           >
             <p className="text-muted-foreground font-sans">Companion courses are coming soon.</p>
-            <p className="text-sm text-muted-foreground/70 mt-2">Check back later for new courses.</p>
+            <p className="text-sm text-muted-foreground mt-2">Check back later for new courses.</p>
           </motion.div>
         ) : (
           <div className={resources.length === 1

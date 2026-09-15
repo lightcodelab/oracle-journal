@@ -266,7 +266,7 @@ const LivingPatternPause = ({ embedded = false }: { embedded?: boolean }) => {
       )}
 
       <div className={embedded ? "max-w-3xl mx-auto pb-4" : "max-w-3xl mx-auto px-4 pb-16"}>
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">States of Being</p>
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">States of Being</p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">Pause</h1>
         <p className="mt-3 text-muted-foreground max-w-2xl leading-relaxed">
           A private note of how you are, right now. Difficult, neutral, restful,

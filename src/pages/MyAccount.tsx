@@ -291,8 +291,8 @@ const MyAccount = () => {
                   <h3 className="font-medium mb-2">{tierName}</h3>
                   <ul className="space-y-1">
                     {TIER_FEATURES[memberTierCode]?.map((feature) => (
-                      <li key={feature} className={`text-sm flex items-center gap-2 ${isPaused ? 'text-muted-foreground/60' : 'text-muted-foreground'}`}>
-                        <Check className={`w-4 h-4 ${isPaused ? 'text-muted-foreground/60' : 'text-primary'}`} />
+                      <li key={feature} className={`text-sm flex items-center gap-2 ${isPaused ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
+                        <Check className={`w-4 h-4 ${isPaused ? 'text-muted-foreground' : 'text-primary'}`} />
                         {feature}
                       </li>
                     ))}

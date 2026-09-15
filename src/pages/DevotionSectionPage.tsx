@@ -217,7 +217,7 @@ const DevotionSectionPage = () => {
             <p className="text-muted-foreground font-sans">
               Content for this section is coming soon.
             </p>
-            <p className="text-sm text-muted-foreground/70 mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               Check back later for new resources.
             </p>
           </motion.div>

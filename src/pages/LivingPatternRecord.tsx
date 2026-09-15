@@ -150,7 +150,7 @@ const LivingPatternRecord = () => {
       </header>
 
       <div className="max-w-3xl mx-auto px-4 pb-16 min-w-0">
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">
           THE LIVING PATTERN LAB
         </p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">My Living Pattern</h1>

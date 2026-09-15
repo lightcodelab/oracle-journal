@@ -337,7 +337,7 @@ const LivingPatternPresence = ({ embedded = false }: { embedded?: boolean }) => 
       )}
 
       <div className={embedded ? "max-w-3xl mx-auto pb-4" : "max-w-3xl mx-auto px-4 pb-16"}>
-        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">Moments of Meaning</p>
+        <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">Moments of Meaning</p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">Perceive</h1>
         <p className="mt-3 text-muted-foreground max-w-2xl leading-relaxed">
           Something stood out. This is a private place to meet it before a familiar story quietly
