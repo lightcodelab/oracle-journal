@@ -346,6 +346,11 @@ const MyPlaylists = () => {
                           onClick={() => (currentTrackIndex === idx && isPlaying ? togglePlayPause() : playTrack(idx))}
                           className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 hover:bg-primary/20 transition-colors"
                           disabled={!track.audio_url}
+                          aria-label={
+                            currentTrackIndex === idx && isPlaying
+                              ? `Pause ${track.title ?? "track"}`
+                              : `Play ${track.title ?? "track"}`
+                          }
                         >
                           {currentTrackIndex === idx && isPlaying ? (
                             <Pause className="w-3.5 h-3.5 text-primary" />

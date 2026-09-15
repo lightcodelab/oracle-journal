@@ -288,7 +288,7 @@ const JournalContent = () => {
                   />
                 </div>
                 <Select value={filterType} onValueChange={(v) => setFilterType(v as FilterType)}>
-                  <SelectTrigger className="w-full sm:w-40">
+                  <SelectTrigger className="w-full sm:w-40" aria-label="Filter entries">
                     <Filter className="h-4 w-4 mr-2" />
                     <SelectValue />
                   </SelectTrigger>
