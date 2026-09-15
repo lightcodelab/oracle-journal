@@ -320,10 +320,14 @@ Write the full ~800 word letter now, then the PRACTICES block.`;
         },
         idempotencyKey: `remembrance-letter-${userId}-${month}`,
       });
-      await admin
-        .from("remembrance_letters")
-        .update({ email_sent_at: new Date().toISOString() })
-        .eq("id", inserted.id);
+      if (result.sent) {
+        await admin
+          .from("remembrance_letters")
+          .update({ email_sent_at: new Date().toISOString() })
+          .eq("id", inserted.id);
+      } else {
+        console.log("letter email skipped:", result.reason);
+      }
     } catch (e) {
       console.error("remembrance letter email failed:", e);
     }
