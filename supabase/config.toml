@@ -1,44 +1,33 @@
 project_id = "gjaafbzhkdekgigmnafp"
 
-[functions.verify-woocommerce-purchase]
-verify_jwt = false
-
-[functions.import-sacred-rewrite-cards]
-verify_jwt = false
-
-[functions.fix-placeholder-cards]
-verify_jwt = false
-
-[functions.healing-bot]
-verify_jwt = false
-
-[functions.areekeera-bot]
-verify_jwt = false
-
-[functions.stripe-checkout]
-verify_jwt = false
-
-[functions.stripe-webhook]
-verify_jwt = false
-
-[functions.publish-scheduled-content]
-verify_jwt = false
-
-[functions.compress-existing-images]
-verify_jwt = false
-
-[functions.create-manual-user]
-verify_jwt = false
-
-[functions.mailerlite-sync]
-verify_jwt = false
-
-[functions.quiz-submit]
-verify_jwt = false
-
-[functions.mirror-s01-runner]
-verify_jwt = false
-
-[functions.living-media-gc]
-verify_jwt = false
-
+[functions]
+  [functions.areekeera-bot]
+    verify_jwt = false
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.compress-existing-images]
+    verify_jwt = false
+  [functions.create-manual-user]
+    verify_jwt = false
+  [functions.fix-placeholder-cards]
+    verify_jwt = false
+  [functions.healing-bot]
+    verify_jwt = false
+  [functions.import-sacred-rewrite-cards]
+    verify_jwt = false
+  [functions.living-media-gc]
+    verify_jwt = false
+  [functions.mailerlite-sync]
+    verify_jwt = false
+  [functions.mirror-s01-runner]
+    verify_jwt = false
+  [functions.publish-scheduled-content]
+    verify_jwt = false
+  [functions.quiz-submit]
+    verify_jwt = false
+  [functions.stripe-checkout]
+    verify_jwt = false
+  [functions.stripe-webhook]
+    verify_jwt = false
+  [functions.verify-woocommerce-purchase]
+    verify_jwt = false
