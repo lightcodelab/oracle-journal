@@ -117,7 +117,7 @@ const PatternReturnForm = ({
                   <button
                     type="button"
                     onClick={() => setDraft((d) => ({ ...d, [q.field]: NOT_SURE }))}
-                    className="mt-2 text-sm text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground"
+                    className="mt-2 text-sm text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground"
                   >
                     {NOT_SURE}
                   </button>

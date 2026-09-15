@@ -46,7 +46,7 @@ export function LivingPatternCard() {
             <p>
               <Link
                 to="/living-pattern/orientation"
-                className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+                className="text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
               >
                 Start here: How to use your Living Pattern
               </Link>{" "}
@@ -56,7 +56,7 @@ export function LivingPatternCard() {
               To go deeper and understand why to use The Living Pattern,{" "}
               <Link
                 to="/remembrance/course/ba0869d1-128d-4e5b-8c1a-e4c7a6d7f17a"
-                className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+                className="text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
               >
                 access the Becoming course now
               </Link>

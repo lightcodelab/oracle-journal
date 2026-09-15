@@ -55,7 +55,7 @@ const Row = ({
             <li key={id}>
               <Link
                 to={`/living-pattern/records/${id}`}
-                className="text-sm text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground"
+                className="text-sm text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground"
               >
                 Open record {i + 1}
               </Link>

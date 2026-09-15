@@ -112,7 +112,7 @@ const LivingPatternLenses = () => {
           <button
             type="button"
             onClick={() => navigate("/living-pattern/record")}
-            className="text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground"
+            className="text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground"
           >
             Open My Living Pattern
           </button>{" "}

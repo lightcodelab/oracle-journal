@@ -260,7 +260,7 @@ const PatternRecordFlow = () => {
                   <button
                     type="button"
                     onClick={() => setShowAllStateWords((v) => !v)}
-                    className="text-sm text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground"
+                    className="text-sm text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground"
                   >
                     {showAllStateWords ? "Show fewer words" : "Show more words"}
                   </button>
@@ -341,7 +341,7 @@ const PatternRecordFlow = () => {
           <button
             type="button"
             onClick={() => setField(current.field as keyof Answers, NOT_SURE as never)}
-            className="text-sm text-primary underline decoration-primary/40 underline-offset-4 hover:text-foreground"
+            className="text-sm text-primary-strong underline decoration-primary/40 underline-offset-4 hover:text-foreground"
           >
             {NOT_SURE}
           </button>
