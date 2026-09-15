@@ -77,6 +77,7 @@ export function useRemembranceLetters() {
           content: l.content,
           practices: Array.isArray(l.practices) ? l.practices : [],
           generated_at: l.generated_at,
+          read_at: l.read_at ?? null,
         })),
       );
       const map: Record<string, RemembranceReflection> = {};
