@@ -512,36 +512,50 @@ async function handleInvoicePaid(
   const userIdToUse = await getUserIdFromCustomer(invoice.customer as string);
   if (!userIdToUse) return;
 
-  // Record invoice
-  await supabaseAdmin.from("invoices").upsert({
-    id: invoice.id,
-    profile_id: userIdToUse,
-    subscription_id: invoice.subscription as string,
-    provider_invoice_id: invoice.id,
-    status: "paid",
-    amount_due_cents: invoice.amount_due,
-    amount_paid_cents: invoice.amount_paid,
-    currency: invoice.currency,
-    period_start: invoice.period_start 
-      ? new Date(invoice.period_start * 1000).toISOString() 
-      : null,
-    period_end: invoice.period_end 
-      ? new Date(invoice.period_end * 1000).toISOString() 
-      : null,
-    paid_at: new Date().toISOString(),
-  }, { onConflict: "id" });
+  // Record invoice. Local ids are uuids, so Stripe ids live in the
+  // provider_* columns and the local subscription row is resolved by lookup.
+  const localSubscriptionId = await getLocalSubscriptionId(
+    invoice.subscription as string,
+  );
+
+  const { data: invoiceRow, error: invoiceError } = await supabaseAdmin
+    .from("invoices")
+    .upsert({
+      profile_id: userIdToUse,
+      subscription_id: localSubscriptionId,
+      provider_invoice_id: invoice.id,
+      status: "paid",
+      amount_due_cents: invoice.amount_due,
+      amount_paid_cents: invoice.amount_paid,
+      currency: invoice.currency,
+      period_start: invoice.period_start
+        ? new Date(invoice.period_start * 1000).toISOString()
+        : null,
+      period_end: invoice.period_end
+        ? new Date(invoice.period_end * 1000).toISOString()
+        : null,
+      paid_at: new Date().toISOString(),
+    }, { onConflict: "provider_invoice_id" })
+    .select("id")
+    .maybeSingle();
+
+  if (invoiceError) console.error("invoice upsert failed:", invoiceError);
 
   // Record payment
-  if (invoice.charge) {
-    await supabaseAdmin.from("payments").insert({
-      invoice_id: invoice.id,
-      provider: "stripe",
-      provider_payment_id: invoice.charge as string,
-      amount_cents: invoice.amount_paid,
-      currency: invoice.currency,
-      status: "succeeded",
-      received_at: new Date().toISOString(),
-    });
+  const chargeId = (invoice.charge as string | null) ?? invoice.id;
+  if (invoiceRow?.id) {
+    const { error: paymentError } = await supabaseAdmin
+      .from("payments")
+      .upsert({
+        invoice_id: invoiceRow.id,
+        provider: "stripe",
+        provider_payment_id: chargeId,
+        amount_cents: invoice.amount_paid,
+        currency: invoice.currency,
+        status: "succeeded",
+        received_at: new Date().toISOString(),
+      }, { onConflict: "provider_payment_id" });
+    if (paymentError) console.error("payment upsert failed:", paymentError);
   }
 
   await notifyAdmins({
@@ -592,17 +606,38 @@ async function handleInvoiceFailed(
   const userIdToUse = await getUserIdFromCustomer(invoice.customer as string);
   if (!userIdToUse) return;
 
-  await supabaseAdmin.from("invoices").upsert({
-    id: invoice.id,
-    profile_id: userIdToUse,
-    subscription_id: invoice.subscription as string,
-    provider_invoice_id: invoice.id,
-    status: "failed",
-    amount_due_cents: invoice.amount_due,
-    currency: invoice.currency,
-  }, { onConflict: "id" });
+  const localSubscriptionId = await getLocalSubscriptionId(
+    invoice.subscription as string,
+  );
+
+  const { error: failedInvoiceError } = await supabaseAdmin
+    .from("invoices")
+    .upsert({
+      profile_id: userIdToUse,
+      subscription_id: localSubscriptionId,
+      provider_invoice_id: invoice.id,
+      status: "failed",
+      amount_due_cents: invoice.amount_due,
+      currency: invoice.currency,
+    }, { onConflict: "provider_invoice_id" });
+
+  if (failedInvoiceError) {
+    console.error("failed invoice upsert failed:", failedInvoiceError);
+  }
 
   console.log(`Invoice failed for user ${userIdToUse}: ${invoice.id}`);
+}
+
+async function getLocalSubscriptionId(
+  providerSubscriptionId: string | null,
+): Promise<string | null> {
+  if (!providerSubscriptionId) return null;
+  const { data } = await supabaseAdmin
+    .from("subscriptions")
+    .select("id")
+    .eq("provider_subscription_id", providerSubscriptionId)
+    .maybeSingle();
+  return data?.id ?? null;
 }
 
 async function getUserIdFromCustomer(customerId: string): Promise<string | null> {
