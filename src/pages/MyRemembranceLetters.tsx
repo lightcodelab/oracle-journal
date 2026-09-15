@@ -4,6 +4,7 @@ import { ArrowLeft, Home, Loader2, Mail } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useMemberState } from "@/hooks/useMemberState";
 import NavActions from "@/components/NavActions";
+import { DoorHeader } from "@/components/temple/DoorHeader";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -12,6 +13,7 @@ import {
   type RemembranceLetter,
 } from "@/hooks/useRemembranceLetters";
 import { REMEMBRANCE_REFLECTION_QUESTIONS, themeForMonth } from "@/lib/remembranceThemes";
+import remembranceHeader from "@/assets/remembrance-letters-header.png.asset.json";
 
 /**
  * My Remembrance Letters — the member's own year-long Sacred Undoing pilgrimage.
@@ -182,7 +184,7 @@ const MyRemembranceLetters = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
+      <header className="max-w-6xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
         <Link
           to="/temple"
           className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -193,13 +195,15 @@ const MyRemembranceLetters = () => {
         <NavActions />
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 pb-20">
-        <p className="text-[0.65rem] sm:text-xs tracking-[0.22em] uppercase text-primary-strong">
-          A year-long Sacred Undoing pilgrimage
-        </p>
-        <h1 className="mt-2 font-serif text-3xl sm:text-4xl text-foreground">
-          My Remembrance Letters
-        </h1>
+      <div className="max-w-6xl mx-auto px-4">
+        <DoorHeader
+          image={remembranceHeader.url}
+          title="My Remembrance Letters"
+          description="A year-long Sacred Undoing pilgrimage, written for you alone."
+        />
+      </div>
+
+      <main id="main-content" className="max-w-3xl mx-auto px-4 pb-20">
 
         {loading ? (
           <p className="mt-8 text-muted-foreground">Gathering your letters…</p>
