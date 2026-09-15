@@ -128,6 +128,13 @@ const MyRemembranceLetters = () => {
     }
   }, [letters, activeMonth]);
 
+  useEffect(() => {
+    const active = letters.find((l) => l.month_number === activeMonth);
+    if (active && !active.read_at) {
+      void markRead(active.id);
+    }
+  }, [activeMonth, letters, markRead]);
+
   const activeLetter = useMemo(
     () => letters.find((l) => l.month_number === activeMonth) ?? null,
     [letters, activeMonth],
