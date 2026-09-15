@@ -81,6 +81,7 @@ import SkipToContent from "./components/SkipToContent";
 import AffiliateRedirect from "./pages/AffiliateRedirect";
 import AffiliatePortal from "./pages/AffiliatePortal";
 import AdminAffiliates from "./pages/AdminAffiliates";
+import AdminLaunchDashboard from "./pages/AdminLaunchDashboard";
 import AdminQuizzes from "./pages/AdminQuizzes";
 import AdminQuizEditor from "./pages/AdminQuizEditor";
 import AdminQuizAnalytics from "./pages/AdminQuizAnalytics";
@@ -194,6 +195,7 @@ const App = () => {
             <Route path="/r/:code" element={<AffiliateRedirect />} />
             <Route path="/affiliate" element={<AffiliatePortal />} />
             <Route path="/admin/affiliates" element={<AdminAffiliates />} />
+            <Route path="/admin/launch" element={<AdminLaunchDashboard />} />
             <Route path="/admin/quizzes" element={<AdminQuizzes />} />
             <Route path="/admin/quizzes/:id" element={<AdminQuizEditor />} />
             <Route path="/admin/quizzes/:id/analytics" element={<AdminQuizAnalytics />} />

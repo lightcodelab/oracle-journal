@@ -31,6 +31,24 @@ const planToTier: Record<string, string> = {
   initiate: "T3",
 };
 
+// Fire-and-forget alert to the temple keepers. Never blocks webhook success.
+async function notifyAdmins(payload: Record<string, unknown>) {
+  const secret = Deno.env.get("ADMIN_NOTIFY_SECRET");
+  if (!secret) return;
+  try {
+    await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/notify-admin-event`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-notify-secret": secret,
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    console.error("admin notification failed:", e);
+  }
+}
+
 serve(async (req) => {
   const signature = req.headers.get("stripe-signature");
   if (!signature) {
@@ -525,6 +543,22 @@ async function handleInvoicePaid(
       received_at: new Date().toISOString(),
     });
   }
+
+  await notifyAdmins({
+    kind: "payment",
+    user_id: userIdToUse,
+    amount_cents: invoice.amount_paid,
+    currency: invoice.currency,
+    plan_code: (invoice.lines?.data?.[0]?.price?.nickname ??
+      invoice.lines?.data?.[0]?.description ??
+      undefined) as string | undefined,
+    cadence: invoice.lines?.data?.[0]?.price?.recurring?.interval === "year"
+      ? "yearly"
+      : invoice.lines?.data?.[0]?.price?.recurring?.interval === "month"
+        ? "monthly"
+        : undefined,
+    event_ref: invoice.id,
+  });
 
   console.log(`Invoice paid for user ${userIdToUse}: ${invoice.id}`);
 }

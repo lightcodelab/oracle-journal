@@ -36,3 +36,7 @@ project_id = "gjaafbzhkdekgigmnafp"
     verify_jwt = false
   [functions.send-affiliate-approval]
     verify_jwt = true
+  [functions.notify-admin-event]
+    verify_jwt = false
+  [functions.admin-daily-summary]
+    verify_jwt = false
