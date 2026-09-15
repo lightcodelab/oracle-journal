@@ -25,7 +25,8 @@ import {
   Smartphone,
   LineChart,
   Share2,
-  Compass
+  Compass,
+  Mail
 } from 'lucide-react';
 import { useInstallApp } from '@/components/InstallAppDialog';
 import GlobalSearch from '@/components/GlobalSearch';
