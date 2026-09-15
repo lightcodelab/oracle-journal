@@ -48,7 +48,7 @@ export function RemembranceLettersCard() {
     <section aria-labelledby="remembrance-letters-heading" className="mb-12">
       <div className="rounded-xl border border-border/60 bg-card p-5 sm:p-6 md:p-8">
         {!pilgrim ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 md:gap-8 items-center">
             <div>
               <p className="text-[0.6rem] sm:text-[0.7rem] tracking-[0.16em] uppercase text-primary-strong whitespace-nowrap">
                 A year-long Sacred Undoing pilgrimage
