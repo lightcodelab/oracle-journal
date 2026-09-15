@@ -16,8 +16,14 @@ import remembranceLettersHomeAsset from "@/assets/remembrance-letters-home.png.a
 
 export function RemembranceLettersCard() {
   const { toast } = useToast();
-  const { pilgrim, loading, join } = useRemembranceLetters();
+  const { pilgrim, letters, loading, join } = useRemembranceLetters();
   const [joining, setJoining] = useState(false);
+
+  const hasUnread = useMemo(() => {
+    if (!letters.length) return false;
+    const latest = letters[letters.length - 1];
+    return !latest.read_at;
+  }, [letters]);
 
   const beginPilgrimage = async () => {
     setJoining(true);
