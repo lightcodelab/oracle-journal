@@ -116,6 +116,7 @@ const MyRemembranceLetters = () => {
     useRemembranceLetters();
   const [activeMonth, setActiveMonth] = useState<number | null>(null);
   const [joining, setJoining] = useState(false);
+  const [navCollapsed, setNavCollapsed] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -192,10 +193,12 @@ const MyRemembranceLetters = () => {
           letters={letters}
           activeMonth={activeMonth}
           onSelect={setActiveMonth}
+          collapsed={navCollapsed}
+          onCollapsedChange={setNavCollapsed}
         />
       )}
 
-      <div className={cn("ml-0", showSidebar && "md:ml-72")}>
+      <div className={cn("ml-0", showSidebar && (navCollapsed ? "md:ml-16" : "md:ml-72"))}>
         <header
           className={cn(
             "max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3",

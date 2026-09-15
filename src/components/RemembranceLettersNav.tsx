@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Menu, X } from "lucide-react";
+import { Mail, Menu, PanelRightOpen, PanelRight, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { themeForMonth } from "@/lib/remembranceThemes";
 import type { RemembranceLetter } from "@/hooks/useRemembranceLetters";
@@ -8,14 +8,21 @@ interface RemembranceLettersNavProps {
   letters: RemembranceLetter[];
   activeMonth: number | null;
   onSelect: (month: number) => void;
+  collapsed?: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
 }
 
 export default function RemembranceLettersNav({
   letters,
   activeMonth,
   onSelect,
+  collapsed: collapsedProp,
+  onCollapsedChange,
 }: RemembranceLettersNavProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const collapsed = collapsedProp ?? internalCollapsed;
+  const setCollapsed = onCollapsedChange ?? setInternalCollapsed;
 
   const handleSelect = (month: number) => {
     setIsMobileOpen(false);
@@ -26,7 +33,12 @@ export default function RemembranceLettersNav({
     <>
       <div className="p-4 border-b border-border">
         <div className="flex items-start justify-between">
-          <div>
+          <div
+            className={cn(
+              "transition-opacity duration-200",
+              collapsed && "md:opacity-0 md:w-0 md:overflow-hidden"
+            )}
+          >
             <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.16em] uppercase text-primary-strong">
               A year-long Sacred Undoing pilgrimage
             </p>
@@ -41,6 +53,18 @@ export default function RemembranceLettersNav({
           >
             <X className="w-4 h-4" />
           </button>
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="hidden md:flex p-1.5 hover:bg-muted rounded-md text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={collapsed ? "Expand navigation" : "Collapse navigation"}
+            aria-pressed={collapsed}
+          >
+            {collapsed ? (
+              <PanelRight className="w-4 h-4" aria-hidden="true" />
+            ) : (
+              <PanelRightOpen className="w-4 h-4" aria-hidden="true" />
+            )}
+          </button>
         </div>
       </div>
 
@@ -54,11 +78,14 @@ export default function RemembranceLettersNav({
                 key={letter.id}
                 onClick={() => handleSelect(letter.month_number)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-colors",
+                  "group w-full flex items-center gap-3 rounded-md text-left transition-colors",
+                  collapsed ? "md:justify-center md:px-2 py-2.5" : "px-3 py-2.5",
                   selected
                     ? "bg-primary/10 text-primary border-l-2 border-primary"
                     : "text-foreground/70 hover:bg-muted hover:text-foreground"
                 )}
+                aria-label={`Month ${letter.month_number}${theme?.shortTitle ? ` — ${theme.shortTitle}` : ""}`}
+                title={collapsed ? `Month ${letter.month_number}${theme?.shortTitle ? ` — ${theme.shortTitle}` : ""}` : undefined}
               >
                 <div
                   className={cn(
@@ -70,7 +97,13 @@ export default function RemembranceLettersNav({
                 >
                   <Mail className="w-3.5 h-3.5" aria-hidden="true" />
                 </div>
-                <span className={cn("text-sm leading-tight", selected && "font-medium")}>
+                <span
+                  className={cn(
+                    "text-sm leading-tight transition-opacity duration-200",
+                    selected && "font-medium",
+                    collapsed && "md:hidden"
+                  )}
+                >
                   Month {letter.month_number}
                   <span className="block text-xs text-muted-foreground">
                     {theme?.shortTitle ?? ""}
@@ -106,7 +139,8 @@ export default function RemembranceLettersNav({
 
       <aside
         className={cn(
-          "fixed top-0 left-0 h-full w-64 md:w-72 bg-card border-r border-border flex flex-col transition-transform duration-300",
+          "fixed top-0 left-0 h-full bg-card border-r border-border flex flex-col transition-all duration-300",
+          collapsed ? "w-64 md:w-16" : "w-64 md:w-72",
           isMobileOpen ? "translate-x-0 z-50" : "-translate-x-full md:translate-x-0 z-40"
         )}
       >
