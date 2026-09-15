@@ -183,6 +183,13 @@
       "when": 1789435419591,
       "tag": "0025_launch_stats_use_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1789437668967,
+      "tag": "0026_signup_guard_and_unpaid_purge",
+      "breakpoints": true
     }
   ]
 }
