@@ -14,6 +14,7 @@ import {
 import { REMEMBRANCE_REFLECTION_QUESTIONS } from "@/lib/remembranceThemes";
 import remembranceLettersHomeAsset from "@/assets/remembrance-letters-home.png.asset.json";
 import RemembranceLettersNav from "@/components/RemembranceLettersNav";
+import { cn } from "@/lib/utils";
 
 /**
  * My Remembrance Letters — the member's own year-long Sacred Undoing pilgrimage.
