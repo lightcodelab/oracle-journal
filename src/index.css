@@ -26,7 +26,7 @@ All colors MUST be HSL.
        on the slightly darker gold used for hovered/overlaid buttons */
     --primary-foreground: 31 30% 4%;
     /* Deeper gold for small text on light surfaces (AA at 4.9:1) */
-    --primary-strong: 41 55% 28%;
+    --primary-strong: 41 55% 25%;
 
     --secondary: 40 45% 84%;
     --secondary-foreground: 31 27% 20%;
