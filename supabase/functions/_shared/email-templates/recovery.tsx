@@ -29,6 +29,7 @@ export const RecoveryEmail = ({
     <Preview>Reset your password for {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
+        <Text style={eyebrow}>THE TEMPLE of Sustainment</Text>
         <Heading style={h1}>Reset your password</Heading>
         <Text style={text}>
           We received a request to reset your password for {siteName}. Click
@@ -73,6 +74,13 @@ const button = {
   textDecoration: 'none',
 }
 const footer = { fontSize: '12px', color: '#8A7A66', margin: '30px 0 0' }
+const eyebrow = {
+  color: '#8a6d1f',
+  fontSize: '12px',
+  letterSpacing: '2px',
+  textTransform: 'uppercase' as const,
+  margin: '0 0 8px',
+}
 // Rendered as a text child, which React may HTML-escape: keep this CSS free of >, &, and quotes.
 const darkModeCss = `
   @media (prefers-color-scheme: dark) {

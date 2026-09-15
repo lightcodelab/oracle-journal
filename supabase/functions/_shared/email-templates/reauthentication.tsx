@@ -22,6 +22,7 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
     <Preview>Your verification code</Preview>
     <Body style={main}>
       <Container style={container}>
+        <Text style={eyebrow}>THE TEMPLE of Sustainment</Text>
         <Heading style={h1}>Confirm reauthentication</Heading>
         <Text style={text}>Use the code below to confirm your identity:</Text>
         <Text style={codeStyle}>{token}</Text>
@@ -59,3 +60,10 @@ const codeStyle = {
   margin: '0 0 30px',
 }
 const footer = { fontSize: '12px', color: '#8A7A66', margin: '30px 0 0' }
+const eyebrow = {
+  color: '#8a6d1f',
+  fontSize: '12px',
+  letterSpacing: '2px',
+  textTransform: 'uppercase' as const,
+  margin: '0 0 8px',
+}

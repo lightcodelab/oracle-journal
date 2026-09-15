@@ -29,6 +29,7 @@ export const MagicLinkEmail = ({
     <Preview>Your login link for {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
+        <Text style={eyebrow}>THE TEMPLE of Sustainment</Text>
         <Heading style={h1}>Your login link</Heading>
         <Text style={text}>
           Click the button below to log in to {siteName}. This link will expire
@@ -72,6 +73,13 @@ const button = {
   textDecoration: 'none',
 }
 const footer = { fontSize: '12px', color: '#8A7A66', margin: '30px 0 0' }
+const eyebrow = {
+  color: '#8a6d1f',
+  fontSize: '12px',
+  letterSpacing: '2px',
+  textTransform: 'uppercase' as const,
+  margin: '0 0 8px',
+}
 // Rendered as a text child, which React may HTML-escape: keep this CSS free of >, &, and quotes.
 const darkModeCss = `
   @media (prefers-color-scheme: dark) {
