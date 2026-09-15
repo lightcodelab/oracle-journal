@@ -239,6 +239,13 @@ const MyRemembranceLetters = () => {
           </section>
         ) : (
           <>
+            <p className="mt-6 text-[0.55rem] sm:text-[0.6rem] tracking-[0.16em] uppercase text-primary-strong">
+              A year-long Sacred Undoing pilgrimage
+            </p>
+            <h1 className="mt-2 font-serif text-2xl sm:text-3xl text-foreground">
+              My Remembrance Letters
+            </h1>
+
             <div
               role="tablist"
               aria-label="Your monthly letters"
