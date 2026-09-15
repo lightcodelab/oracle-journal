@@ -58,7 +58,7 @@ export function RemembranceLettersCard() {
               id="remembrance-letters-heading"
               className="mt-2 font-serif text-2xl sm:text-3xl text-foreground"
             >
-              My Remembrance Letters
+              The Remembrance Letters
             </h2>
             <p className="mt-4 text-sm sm:text-base leading-relaxed text-muted-foreground">
               Twelve letters, one each month, written for you alone. Each one draws four cards for
