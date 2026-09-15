@@ -70,7 +70,7 @@ export function RemembranceLettersCard() {
                 Begin the Pilgrimage
               </Button>
             </div>
-            <div className="overflow-hidden rounded-lg border border-border">
+            <div className="overflow-hidden rounded-lg border border-border md:max-w-[260px]">
               <img
                 src={remembranceLettersHomeAsset.url}
                 alt="A woman reading a handwritten letter by warm morning light"
