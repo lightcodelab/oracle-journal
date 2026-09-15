@@ -22,8 +22,9 @@ All colors MUST be HSL.
     --popover-foreground: 31 27% 18%;
 
     --primary: 41 47% 45%;
-    /* Dark brown lettering keeps the gold intact at WCAG AA (5.1:1) */
-    --primary-foreground: 31 27% 10%;
+    /* Near-black brown lettering keeps the gold intact at WCAG AA, including
+       on the slightly darker gold used for hovered/overlaid buttons */
+    --primary-foreground: 31 30% 4%;
     /* Deeper gold for small text on light surfaces (AA at 4.9:1) */
     --primary-strong: 41 55% 28%;
 
