@@ -226,24 +226,33 @@ const AllResourcesSection = () => {
             ))}
           </TabsList>
 
-          {/* Single content area that reacts to tab changes */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map((resource, index) => (
-              <ResourceCard
-                key={resource.id}
-                resource={resource}
-                index={index}
-                showDraftBadge={isAdmin}
-                basePath="/devotion"
-              />
-            ))}
-          </div>
+          {/* One content panel per tab so each tab has a real target for
+              screen readers; only the active panel renders its cards. */}
+          {['all', ...locations.map((loc) => loc.id)].map((tabValue) => (
+            <TabsContent key={tabValue} value={tabValue} forceMount className="mt-0">
+              {activeTab === tabValue && (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filtered.map((resource, index) => (
+                      <ResourceCard
+                        key={resource.id}
+                        resource={resource}
+                        index={index}
+                        showDraftBadge={isAdmin}
+                        basePath="/devotion"
+                      />
+                    ))}
+                  </div>
 
-          {filtered.length === 0 && (
-            <p className="text-muted-foreground text-center py-8">
-              No resources found in this category.
-            </p>
-          )}
+                  {filtered.length === 0 && (
+                    <p className="text-muted-foreground text-center py-8">
+                      No resources found in this category.
+                    </p>
+                  )}
+                </>
+              )}
+            </TabsContent>
+          ))}
         </Tabs>
       </div>
     </motion.div>
