@@ -606,17 +606,38 @@ async function handleInvoiceFailed(
   const userIdToUse = await getUserIdFromCustomer(invoice.customer as string);
   if (!userIdToUse) return;
 
-  await supabaseAdmin.from("invoices").upsert({
-    id: invoice.id,
-    profile_id: userIdToUse,
-    subscription_id: invoice.subscription as string,
-    provider_invoice_id: invoice.id,
-    status: "failed",
-    amount_due_cents: invoice.amount_due,
-    currency: invoice.currency,
-  }, { onConflict: "id" });
+  const localSubscriptionId = await getLocalSubscriptionId(
+    invoice.subscription as string,
+  );
+
+  const { error: failedInvoiceError } = await supabaseAdmin
+    .from("invoices")
+    .upsert({
+      profile_id: userIdToUse,
+      subscription_id: localSubscriptionId,
+      provider_invoice_id: invoice.id,
+      status: "failed",
+      amount_due_cents: invoice.amount_due,
+      currency: invoice.currency,
+    }, { onConflict: "provider_invoice_id" });
+
+  if (failedInvoiceError) {
+    console.error("failed invoice upsert failed:", failedInvoiceError);
+  }
 
   console.log(`Invoice failed for user ${userIdToUse}: ${invoice.id}`);
+}
+
+async function getLocalSubscriptionId(
+  providerSubscriptionId: string | null,
+): Promise<string | null> {
+  if (!providerSubscriptionId) return null;
+  const { data } = await supabaseAdmin
+    .from("subscriptions")
+    .select("id")
+    .eq("provider_subscription_id", providerSubscriptionId)
+    .maybeSingle();
+  return data?.id ?? null;
 }
 
 async function getUserIdFromCustomer(customerId: string): Promise<string | null> {
