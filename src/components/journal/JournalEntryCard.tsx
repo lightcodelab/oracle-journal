@@ -104,7 +104,7 @@ export default function JournalEntryCard({
           <span className="text-muted-foreground">
             {getContextIcon(entry.context_type)}
           </span>
-          <h3 className="font-medium text-foreground truncate">{title}</h3>
+          <h2 className="font-medium text-foreground truncate">{title}</h2>
         </div>
 
         {/* Actions - Always visible */}
