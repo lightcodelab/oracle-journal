@@ -112,7 +112,7 @@ const MyRemembranceLetters = () => {
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
   const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
-  const { pilgrim, letters, reflections, loading, error, join, saveReflection } =
+  const { pilgrim, letters, reflections, loading, error, join, saveReflection, markRead } =
     useRemembranceLetters();
   const [activeMonth, setActiveMonth] = useState<number | null>(null);
   const [joining, setJoining] = useState(false);
