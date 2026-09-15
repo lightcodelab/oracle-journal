@@ -44,3 +44,7 @@ project_id = "gjaafbzhkdekgigmnafp"
     verify_jwt = false
   [functions.purge-unpaid-accounts]
     verify_jwt = false
+  [functions.generate-remembrance-letter]
+    verify_jwt = false
+  [functions.run-remembrance-letters]
+    verify_jwt = false
