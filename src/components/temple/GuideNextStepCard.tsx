@@ -7,12 +7,12 @@ export function GuideNextStepCard() {
   return (
     <div className="rounded-lg border border-border/50 bg-card/50 p-8 h-full flex flex-row items-start gap-6">
       <div className="flex-1 flex flex-col">
-        <h3
+        <h2
           id="guide-next-step-heading"
           className="font-serif text-2xl text-foreground mb-2 font-bold"
         >
           Not sure what you need today?
-        </h3>
+        </h2>
         <p className="text-sm text-muted-foreground mb-5">
           Tell <strong>The AreekeerA® Guide</strong> what life feels like right now, and it will
            help you choose your next experiment — what resources to try, in what order, and
