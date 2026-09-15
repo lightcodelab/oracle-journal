@@ -254,7 +254,7 @@ export const DeckSelection = ({
                     </div>
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <h3 className="font-serif text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                        <h2 className="font-serif text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2">
                           {deck.name}
                         </h3>
                         <div className="text-muted-foreground group-hover:text-primary transition-colors shrink-0">
