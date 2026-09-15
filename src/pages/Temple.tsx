@@ -207,7 +207,7 @@ const Temple = () => {
         <NavActions />
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 pb-10 sm:pb-14">
+      <div className="max-w-6xl mx-auto px-4 pb-10 sm:pb-14">
         <WelcomeHome
           displayName={profileLoaded ? displayName : null}
           showFounderBadge={!!founderBadge}
@@ -224,7 +224,7 @@ const Temple = () => {
         <RecommendedSection enabled={hasFullAccess} />
         <SeasonalSection enabled={hasFullAccess} />
         <LiveAndSupport enabled={hasFullAccess} />
-      </main>
+      </div>
     </div>
   );
 };

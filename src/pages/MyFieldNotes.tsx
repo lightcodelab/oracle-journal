@@ -53,7 +53,7 @@ const MyFieldNotes = () => {
           </div>
           <NavActions />
         </header>
-        <main className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
+        <div className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
           <h1 className="font-serif text-3xl text-foreground mb-4">Your notes are private</h1>
           <p className="text-muted-foreground mb-8">
             An active membership opens this record. Return to the entrance to see what is currently
@@ -62,7 +62,7 @@ const MyFieldNotes = () => {
           <Button asChild size="lg">
             <Link to="/">Return to the entrance</Link>
           </Button>
-        </main>
+        </div>
       </div>
     );
   }
@@ -80,7 +80,7 @@ const MyFieldNotes = () => {
         <NavActions />
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 pb-16">
+      <div className="max-w-3xl mx-auto px-4 pb-16">
         <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">Private notes</p>
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">My Field Notes</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground leading-relaxed">
@@ -206,7 +206,7 @@ const MyFieldNotes = () => {
             )}
           </section>
         )}
-      </main>
+      </div>
     </div>
   );
 };

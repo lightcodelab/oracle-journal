@@ -57,7 +57,7 @@ const AllCourses = () => {
         <ProfileDropdown />
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 pb-12">
+      <div className="max-w-6xl mx-auto px-4 pb-12">
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -126,7 +126,7 @@ const AllCourses = () => {
             ))}
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 };

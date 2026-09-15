@@ -193,7 +193,7 @@ const MyPlaylists = () => {
         </div>
       </header>
 
-      <main className="container max-w-5xl px-4 py-8">
+      <div className="container max-w-5xl px-4 py-8">
         <div className="text-center mb-8">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
             <ListMusic className="w-8 h-8 text-primary" />
@@ -476,7 +476,7 @@ const MyPlaylists = () => {
             />
           </motion.div>
         )}
-      </main>
+      </div>
 
       {/* Delete confirmation */}
       <AlertDialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>

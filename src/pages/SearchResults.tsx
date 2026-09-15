@@ -295,7 +295,7 @@ const SearchResults = () => {
         </div>
       </header>
 
-      <main className="container max-w-6xl px-4 py-8">
+      <div className="container max-w-6xl px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -436,7 +436,7 @@ const SearchResults = () => {
             <p className="text-muted-foreground">Enter a search term to find resources across the Temple</p>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 };

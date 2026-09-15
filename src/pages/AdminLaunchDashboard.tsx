@@ -122,7 +122,7 @@ const AdminLaunchDashboard = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
         <PageBreadcrumb items={[{ label: "Admin", href: "/admin" }, { label: "Launch Dashboard" }]} />
 
         <div className="flex flex-wrap items-center gap-2">
@@ -299,7 +299,7 @@ const AdminLaunchDashboard = () => {
             </CardContent>
           </Card>
         </section>
-      </main>
+      </div>
     </div>
   );
 };

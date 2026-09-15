@@ -42,7 +42,7 @@ const LivingPatternPatterns = () => {
           </div>
           <NavActions />
         </header>
-        <main className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
+        <div className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
           <h1 className="font-serif text-3xl text-foreground mb-4">
             Your Living Pattern is private
           </h1>
@@ -50,7 +50,7 @@ const LivingPatternPatterns = () => {
           <Button asChild size="lg">
             <Link to="/">Return to the entrance</Link>
           </Button>
-        </main>
+        </div>
       </div>
     );
   }
@@ -68,7 +68,7 @@ const LivingPatternPatterns = () => {
         <NavActions />
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 pb-16">
+      <div className="max-w-3xl mx-auto px-4 pb-16">
         <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
           Patterns of Choosing
         </p>
@@ -125,7 +125,7 @@ const LivingPatternPatterns = () => {
             );
           })}
         </ul>
-      </main>
+      </div>
     </div>
   );
 };

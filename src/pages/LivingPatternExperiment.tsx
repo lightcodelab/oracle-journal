@@ -206,7 +206,7 @@ const LivingPatternExperiment = () => {
           </div>
           <NavActions />
         </header>
-        <main className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
+        <div className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
           <h1 className="font-serif text-3xl text-foreground mb-4">Your Living Pattern is private</h1>
           <p className="text-muted-foreground mb-8">
             An active membership opens this record. Return to the entrance to see what is currently open.
@@ -214,7 +214,7 @@ const LivingPatternExperiment = () => {
           <Button asChild size="lg">
             <Link to="/">Return to the entrance</Link>
           </Button>
-        </main>
+        </div>
       </div>
     );
   }
@@ -232,7 +232,7 @@ const LivingPatternExperiment = () => {
         <NavActions />
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 pb-16">
+      <div className="max-w-3xl mx-auto px-4 pb-16">
         <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary">
           Field Notes for Your Experiments
         </p>
@@ -555,7 +555,7 @@ const LivingPatternExperiment = () => {
             </div>
           </>
         )}
-      </main>
+      </div>
     </div>
   );
 };

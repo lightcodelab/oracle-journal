@@ -199,7 +199,7 @@ const MyAccount = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container max-w-4xl px-4 py-12">
+      <div className="container max-w-4xl px-4 py-12">
         <div className="text-center mb-8">
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
             <CreditCard className="w-10 h-10 text-primary" />
@@ -665,7 +665,7 @@ const MyAccount = () => {
             </CardContent>
           </Card>
         )}
-      </main>
+      </div>
     </div>
   );
 };

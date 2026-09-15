@@ -28,7 +28,7 @@ export function ExpiredAccess({ expiresAt }: { expiresAt: string | null }) {
       <div className="absolute top-4 right-4 z-20">
         <NavActions />
       </div>
-      <main className="max-w-2xl mx-auto px-4 pt-24 pb-16 text-center">
+      <div className="max-w-2xl mx-auto px-4 pt-24 pb-16 text-center">
         <h1 className="font-serif text-3xl sm:text-4xl text-foreground mb-4">
           Your Temple access period has ended
         </h1>
@@ -45,7 +45,7 @@ export function ExpiredAccess({ expiresAt }: { expiresAt: string | null }) {
         <Button asChild size="lg">
           <Link to="/">Join THE TEMPLE</Link>
         </Button>
-      </main>
+      </div>
     </div>
   );
 }
