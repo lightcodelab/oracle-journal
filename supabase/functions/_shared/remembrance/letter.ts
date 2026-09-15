@@ -161,12 +161,13 @@ export async function generateRemembranceLetter(
   const theme = MONTH_THEMES[month];
   if (!theme) throw new Error("Invalid month");
 
-  const { data: profile } = await admin
+  const { data: profile, error: profileError } = await admin
     .from("profiles")
-    .select("full_name, display_name, email")
+    .select("full_name, email")
     .eq("id", userId)
     .maybeSingle();
-  const rawName: string = profile?.display_name || profile?.full_name || "";
+  if (profileError) console.error("profile lookup failed:", profileError);
+  const rawName: string = profile?.full_name || "";
   const firstName = rawName.trim().split(/\s+/)[0] || "friend";
 
   const { drawn, deckMap } = await drawCards(admin, theme.deckWeights);
