@@ -233,9 +233,9 @@ export default function DoorOfCommunion() {
                     className="absolute inset-0 bg-gradient-to-t from-[hsl(28_45%_6%/0.92)] via-[hsl(28_40%_10%/0.55)] to-transparent"
                   />
                   <div className="absolute inset-x-0 bottom-0 p-5">
-                    <h3 className="font-serif text-2xl text-[hsl(38_60%_94%)] mb-1.5">
+                    <h2 className="font-serif text-2xl text-[hsl(38_60%_94%)] mb-1.5">
                       {category.title}
-                    </h3>
+                    </h2>
                     <p className="text-sm leading-relaxed text-[hsl(36_35%_86%)]">
                       {category.description}
                     </p>
