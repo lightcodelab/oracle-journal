@@ -260,17 +260,7 @@ const MyRemembranceLetters = () => {
             </section>
           ) : (
             <>
-              {pilgrim.status === "active" && pilgrim.next_letter_due_at ? (
-                <p className="mt-6 text-xs text-muted-foreground">
-                  Your next letter is written on{" "}
-                  {new Date(pilgrim.next_letter_due_at).toLocaleDateString(undefined, {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                  .
-                </p>
-              ) : pilgrim.status === "completed" ? (
+              {pilgrim.status === "completed" ? (
                 <p className="mt-6 text-xs text-muted-foreground">
                   All twelve letters have been written. They remain here for you.
                 </p>
@@ -288,6 +278,17 @@ const MyRemembranceLetters = () => {
                     <h2 className="mt-1.5 font-serif text-2xl sm:text-3xl text-foreground">
                       Month {activeLetter.month_number}
                     </h2>
+                    {pilgrim.status === "active" && pilgrim.next_letter_due_at ? (
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        Your next letter is written on{" "}
+                        {new Date(pilgrim.next_letter_due_at).toLocaleDateString(undefined, {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                        .
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="grid grid-cols-4 gap-2 sm:gap-4">
