@@ -31,3 +31,8 @@ project_id = "gjaafbzhkdekgigmnafp"
     verify_jwt = false
   [functions.verify-woocommerce-purchase]
     verify_jwt = false
+
+  [functions.preview-transactional-email]
+    verify_jwt = false
+  [functions.send-affiliate-approval]
+    verify_jwt = true

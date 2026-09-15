@@ -77,7 +77,22 @@ const AdminAffiliates = () => {
       toast({ title: "Failed", description: error.message, variant: "destructive" });
       return;
     }
-    toast({ title: `Affiliate ${status}` });
+    if (status === "active") {
+      const { error: emailError } = await supabase.functions.invoke("send-affiliate-approval", {
+        body: { affiliate_id: id },
+      });
+      if (emailError) {
+        toast({
+          title: "Approved, but the welcome email failed",
+          description: "The affiliate is active — you may want to let them know manually.",
+          variant: "destructive",
+        });
+      } else {
+        toast({ title: "Affiliate approved", description: "A welcome email with their referral link is on its way." });
+      }
+    } else {
+      toast({ title: `Affiliate ${status}` });
+    }
     await loadAll();
   };
 
