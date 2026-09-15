@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRemembranceLetters } from "@/hooks/useRemembranceLetters";
