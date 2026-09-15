@@ -6337,6 +6337,30 @@ export type Database = {
           },
         ]
       }
+      signup_attempts: {
+        Row: {
+          client_hash: string
+          created_at: string
+          email_domain: string | null
+          id: string
+          outcome: string
+        }
+        Insert: {
+          client_hash: string
+          created_at?: string
+          email_domain?: string | null
+          id?: string
+          outcome?: string
+        }
+        Update: {
+          client_hash?: string
+          created_at?: string
+          email_domain?: string | null
+          id?: string
+          outcome?: string
+        }
+        Relationships: []
+      }
       snail_mail_letters: {
         Row: {
           card_ids: string[]
@@ -7170,6 +7194,30 @@ export type Database = {
         }
         Relationships: []
       }
+      unpaid_account_purges: {
+        Row: {
+          account_created_at: string | null
+          email: string | null
+          id: string
+          purged_at: string
+          user_id: string
+        }
+        Insert: {
+          account_created_at?: string | null
+          email?: string | null
+          id?: string
+          purged_at?: string
+          user_id: string
+        }
+        Update: {
+          account_created_at?: string | null
+          email?: string | null
+          id?: string
+          purged_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_areekeera_protocols: {
         Row: {
           id: string
@@ -7608,6 +7656,14 @@ export type Database = {
       can_view_lesson_by_door: {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
+      }
+      find_unpaid_accounts: {
+        Args: { _older_than_days?: number }
+        Returns: {
+          created_at: string
+          email: string
+          user_id: string
+        }[]
       }
       get_current_membership_offer: { Args: never; Returns: Json }
       get_deck_purchases_admin: {

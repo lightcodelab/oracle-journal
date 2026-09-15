@@ -40,3 +40,7 @@ project_id = "gjaafbzhkdekgigmnafp"
     verify_jwt = false
   [functions.admin-daily-summary]
     verify_jwt = false
+  [functions.signup-guard]
+    verify_jwt = false
+  [functions.purge-unpaid-accounts]
+    verify_jwt = false
