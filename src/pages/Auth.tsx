@@ -197,6 +197,21 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      // Refuse throwaway email providers and bulk sign-up attempts before an
+      // account is created. Never blocks a genuine member if the check fails.
+      const { data: guard } = await supabase.functions.invoke("signup-guard", {
+        body: { email },
+      });
+      if (guard && guard.allowed === false) {
+        toast({
+          title: "We can't create that account",
+          description: guard.message || "Please use a personal or work email address.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
       // Store trial info for after signup
       if (priceId) {
         sessionStorage.setItem("pendingTrialPriceId", priceId);
