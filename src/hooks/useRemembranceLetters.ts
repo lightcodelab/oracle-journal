@@ -34,6 +34,7 @@ export interface RemembranceLetter {
   content: string;
   practices: string[];
   generated_at: string;
+  read_at: string | null;
 }
 
 export interface RemembrancePilgrim {
