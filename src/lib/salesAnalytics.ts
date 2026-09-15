@@ -57,8 +57,8 @@ function referrerHost(): string | null {
   }
 }
 
-function trim(value: string | null | undefined, max: number): string | null {
-  if (!value) return null;
+function trim(value: string | null | undefined, max: number): string | undefined {
+  if (!value) return undefined;
   return value.slice(0, max);
 }
 
@@ -67,7 +67,7 @@ async function recordEvent(event: SalesEvent, params: EventParams) {
     const search = new URLSearchParams(window.location.search);
     await supabase.from("launch_events").insert({
       event,
-      session_id: getSessionId(),
+      session_id: getSessionId() ?? undefined,
       path: trim(window.location.pathname, 500),
       referrer: trim(document.referrer || null, 500),
       referrer_host: trim(referrerHost(), 255),
@@ -75,7 +75,7 @@ async function recordEvent(event: SalesEvent, params: EventParams) {
       utm_medium: trim(search.get("utm_medium"), 120),
       utm_campaign: trim(search.get("utm_campaign"), 120),
       affiliate_code: trim(getStoredAffiliateRef()?.code ?? null, 64),
-      metadata: params as Record<string, unknown>,
+      metadata: params as unknown as Record<string, never>,
     });
   } catch {
     // Analytics must never break the page.
