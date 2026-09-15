@@ -27,4 +27,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'admin-new-signup': adminNewSignupTemplate,
   'admin-new-payment': adminNewPaymentTemplate,
   'admin-daily-summary': adminDailySummaryTemplate,
+  'remembrance-letter-ready': remembranceLetterReadyTemplate,
 }
