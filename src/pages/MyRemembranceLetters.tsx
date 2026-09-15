@@ -281,6 +281,15 @@ const MyRemembranceLetters = () => {
                   key={activeLetter.id}
                   className="mt-6"
                 >
+                  <div className="mb-6">
+                    <p className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.16em] uppercase text-primary-strong">
+                      The Remembrance Letters
+                    </p>
+                    <h2 className="mt-1.5 font-serif text-2xl sm:text-3xl text-foreground">
+                      Month {activeLetter.month_number}
+                    </h2>
+                  </div>
+
                   <div className="grid grid-cols-4 gap-2 sm:gap-4">
                     {activeLetter.card_snapshot.map((card, i) => (
                       <figure key={`${card.id}-${i}`} className="m-0">
