@@ -59,6 +59,7 @@ import MyPlaylists from "./pages/MyPlaylists";
 import LivingPatternLenses from "./pages/LivingPatternLenses";
 import LivingPatternOrientation from "./pages/LivingPatternOrientation";
 import MyFieldNotes from "./pages/MyFieldNotes";
+import MyRemembranceLetters from "./pages/MyRemembranceLetters";
 import LivingPatternExperiment from "./pages/LivingPatternExperiment";
 
 import LivingPatternPresence from "./pages/LivingPatternPresence";
