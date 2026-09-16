@@ -280,6 +280,8 @@ const Index = () => {
     setShowCard(false);
     setIsRevealed(false);
     setSelectedCard(null);
+    // Clear deck/card params so the resume effect doesn't reopen the deck.
+    if (resumeDeckId || resumeCardId) setSearchParams({}, { replace: true });
   };
 
 
