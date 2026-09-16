@@ -68,6 +68,28 @@ Deno.serve(async (req) => {
       { onConflict: "job_name" },
     );
 
+    // Reactivate pilgrims who were paused only because their membership had
+    // lapsed, once access is restored (e.g. after they renew).
+    const { data: lapsed } = await admin
+      .from("remembrance_pilgrims")
+      .select("user_id")
+      .eq("status", "paused")
+      .eq("paused_reason", "membership_inactive")
+      .limit(BATCH_SIZE);
+
+    let reactivated = 0;
+    for (const p of lapsed ?? []) {
+      const { data: regained } = await admin.rpc("has_full_temple_access", {
+        _user_id: p.user_id,
+      });
+      if (!regained) continue;
+      await admin
+        .from("remembrance_pilgrims")
+        .update({ status: "active", paused_reason: null })
+        .eq("user_id", p.user_id);
+      reactivated++;
+    }
+
     const limit = paused ? 1 : BATCH_SIZE;
     const { data: due } = await admin
       .from("remembrance_pilgrims")
