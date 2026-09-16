@@ -134,7 +134,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    const result = { generated, skipped, failures, paused_before: paused, pause: newPause };
+    const result = { generated, skipped, reactivated, failures, paused_before: paused, pause: newPause };
 
     await admin
       .from("remembrance_job_state")
