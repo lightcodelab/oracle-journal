@@ -225,6 +225,13 @@
       "when": 1789607115375,
       "tag": "0031_add_saved_spread_generated_reading",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1789608866178,
+      "tag": "0032_add_saved_reading_journal_answers",
+      "breakpoints": true
     }
   ]
 }
