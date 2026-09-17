@@ -26,6 +26,7 @@ interface SpreadViewDialogProps {
   spreadCards: SpreadCardData[];
   savedAt?: string;
   generatedReading?: string | null;
+  journalAnswers?: Record<string, string> | null;
 }
 
 const getDeckBadgeClass = (deckName: string | null | undefined) => {
