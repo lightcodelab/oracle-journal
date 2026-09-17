@@ -12,8 +12,7 @@ import spreadsImg from "@/assets/sacred-spreads-temple.jpg";
 export function SacredSpreadsCard() {
   return (
     <section aria-labelledby="sacred-spreads-heading" className="mb-12">
-      <div className="rounded-xl border border-border/60 bg-card p-5 sm:p-6 md:p-8">
-        <article className="relative overflow-hidden rounded-lg border border-border/50 w-full min-w-0 sm:aspect-[21/9] sm:min-h-[280px]">
+      <article className="relative overflow-hidden rounded-lg border border-border/50 w-full min-w-0 sm:aspect-[21/9] sm:min-h-[280px]">
           <img
             src={spreadsImg}
             alt=""
@@ -33,7 +32,7 @@ export function SacredSpreadsCard() {
             className="absolute inset-0 bg-gradient-to-t from-[#1f140e]/70 via-[#1f140e]/20 to-transparent"
           />
 
-          <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 max-w-full sm:max-w-[62%] [text-shadow:0_1px_3px_rgba(0,0,0,0.45)]">
+          <div className="relative flex h-full flex-col justify-end p-5 pt-6 sm:p-7 sm:pt-8 max-w-full sm:max-w-[62%] [text-shadow:0_1px_3px_rgba(0,0,0,0.45)]">
             <p className="text-[0.65rem] tracking-[0.2em] uppercase text-primary-strong">
               Let the cards speak together
             </p>
@@ -43,7 +42,7 @@ export function SacredSpreadsCard() {
             >
               Sacred Spreads
             </h2>
-            <p className="mt-2 text-sm sm:text-base leading-relaxed text-on-image">
+            <p className="mt-3 text-xs sm:text-sm leading-relaxed text-on-image">
               Choose a spread, draw your cards, and receive a reading written
               from the thread that runs through them all — with questions to
               write into, saved with your cards.
@@ -64,7 +63,6 @@ export function SacredSpreadsCard() {
             </div>
           </div>
         </article>
-      </div>
     </section>
   );
 }
