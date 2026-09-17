@@ -1,9 +1,17 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Bookmark, Loader2, RefreshCw, ArrowLeft } from "lucide-react";
+import { REMEMBRANCE_REFLECTION_QUESTIONS } from "@/lib/remembranceThemes";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
+
+export type SpreadJournalAnswers = {
+  asking_to_be_seen: string;
+  invited_to_shift: string;
+  how_i_will_live_it: string;
+};
 
 interface SpreadReadingProps {
   spread: SpreadType;
@@ -17,6 +25,8 @@ interface SpreadReadingProps {
   generating?: boolean;
   generationError?: string | null;
   onRetryGeneration?: () => void;
+  journalAnswers?: SpreadJournalAnswers;
+  onJournalAnswerChange?: (key: keyof SpreadJournalAnswers, value: string) => void;
 }
 
 const getDeckBadgeClass = (deckName: string | null | undefined) => {
