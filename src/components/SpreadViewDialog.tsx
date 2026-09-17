@@ -38,7 +38,7 @@ const getDeckBadgeClass = (deckName: string | null | undefined) => {
   return "bg-primary/80 text-primary-foreground";
 };
 
-const SpreadViewDialog = ({ open, onOpenChange, spreadType, spreadName, spreadCards, savedAt, generatedReading }: SpreadViewDialogProps) => {
+const SpreadViewDialog = ({ open, onOpenChange, spreadType, spreadName, spreadCards, savedAt, generatedReading, journalAnswers }: SpreadViewDialogProps) => {
   const [selectedCard, setSelectedCard] = useState<OracleCard | null>(null);
   const [cardDetailOpen, setCardDetailOpen] = useState(false);
   const [loadingCard, setLoadingCard] = useState(false);
