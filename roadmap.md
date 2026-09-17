@@ -8,7 +8,7 @@
 - [x] Route public-page calls to action through membership pricing before signup
 - [x] Clarify the account-to-payment step on account creation
 
-- [ ] Add Sacred Spreads landing shuffle and deal animation
-- [ ] Generate a shared reading automatically after the final card reveal
-- [ ] Save and reopen generated readings with their spreads
+- [x] Add Sacred Spreads landing shuffle and deal animation
+- [x] Generate a shared reading automatically after the final card reveal
+- [x] Save and reopen generated readings with their spreads
 - [ ] Verify Sacred Spreads generation, access, persistence, and responsive states
