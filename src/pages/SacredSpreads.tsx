@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SpreadSelection, type SpreadType } from "@/components/SpreadSelection";
-import { SpreadReading } from "@/components/SpreadReading";
+import { SpreadReading, type SpreadJournalAnswers } from "@/components/SpreadReading";
 import { MultiDeckShuffleAnimation } from "@/components/MultiDeckShuffleAnimation";
 import CardDetailDialog from "@/components/CardDetailDialog";
 import ProfileDropdown from "@/components/ProfileDropdown";
@@ -29,6 +29,12 @@ const SacredSpreads = () => {
   const [generatedReadingModel, setGeneratedReadingModel] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
+  const emptyJournalAnswers: SpreadJournalAnswers = {
+    asking_to_be_seen: "",
+    invited_to_shift: "",
+    how_i_will_live_it: "",
+  };
+  const [journalAnswers, setJournalAnswers] = useState<SpreadJournalAnswers>(emptyJournalAnswers);
 
   const navigate = useNavigate();
   const { toast } = useToast();
