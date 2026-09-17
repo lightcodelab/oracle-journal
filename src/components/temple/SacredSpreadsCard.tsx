@@ -12,8 +12,7 @@ import spreadsImg from "@/assets/sacred-spreads-temple.jpg";
 export function SacredSpreadsCard() {
   return (
     <section aria-labelledby="sacred-spreads-heading" className="mb-12">
-      <div className="rounded-xl border border-border/60 bg-card p-5 sm:p-6 md:p-8">
-        <article className="relative overflow-hidden rounded-lg border border-border/50 w-full min-w-0 sm:aspect-[21/9] sm:min-h-[280px]">
+      <article className="relative overflow-hidden rounded-lg border border-border/50 w-full min-w-0 sm:aspect-[21/9] sm:min-h-[280px]">
           <img
             src={spreadsImg}
             alt=""
