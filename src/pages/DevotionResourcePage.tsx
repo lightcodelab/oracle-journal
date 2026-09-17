@@ -578,16 +578,19 @@ const DevotionResourcePage = () => {
       </div>
 
       <div className="max-w-4xl mx-auto pt-12">
-        {/* Back button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate(getBackPath())}
-          className="mb-6"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
+        {/* Back button + Share */}
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(getBackPath())}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          <ShareButton title={resource.title} />
+        </div>
+
 
         {/* Header */}
         <motion.div
