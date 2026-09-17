@@ -32,7 +32,7 @@ export function SacredSpreadsCard() {
             className="absolute inset-0 bg-gradient-to-t from-[#1f140e]/70 via-[#1f140e]/20 to-transparent"
           />
 
-          <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 max-w-full sm:max-w-[62%] [text-shadow:0_1px_3px_rgba(0,0,0,0.45)]">
+          <div className="relative flex h-full flex-col justify-end p-5 pt-6 sm:p-7 sm:pt-8 max-w-full sm:max-w-[62%] [text-shadow:0_1px_3px_rgba(0,0,0,0.45)]">
             <p className="text-[0.65rem] tracking-[0.2em] uppercase text-primary-strong">
               Let the cards speak together
             </p>
