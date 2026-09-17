@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SpreadSelection, type SpreadType } from "@/components/SpreadSelection";
 import { SpreadReading, EMPTY_SPREAD_JOURNAL_ANSWERS, type SpreadJournalAnswers } from "@/components/SpreadReading";
-import { MultiDeckShuffleAnimation } from "@/components/MultiDeckShuffleAnimation";
+
 import CardDetailDialog from "@/components/CardDetailDialog";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
@@ -24,7 +24,7 @@ const SacredSpreads = () => {
   const [selectedCard, setSelectedCard] = useState<OracleCard | null>(null);
   const [cardDialogOpen, setCardDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [showEntranceShuffle, setShowEntranceShuffle] = useState(true);
+  
   const [generatedReading, setGeneratedReading] = useState<string | null>(null);
   const [generatedReadingModel, setGeneratedReadingModel] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
@@ -242,13 +242,7 @@ const SacredSpreads = () => {
 
       <div className="relative z-10 container mx-auto px-4 py-12">
         {/* Spread selection */}
-        {!activeSpread && showEntranceShuffle && (
-          <div className="pt-12">
-            <h1 className="sr-only">Sacred Spreads</h1>
-            <MultiDeckShuffleAnimation onComplete={() => setShowEntranceShuffle(false)} />
-          </div>
-        )}
-        {!activeSpread && !showEntranceShuffle && (
+        {!activeSpread && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
