@@ -10,6 +10,7 @@ import { WelcomeHome } from "@/components/temple/WelcomeHome";
 import { ContinueJourney } from "@/components/temple/ContinueJourney";
 import { LivingPatternCard } from "@/components/temple/LivingPatternCard";
 import { RemembranceLettersCard } from "@/components/temple/RemembranceLettersCard";
+import { SacredSpreadsCard } from "@/components/temple/SacredSpreadsCard";
 import { BeginPractice } from "@/components/temple/BeginPractice";
 import { ExploreDoors } from "@/components/temple/ExploreDoors";
 import { GuideNextStepCard } from "@/components/temple/GuideNextStepCard";
