@@ -6266,6 +6266,8 @@ export type Database = {
           created_at: string
           deck_id: string | null
           deck_name: string | null
+          generated_reading: string | null
+          generated_reading_model: string | null
           id: string
           image_file_name: string | null
           is_encrypted: boolean | null
@@ -6284,6 +6286,8 @@ export type Database = {
           created_at?: string
           deck_id?: string | null
           deck_name?: string | null
+          generated_reading?: string | null
+          generated_reading_model?: string | null
           id?: string
           image_file_name?: string | null
           is_encrypted?: boolean | null
@@ -6302,6 +6306,8 @@ export type Database = {
           created_at?: string
           deck_id?: string | null
           deck_name?: string | null
+          generated_reading?: string | null
+          generated_reading_model?: string | null
           id?: string
           image_file_name?: string | null
           is_encrypted?: boolean | null
