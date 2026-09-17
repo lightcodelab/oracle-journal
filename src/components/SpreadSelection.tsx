@@ -69,12 +69,9 @@ interface SpreadSelectionProps {
 export const SpreadSelection = ({ onSelectSpread }: SpreadSelectionProps) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
-      {SPREAD_TYPES.map((spread, index) => (
+      {SPREAD_TYPES.map((spread) => (
         <motion.div
           key={spread.id}
-          initial={{ opacity: 0, y: -80, x: (index % 2 === 0 ? 1 : -1) * 18, scale: 0.82, rotate: -4 + index }}
-          animate={{ opacity: 1, y: 0, x: 0, scale: 1, rotate: 0 }}
-          transition={{ duration: 0.55, delay: index * 0.1, type: "spring", stiffness: 110, damping: 16 }}
           onClick={() => onSelectSpread(spread)}
           className="group cursor-pointer"
         >
