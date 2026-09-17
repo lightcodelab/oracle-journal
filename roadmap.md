@@ -11,4 +11,4 @@
 - [x] Add Sacred Spreads landing shuffle and deal animation
 - [x] Generate a shared reading automatically after the final card reveal
 - [x] Save and reopen generated readings with their spreads
-- [ ] Verify Sacred Spreads generation, access, persistence, and responsive states
+- [x] Verify Sacred Spreads generation, access, persistence, and responsive states
