@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Bookmark, Loader2, RefreshCw } from "lucide-react";
+import { Sparkles, Bookmark, Loader2, RefreshCw, ArrowLeft } from "lucide-react";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
 
@@ -50,6 +50,17 @@ export const SpreadReading = ({
       transition={{ duration: 0.8 }}
       className="text-center space-y-8 max-w-5xl mx-auto min-h-[80vh] flex flex-col justify-center py-8"
     >
+
+      <div className="w-full flex justify-start">
+        <Button
+          variant="outline"
+          onClick={onBackToDecks}
+          className="font-sans"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Spreads
+        </Button>
+      </div>
 
       <div className="space-y-4">
         <div className="flex items-center justify-center gap-2 text-primary/60">
