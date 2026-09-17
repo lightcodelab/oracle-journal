@@ -176,16 +176,47 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
             </section>
           )}
 
-          {journalAnswers && REMEMBRANCE_REFLECTION_QUESTIONS.some((q) => journalAnswers[q.key]?.trim()) && (
+          {readingId && (
             <section className="max-w-3xl mx-auto rounded-xl border border-border bg-card p-5 sm:p-6 mt-4" aria-labelledby="saved-spread-journal-title">
-              <h2 id="saved-spread-journal-title" className="font-serif text-xl text-foreground">Your writing</h2>
-              <div className="mt-4 space-y-4">
-                {REMEMBRANCE_REFLECTION_QUESTIONS.filter((q) => journalAnswers[q.key]?.trim()).map((q) => (
+              <h2 id="saved-spread-journal-title" className="font-serif text-xl text-foreground">Write with this reading</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Private to you. You can return and add to your writing at any time.
+              </p>
+              <div className="mt-5 space-y-5">
+                {SPREAD_JOURNAL_QUESTIONS.map((q) => (
                   <div key={q.key}>
-                    <p className="font-serif text-base text-foreground">{q.label}</p>
-                    <p className="mt-1 whitespace-pre-line text-sm text-foreground/80">{journalAnswers[q.key]}</p>
+                    <label htmlFor={`saved-spread-${q.key}`} className="block font-serif text-base text-foreground">
+                      {q.label}
+                    </label>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{q.help}</p>
+                    <Textarea
+                      id={`saved-spread-${q.key}`}
+                      value={journalDraft[q.key] || ""}
+                      onChange={(e) => setJournalDraft((prev) => ({ ...prev, [q.key]: e.target.value }))}
+                      rows={4}
+                      className="mt-2"
+                    />
                   </div>
                 ))}
+              </div>
+              <div className="mt-5 flex justify-end">
+                <Button
+                  onClick={handleSaveJournal}
+                  disabled={!journalDirty || updateJournalAnswers.isPending}
+                  className="font-sans"
+                >
+                  {updateJournalAnswers.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Your Writing
+                    </>
+                  )}
+                </Button>
               </div>
             </section>
           )}
