@@ -2,9 +2,8 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { z } from "npm:zod@3.25.76";
 
-const MODEL = "google/gemini-3.1-pro-preview";
-const FALLBACK_MODEL = "google/gemini-3.8-flash";
-const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
+const MODEL = "openai/gpt-6-astra";
+const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/responses";
 
 const SPREADS: Record<string, { name: string; positions: string[] }> = {
   "past-present-future": { name: "Past, Present, Future", positions: ["Past", "Present", "Future"] },
@@ -87,10 +86,10 @@ async function callGateway(apiKey: string, model: string, systemPrompt: string, 
       body: JSON.stringify({
         model,
         stream: true,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
+        instructions: systemPrompt,
+        input: userPrompt,
+        reasoning: { effort: "medium", summary: "auto" },
+        include: ["reasoning.encrypted_content"],
       }),
     });
 
@@ -123,7 +122,7 @@ async function callGateway(apiKey: string, model: string, systemPrompt: string, 
         if (!data || data === "[DONE]") continue;
         try {
           const event = JSON.parse(data);
-          text += event.choices?.[0]?.delta?.content ?? "";
+          if (event.type === "response.output_text.delta") text += event.delta ?? "";
         } catch {
           // Provider metadata and incomplete events do not contain answer text.
         }
@@ -191,16 +190,8 @@ Rules:
 - Output only the reading.`;
     const userPrompt = `Spread: ${spread.name}\n\nCards in their exact spread order:\n\n${cardsBlock}\n\nWrite the complete shared card reading now.`;
 
-    let model = MODEL;
-    let reading: string;
-    try {
-      reading = await callGateway(apiKey, MODEL, systemPrompt, userPrompt);
-    } catch (error) {
-      if (error instanceof GatewayError && !error.retryable) throw error;
-      model = FALLBACK_MODEL;
-      reading = await callGateway(apiKey, FALLBACK_MODEL, systemPrompt, userPrompt);
-    }
-    return json({ reading, model });
+    const reading = await callGateway(apiKey, MODEL, systemPrompt, userPrompt);
+    return json({ reading, model: MODEL });
   } catch (error) {
     console.error("generate-sacred-spread-reading failed", error);
     if (error instanceof GatewayError) return json({ error: error.message }, error.status);

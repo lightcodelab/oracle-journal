@@ -72,9 +72,9 @@ export const SpreadSelection = ({ onSelectSpread }: SpreadSelectionProps) => {
       {SPREAD_TYPES.map((spread, index) => (
         <motion.div
           key={spread.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: index * 0.08 }}
+          initial={{ opacity: 0, y: -80, x: (index % 2 === 0 ? 1 : -1) * 18, scale: 0.82, rotate: -4 + index }}
+          animate={{ opacity: 1, y: 0, x: 0, scale: 1, rotate: 0 }}
+          transition={{ duration: 0.55, delay: index * 0.1, type: "spring", stiffness: 110, damping: 16 }}
           onClick={() => onSelectSpread(spread)}
           className="group cursor-pointer"
         >

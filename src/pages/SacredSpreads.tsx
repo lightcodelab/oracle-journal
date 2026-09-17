@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SpreadSelection, type SpreadType } from "@/components/SpreadSelection";
 import { SpreadReading } from "@/components/SpreadReading";
+import { MultiDeckShuffleAnimation } from "@/components/MultiDeckShuffleAnimation";
 import CardDetailDialog from "@/components/CardDetailDialog";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
@@ -23,6 +24,11 @@ const SacredSpreads = () => {
   const [selectedCard, setSelectedCard] = useState<OracleCard | null>(null);
   const [cardDialogOpen, setCardDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showEntranceShuffle, setShowEntranceShuffle] = useState(true);
+  const [generatedReading, setGeneratedReading] = useState<string | null>(null);
+  const [generatedReadingModel, setGeneratedReadingModel] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -92,6 +98,42 @@ const SacredSpreads = () => {
     await initializeSpreadReading(spread);
   };
 
+  const generateSharedReading = useCallback(async () => {
+    if (!activeSpread || spreadCards.length !== activeSpread.cardCount || generating || generatedReading) return;
+    setGenerating(true);
+    setGenerationError(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-sacred-spread-reading', {
+        body: {
+          spreadType: activeSpread.id,
+          cardIds: spreadCards.map((card) => card.id),
+        },
+      });
+      if (error) {
+        let message = error.message;
+        const context = 'context' in error ? error.context : null;
+        if (context instanceof Response) {
+          const payload = await context.clone().json().catch(() => null);
+          if (payload && typeof payload.error === 'string') message = payload.error;
+        }
+        throw new Error(message);
+      }
+      if (!data?.reading) throw new Error('The reading returned no content.');
+      setGeneratedReading(data.reading);
+      setGeneratedReadingModel(data.model || null);
+    } catch (error) {
+      setGenerationError(error instanceof Error ? error.message : 'Your reading could not be written. Please try again.');
+    } finally {
+      setGenerating(false);
+    }
+  }, [activeSpread, spreadCards, generating, generatedReading]);
+
+  useEffect(() => {
+    if (activeSpread && spreadRevealedPositions.length === activeSpread.cardCount && !generatedReading && !generationError) {
+      void generateSharedReading();
+    }
+  }, [activeSpread, spreadRevealedPositions.length, generatedReading, generationError, generateSharedReading]);
+
   const handleSelectSpreadCard = (card: OracleCard, positionIndex: number) => {
     if (!spreadRevealedPositions.includes(positionIndex)) {
       setSpreadRevealedPositions(prev => [...prev, positionIndex]);
@@ -103,7 +145,7 @@ const SacredSpreads = () => {
   };
 
   const handleSaveSpread = async () => {
-    if (!user || !activeSpread || spreadCards.length === 0) return;
+    if (!user || !activeSpread || spreadCards.length === 0 || !generatedReading) return;
     setSaving(true);
 
     try {
@@ -126,6 +168,8 @@ const SacredSpreads = () => {
           spread_cards: spreadCardsData,
           image_file_name: spreadCards[0]?.image_file_name || null,
           deck_name: 'Spread',
+          generated_reading: generatedReading,
+          generated_reading_model: generatedReadingModel,
           saved_at: new Date().toISOString(),
         });
 
@@ -153,6 +197,10 @@ const SacredSpreads = () => {
     setShowSpreadReading(false);
     setCardDialogOpen(false);
     setSelectedCard(null);
+    setGeneratedReading(null);
+    setGeneratedReadingModel(null);
+    setGenerating(false);
+    setGenerationError(null);
   };
 
   if (loading) {
@@ -189,7 +237,13 @@ const SacredSpreads = () => {
 
       <div className="relative z-10 container mx-auto px-4 py-12">
         {/* Spread selection */}
-        {!activeSpread && (
+        {!activeSpread && showEntranceShuffle && (
+          <div className="pt-12">
+            <h1 className="sr-only">Sacred Spreads</h1>
+            <MultiDeckShuffleAnimation onComplete={() => setShowEntranceShuffle(false)} />
+          </div>
+        )}
+        {!activeSpread && !showEntranceShuffle && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -226,6 +280,13 @@ const SacredSpreads = () => {
             revealedPositions={spreadRevealedPositions}
             onSaveSpread={handleSaveSpread}
             saving={saving}
+            generatedReading={generatedReading}
+            generating={generating}
+            generationError={generationError}
+            onRetryGeneration={() => {
+              setGenerationError(null);
+              void generateSharedReading();
+            }}
           />
         )}
       </div>
