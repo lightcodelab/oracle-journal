@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { Play, CheckCircle, DoorOpen } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import ShareButton from '@/components/ShareButton';
+
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ReflectionFooter from '@/components/temple/living/ReflectionFooter';
 import CourseSessionNav from '@/components/CourseSessionNav';
