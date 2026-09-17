@@ -51,6 +51,17 @@ export const SpreadReading = ({
       className="text-center space-y-8 max-w-5xl mx-auto min-h-[80vh] flex flex-col justify-center py-8"
     >
 
+      <div className="w-full flex justify-start">
+        <Button
+          variant="outline"
+          onClick={onBackToDecks}
+          className="font-sans"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Spreads
+        </Button>
+      </div>
+
       <div className="space-y-4">
         <div className="flex items-center justify-center gap-2 text-primary/60">
           {spread.icon}
