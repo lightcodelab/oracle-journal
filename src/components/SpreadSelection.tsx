@@ -69,7 +69,7 @@ interface SpreadSelectionProps {
 export const SpreadSelection = ({ onSelectSpread }: SpreadSelectionProps) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
-      {SPREAD_TYPES.map((spread, index) => (
+      {SPREAD_TYPES.map((spread) => (
         <motion.div
           key={spread.id}
           onClick={() => onSelectSpread(spread)}
