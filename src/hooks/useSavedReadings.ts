@@ -62,6 +62,24 @@ export const useDeleteSavedReading = () => {
   });
 };
 
+export const useUpdateJournalAnswers = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, journalAnswers }: { id: string; journalAnswers: Record<string, string> }) => {
+      const { error } = await supabase
+        .from('saved_readings')
+        .update({ journal_answers: journalAnswers })
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['saved-readings'] });
+    },
+  });
+};
+
 export const useUpdateReadingNotes = () => {
   const queryClient = useQueryClient();
 

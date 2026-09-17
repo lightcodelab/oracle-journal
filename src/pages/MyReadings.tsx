@@ -478,6 +478,10 @@ const MyReadings = () => {
         <SpreadViewDialog
           open={!!spreadViewReading}
           onOpenChange={(open) => !open && setSpreadViewReading(null)}
+          readingId={spreadViewReading.id}
+          onJournalSaved={(answers) =>
+            setSpreadViewReading((prev) => (prev ? { ...prev, journal_answers: answers } : prev))
+          }
           spreadType={(spreadViewReading as any).spread_type || ''}
           spreadName={(spreadViewReading as any).spread_name || 'Spread'}
           spreadCards={((spreadViewReading as any).spread_cards || []) as any[]}

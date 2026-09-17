@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Loader2, Save } from "lucide-react";
 import { SPREAD_TYPES } from "./SpreadSelection";
-import { REMEMBRANCE_REFLECTION_QUESTIONS } from "@/lib/remembranceThemes";
+import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import CardDetailDialog from "./CardDetailDialog";
 import { supabase } from "@/integrations/supabase/client";
+import { useUpdateJournalAnswers } from "@/hooks/useSavedReadings";
+import { useToast } from "@/hooks/use-toast";
 import type { OracleCard } from "@/data/oracleCards";
 
 interface SpreadCardData {
@@ -22,12 +25,14 @@ interface SpreadCardData {
 interface SpreadViewDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  readingId?: string;
   spreadType: string;
   spreadName: string;
   spreadCards: SpreadCardData[];
   savedAt?: string;
   generatedReading?: string | null;
   journalAnswers?: Record<string, string> | null;
+  onJournalSaved?: (answers: Record<string, string>) => void;
 }
 
 const getDeckBadgeClass = (deckName: string | null | undefined) => {
@@ -39,10 +44,37 @@ const getDeckBadgeClass = (deckName: string | null | undefined) => {
   return "bg-primary/80 text-primary-foreground";
 };
 
-const SpreadViewDialog = ({ open, onOpenChange, spreadType, spreadName, spreadCards, savedAt, generatedReading, journalAnswers }: SpreadViewDialogProps) => {
+const emptyAnswers = () =>
+  Object.fromEntries(SPREAD_JOURNAL_QUESTIONS.map((q) => [q.key, ""])) as Record<string, string>;
+
+const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadName, spreadCards, savedAt, generatedReading, journalAnswers, onJournalSaved }: SpreadViewDialogProps) => {
   const [selectedCard, setSelectedCard] = useState<OracleCard | null>(null);
   const [cardDetailOpen, setCardDetailOpen] = useState(false);
   const [loadingCard, setLoadingCard] = useState(false);
+  const [journalDraft, setJournalDraft] = useState<Record<string, string>>(emptyAnswers);
+  const updateJournalAnswers = useUpdateJournalAnswers();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (open) {
+      setJournalDraft({ ...emptyAnswers(), ...(journalAnswers || {}) });
+    }
+  }, [open, readingId, journalAnswers]);
+
+  const journalDirty = SPREAD_JOURNAL_QUESTIONS.some(
+    (q) => (journalDraft[q.key] || "") !== (journalAnswers?.[q.key] || "")
+  );
+
+  const handleSaveJournal = async () => {
+    if (!readingId) return;
+    try {
+      await updateJournalAnswers.mutateAsync({ id: readingId, journalAnswers: journalDraft });
+      onJournalSaved?.(journalDraft);
+      toast({ title: "Writing Saved", description: "Your reflections have been saved with this reading." });
+    } catch {
+      toast({ title: "Error", description: "Your writing could not be saved. Please try again.", variant: "destructive" });
+    }
+  };
 
   const spreadDef = SPREAD_TYPES.find(s => s.id === spreadType);
 
@@ -144,16 +176,47 @@ const SpreadViewDialog = ({ open, onOpenChange, spreadType, spreadName, spreadCa
             </section>
           )}
 
-          {journalAnswers && REMEMBRANCE_REFLECTION_QUESTIONS.some((q) => journalAnswers[q.key]?.trim()) && (
+          {readingId && (
             <section className="max-w-3xl mx-auto rounded-xl border border-border bg-card p-5 sm:p-6 mt-4" aria-labelledby="saved-spread-journal-title">
-              <h2 id="saved-spread-journal-title" className="font-serif text-xl text-foreground">Your writing</h2>
-              <div className="mt-4 space-y-4">
-                {REMEMBRANCE_REFLECTION_QUESTIONS.filter((q) => journalAnswers[q.key]?.trim()).map((q) => (
+              <h2 id="saved-spread-journal-title" className="font-serif text-xl text-foreground">Write with this reading</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Private to you. You can return and add to your writing at any time.
+              </p>
+              <div className="mt-5 space-y-5">
+                {SPREAD_JOURNAL_QUESTIONS.map((q) => (
                   <div key={q.key}>
-                    <p className="font-serif text-base text-foreground">{q.label}</p>
-                    <p className="mt-1 whitespace-pre-line text-sm text-foreground/80">{journalAnswers[q.key]}</p>
+                    <label htmlFor={`saved-spread-${q.key}`} className="block font-serif text-base text-foreground">
+                      {q.label}
+                    </label>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{q.help}</p>
+                    <Textarea
+                      id={`saved-spread-${q.key}`}
+                      value={journalDraft[q.key] || ""}
+                      onChange={(e) => setJournalDraft((prev) => ({ ...prev, [q.key]: e.target.value }))}
+                      rows={4}
+                      className="mt-2"
+                    />
                   </div>
                 ))}
+              </div>
+              <div className="mt-5 flex justify-end">
+                <Button
+                  onClick={handleSaveJournal}
+                  disabled={!journalDirty || updateJournalAnswers.isPending}
+                  className="font-sans"
+                >
+                  {updateJournalAnswers.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Your Writing
+                    </>
+                  )}
+                </Button>
               </div>
             </section>
           )}
