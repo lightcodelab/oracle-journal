@@ -1,0 +1,1 @@
+ALTER TABLE public.saved_readings ADD COLUMN IF NOT EXISTS journal_answers JSONB;

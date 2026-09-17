@@ -18,6 +18,7 @@ export interface SavedReading {
   spread_cards: any[] | null;
   generated_reading: string | null;
   generated_reading_model: string | null;
+  journal_answers: Record<string, string> | null;
 }
 
 export const useSavedReadings = () => {

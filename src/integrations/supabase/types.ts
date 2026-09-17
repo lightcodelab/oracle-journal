@@ -6271,6 +6271,7 @@ export type Database = {
           id: string
           image_file_name: string | null
           is_encrypted: boolean | null
+          journal_answers: Json | null
           notes: string | null
           notes_encrypted: Json | null
           saved_at: string
@@ -6291,6 +6292,7 @@ export type Database = {
           id?: string
           image_file_name?: string | null
           is_encrypted?: boolean | null
+          journal_answers?: Json | null
           notes?: string | null
           notes_encrypted?: Json | null
           saved_at?: string
@@ -6311,6 +6313,7 @@ export type Database = {
           id?: string
           image_file_name?: string | null
           is_encrypted?: boolean | null
+          journal_answers?: Json | null
           notes?: string | null
           notes_encrypted?: Json | null
           saved_at?: string

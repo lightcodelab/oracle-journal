@@ -483,6 +483,7 @@ const MyReadings = () => {
           spreadCards={((spreadViewReading as any).spread_cards || []) as any[]}
           savedAt={spreadViewReading.saved_at}
           generatedReading={spreadViewReading.generated_reading}
+          journalAnswers={spreadViewReading.journal_answers}
         />
       )}
     </div>
