@@ -47,3 +47,21 @@ export const REMEMBRANCE_REFLECTION_QUESTIONS = [
     help: "What is one intention, boundary, or action I will carry into this month?",
   },
 ];
+
+/**
+ * Sacred Spreads journal questions — the three shared reflection questions
+ * plus two return-and-notice questions unique to the spread form.
+ */
+export const SPREAD_JOURNAL_QUESTIONS = [
+  ...REMEMBRANCE_REFLECTION_QUESTIONS,
+  {
+    key: "invited_to_return" as const,
+    label: "Where was I being invited to return?",
+    help: "What part of yourself, or what place of truth, is this reading calling you back to?",
+  },
+  {
+    key: "noticed_after_sitting" as const,
+    label: "What did I notice happened after I sat with these themes this week?",
+    help: "Come back to this later — what shifted, softened, or became clearer?",
+  },
+];
