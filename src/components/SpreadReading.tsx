@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, Sparkles, Bookmark, Loader2 } from "lucide-react";
+import { Sparkles, Bookmark, Loader2, RefreshCw } from "lucide-react";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
 
@@ -14,6 +13,10 @@ interface SpreadReadingProps {
   revealedPositions: number[];
   onSaveSpread?: () => void;
   saving?: boolean;
+  generatedReading?: string | null;
+  generating?: boolean;
+  generationError?: string | null;
+  onRetryGeneration?: () => void;
 }
 
 const getDeckBadgeClass = (deckName: string | null | undefined) => {
@@ -33,6 +36,10 @@ export const SpreadReading = ({
   revealedPositions,
   onSaveSpread,
   saving = false,
+  generatedReading,
+  generating = false,
+  generationError,
+  onRetryGeneration,
 }: SpreadReadingProps) => {
   const allRevealed = revealedPositions.length === spread.cardCount;
 
@@ -125,17 +132,49 @@ export const SpreadReading = ({
         })}
       </div>
 
-      {/* All revealed message + save button */}
+      {/* All revealed shared reading + save button */}
       {allRevealed && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="space-y-4"
         >
-          <p className="text-foreground/70 text-sm italic">
-            All cards revealed. Select any card to explore its full wisdom.
-          </p>
-          {onSaveSpread && (
+          {generating && (
+            <div className="border-y border-border py-8" role="status">
+              <Loader2 className="w-6 h-6 mx-auto mb-3 animate-spin text-primary" />
+              <p className="font-serif text-lg text-foreground">Your shared reading is being written…</p>
+              <p className="mt-1 text-sm text-muted-foreground">The common thread between your cards is coming into view.</p>
+            </div>
+          )}
+          {generationError && !generating && (
+            <div className="border-y border-destructive/40 py-6 space-y-3" role="alert">
+              <p className="text-sm text-destructive">{generationError}</p>
+              {onRetryGeneration && (
+                <Button variant="outline" onClick={onRetryGeneration}>
+                  <RefreshCw className="w-4 h-4" />
+                  Try again
+                </Button>
+              )}
+            </div>
+          )}
+          {generatedReading && !generating && (
+            <motion.section
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-3xl mx-auto border-y border-border py-8 text-left"
+              aria-labelledby="shared-reading-title"
+            >
+              <div className="flex items-center justify-center gap-2 mb-5 text-primary">
+                <Sparkles className="w-4 h-4" />
+                <h2 id="shared-reading-title" className="font-serif text-2xl text-foreground">Your Card Reading</h2>
+              </div>
+              <div className="whitespace-pre-line font-serif text-base sm:text-lg leading-8 text-foreground/85">
+                {generatedReading}
+              </div>
+            </motion.section>
+          )}
+          {generatedReading && <p className="text-foreground/70 text-sm italic">Select any card to explore its full wisdom.</p>}
+          {generatedReading && onSaveSpread && (
             <Button
               onClick={onSaveSpread}
               disabled={saving}

@@ -77,13 +77,14 @@ const MyReadings = () => {
       reading.card_title.toLowerCase().includes(query) ||
       reading.deck_name?.toLowerCase().includes(query) ||
       reading.notes?.toLowerCase().includes(query) ||
-      (reading as any).spread_name?.toLowerCase().includes(query)
+      reading.spread_name?.toLowerCase().includes(query) ||
+      reading.generated_reading?.toLowerCase().includes(query)
     );
   });
 
   // Separate spread readings from single card readings
-  const spreadReadings = filteredReadings.filter((r: any) => r.spread_type);
-  const singleReadings = filteredReadings.filter((r: any) => !r.spread_type);
+  const spreadReadings = filteredReadings.filter((reading) => reading.spread_type);
+  const singleReadings = filteredReadings.filter((reading) => !reading.spread_type);
 
   const handleDeleteClick = (id: string) => {
     setReadingToDelete(id);
@@ -138,8 +139,7 @@ const MyReadings = () => {
   };
 
   const handleReadingClick = (reading: SavedReading) => {
-    const r = reading as any;
-    if (r.spread_type && r.spread_cards) {
+    if (reading.spread_type && reading.spread_cards) {
       setSpreadViewReading(reading);
     }
     // Single card readings don't navigate - they can use existing detail flow
@@ -482,6 +482,7 @@ const MyReadings = () => {
           spreadName={(spreadViewReading as any).spread_name || 'Spread'}
           spreadCards={((spreadViewReading as any).spread_cards || []) as any[]}
           savedAt={spreadViewReading.saved_at}
+          generatedReading={spreadViewReading.generated_reading}
         />
       )}
     </div>
