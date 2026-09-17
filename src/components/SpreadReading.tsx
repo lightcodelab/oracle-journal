@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Bookmark, Loader2, RefreshCw, ArrowLeft } from "lucide-react";
-import { REMEMBRANCE_REFLECTION_QUESTIONS } from "@/lib/remembranceThemes";
+import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
 
@@ -11,6 +11,16 @@ export type SpreadJournalAnswers = {
   asking_to_be_seen: string;
   invited_to_shift: string;
   how_i_will_live_it: string;
+  invited_to_return: string;
+  noticed_after_sitting: string;
+};
+
+export const EMPTY_SPREAD_JOURNAL_ANSWERS: SpreadJournalAnswers = {
+  asking_to_be_seen: "",
+  invited_to_shift: "",
+  how_i_will_live_it: "",
+  invited_to_return: "",
+  noticed_after_sitting: "",
 };
 
 interface SpreadReadingProps {
@@ -209,7 +219,7 @@ export const SpreadReading = ({
               </p>
 
               <div className="mt-5 space-y-5">
-                {REMEMBRANCE_REFLECTION_QUESTIONS.map((q) => (
+                {SPREAD_JOURNAL_QUESTIONS.map((q) => (
                   <div key={q.key}>
                     <label htmlFor={`spread-${q.key}`} className="block font-serif text-base text-foreground">
                       {q.label}
