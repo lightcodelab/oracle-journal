@@ -12,6 +12,8 @@ import { VimeoEmbed } from '@/components/VimeoEmbed';
 import ReflectionFooter from '@/components/temple/living/ReflectionFooter';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
+import ShareButton from '@/components/ShareButton';
+
 import { useRecordLastActivity } from '@/hooks/useRecordLastActivity';
 
 interface ResourceAttachment {
