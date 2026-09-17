@@ -176,6 +176,7 @@ const SacredSpreads = () => {
           deck_name: 'Spread',
           generated_reading: generatedReading,
           generated_reading_model: generatedReadingModel,
+          journal_answers: journalAnswers,
           saved_at: new Date().toISOString(),
         });
 
