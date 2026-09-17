@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Bookmark, Loader2, RefreshCw } from "lucide-react";
+import { Sparkles, Bookmark, Loader2, RefreshCw, ArrowLeft } from "lucide-react";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
 
