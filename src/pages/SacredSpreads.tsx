@@ -93,7 +93,7 @@ const SacredSpreads = () => {
     setActiveSpread(spread);
     setSpreadCards(mappedCards);
     setSpreadRevealedPositions([]);
-    setJournalAnswers({ asking_to_be_seen: "", invited_to_shift: "", how_i_will_live_it: "" });
+    setJournalAnswers({ ...EMPTY_SPREAD_JOURNAL_ANSWERS });
     setShowSpreadReading(true);
   };
 
@@ -205,7 +205,7 @@ const SacredSpreads = () => {
     setGeneratedReadingModel(null);
     setGenerating(false);
     setGenerationError(null);
-    setJournalAnswers({ asking_to_be_seen: "", invited_to_shift: "", how_i_will_live_it: "" });
+    setJournalAnswers({ ...EMPTY_SPREAD_JOURNAL_ANSWERS });
   };
 
   if (loading) {
