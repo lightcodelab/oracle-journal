@@ -94,16 +94,16 @@ export function LivingPatternCard() {
               Follow one moment all the way through, and choose one small
               experiment. You can return to it later, when life has answered back.
             </p>
-            <div className="mt-4 flex flex-wrap gap-3">
+            <div className="mt-4 flex w-full flex-nowrap items-center gap-2 sm:gap-3 sm:w-auto">
               <Link
                 to="/living-pattern"
-                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                className="inline-flex min-w-0 flex-1 items-center justify-center whitespace-nowrap rounded-md bg-primary px-3 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:flex-none sm:px-4"
               >
                 Record a Pattern
               </Link>
               <Link
                 to="/living-pattern/record"
-                className="inline-flex items-center justify-center rounded-md border border-on-image/50 px-4 py-2.5 text-sm font-medium text-on-image transition-colors hover:bg-on-image/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                className="inline-flex min-w-0 flex-1 items-center justify-center whitespace-nowrap rounded-md border border-on-image/50 px-3 py-2.5 text-sm font-medium text-on-image transition-colors hover:bg-on-image/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:flex-none sm:px-4"
               >
                 My Living Pattern
               </Link>
