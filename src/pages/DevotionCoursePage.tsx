@@ -248,6 +248,10 @@ const DevotionCoursePage = () => {
             <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
               {course.title}
             </h1>
+            <div className="flex justify-center mb-4">
+              <ShareButton title={course.title} />
+            </div>
+
             {course.description && (
               looksLikeHtml(course.description) ? (
                 <div
