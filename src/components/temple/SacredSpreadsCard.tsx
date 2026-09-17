@@ -42,7 +42,7 @@ export function SacredSpreadsCard() {
             >
               Sacred Spreads
             </h2>
-            <p className="mt-2 text-sm sm:text-base leading-relaxed text-on-image">
+            <p className="mt-3 text-xs sm:text-sm leading-relaxed text-on-image">
               Choose a spread, draw your cards, and receive a reading written
               from the thread that runs through them all — with questions to
               write into, saved with your cards.
@@ -63,7 +63,6 @@ export function SacredSpreadsCard() {
             </div>
           </div>
         </article>
-      </div>
     </section>
   );
 }
