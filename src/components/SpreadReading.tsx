@@ -196,6 +196,37 @@ export const SpreadReading = ({
               </div>
             </motion.section>
           )}
+          {generatedReading && journalAnswers && onJournalAnswerChange && (
+            <section
+              aria-labelledby="spread-journal-title"
+              className="max-w-3xl mx-auto rounded-xl border border-border bg-card p-5 sm:p-6 text-left"
+            >
+              <h2 id="spread-journal-title" className="font-serif text-xl text-foreground">
+                Write with this reading
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Private to you. Your writing is saved with the cards and your reading.
+              </p>
+
+              <div className="mt-5 space-y-5">
+                {REMEMBRANCE_REFLECTION_QUESTIONS.map((q) => (
+                  <div key={q.key}>
+                    <label htmlFor={`spread-${q.key}`} className="block font-serif text-base text-foreground">
+                      {q.label}
+                    </label>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{q.help}</p>
+                    <Textarea
+                      id={`spread-${q.key}`}
+                      value={journalAnswers[q.key]}
+                      onChange={(e) => onJournalAnswerChange(q.key, e.target.value)}
+                      rows={4}
+                      className="mt-2"
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
           {generatedReading && <p className="text-foreground/70 text-sm italic">Select any card to explore its full wisdom.</p>}
           {generatedReading && onSaveSpread && (
             <Button
