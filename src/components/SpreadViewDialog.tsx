@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Loader2, Save } from "lucide-react";
 import { SPREAD_TYPES } from "./SpreadSelection";
-import { REMEMBRANCE_REFLECTION_QUESTIONS } from "@/lib/remembranceThemes";
+import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import CardDetailDialog from "./CardDetailDialog";
 import { supabase } from "@/integrations/supabase/client";
+import { useUpdateJournalAnswers } from "@/hooks/useSavedReadings";
+import { useToast } from "@/hooks/use-toast";
 import type { OracleCard } from "@/data/oracleCards";
 
 interface SpreadCardData {
@@ -22,12 +25,14 @@ interface SpreadCardData {
 interface SpreadViewDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  readingId?: string;
   spreadType: string;
   spreadName: string;
   spreadCards: SpreadCardData[];
   savedAt?: string;
   generatedReading?: string | null;
   journalAnswers?: Record<string, string> | null;
+  onJournalSaved?: (answers: Record<string, string>) => void;
 }
 
 const getDeckBadgeClass = (deckName: string | null | undefined) => {
