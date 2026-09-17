@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { Sparkles } from "lucide-react";
 import { SPREAD_TYPES } from "./SpreadSelection";
+import { REMEMBRANCE_REFLECTION_QUESTIONS } from "@/lib/remembranceThemes";
 import CardDetailDialog from "./CardDetailDialog";
 import { supabase } from "@/integrations/supabase/client";
 import type { OracleCard } from "@/data/oracleCards";
@@ -139,6 +140,20 @@ const SpreadViewDialog = ({ open, onOpenChange, spreadType, spreadName, spreadCa
               </div>
               <div className="whitespace-pre-line font-serif text-base sm:text-lg leading-8 text-foreground/85">
                 {generatedReading}
+              </div>
+            </section>
+          )}
+
+          {journalAnswers && REMEMBRANCE_REFLECTION_QUESTIONS.some((q) => journalAnswers[q.key]?.trim()) && (
+            <section className="max-w-3xl mx-auto rounded-xl border border-border bg-card p-5 sm:p-6 mt-4" aria-labelledby="saved-spread-journal-title">
+              <h2 id="saved-spread-journal-title" className="font-serif text-xl text-foreground">Your writing</h2>
+              <div className="mt-4 space-y-4">
+                {REMEMBRANCE_REFLECTION_QUESTIONS.filter((q) => journalAnswers[q.key]?.trim()).map((q) => (
+                  <div key={q.key}>
+                    <p className="font-serif text-base text-foreground">{q.label}</p>
+                    <p className="mt-1 whitespace-pre-line text-sm text-foreground/80">{journalAnswers[q.key]}</p>
+                  </div>
+                ))}
               </div>
             </section>
           )}
