@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { CardBack } from "./CardBack";
 import sacredRewriteCardBack from "@/assets/card-back-v2.png";
 import mnlCardBack from "@/assets/mnl-card-back.png";
@@ -12,7 +12,12 @@ const cardBackImages = [
   taoshCardBack,
 ];
 
-export const MultiDeckShuffleAnimation = () => {
+interface MultiDeckShuffleAnimationProps {
+  onComplete?: () => void;
+}
+
+export const MultiDeckShuffleAnimation = ({ onComplete }: MultiDeckShuffleAnimationProps) => {
+  const reduceMotion = useReducedMotion();
   // Create cards cycling through all 4 deck card backs
   const cardCount = 8;
   const cards = Array.from({ length: cardCount }, (_, i) => ({
@@ -21,11 +26,19 @@ export const MultiDeckShuffleAnimation = () => {
   }));
 
   return (
-    <div className="relative w-full h-[500px] flex items-center justify-center">
+    <motion.div
+      className="relative w-full h-[360px] md:h-[430px] flex items-center justify-center"
+      initial={{ opacity: 1 }}
+      animate={{ opacity: [1, 1, 0] }}
+      transition={{ duration: reduceMotion ? 0.01 : 2.25, times: [0, 0.82, 1] }}
+      onAnimationComplete={onComplete}
+      aria-label="Shuffling the Sacred Spread cards"
+      role="status"
+    >
       {cards.map(({ index, cardBack }) => (
         <motion.div
           key={index}
-          className="absolute w-64 h-80"
+          className="absolute w-40 h-56 sm:w-52 sm:h-72"
           initial={{
             x: 0,
             y: 0,
@@ -34,14 +47,14 @@ export const MultiDeckShuffleAnimation = () => {
             zIndex: index,
           }}
           animate={{
-            x: [
+            x: reduceMotion ? 0 : [
               0,
               Math.sin(index * 1.2) * 150,
               Math.cos(index * 0.8) * -120,
               Math.sin(index * 1.5) * 100,
               0,
             ],
-            y: [
+            y: reduceMotion ? 0 : [
               0,
               Math.cos(index * 1.2) * -80,
               Math.sin(index * 0.8) * 90,
@@ -58,8 +71,7 @@ export const MultiDeckShuffleAnimation = () => {
             scale: [1, 0.95, 1.05, 0.98, 1],
           }}
           transition={{
-            duration: 1.5,
-            repeat: Infinity,
+            duration: reduceMotion ? 0.01 : 1.8,
             ease: "easeInOut",
             times: [0, 0.25, 0.5, 0.75, 1],
           }}
@@ -69,14 +81,14 @@ export const MultiDeckShuffleAnimation = () => {
       ))}
       
       <motion.div
-        className="absolute text-center mt-96 pt-32"
+        className="absolute text-center bottom-4"
         animate={{ opacity: [0.5, 1, 0.5] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: reduceMotion ? 0.01 : 1.2, repeat: reduceMotion ? 0 : 1, ease: "easeInOut" }}
       >
         <p className="text-2xl text-foreground/80 font-serif">
           Shuffling the cards...
         </p>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };

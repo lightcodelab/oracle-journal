@@ -25,6 +25,7 @@ interface SpreadViewDialogProps {
   spreadName: string;
   spreadCards: SpreadCardData[];
   savedAt?: string;
+  generatedReading?: string | null;
 }
 
 const getDeckBadgeClass = (deckName: string | null | undefined) => {
@@ -36,7 +37,7 @@ const getDeckBadgeClass = (deckName: string | null | undefined) => {
   return "bg-primary/80 text-primary-foreground";
 };
 
-const SpreadViewDialog = ({ open, onOpenChange, spreadType, spreadName, spreadCards, savedAt }: SpreadViewDialogProps) => {
+const SpreadViewDialog = ({ open, onOpenChange, spreadType, spreadName, spreadCards, savedAt, generatedReading }: SpreadViewDialogProps) => {
   const [selectedCard, setSelectedCard] = useState<OracleCard | null>(null);
   const [cardDetailOpen, setCardDetailOpen] = useState(false);
   const [loadingCard, setLoadingCard] = useState(false);
@@ -128,6 +129,18 @@ const SpreadViewDialog = ({ open, onOpenChange, spreadType, spreadName, spreadCa
               </motion.div>
             ))}
           </div>
+
+          {generatedReading && (
+            <section className="max-w-3xl mx-auto border-y border-border py-7" aria-labelledby="saved-shared-reading-title">
+              <div className="flex items-center justify-center gap-2 mb-5 text-primary">
+                <Sparkles className="w-4 h-4" />
+                <h2 id="saved-shared-reading-title" className="font-serif text-2xl text-foreground">Your Card Reading</h2>
+              </div>
+              <div className="whitespace-pre-line font-serif text-base sm:text-lg leading-8 text-foreground/85">
+                {generatedReading}
+              </div>
+            </section>
+          )}
 
           <p className="text-center text-sm text-muted-foreground italic">
             Select any card to explore its full wisdom.

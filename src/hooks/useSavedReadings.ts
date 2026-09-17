@@ -16,6 +16,8 @@ export interface SavedReading {
   spread_type: string | null;
   spread_name: string | null;
   spread_cards: any[] | null;
+  generated_reading: string | null;
+  generated_reading_model: string | null;
 }
 
 export const useSavedReadings = () => {
