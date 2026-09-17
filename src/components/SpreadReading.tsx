@@ -50,6 +50,8 @@ export const SpreadReading = ({
   generating = false,
   generationError,
   onRetryGeneration,
+  journalAnswers,
+  onJournalAnswerChange,
 }: SpreadReadingProps) => {
   const allRevealed = revealedPositions.length === spread.cardCount;
 
