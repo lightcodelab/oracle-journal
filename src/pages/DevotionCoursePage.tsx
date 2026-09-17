@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { Play, CheckCircle, DoorOpen } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import ShareButton from '@/components/ShareButton';
+
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ReflectionFooter from '@/components/temple/living/ReflectionFooter';
 import CourseSessionNav from '@/components/CourseSessionNav';
@@ -248,6 +250,10 @@ const DevotionCoursePage = () => {
             <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
               {course.title}
             </h1>
+            <div className="flex justify-center mb-4">
+              <ShareButton title={course.title} />
+            </div>
+
             {course.description && (
               looksLikeHtml(course.description) ? (
                 <div
