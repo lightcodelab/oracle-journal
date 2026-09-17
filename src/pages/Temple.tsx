@@ -222,6 +222,7 @@ const Temple = () => {
         <ContinueJourney enabled={hasFullAccess} />
         {isAdmin && <LivingPatternCard />}
         {hasFullAccess && <RemembranceLettersCard />}
+        {hasFullAccess && <SacredSpreadsCard />}
         <BeginPractice />
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />
