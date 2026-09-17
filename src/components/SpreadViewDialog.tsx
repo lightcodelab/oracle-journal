@@ -44,10 +44,37 @@ const getDeckBadgeClass = (deckName: string | null | undefined) => {
   return "bg-primary/80 text-primary-foreground";
 };
 
-const SpreadViewDialog = ({ open, onOpenChange, spreadType, spreadName, spreadCards, savedAt, generatedReading, journalAnswers }: SpreadViewDialogProps) => {
+const emptyAnswers = () =>
+  Object.fromEntries(SPREAD_JOURNAL_QUESTIONS.map((q) => [q.key, ""])) as Record<string, string>;
+
+const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadName, spreadCards, savedAt, generatedReading, journalAnswers, onJournalSaved }: SpreadViewDialogProps) => {
   const [selectedCard, setSelectedCard] = useState<OracleCard | null>(null);
   const [cardDetailOpen, setCardDetailOpen] = useState(false);
   const [loadingCard, setLoadingCard] = useState(false);
+  const [journalDraft, setJournalDraft] = useState<Record<string, string>>(emptyAnswers);
+  const updateJournalAnswers = useUpdateJournalAnswers();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (open) {
+      setJournalDraft({ ...emptyAnswers(), ...(journalAnswers || {}) });
+    }
+  }, [open, readingId, journalAnswers]);
+
+  const journalDirty = SPREAD_JOURNAL_QUESTIONS.some(
+    (q) => (journalDraft[q.key] || "") !== (journalAnswers?.[q.key] || "")
+  );
+
+  const handleSaveJournal = async () => {
+    if (!readingId) return;
+    try {
+      await updateJournalAnswers.mutateAsync({ id: readingId, journalAnswers: journalDraft });
+      onJournalSaved?.(journalDraft);
+      toast({ title: "Writing Saved", description: "Your reflections have been saved with this reading." });
+    } catch {
+      toast({ title: "Error", description: "Your writing could not be saved. Please try again.", variant: "destructive" });
+    }
+  };
 
   const spreadDef = SPREAD_TYPES.find(s => s.id === spreadType);
 
