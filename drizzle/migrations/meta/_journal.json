@@ -239,6 +239,13 @@
       "when": 1789705548140,
       "tag": "0033_allow_members_create_areekeera_protocols",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1789706765101,
+      "tag": "0034_restrict_internal_definer_function_execute",
+      "breakpoints": true
     }
   ]
 }
