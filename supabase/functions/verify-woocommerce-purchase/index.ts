@@ -6,7 +6,6 @@ const corsHeaders = {
 };
 
 interface PurchaseVerificationRequest {
-  email: string;
   deckId: string;
   isPremium?: boolean;
 }

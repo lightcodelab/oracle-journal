@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
@@ -22,26 +21,18 @@ export const PurchaseVerification = ({
   onClose,
   onSuccess,
 }: PurchaseVerificationProps) => {
-  const [email, setEmail] = useState("");
   const [isPremium, setIsPremium] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const handleVerify = async () => {
-    if (!email || !deckId) {
-      toast({
-        title: "Error",
-        description: "Please enter your email address",
-        variant: "destructive",
-      });
-      return;
-    }
+    if (!deckId) return;
 
     setLoading(true);
 
     try {
       const { data, error } = await supabase.functions.invoke('verify-woocommerce-purchase', {
-        body: { email, deckId, isPremium },
+        body: { deckId, isPremium },
       });
 
       if (error) throw error;
@@ -56,7 +47,7 @@ export const PurchaseVerification = ({
       } else {
         toast({
           title: "Purchase not found",
-          description: "No purchase found for this deck with the provided email. Please check your email or contact support.",
+          description: "We couldn't find a purchase for this deck under your account email. If you bought it with a different email, please contact support.",
           variant: "destructive",
         });
       }
@@ -78,22 +69,11 @@ export const PurchaseVerification = ({
         <DialogHeader>
           <DialogTitle>Verify Purchase for {deckName}</DialogTitle>
           <DialogDescription>
-            Enter the email address you used when purchasing this deck from our store, and select which version you purchased.
+            We'll check for a purchase made with your account email address. Select which version you purchased.
           </DialogDescription>
         </DialogHeader>
-        
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="verify-email">Email Address</Label>
-            <Input
-              id="verify-email"
-              type="email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
 
+        <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label>Version Purchased</Label>
             <div className="flex gap-4">
@@ -121,7 +101,7 @@ export const PurchaseVerification = ({
 
           <Button
             onClick={handleVerify}
-            disabled={loading || !email}
+            disabled={loading}
             className="w-full"
           >
             {loading ? (
