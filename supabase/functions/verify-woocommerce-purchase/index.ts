@@ -37,8 +37,26 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { email, deckId, isPremium = false }: PurchaseVerificationRequest = await req.json();
-    console.log('Verifying purchase for:', { email, deckId, isPremium, userId: user.id });
+    const { deckId, isPremium = false }: PurchaseVerificationRequest = await req.json();
+
+    if (!deckId || typeof deckId !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'A deck must be specified' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Purchases may only ever be claimed against the caller's own verified
+    // account email. A client-supplied email address is never trusted.
+    const email = user.email;
+    if (!email) {
+      return new Response(
+        JSON.stringify({ error: 'Your account has no email address on file' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('Verifying purchase for:', { deckId, isPremium, userId: user.id });
 
     // Check if user is admin - admins get instant access
     const { data: adminRole } = await supabaseClient
