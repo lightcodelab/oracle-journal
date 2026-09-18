@@ -232,6 +232,13 @@
       "when": 1789608866178,
       "tag": "0032_add_saved_reading_journal_answers",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1789705548140,
+      "tag": "0033_allow_members_create_areekeera_protocols",
+      "breakpoints": true
     }
   ]
 }
