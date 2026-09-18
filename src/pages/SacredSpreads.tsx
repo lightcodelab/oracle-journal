@@ -148,7 +148,7 @@ const SacredSpreads = () => {
   };
 
   const handleSaveSpread = async () => {
-    if (!user || !activeSpread || spreadCards.length === 0 || !generatedReading) return;
+    if (!user || !activeSpread || spreadCards.length === 0) return;
     setSaving(true);
 
     try {

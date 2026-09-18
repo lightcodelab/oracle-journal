@@ -204,7 +204,7 @@ export const SpreadReading = ({
               </div>
             </motion.section>
           )}
-          {generatedReading && journalAnswers && onJournalAnswerChange && (
+          {!generating && journalAnswers && onJournalAnswerChange && (
             <section
               aria-labelledby="spread-journal-title"
               className="max-w-3xl mx-auto rounded-xl border border-border bg-card p-5 sm:p-6 text-left"
@@ -235,8 +235,9 @@ export const SpreadReading = ({
               </div>
             </section>
           )}
-          {generatedReading && <p className="text-foreground/70 text-sm italic">Select any card to explore its full wisdom.</p>}
-          {generatedReading && onSaveSpread && (
+          {!generating && <p className="text-foreground/70 text-sm italic">Select any card to explore its full wisdom.</p>}
+          {!generating && onSaveSpread && (
+
             <Button
               onClick={onSaveSpread}
               disabled={saving}
