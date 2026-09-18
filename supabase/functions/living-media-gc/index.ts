@@ -30,11 +30,14 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 
-  // Internal scheduled job: require the shared internal secret, like the
-  // other scheduled admin functions in this project.
-  const expectedSecret = Deno.env.get("ADMIN_NOTIFY_SECRET");
-  const providedSecret = req.headers.get("x-admin-notify-secret");
-  if (!expectedSecret || providedSecret !== expectedSecret) {
+  // Internal scheduled job: require a shared internal secret, like the other
+  // scheduled admin functions in this project.
+  const provided = req.headers.get("x-admin-notify-secret");
+  const accepted = [
+    Deno.env.get("LIVING_MEDIA_GC_SECRET"),
+    Deno.env.get("ADMIN_NOTIFY_SECRET"),
+  ].filter((s): s is string => Boolean(s));
+  if (!provided || accepted.length === 0 || !accepted.includes(provided)) {
     return json({ error: "not authorised" }, 401);
   }
 
