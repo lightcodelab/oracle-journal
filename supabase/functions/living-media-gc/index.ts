@@ -14,13 +14,29 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 const BUCKET = "living-field-note-media";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") {
+    return new Response("ok", {
+      headers: {
+        ...corsHeaders,
+        "Access-Control-Allow-Headers":
+          "authorization, x-client-info, apikey, content-type, x-admin-notify-secret",
+      },
+    });
+  }
 
   const json = (body: unknown, status = 200) =>
     new Response(JSON.stringify(body), {
       status,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
+
+  // Internal scheduled job: require the shared internal secret, like the
+  // other scheduled admin functions in this project.
+  const expectedSecret = Deno.env.get("ADMIN_NOTIFY_SECRET");
+  const providedSecret = req.headers.get("x-admin-notify-secret");
+  if (!expectedSecret || providedSecret !== expectedSecret) {
+    return json({ error: "not authorised" }, 401);
+  }
 
   try {
     const admin = createClient(
