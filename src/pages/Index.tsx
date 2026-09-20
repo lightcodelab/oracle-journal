@@ -18,10 +18,10 @@ import sacredRewriteCardBack from "@/assets/card-back-v2.png";
 import mnlCardBack from "@/assets/mnl-card-back.png";
 import areekeeraCardBack from "@/assets/areekeera-card-back.png";
 import taoshCardBack from "@/assets/taosh-card-back.png";
-import tsrBanner from "@/assets/tsr-banner.png";
-import mnlBanner from "@/assets/mnl-banner.png";
-import areekeeraBanner from "@/assets/areekeera-banner.png";
-import taoshBanner from "@/assets/taosh-banner.png";
+import tsrThumbnail from "@/assets/sacred-rewrite-thumbnail.png.asset.json";
+import mnlThumbnail from "@/assets/magic-not-logic-thumbnail.png.asset.json";
+import areekeeraThumbnail from "@/assets/areekeera-thumbnail.png.asset.json";
+import taoshThumbnail from "@/assets/taosh-thumbnail.png.asset.json";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
 import type { OracleCard } from "@/data/oracleCards";
@@ -33,6 +33,7 @@ interface Deck {
   description: string | null;
   theme: string;
   image_color: string;
+  thumbnail_url?: string | null;
   is_free: boolean;
   is_starter: boolean;
   woocommerce_product_id: string | null;
@@ -308,6 +309,15 @@ const Index = () => {
     return getCardBackForDeck(selectedDeck.name);
   };
 
+  const getDeckThumbnail = (deck: Deck) => {
+    if (deck.thumbnail_url) return deck.thumbnail_url;
+    if (deck.name === "The Sacred Rewrite") return tsrThumbnail.url;
+    if (deck.name === "Magic not Logic") return mnlThumbnail.url;
+    if (deck.name === "AreekeerA") return areekeeraThumbnail.url;
+    if (deck.name === "The Art of Self-Healing") return taoshThumbnail.url;
+    return null;
+  };
+
   if (loading || tierLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -386,7 +396,7 @@ const Index = () => {
           >
             {/* Breadcrumb handles navigation now */}
 
-            {selectedDeck.name === "The Sacred Rewrite" ? (
+            {getDeckThumbnail(selectedDeck) ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -394,47 +404,8 @@ const Index = () => {
                 className="mb-8"
               >
                 <img 
-                  src={tsrBanner} 
-                  alt="The Sacred Rewrite" 
-                  className="w-full max-w-3xl mx-auto shadow-lg"
-                />
-              </motion.div>
-            ) : selectedDeck.name === "Magic not Logic" ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
-                className="mb-8"
-              >
-                <img 
-                  src={mnlBanner} 
-                  alt="Magic not Logic" 
-                  className="w-full max-w-3xl mx-auto shadow-lg"
-                />
-              </motion.div>
-            ) : selectedDeck.name === "AreekeerA" ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
-                className="mb-8"
-              >
-                <img 
-                  src={areekeeraBanner} 
-                  alt="AreekeerA® Energy Medicine Codes" 
-                  className="w-full max-w-3xl mx-auto shadow-lg"
-                />
-              </motion.div>
-            ) : selectedDeck.name === "The Art of Self-Healing" ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
-                className="mb-8"
-              >
-                <img 
-                  src={taoshBanner} 
-                  alt="The Art of Self-Healing" 
+                  src={getDeckThumbnail(selectedDeck) || undefined}
+                  alt={selectedDeck.name}
                   className="w-full max-w-3xl mx-auto shadow-lg"
                 />
               </motion.div>
