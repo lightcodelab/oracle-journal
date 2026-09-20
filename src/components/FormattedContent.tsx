@@ -1,4 +1,5 @@
 import React from 'react';
+import { looksLikeHtml } from '@/lib/richText';
 
 interface FormattedContentProps {
   content: string;
