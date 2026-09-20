@@ -368,6 +368,16 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         </>
       )}
 
+      {/* Custom sections added in the Card Deck Editor */}
+      {customSections.map((section) => (
+        <div key={section.id} className="bg-card border border-border rounded-lg p-6">
+          {section.title && (
+            <h3 className="font-serif text-xl text-foreground mb-4">{section.title}</h3>
+          )}
+          <FormattedContent content={section.content} className="text-foreground/90 font-sans leading-relaxed" />
+        </div>
+      ))}
+
       {/* Linked resources for deepening the experience */}
       {linkedResources.length > 0 && (
         <div className="bg-card border border-border rounded-lg p-6">
