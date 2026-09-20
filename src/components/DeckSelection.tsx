@@ -13,6 +13,7 @@ import sacredSpreadsBanner from "@/assets/sacred-spreads-thumbnail.png.asset.jso
 import companionCoursesBanner from "@/assets/companion-courses-header.png.asset.json";
 import remembranceHeader from "@/assets/door-remembrance-header-v1.webp.asset.json";
 import { DoorHeader } from "@/components/temple/DoorHeader";
+import { htmlToPlainText } from "@/lib/richText";
 
 interface Deck {
   id: string;
@@ -268,7 +269,7 @@ export const DeckSelection = ({
                       )}
                       {deck.description && (
                         <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                          {deck.description}
+                          {htmlToPlainText(deck.description)}
                         </p>
                       )}
                       <Badge variant="secondary" className="text-xs">

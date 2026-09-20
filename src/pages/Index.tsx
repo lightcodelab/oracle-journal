@@ -26,6 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
 import type { OracleCard } from "@/data/oracleCards";
 import { useTierAccess } from "@/hooks/useTierAccess";
+import { FormattedContent } from "@/components/FormattedContent";
 
 interface Deck {
   id: string;
@@ -401,7 +402,7 @@ const Index = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
-                className="mb-8"
+                className="mb-0"
               >
                 <img 
                   src={getDeckThumbnail(selectedDeck) || undefined}
@@ -424,10 +425,6 @@ const Index = () => {
               </>
             )}
             
-            <p className="text-xl md:text-2xl text-foreground/80 leading-relaxed">
-              {selectedDeck.description || "Draw a card to receive divine guidance"}
-            </p>
-
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button
                 onClick={handleShuffle}
@@ -453,6 +450,17 @@ const Index = () => {
                 )
               )}
             </div>
+
+            {selectedDeck.description ? (
+              <FormattedContent
+                content={selectedDeck.description}
+                className="text-left text-base md:text-lg text-foreground/80 prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-p:my-3 prose-ul:my-3 prose-ol:my-3"
+              />
+            ) : (
+              <p className="text-xl md:text-2xl text-foreground/80 leading-relaxed">
+                Draw a card to receive divine guidance
+              </p>
+            )}
           </motion.div>
         )}
 
