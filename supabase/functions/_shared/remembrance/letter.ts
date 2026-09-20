@@ -54,7 +54,7 @@ function flattenCardContent(card: any): string {
  * decks are visited, so the theme's primary decks tend to land as cards 1 and 2.
  */
 async function drawCards(admin: any, deckWeights: Record<string, number>) {
-  const { data: decks } = await admin.from("decks").select("id,name");
+  const { data: decks } = await admin.from("decks").select("id,name").eq("is_published", true);
   const deckMap: Record<string, string> = {};
   (decks ?? []).forEach((d: any) => (deckMap[d.name] = d.id));
 
@@ -83,7 +83,10 @@ async function drawCards(admin: any, deckWeights: Record<string, number>) {
 
   // Fewer decks than cards needed: top up from anywhere, still no repeats.
   if (drawn.length < 4) {
-    const { data: anyCards } = await admin.from("cards").select("*").limit(300);
+    const publishedDeckIds = Object.values(deckMap);
+    const { data: anyCards } = publishedDeckIds.length > 0
+      ? await admin.from("cards").select("*").in("deck_id", publishedDeckIds).limit(300)
+      : { data: [] };
     const remaining = (anyCards ?? []).filter((c: any) => !usedIds.has(c.id));
     while (drawn.length < 4 && remaining.length > 0) {
       const pick = remaining.splice(Math.floor(Math.random() * remaining.length), 1)[0];
