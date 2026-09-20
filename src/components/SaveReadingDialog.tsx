@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { OracleCard } from '@/data/oracleCards';
+import { cardImageSrc } from "@/lib/cardImage";
 
 interface SaveReadingDialogProps {
   open: boolean;
@@ -101,7 +102,7 @@ const SaveReadingDialog = ({ open, onOpenChange, card, deckId }: SaveReadingDial
           <div className="flex items-center gap-4 p-3 rounded-lg bg-muted/50">
             {card.image_file_name ? (
               <img
-                src={`/cards/${card.image_file_name}`}
+                src={cardImageSrc(card.image_file_name)}
                 alt={card.card_title}
                 className="w-16 h-20 object-cover rounded-md border border-border"
               />

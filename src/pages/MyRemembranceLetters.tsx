@@ -15,6 +15,7 @@ import { REMEMBRANCE_REFLECTION_QUESTIONS } from "@/lib/remembranceThemes";
 import remembranceLettersHomeAsset from "@/assets/remembrance-letters-home.png.asset.json";
 import RemembranceLettersNav from "@/components/RemembranceLettersNav";
 import { cn } from "@/lib/utils";
+import { cardImageSrc } from "@/lib/cardImage";
 
 /**
  * My Remembrance Letters — the member's own year-long Sacred Undoing pilgrimage.
@@ -304,7 +305,7 @@ const MyRemembranceLetters = () => {
                         <div className="overflow-hidden rounded-lg border border-border bg-muted">
                           {card.image_file_name ? (
                             <img
-                              src={`/cards/${card.image_file_name}`}
+                              src={cardImageSrc(card.image_file_name)}
                               alt={`${card.card_title ?? "Card"}${card.deck_name ? ` — ${card.deck_name}` : ""}`}
                               loading="lazy"
                               className="aspect-[2/3] w-full object-cover"

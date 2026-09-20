@@ -32,6 +32,7 @@ import PageBreadcrumb from '@/components/PageBreadcrumb';
 import SpreadViewDialog from '@/components/SpreadViewDialog';
 import { useSavedReadings, useDeleteSavedReading, useUpdateReadingNotes, SavedReading } from '@/hooks/useSavedReadings';
 import { useToast } from '@/hooks/use-toast';
+import { cardImageSrc } from "@/lib/cardImage";
 
 const MyReadings = () => {
   const navigate = useNavigate();
@@ -235,7 +236,7 @@ const MyReadings = () => {
                         <div key={i} className="flex-shrink-0" style={{ transform: `rotate(${-6 + i * 4}deg)` }}>
                           {sc.image_file_name ? (
                             <img
-                              src={`/cards/${sc.image_file_name}`}
+                              src={cardImageSrc(sc.image_file_name)}
                               alt={sc.card_title}
                               className="w-14 h-20 sm:w-16 sm:h-22 object-cover rounded-md border border-border shadow-sm"
                             />
@@ -345,7 +346,7 @@ const MyReadings = () => {
                     <div className="aspect-[3/4] relative">
                       {reading.image_file_name ? (
                         <img
-                          src={`/cards/${reading.image_file_name}`}
+                          src={cardImageSrc(reading.image_file_name)}
                           alt={reading.card_title}
                           className="w-full h-full object-cover"
                         />

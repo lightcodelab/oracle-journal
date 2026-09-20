@@ -9,6 +9,7 @@ import mnlCardBack from "@/assets/mnl-card-back.png";
 import areekeeraCardBack from "@/assets/areekeera-card-back.png";
 import taoshCardBack from "@/assets/taosh-card-back.png";
 import type { OracleCard } from "@/data/oracleCards";
+import { cardImageSrc } from "@/lib/cardImage";
 
 interface StarterCardSpreadProps {
   cards: OracleCard[];
@@ -121,7 +122,7 @@ export const StarterCardSpread = ({
                   // Show card front if viewed
                   <div className="relative w-full h-full">
                     <img 
-                      src={`/cards/${card.image_file_name}`} 
+                      src={cardImageSrc(card.image_file_name)} 
                       alt={card.card_title}
                       className="w-full h-full object-cover rounded-xl border-2 border-accent/50 shadow-lg"
                     />

@@ -11,6 +11,7 @@ import SaveReadingDialog from "./SaveReadingDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { fetchCardResourceLinks, fetchLinkableResources, linkKey, type LinkableResource } from "@/lib/cardResourceLinks";
+import { cardImageSrc } from "@/lib/cardImage";
 
 
 interface CardDetailProps {
@@ -121,7 +122,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
       <div className="flex justify-center">
         {card.image_file_name ? (
           <img 
-            src={`/cards/${card.image_file_name}`} 
+            src={cardImageSrc(card.image_file_name)} 
             alt={card.card_title}
             className="w-72 h-96 object-cover rounded-2xl border border-border shadow-lg"
           />
