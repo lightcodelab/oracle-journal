@@ -2219,6 +2219,7 @@ export type Database = {
           id: string
           image_color: string
           is_free: boolean | null
+          is_published: boolean
           is_starter: boolean | null
           name: string
           theme: string
@@ -2234,6 +2235,7 @@ export type Database = {
           id?: string
           image_color: string
           is_free?: boolean | null
+          is_published?: boolean
           is_starter?: boolean | null
           name: string
           theme: string
@@ -2249,6 +2251,7 @@ export type Database = {
           id?: string
           image_color?: string
           is_free?: boolean | null
+          is_published?: boolean
           is_starter?: boolean | null
           name?: string
           theme?: string
