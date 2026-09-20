@@ -53,6 +53,17 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
     return card.content_sections?.[key] || card[key as keyof OracleCard] as string | undefined;
   };
 
+  const customSections = (Array.isArray(card.content_sections?.custom_sections)
+    ? (card.content_sections!.custom_sections as any[])
+    : []
+  )
+    .filter((s) => s && typeof s === 'object' && String(s.content || '').trim())
+    .map((s, i) => ({
+      id: String(s.id ?? i),
+      title: String(s.title ?? ''),
+      content: String(s.content ?? ''),
+    }));
+
   const isAreekeerA = card.deck_name === 'AreekeerA';
   const isArtOfSelfHealing = card.deck_name === 'The Art of Self-Healing';
   const isSacredRewrite = card.deck_name === 'The Sacred Rewrite';
