@@ -352,6 +352,98 @@ const CardDeckAdmin = () => {
     return (draft.content_sections?.[f.key] as string) || '';
   };
 
+  // Sections the admin explicitly added this session (so an empty box stays visible).
+  const [addedKeys, setAddedKeys] = useState<string[]>([]);
+  const [uploadingCardImage, setUploadingCardImage] = useState(false);
+
+  useEffect(() => { setAddedKeys([]); }, [selectedCardId]);
+
+  const fieldId = (f: FieldDef) => `${f.storage}:${f.key}`;
+
+  const visibleFields = useMemo(
+    () => fields.filter((f) => getValue(f).trim() !== '' || addedKeys.includes(fieldId(f))),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [fields, draft, addedKeys],
+  );
+
+  const availableFields = useMemo(
+    () => fields.filter((f) => !visibleFields.includes(f)),
+    [fields, visibleFields],
+  );
+
+  type CustomSection = { id: string; title: string; content: string };
+
+  const customSections: CustomSection[] = Array.isArray(draft?.content_sections?.custom_sections)
+    ? ((draft!.content_sections!.custom_sections as any[]).map((s, i) => ({
+        id: String(s?.id ?? i),
+        title: String(s?.title ?? ''),
+        content: String(s?.content ?? ''),
+      })))
+    : [];
+
+  const setCustomSections = (next: CustomSection[]) => {
+    if (!draft) return;
+    setDraft({
+      ...draft,
+      content_sections: { ...(draft.content_sections || {}), custom_sections: next },
+    });
+  };
+
+  const addSection = (value: string) => {
+    if (!draft) return;
+    if (value === '__custom__') {
+      setCustomSections([
+        ...customSections,
+        { id: `cs-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, title: '', content: '' },
+      ]);
+      return;
+    }
+    if (!addedKeys.includes(value)) setAddedKeys((prev) => [...prev, value]);
+  };
+
+  const removeSection = (f: FieldDef) => {
+    updateField(f, '');
+    setAddedKeys((prev) => prev.filter((k) => k !== fieldId(f)));
+  };
+
+  const updateCustomSection = (id: string, patch: Partial<CustomSection>) => {
+    setCustomSections(customSections.map((s) => (s.id === id ? { ...s, ...patch } : s)));
+  };
+
+  const removeCustomSection = (id: string) => {
+    setCustomSections(customSections.filter((s) => s.id !== id));
+  };
+
+  const moveCustomSection = (index: number, delta: number) => {
+    const next = [...customSections];
+    const target = index + delta;
+    if (target < 0 || target >= next.length) return;
+    [next[index], next[target]] = [next[target], next[index]];
+    setCustomSections(next);
+  };
+
+  const handleCardImageUpload = async (file: File) => {
+    if (!draft) return;
+    setUploadingCardImage(true);
+    try {
+      const compressed = await compressImage(file);
+      const ext = compressed.name.split('.').pop() || 'webp';
+      const path = `cards/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from('content-images')
+        .upload(path, compressed, { contentType: compressed.type, upsert: false });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from('content-images').getPublicUrl(path);
+      setDraft((d) => (d ? { ...d, image_file_name: pub.publicUrl } : d));
+      toast({ title: 'Card image uploaded', description: 'Press Save Changes to keep it.' });
+    } catch (err: any) {
+      toast({ title: 'Upload failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setUploadingCardImage(false);
+    }
+  };
+
+
   const handleSave = async () => {
     if (!draft) return;
     setSaving(true);
