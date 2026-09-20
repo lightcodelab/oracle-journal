@@ -11,6 +11,7 @@ import SaveReadingDialog from "./SaveReadingDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { fetchCardResourceLinks, fetchLinkableResources, linkKey, type LinkableResource } from "@/lib/cardResourceLinks";
+import { cardImageSrc } from "@/lib/cardImage";
 
 
 interface CardDetailProps {
@@ -51,6 +52,17 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
   const getContent = (key: string): string | undefined => {
     return card.content_sections?.[key] || card[key as keyof OracleCard] as string | undefined;
   };
+
+  const customSections = (Array.isArray(card.content_sections?.custom_sections)
+    ? (card.content_sections!.custom_sections as any[])
+    : []
+  )
+    .filter((s) => s && typeof s === 'object' && String(s.content || '').trim())
+    .map((s, i) => ({
+      id: String(s.id ?? i),
+      title: String(s.title ?? ''),
+      content: String(s.content ?? ''),
+    }));
 
   const isAreekeerA = card.deck_name === 'AreekeerA';
   const isArtOfSelfHealing = card.deck_name === 'The Art of Self-Healing';
@@ -121,7 +133,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
       <div className="flex justify-center">
         {card.image_file_name ? (
           <img 
-            src={`/cards/${card.image_file_name}`} 
+            src={cardImageSrc(card.image_file_name)} 
             alt={card.card_title}
             className="w-72 h-96 object-cover rounded-2xl border border-border shadow-lg"
           />
@@ -366,6 +378,16 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
           )}
         </>
       )}
+
+      {/* Custom sections added in the Card Deck Editor */}
+      {customSections.map((section) => (
+        <div key={section.id} className="bg-card border border-border rounded-lg p-6">
+          {section.title && (
+            <h3 className="font-serif text-xl text-foreground mb-4">{section.title}</h3>
+          )}
+          <FormattedContent content={section.content} className="text-foreground/90 font-sans leading-relaxed" />
+        </div>
+      ))}
 
       {/* Linked resources for deepening the experience */}
       {linkedResources.length > 0 && (

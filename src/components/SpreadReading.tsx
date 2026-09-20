@@ -6,6 +6,7 @@ import { Sparkles, Bookmark, Loader2, RefreshCw, ArrowLeft } from "lucide-react"
 import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
+import { cardImageSrc } from "@/lib/cardImage";
 
 export type SpreadJournalAnswers = {
   asking_to_be_seen: string;
@@ -134,7 +135,7 @@ export const SpreadReading = ({
                       className="relative w-full h-full"
                     >
                       <img
-                        src={`/cards/${card.image_file_name}`}
+                        src={cardImageSrc(card.image_file_name)}
                         alt={card.card_title}
                         className="w-full h-full object-cover rounded-xl border-2 border-accent/50 shadow-lg"
                       />

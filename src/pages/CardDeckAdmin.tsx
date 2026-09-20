@@ -7,7 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Save, ArrowLeft, Plus } from 'lucide-react';
+import { Loader2, Save, ArrowLeft, Plus, ArrowUp, ArrowDown } from 'lucide-react';
+import RichTextEditor from '@/components/admin/RichTextEditor';
+import { cardImageSrc } from '@/lib/cardImage';
 import { useToast } from '@/hooks/use-toast';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
@@ -349,6 +351,98 @@ const CardDeckAdmin = () => {
     }
     return (draft.content_sections?.[f.key] as string) || '';
   };
+
+  // Sections the admin explicitly added this session (so an empty box stays visible).
+  const [addedKeys, setAddedKeys] = useState<string[]>([]);
+  const [uploadingCardImage, setUploadingCardImage] = useState(false);
+
+  useEffect(() => { setAddedKeys([]); }, [selectedCardId]);
+
+  const fieldId = (f: FieldDef) => `${f.storage}:${f.key}`;
+
+  const visibleFields = useMemo(
+    () => fields.filter((f) => getValue(f).trim() !== '' || addedKeys.includes(fieldId(f))),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [fields, draft, addedKeys],
+  );
+
+  const availableFields = useMemo(
+    () => fields.filter((f) => !visibleFields.includes(f)),
+    [fields, visibleFields],
+  );
+
+  type CustomSection = { id: string; title: string; content: string };
+
+  const customSections: CustomSection[] = Array.isArray(draft?.content_sections?.custom_sections)
+    ? ((draft!.content_sections!.custom_sections as any[]).map((s, i) => ({
+        id: String(s?.id ?? i),
+        title: String(s?.title ?? ''),
+        content: String(s?.content ?? ''),
+      })))
+    : [];
+
+  const setCustomSections = (next: CustomSection[]) => {
+    if (!draft) return;
+    setDraft({
+      ...draft,
+      content_sections: { ...(draft.content_sections || {}), custom_sections: next },
+    });
+  };
+
+  const addSection = (value: string) => {
+    if (!draft) return;
+    if (value === '__custom__') {
+      setCustomSections([
+        ...customSections,
+        { id: `cs-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, title: '', content: '' },
+      ]);
+      return;
+    }
+    if (!addedKeys.includes(value)) setAddedKeys((prev) => [...prev, value]);
+  };
+
+  const removeSection = (f: FieldDef) => {
+    updateField(f, '');
+    setAddedKeys((prev) => prev.filter((k) => k !== fieldId(f)));
+  };
+
+  const updateCustomSection = (id: string, patch: Partial<CustomSection>) => {
+    setCustomSections(customSections.map((s) => (s.id === id ? { ...s, ...patch } : s)));
+  };
+
+  const removeCustomSection = (id: string) => {
+    setCustomSections(customSections.filter((s) => s.id !== id));
+  };
+
+  const moveCustomSection = (index: number, delta: number) => {
+    const next = [...customSections];
+    const target = index + delta;
+    if (target < 0 || target >= next.length) return;
+    [next[index], next[target]] = [next[target], next[index]];
+    setCustomSections(next);
+  };
+
+  const handleCardImageUpload = async (file: File) => {
+    if (!draft) return;
+    setUploadingCardImage(true);
+    try {
+      const compressed = await compressImage(file);
+      const ext = compressed.name.split('.').pop() || 'webp';
+      const path = `cards/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from('content-images')
+        .upload(path, compressed, { contentType: compressed.type, upsert: false });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from('content-images').getPublicUrl(path);
+      setDraft((d) => (d ? { ...d, image_file_name: pub.publicUrl } : d));
+      toast({ title: 'Card image uploaded', description: 'Press Save Changes to keep it.' });
+    } catch (err: any) {
+      toast({ title: 'Upload failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setUploadingCardImage(false);
+    }
+  };
+
 
   const handleSave = async () => {
     if (!draft) return;
@@ -886,38 +980,155 @@ const CardDeckAdmin = () => {
                   )}
                 </div>
                 <div className="space-y-2 sm:col-span-2">
-                  <Label>Image File Name</Label>
-                  <Input
-                    value={draft.image_file_name || ''}
-                    placeholder="e.g. card-01.jpg (served from /cards/)"
-                    onChange={(e) => setDraft({ ...draft, image_file_name: e.target.value })}
-                  />
+                  <Label>Card Image</Label>
+                  {draft.image_file_name ? (
+                    <div className="flex items-center gap-3 p-3 bg-background rounded-md border">
+                      <img
+                        src={cardImageSrc(draft.image_file_name)}
+                        alt="Card image"
+                        className="w-20 aspect-[3/4] object-cover rounded"
+                      />
+                      <span className="flex-1 text-xs truncate text-muted-foreground">
+                        {draft.image_file_name}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setDraft({ ...draft, image_file_name: null })}
+                      >
+                        <XIcon className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        disabled={uploadingCardImage}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleCardImageUpload(file);
+                          e.target.value = '';
+                        }}
+                      />
+                      {uploadingCardImage && <Loader2 className="w-4 h-4 animate-spin" />}
+                    </div>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    JPG, PNG or WebP — auto-compressed. Existing cards keep their original artwork
+                    until you upload a replacement.
+                  </p>
                 </div>
               </div>
 
-              {/* Deck-specific fields */}
-              <div className="space-y-4 pt-4 border-t border-border">
+              {/* Deck-specific sections */}
+              <div className="space-y-5 pt-4 border-t border-border">
                 <p className="text-sm text-muted-foreground font-serif italic">
-                  {selectedDeck?.name} fields — leave any field blank to hide that section.
+                  Card Reading content — only the sections below appear on the card page.
                 </p>
-                {fields.map((f) => (
+
+                {visibleFields.map((f) => (
                   <div key={`${f.storage}-${f.key}`} className="space-y-2">
-                    <Label>{f.label}</Label>
+                    <div className="flex items-start justify-between gap-2">
+                      <Label>{f.label}</Label>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="text-muted-foreground"
+                        onClick={() => removeSection(f)}
+                      >
+                        <XIcon className="w-4 h-4 mr-1" /> Remove
+                      </Button>
+                    </div>
                     {f.type === 'input' ? (
                       <Input
                         value={getValue(f)}
                         onChange={(e) => updateField(f, e.target.value)}
                       />
                     ) : (
-                      <Textarea
-                        rows={f.rows || 6}
+                      <RichTextEditor
                         value={getValue(f)}
-                        onChange={(e) => updateField(f, e.target.value)}
+                        onChange={(html) => updateField(f, html)}
+                        minHeight={(f.rows || 6) * 24}
                       />
                     )}
                     {f.helper && <p className="text-xs text-muted-foreground">{f.helper}</p>}
                   </div>
                 ))}
+
+                {/* Custom sections */}
+                {customSections.map((section, index) => (
+                  <div key={section.id} className="space-y-2 rounded-md border border-primary/30 p-3 bg-muted/20">
+                    <div className="flex items-center justify-between gap-2">
+                      <Label>Custom section</Label>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          disabled={index === 0}
+                          onClick={() => moveCustomSection(index, -1)}
+                          aria-label="Move section up"
+                        >
+                          <ArrowUp className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          disabled={index === customSections.length - 1}
+                          onClick={() => moveCustomSection(index, 1)}
+                          aria-label="Move section down"
+                        >
+                          <ArrowDown className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-muted-foreground"
+                          onClick={() => removeCustomSection(section.id)}
+                        >
+                          <XIcon className="w-4 h-4 mr-1" /> Remove
+                        </Button>
+                      </div>
+                    </div>
+                    <Input
+                      value={section.title}
+                      placeholder="Section title — shown on the card page"
+                      onChange={(e) => updateCustomSection(section.id, { title: e.target.value })}
+                    />
+                    <RichTextEditor
+                      value={section.content}
+                      onChange={(html) => updateCustomSection(section.id, { content: html })}
+                      minHeight={160}
+                    />
+                  </div>
+                ))}
+
+                {/* Add a section */}
+                <div className="space-y-2 pt-2">
+                  <Label>Add a section</Label>
+                  <Select value="" onValueChange={addSection}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose a section to add…" />
+                    </SelectTrigger>
+                    <SelectContent position="popper" className="max-h-[50vh] overflow-y-auto">
+                      {availableFields.map((f) => (
+                        <SelectItem key={`${f.storage}-${f.key}`} value={`${f.storage}:${f.key}`}>
+                          {f.label}
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="__custom__">New custom section…</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Named sections belong to this deck's layout. A custom section lets you write your
+                    own title and content, shown after the deck's own sections.
+                  </p>
+                </div>
               </div>
 
               {/* Card tags — power the Search tool */}

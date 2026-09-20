@@ -2,6 +2,7 @@ import { useState } from "react";
 import { OracleCard } from "@/data/oracleCards";
 import { CardBack } from "./CardBack";
 import { motion } from "framer-motion";
+import { cardImageSrc } from "@/lib/cardImage";
 
 interface OracleCardComponentProps {
   card: OracleCard;
@@ -44,7 +45,7 @@ export const OracleCardComponent = ({ card, isRevealed, onClick, cardBackImage }
         <div className="absolute w-full h-full backface-hidden" style={{ transform: "rotateY(180deg)" }}>
           {card.image_file_name ? (
             <img 
-              src={`/cards/${card.image_file_name}`} 
+              src={cardImageSrc(card.image_file_name)} 
               alt={card.card_title}
               className="w-full h-full object-cover rounded-2xl border-2 border-accent/50 shadow-glow"
             />

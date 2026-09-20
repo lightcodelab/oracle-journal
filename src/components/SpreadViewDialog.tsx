@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useUpdateJournalAnswers } from "@/hooks/useSavedReadings";
 import { useToast } from "@/hooks/use-toast";
 import type { OracleCard } from "@/data/oracleCards";
+import { cardImageSrc } from "@/lib/cardImage";
 
 interface SpreadCardData {
   position: string;
@@ -138,7 +139,7 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
                 >
                   {cardData.image_file_name ? (
                     <img
-                      src={`/cards/${cardData.image_file_name}`}
+                      src={cardImageSrc(cardData.image_file_name)}
                       alt={cardData.card_title}
                       className="w-full h-full object-cover rounded-xl border-2 border-accent/50 shadow-lg"
                     />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { looksLikeHtml } from '@/lib/richText';
 
 interface FormattedContentProps {
   content: string;
@@ -17,6 +18,16 @@ const renderWithBold = (text: string): React.ReactNode => {
 };
 
 export const FormattedContent = ({ content, className = "" }: FormattedContentProps) => {
+  // Rich-text content written in the admin editors is already formatted HTML.
+  if (looksLikeHtml(content)) {
+    return (
+      <div
+        className={`prose prose-invert max-w-none prose-headings:font-serif prose-p:leading-relaxed ${className}`}
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    );
+  }
+
   // Replace em dashes with commas and remove spaces before commas
   const processedContent = content
     .replace(/—/g, ',')
