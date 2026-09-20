@@ -853,10 +853,10 @@ const CardDeckAdmin = () => {
               </div>
               <div className="space-y-2">
                 <Label>Description</Label>
-                <Textarea
-                  rows={3}
+                <RichTextEditor
                   value={deckDraft.description}
-                  onChange={(e) => setDeckDraft({ ...deckDraft, description: e.target.value })}
+                  onChange={(html) => setDeckDraft({ ...deckDraft, description: html })}
+                  minHeight={180}
                 />
               </div>
               <div className="space-y-2">
