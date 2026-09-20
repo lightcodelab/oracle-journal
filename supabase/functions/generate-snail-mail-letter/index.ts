@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
     if (!subscriber) throw new Error("Subscriber not found");
 
     // Fetch decks
-    const { data: decks } = await admin.from("decks").select("id,name");
+    const { data: decks } = await admin.from("decks").select("id,name").eq("is_published", true);
     const deckMap: Record<string, string> = {};
     (decks ?? []).forEach((d: any) => deckMap[d.name] = d.id);
 
@@ -85,7 +85,10 @@ Deno.serve(async (req) => {
     }
     // Top up from any deck if short
     if (drawn.length < 4) {
-      const { data: anyCards } = await admin.from("cards").select("*").limit(200);
+      const publishedDeckIds = Object.values(deckMap);
+      const { data: anyCards } = publishedDeckIds.length > 0
+        ? await admin.from("cards").select("*").in("deck_id", publishedDeckIds).limit(200)
+        : { data: [] };
       const remaining = (anyCards ?? []).filter((c: any) => !usedIds.has(c.id));
       while (drawn.length < 4 && remaining.length > 0) {
         const pick = remaining.splice(Math.floor(Math.random() * remaining.length), 1)[0];

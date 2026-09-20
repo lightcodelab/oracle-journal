@@ -163,7 +163,8 @@ Deno.serve(async (req) => {
       return json({ error: "The selected cards do not match this spread." }, 400);
     }
 
-    const { data: cards, error: cardsError } = await admin.from("cards").select("*, decks(name)").in("id", parsed.data.cardIds);
+    // Read through the member-scoped client so draft decks remain admin-only.
+    const { data: cards, error: cardsError } = await userClient.from("cards").select("*, decks(name)").in("id", parsed.data.cardIds);
     if (cardsError) throw cardsError;
     if (!cards || cards.length !== parsed.data.cardIds.length) return json({ error: "One or more selected cards could not be found." }, 400);
     const byId = new Map(cards.map((card: Record<string, unknown>) => [String(card.id), card]));

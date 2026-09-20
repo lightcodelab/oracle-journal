@@ -39,6 +39,7 @@ interface Deck {
   is_starter: boolean;
   woocommerce_product_id: string | null;
   woocommerce_product_id_premium: string | null;
+  is_published: boolean;
 }
 
 
@@ -90,6 +91,7 @@ const Index = () => {
     const { data, error } = await supabase
       .from('decks')
       .select('*')
+      .eq('is_published', true)
       .order('display_order');
 
     if (error) {
@@ -108,7 +110,8 @@ const Index = () => {
     // All authenticated users have access to all decks
     const { data: allDecks } = await supabase
       .from('decks')
-      .select('id');
+      .select('id')
+      .eq('is_published', true);
     
     setUserPurchases((allDecks || []).map(d => d.id));
   };

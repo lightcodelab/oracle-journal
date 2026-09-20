@@ -62,6 +62,7 @@ const SacredSpreads = () => {
     const { data: allDecks } = await supabase
       .from('decks')
       .select('id')
+      .eq('is_published', true)
       .eq('is_starter', false);
 
     if (!allDecks || allDecks.length === 0) return;

@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CourseTagPicker from '@/components/admin/CourseTagPicker';
 import CardResourceLinkPicker, { type SelectedLink } from '@/components/admin/CardResourceLinkPicker';
 import { fetchCardResourceLinks, saveCardResourceLinks } from '@/lib/cardResourceLinks';
+import { Switch } from '@/components/ui/switch';
 
 import { Image as ImageIcon, X as XIcon } from 'lucide-react';
 import {
@@ -37,6 +39,7 @@ interface DeckRow {
   theme?: string | null;
   thumbnail_url?: string | null;
   image_color?: string | null;
+  is_published: boolean;
 }
 
 interface CardRow {
@@ -174,6 +177,7 @@ const CardDeckAdmin = () => {
     description: string;
     theme: string;
     thumbnail_url: string | null;
+    is_published: boolean;
   } | null>(null);
   const [deckTagIds, setDeckTagIds] = useState<string[]>([]);
   const [cardTagIds, setCardTagIds] = useState<string[]>([]);
@@ -208,7 +212,7 @@ const CardDeckAdmin = () => {
 
       const { data: deckData, error } = await supabase
         .from('decks')
-        .select('id, name, description, theme, thumbnail_url, image_color')
+        .select('id, name, description, theme, thumbnail_url, image_color, is_published')
         .order('display_order', { ascending: true });
       if (error) {
         toast({ title: 'Failed to load decks', description: error.message, variant: 'destructive' });
@@ -248,6 +252,7 @@ const CardDeckAdmin = () => {
           description: d.description || '',
           theme: d.theme || '',
           thumbnail_url: d.thumbnail_url || null,
+          is_published: d.is_published,
         });
       }
       const { data: tagRows } = await (supabase as any)
@@ -531,14 +536,15 @@ const CardDeckAdmin = () => {
           display_order: nextOrder,
           is_free: false,
           is_starter: false,
+          is_published: false,
         })
-        .select('id, name')
+        .select('id, name, description, theme, thumbnail_url, image_color, is_published')
         .single();
       if (error) throw error;
 
       // Refresh deck list and select the new deck
       const { data: deckData } = await supabase
-        .from('decks').select('id, name').order('display_order', { ascending: true });
+        .from('decks').select('id, name, description, theme, thumbnail_url, image_color, is_published').order('display_order', { ascending: true });
       setDecks(deckData || []);
       setSelectedDeckId(created.id);
       setNewDeckOpen(false);
@@ -618,6 +624,7 @@ const CardDeckAdmin = () => {
           description: deckDraft.description.trim() || null,
           theme: deckDraft.theme.trim() || null,
           thumbnail_url: deckDraft.thumbnail_url,
+          is_published: deckDraft.is_published,
         })
         .eq('id', selectedDeckId);
       if (error) throw error;
@@ -639,6 +646,7 @@ const CardDeckAdmin = () => {
                 description: deckDraft.description.trim() || null,
                 theme: deckDraft.theme.trim() || null,
                 thumbnail_url: deckDraft.thumbnail_url,
+                is_published: deckDraft.is_published,
               }
             : d,
         ),
@@ -829,12 +837,31 @@ const CardDeckAdmin = () => {
         {selectedDeckId && deckDraft && (
           <Card className="border-primary/30 bg-muted/20">
             <CardHeader>
-              <CardTitle className="font-serif text-lg">Deck Settings</CardTitle>
+              <div className="flex items-center justify-between gap-3">
+                <CardTitle className="font-serif text-lg">Deck Settings</CardTitle>
+                <Badge variant={deckDraft.is_published ? 'default' : 'secondary'}>
+                  {deckDraft.is_published ? 'Published' : 'Draft'}
+                </Badge>
+              </div>
               <p className="text-xs text-muted-foreground">
                 These fields control how the deck appears on the Door of Remembrance. They are separate from individual card content.
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="flex items-center justify-between gap-4 rounded-md border border-border/60 bg-background p-4">
+                <div className="space-y-1">
+                  <Label htmlFor="deck-published">Publish Deck</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Draft decks and their cards are visible only to admins.
+                  </p>
+                </div>
+                <Switch
+                  id="deck-published"
+                  checked={deckDraft.is_published}
+                  onCheckedChange={(is_published) => setDeckDraft({ ...deckDraft, is_published })}
+                  aria-label="Publish deck"
+                />
+              </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label>Deck Name</Label>
