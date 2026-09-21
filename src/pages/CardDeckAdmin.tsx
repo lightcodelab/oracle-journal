@@ -38,6 +38,7 @@ interface DeckRow {
   description?: string | null;
   theme?: string | null;
   thumbnail_url?: string | null;
+  card_back_url?: string | null;
   image_color?: string | null;
   is_published: boolean;
 }
@@ -177,6 +178,7 @@ const CardDeckAdmin = () => {
     description: string;
     theme: string;
     thumbnail_url: string | null;
+    card_back_url: string | null;
     is_published: boolean;
   } | null>(null);
   const [deckTagIds, setDeckTagIds] = useState<string[]>([]);
@@ -185,6 +187,7 @@ const CardDeckAdmin = () => {
 
   const [savingDeck, setSavingDeck] = useState(false);
   const [uploadingDeckThumb, setUploadingDeckThumb] = useState(false);
+  const [uploadingCardBack, setUploadingCardBack] = useState(false);
 
   // New-deck dialog state
   const [newDeckOpen, setNewDeckOpen] = useState(false);
@@ -212,7 +215,7 @@ const CardDeckAdmin = () => {
 
       const { data: deckData, error } = await supabase
         .from('decks')
-        .select('id, name, description, theme, thumbnail_url, image_color, is_published')
+        .select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published')
         .order('display_order', { ascending: true });
       if (error) {
         toast({ title: 'Failed to load decks', description: error.message, variant: 'destructive' });
@@ -252,6 +255,7 @@ const CardDeckAdmin = () => {
           description: d.description || '',
           theme: d.theme || '',
           thumbnail_url: d.thumbnail_url || null,
+          card_back_url: d.card_back_url || null,
           is_published: d.is_published,
         });
       }
@@ -509,8 +513,9 @@ const CardDeckAdmin = () => {
     }
     setCreatingDeck(true);
     try {
-      // If user uploaded an image, compress + push to storage and store URL in image_color.
-      let imageColorValue = newDeck.image_color || '#8b5e3c';
+      // If the admin uploaded a card back, store it on the deck's card_back_url.
+      const imageColorValue = newDeck.image_color || '#8b5e3c';
+      let cardBackUrl: string | null = null;
       if (backMode === 'image' && backImageFile) {
         setUploadingImage(true);
         const compressed = await compressImage(backImageFile);
@@ -521,7 +526,7 @@ const CardDeckAdmin = () => {
           .upload(path, compressed, { contentType: compressed.type, upsert: false });
         if (upErr) throw upErr;
         const { data: pub } = supabase.storage.from('content-images').getPublicUrl(path);
-        imageColorValue = pub.publicUrl;
+        cardBackUrl = pub.publicUrl;
         setUploadingImage(false);
       }
 
@@ -533,18 +538,19 @@ const CardDeckAdmin = () => {
           theme: newDeck.theme.trim(),
           description: newDeck.description.trim() || null,
           image_color: imageColorValue,
+          card_back_url: cardBackUrl,
           display_order: nextOrder,
           is_free: false,
           is_starter: false,
           is_published: false,
         })
-        .select('id, name, description, theme, thumbnail_url, image_color, is_published')
+        .select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published')
         .single();
       if (error) throw error;
 
       // Refresh deck list and select the new deck
       const { data: deckData } = await supabase
-        .from('decks').select('id, name, description, theme, thumbnail_url, image_color, is_published').order('display_order', { ascending: true });
+        .from('decks').select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published').order('display_order', { ascending: true });
       setDecks(deckData || []);
       setSelectedDeckId(created.id);
       setNewDeckOpen(false);
@@ -609,6 +615,26 @@ const CardDeckAdmin = () => {
     }
   };
 
+  const handleDeckCardBackUpload = async (file: File) => {
+    setUploadingCardBack(true);
+    try {
+      const compressed = await compressImage(file);
+      const ext = compressed.name.split('.').pop() || 'webp';
+      const path = `card-backs/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from('content-images')
+        .upload(path, compressed, { contentType: compressed.type, upsert: false });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from('content-images').getPublicUrl(path);
+      setDeckDraft((d) => (d ? { ...d, card_back_url: pub.publicUrl } : d));
+      toast({ title: 'Card back uploaded', description: 'Save Deck Settings to apply it.' });
+    } catch (err: any) {
+      toast({ title: 'Upload failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setUploadingCardBack(false);
+    }
+  };
+
   const handleSaveDeckSettings = async () => {
     if (!selectedDeckId || !deckDraft) return;
     if (!deckDraft.name.trim()) {
@@ -624,6 +650,7 @@ const CardDeckAdmin = () => {
           description: deckDraft.description.trim() || null,
           theme: deckDraft.theme.trim() || null,
           thumbnail_url: deckDraft.thumbnail_url,
+          card_back_url: deckDraft.card_back_url,
           is_published: deckDraft.is_published,
         })
         .eq('id', selectedDeckId);
@@ -646,6 +673,7 @@ const CardDeckAdmin = () => {
                 description: deckDraft.description.trim() || null,
                 theme: deckDraft.theme.trim() || null,
                 thumbnail_url: deckDraft.thumbnail_url,
+                card_back_url: deckDraft.card_back_url,
                 is_published: deckDraft.is_published,
               }
             : d,
@@ -921,6 +949,58 @@ const CardDeckAdmin = () => {
                 )}
                 <p className="text-xs text-muted-foreground">
                   Displayed on the Door of Remembrance deck grid. JPG/PNG/WebP, auto-compressed.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label>Card Back Image (shown face-down before a card is revealed)</Label>
+                {deckDraft.card_back_url ? (
+                  <div className="flex items-center gap-3 p-3 bg-background rounded-md border">
+                    <img
+                      src={deckDraft.card_back_url}
+                      alt="Card back"
+                      className="w-20 aspect-[2/3] object-cover rounded"
+                    />
+                    <span className="flex-1 text-xs truncate text-muted-foreground">{deckDraft.card_back_url}</span>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="w-44"
+                        disabled={uploadingCardBack}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleDeckCardBackUpload(file);
+                        }}
+                      />
+                      {uploadingCardBack && <Loader2 className="w-4 h-4 animate-spin" />}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        aria-label="Remove card back image"
+                        onClick={() => setDeckDraft({ ...deckDraft, card_back_url: null })}
+                      >
+                        <XIcon className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      disabled={uploadingCardBack}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleDeckCardBackUpload(file);
+                      }}
+                    />
+                    {uploadingCardBack && <Loader2 className="w-4 h-4 animate-spin" />}
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  Used for this deck's face-down cards and shuffle. Portrait images work best.
+                  If left empty, the deck falls back to its built-in card back.
                 </p>
               </div>
               <CourseTagPicker

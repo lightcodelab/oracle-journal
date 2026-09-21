@@ -35,6 +35,7 @@ interface Deck {
   theme: string;
   image_color: string;
   thumbnail_url?: string | null;
+  card_back_url?: string | null;
   is_free: boolean;
   is_starter: boolean;
   woocommerce_product_id: string | null;
@@ -308,9 +309,11 @@ const Index = () => {
     return sacredRewriteCardBack;
   };
 
-  // Get the appropriate card back image for the selected deck or card
+  // Get the appropriate card back image for the selected deck or card.
+  // An uploaded card back set in the admin editor always wins.
   const getCardBackImage = () => {
     if (!selectedDeck) return sacredRewriteCardBack;
+    if (selectedDeck.card_back_url) return selectedDeck.card_back_url;
     return getCardBackForDeck(selectedDeck.name);
   };
 
