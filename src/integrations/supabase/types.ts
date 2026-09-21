@@ -7833,6 +7833,7 @@ export type Database = {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
       }
+      draw_free_spread_cards: { Args: { _count?: number }; Returns: Json }
       find_unpaid_accounts: {
         Args: { _older_than_days?: number }
         Returns: {
