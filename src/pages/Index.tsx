@@ -88,10 +88,12 @@ const Index = () => {
   }, [navigate]);
 
   const fetchDecks = async () => {
+    // Visibility is enforced in the database: members only receive published
+    // decks, while admins also receive drafts so they can preview before
+    // publishing.
     const { data, error } = await supabase
       .from('decks')
       .select('*')
-      .eq('is_published', true)
       .order('display_order');
 
     if (error) {
@@ -110,8 +112,7 @@ const Index = () => {
     // All authenticated users have access to all decks
     const { data: allDecks } = await supabase
       .from('decks')
-      .select('id')
-      .eq('is_published', true);
+      .select('id');
     
     setUserPurchases((allDecks || []).map(d => d.id));
   };
