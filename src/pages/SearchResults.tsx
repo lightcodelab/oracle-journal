@@ -27,7 +27,14 @@ interface TempleRow {
   image_url: string | null;
   door: string | null;
   tags: string[] | null;
+  rank: number | null;
+  score: number | null;
 }
+
+type MixedItem =
+  | { type: 'deck'; rank: number; score: number; row: TempleRow }
+  | { type: 'card'; rank: number; score: number; row: TempleRow }
+  | { type: 'resource'; rank: number; score: number; resource: SearchResult };
 
 const STOP_WORDS = new Set([
   'the','and','for','with','that','this','was','are','you','your','yours','from','have','has','had',
@@ -38,21 +45,40 @@ const STOP_WORDS = new Set([
   'wants','wanted','need','needs','needed',
 ]);
 
-// Build the list of ilike patterns: the full phrase plus each meaningful word,
-// so "I feel stuck" finds the same results as "stuck".
-const buildPatterns = (q: string): string[] => {
+// Search terms: the full phrase plus each meaningful word, so "I feel stuck"
+// finds the same results as "stuck".
+const buildTerms = (q: string): string[] => {
   const phrase = q.trim();
   const words = phrase
     .toLowerCase()
     .split(/[^a-z0-9]+/)
     .filter((w) => w.length >= 3 && !STOP_WORDS.has(w));
-  return [...new Set([phrase.toLowerCase(), ...words])]
-    .filter((t) => t.length >= 2)
-    .map((t) => `%${t}%`);
+  return [...new Set([phrase.toLowerCase(), ...words])].filter((t) => t.length >= 2);
 };
+
+const toPatterns = (terms: string[]) => terms.map((t) => `%${t}%`);
 
 const orFilter = (fields: string[], patterns: string[]) =>
   patterns.flatMap((p) => fields.map((f) => `${f}.ilike.${p}`)).join(',');
+
+const textMatches = (text: string | null | undefined, terms: string[]) => {
+  if (!text) return false;
+  const lower = text.toLowerCase();
+  return terms.some((t) => lower.includes(t));
+};
+
+// Priority: 1 = title match, 2 = tag match, 3 = body/content match.
+const clientRank = (
+  title: string | null | undefined,
+  summary: string | null | undefined,
+  terms: string[],
+  tagMatched: boolean,
+): number => {
+  if (textMatches(title, terms)) return 1;
+  if (tagMatched) return 2;
+  if (textMatches(summary, terms)) return 3;
+  return 3;
+};
 
 const getPublicUrl = (bucket: string, path: string | null): string | null => {
   if (!path) return null;
@@ -67,26 +93,20 @@ const SearchResults = () => {
   const navigate = useNavigate();
   const query = searchParams.get('q') || '';
   const [localQuery, setLocalQuery] = useState(query);
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [deckResults, setDeckResults] = useState<TempleRow[]>([]);
-  const [cardResults, setCardResults] = useState<TempleRow[]>([]);
-  const [visibleCards, setVisibleCards] = useState(24);
+  const [items, setItems] = useState<MixedItem[]>([]);
+  const [visibleCount, setVisibleCount] = useState(24);
   const [loading, setLoading] = useState(false);
   const { hasAccess, loading: tierLoading } = useTierAccess();
 
-  const totalCount = results.length + deckResults.length + cardResults.length;
-
   useEffect(() => {
     setLocalQuery(query);
-    setVisibleCards(24);
+    setVisibleCount(24);
   }, [query]);
 
 
   useEffect(() => {
     if (!query.trim()) {
-      setResults([]);
-      setDeckResults([]);
-      setCardResults([]);
+      setItems([]);
       return;
     }
 
@@ -94,7 +114,8 @@ const SearchResults = () => {
     const search = async () => {
       setLoading(true);
 
-      const patterns = buildPatterns(query);
+      const terms = buildTerms(query);
+      const patterns = toPatterns(terms);
       const titleSummaryFilter = orFilter(['title', 'summary'], patterns);
       const nameFilter = orFilter(['name'], patterns);
 
@@ -114,23 +135,9 @@ const SearchResults = () => {
         .limit(50);
 
       // Decks, individual cards and courses — matched on titles, body content,
-      // lesson content and any assigned tags (server-side).
+      // lesson content and any assigned tags (server-side, with match-location rank).
       const { data: templeRows } = await supabase.rpc('search_temple', { _q: query });
       const temple = (templeRows || []) as TempleRow[];
-
-      const allCoursesData = temple
-        .filter((r) => r.kind === 'course')
-        .map((r) => ({
-          id: r.id,
-          title: r.title,
-          description: r.subtitle,
-          image_url: r.image_url,
-          door_type: r.door,
-          location: null as any,
-        }));
-
-      setDeckResults(temple.filter((r) => r.kind === 'deck'));
-      setCardResults(temple.filter((r) => r.kind === 'card'));
 
 
       // Search healing_resources by title/summary (include location for door mapping)
@@ -184,12 +191,13 @@ const SearchResults = () => {
       }
 
       // Combine tag-matched IDs that aren't already in direct results
-      const tagResourceIds = [...new Set([...symptomResourceIds, ...conditionResourceIds])]
-        .filter(id => !directHealingIds.has(id));
+      const tagResourceIds = [...new Set([...symptomResourceIds, ...conditionResourceIds])];
+      const tagMatchedIds = new Set(tagResourceIds);
+      const extraTagIds = tagResourceIds.filter(id => !directHealingIds.has(id));
 
       // Fetch additional healing resources by tag matches
       let tagHealingData: any[] = [];
-      if (tagResourceIds.length > 0) {
+      if (extraTagIds.length > 0) {
         const { data } = await supabase
           .from('healing_resources')
           .select(`
@@ -199,68 +207,111 @@ const SearchResults = () => {
             location:content_categories!healing_resources_location_id_fkey(id, page)
           `)
           .eq('status', 'published')
-          .in('id', tagResourceIds)
+          .in('id', extraTagIds)
           .limit(50);
         tagHealingData = data || [];
       }
 
       const allHealingData = [...(healingData || []), ...tagHealingData];
 
-      const contentResults: SearchResult[] = (contentData || []).map((r: any) => ({
-        id: r.id,
-        title: r.title,
-        slug: r.slug,
-        summary: r.summary,
-        thumbnail_url: getPublicUrl('content-thumbnails', r.thumbnail_url),
-        main_media_kind: r.main_media_kind,
-        main_media_file_url: r.main_media_file_url,
-        main_media_embed_url: r.main_media_embed_url,
-        secondary_audio_url: null,
-        is_course: r.is_course,
-        status: r.status,
-        source: 'content' as const,
-        resource_type: r.resource_type || null,
-        doorBucket: r.location?.page || null,
-      }));
+      const mixed: MixedItem[] = [];
 
-      const healingResults: SearchResult[] = allHealingData.map((r: any) => ({
-        id: r.id,
-        title: r.title,
-        slug: `healing-${r.slug || r.id}`,
-        summary: r.summary,
-        thumbnail_url: getPublicUrl('healing-resource-images', r.display_image_url),
-        main_media_kind: r.vimeo_embed_url ? 'video_embed' : r.audio_file_url ? 'file' : 'none',
-        main_media_file_url: r.audio_file_url,
-        main_media_embed_url: r.vimeo_embed_url,
-        secondary_audio_url: null,
-        is_course: false,
-        status: r.status,
-        source: 'healing' as const,
-        resource_type: r.modality ? { id: '', name: r.modality, slug: r.modality } : null,
-        doorBucket: r.location?.page || null,
-      }));
+      // Decks and cards straight from the ranked RPC
+      for (const row of temple) {
+        if (row.kind === 'course') continue;
+        mixed.push({
+          type: row.kind,
+          rank: row.rank ?? 4,
+          score: row.score ?? 0,
+          row,
+        });
+      }
 
-      const courseResults: SearchResult[] = allCoursesData.map((r: any) => ({
-        id: r.id,
-        title: r.title,
-        slug: `legacy-course-${r.id}`,
-        summary: htmlToPlainText(r.description),
-        thumbnail_url: r.image_url || null,
-        main_media_kind: 'none' as const,
-        main_media_file_url: null,
-        main_media_embed_url: null,
-        secondary_audio_url: null,
-        is_course: true,
-        status: 'published' as const,
-        source: 'content' as const,
-        resource_type: { id: '', name: 'Course', slug: 'course' },
-        doorBucket: r.location?.page || r.door_type || null,
-      }));
+      // Courses from the RPC, mapped to resource cards
+      for (const row of temple) {
+        if (row.kind !== 'course') continue;
+        mixed.push({
+          type: 'resource',
+          rank: row.rank ?? 4,
+          score: row.score ?? 0,
+          resource: {
+            id: row.id,
+            title: row.title,
+            slug: `legacy-course-${row.id}`,
+            summary: htmlToPlainText(row.subtitle),
+            thumbnail_url: row.image_url || null,
+            main_media_kind: 'none' as const,
+            main_media_file_url: null,
+            main_media_embed_url: null,
+            secondary_audio_url: null,
+            is_course: true,
+            status: 'published' as const,
+            source: 'content' as const,
+            resource_type: { id: '', name: 'Course', slug: 'course' },
+            doorBucket: row.door || null,
+          },
+        });
+      }
 
-      const allResults = [...contentResults, ...courseResults, ...healingResults].filter(
-        (r) => !!r.slug
-      );
-      setResults(allResults);
+      for (const r of contentData || []) {
+        const resource: SearchResult = {
+          id: r.id,
+          title: r.title,
+          slug: r.slug,
+          summary: r.summary,
+          thumbnail_url: getPublicUrl('content-thumbnails', r.thumbnail_url),
+          main_media_kind: r.main_media_kind,
+          main_media_file_url: r.main_media_file_url,
+          main_media_embed_url: r.main_media_embed_url,
+          secondary_audio_url: null,
+          is_course: r.is_course,
+          status: r.status,
+          source: 'content' as const,
+          resource_type: (r as any).resource_type || null,
+          doorBucket: (r as any).location?.page || null,
+        };
+        mixed.push({
+          type: 'resource',
+          rank: clientRank(r.title, r.summary, terms, false),
+          score: 0,
+          resource,
+        });
+      }
+
+      for (const r of allHealingData) {
+        const resource: SearchResult = {
+          id: r.id,
+          title: r.title,
+          slug: `healing-${r.slug || r.id}`,
+          summary: r.summary,
+          thumbnail_url: getPublicUrl('healing-resource-images', r.display_image_url),
+          main_media_kind: r.vimeo_embed_url ? 'video_embed' : r.audio_file_url ? 'file' : 'none',
+          main_media_file_url: r.audio_file_url,
+          main_media_embed_url: r.vimeo_embed_url,
+          secondary_audio_url: null,
+          is_course: false,
+          status: r.status,
+          source: 'healing' as const,
+          resource_type: r.modality ? { id: '', name: r.modality, slug: r.modality } : null,
+          doorBucket: (r as any).location?.page || null,
+        };
+        mixed.push({
+          type: 'resource',
+          rank: clientRank(r.title, r.summary, terms, tagMatchedIds.has(r.id)),
+          score: 0,
+          resource,
+        });
+      }
+
+      mixed.sort((a, b) => {
+        if (a.rank !== b.rank) return a.rank - b.rank;
+        if (a.score !== b.score) return b.score - a.score;
+        const ta = a.type === 'resource' ? a.resource.title : a.row.title;
+        const tb = b.type === 'resource' ? b.resource.title : b.row.title;
+        return (ta || '').localeCompare(tb || '');
+      });
+
+      setItems(mixed.filter((i) => i.type !== 'resource' || !!i.resource.slug));
       setLoading(false);
     };
 
@@ -285,6 +336,8 @@ const SearchResults = () => {
     if (!resource.doorBucket) return false;
     return !hasAccess(resource.doorBucket);
   };
+
+  const visible = items.slice(0, visibleCount);
 
   return (
     <div className="min-h-screen bg-background">
@@ -320,98 +373,81 @@ const SearchResults = () => {
           <div className="text-center py-12 text-muted-foreground">Searching…</div>
         )}
 
-        {!loading && query && totalCount === 0 && (
+        {!loading && query && items.length === 0 && (
           <div className="text-center py-12">
             <Search className="w-10 h-10 text-muted-foreground/40 mx-auto mb-4" />
             <p className="text-muted-foreground">No resources found for "{query}"</p>
           </div>
         )}
 
-        {!loading && totalCount > 0 && (
+        {!loading && items.length > 0 && (
           <p className="text-sm text-muted-foreground mb-6">
-            {totalCount} result{totalCount !== 1 ? 's' : ''} for "{query}"
+            {items.length} result{items.length !== 1 ? 's' : ''} for "{query}"
           </p>
         )}
 
-        {!loading && deckResults.length > 0 && (
-          <section className="mb-10">
-            <h2 className="font-serif text-xl text-foreground mb-4">Card Decks</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {deckResults.map((deck) => (
-                <button
-                  key={deck.id}
-                  onClick={() => navigate(`/remembrance?deck=${deck.id}`)}
-                  className="text-left rounded-lg border border-border/60 bg-card p-4 hover:border-primary/60 transition-colors"
-                >
-                  <p className="font-serif text-lg text-foreground">{deck.title}</p>
-                  {deck.subtitle && (
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{deck.subtitle}</p>
-                  )}
-                  {deck.tags && deck.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-3">
-                      {deck.tags.slice(0, 4).map((t) => (
-                        <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>
-                      ))}
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {!loading && cardResults.length > 0 && (
-          <section className="mb-10">
-            <h2 className="font-serif text-xl text-foreground mb-4">
-              Cards <span className="text-sm text-muted-foreground font-sans">({cardResults.length})</span>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {cardResults.slice(0, visibleCards).map((card) => (
-                <button
-                  key={card.id}
-                  onClick={() => navigate(`/remembrance?deck=${card.deck_id}&card=${card.id}`)}
-                  className="text-left rounded-lg border border-border/60 bg-card p-4 hover:border-primary/60 transition-colors"
-                >
-                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                    {card.deck_name} · Card {card.card_number}
-                  </p>
-                  <p className="font-serif text-base text-foreground mt-1">{card.title}</p>
-                  {card.subtitle && (
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{card.subtitle}</p>
-                  )}
-                  {card.tags && card.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-3">
-                      {card.tags.slice(0, 4).map((t) => (
-                        <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>
-                      ))}
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-            {cardResults.length > visibleCards && (
-              <div className="flex justify-center mt-4">
-                <Button variant="outline" onClick={() => setVisibleCards((n) => n + 24)}>
-                  Show more cards
-                </Button>
-              </div>
-            )}
-          </section>
-        )}
-
-        {!loading && results.length > 0 && (
+        {!loading && visible.length > 0 && (
           <>
-            <h2 className="font-serif text-xl text-foreground mb-4">Teachings &amp; Courses</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {results.map((resource, index) => {
-                const locked = isLocked(resource);
+              {visible.map((item) => {
+                if (item.type === 'deck') {
+                  const deck = item.row;
+                  return (
+                    <button
+                      key={`deck-${deck.id}`}
+                      onClick={() => navigate(`/remembrance?deck=${deck.id}`)}
+                      className="text-left rounded-lg border border-border/60 bg-card p-4 hover:border-primary/60 transition-colors"
+                    >
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">Card Deck</p>
+                      <p className="font-serif text-lg text-foreground mt-1">{deck.title}</p>
+                      {deck.subtitle && (
+                        <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{htmlToPlainText(deck.subtitle)}</p>
+                      )}
+                      {deck.tags && deck.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-3">
+                          {deck.tags.slice(0, 4).map((t) => (
+                            <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>
+                          ))}
+                        </div>
+                      )}
+                    </button>
+                  );
+                }
 
+                if (item.type === 'card') {
+                  const card = item.row;
+                  return (
+                    <button
+                      key={`card-${card.id}`}
+                      onClick={() => navigate(`/remembrance?deck=${card.deck_id}&card=${card.id}`)}
+                      className="text-left rounded-lg border border-border/60 bg-card p-4 hover:border-primary/60 transition-colors"
+                    >
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                        {card.deck_name} · Card {card.card_number}
+                      </p>
+                      <p className="font-serif text-base text-foreground mt-1">{card.title}</p>
+                      {card.subtitle && (
+                        <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{card.subtitle}</p>
+                      )}
+                      {card.tags && card.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-3">
+                          {card.tags.slice(0, 4).map((t) => (
+                            <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>
+                          ))}
+                        </div>
+                      )}
+                    </button>
+                  );
+                }
+
+                const resource = item.resource;
+                const locked = isLocked(resource);
                 const tierInfo = resource.doorBucket ? getRequiredTierForBucket(resource.doorBucket) : null;
                 return (
-                  <div key={resource.id} className="relative">
+                  <div key={`res-${resource.id}`} className="relative">
                     <ResourceCard
                       resource={resource}
-                      index={index}
+                      index={0}
                       basePath={getBasePath(resource)}
                       comingSoon={locked}
                     />
@@ -427,6 +463,13 @@ const SearchResults = () => {
                 );
               })}
             </div>
+            {items.length > visibleCount && (
+              <div className="flex justify-center mt-6">
+                <Button variant="outline" onClick={() => setVisibleCount((n) => n + 24)}>
+                  Show more results
+                </Button>
+              </div>
+            )}
           </>
         )}
 
