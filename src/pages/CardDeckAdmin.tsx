@@ -214,7 +214,7 @@ const CardDeckAdmin = () => {
 
       const { data: deckData, error } = await supabase
         .from('decks')
-        .select('id, name, description, theme, thumbnail_url, image_color, is_published')
+        .select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published')
         .order('display_order', { ascending: true });
       if (error) {
         toast({ title: 'Failed to load decks', description: error.message, variant: 'destructive' });
@@ -540,13 +540,13 @@ const CardDeckAdmin = () => {
           is_starter: false,
           is_published: false,
         })
-        .select('id, name, description, theme, thumbnail_url, image_color, is_published')
+        .select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published')
         .single();
       if (error) throw error;
 
       // Refresh deck list and select the new deck
       const { data: deckData } = await supabase
-        .from('decks').select('id, name, description, theme, thumbnail_url, image_color, is_published').order('display_order', { ascending: true });
+        .from('decks').select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published').order('display_order', { ascending: true });
       setDecks(deckData || []);
       setSelectedDeckId(created.id);
       setNewDeckOpen(false);
