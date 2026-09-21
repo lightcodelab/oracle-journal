@@ -33,7 +33,7 @@ export function SacredSpreadsCard() {
           />
 
           <div className="relative flex h-full flex-col justify-end p-5 pt-6 sm:p-7 sm:pt-8 max-w-full sm:max-w-[62%]">
-            <p className="text-[0.65rem] tracking-[0.2em] uppercase text-primary-strong">
+            <p className="text-[0.65rem] tracking-[0.2em] uppercase text-on-image">
               Let the cards speak together
             </p>
             <h2
