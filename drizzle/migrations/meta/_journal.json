@@ -260,6 +260,13 @@
       "when": 1789956956939,
       "tag": "0036_rank_search_results_by_match_location",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1789964936820,
+      "tag": "0037_add_deck_card_back_url",
+      "breakpoints": true
     }
   ]
 }

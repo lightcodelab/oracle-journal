@@ -2213,6 +2213,7 @@ export type Database = {
       }
       decks: {
         Row: {
+          card_back_url: string | null
           created_at: string | null
           description: string | null
           display_order: number | null
@@ -2229,6 +2230,7 @@ export type Database = {
           woocommerce_product_id_premium: string | null
         }
         Insert: {
+          card_back_url?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
@@ -2245,6 +2247,7 @@ export type Database = {
           woocommerce_product_id_premium?: string | null
         }
         Update: {
+          card_back_url?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
