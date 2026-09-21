@@ -26,6 +26,7 @@ interface Deck {
   is_starter: boolean;
   woocommerce_product_id: string | null;
   woocommerce_product_id_premium: string | null;
+  is_published?: boolean;
 }
 
 interface DeckSelectionProps {
@@ -247,11 +248,14 @@ export const DeckSelection = ({
                           <Sparkles className="w-12 h-12 text-white/80" />
                         </div>
                       )}
-                      {deck.is_free && (
-                        <div className="absolute top-2 right-2">
+                      <div className="absolute top-2 right-2 flex gap-2">
+                        {deck.is_published === false && (
+                          <Badge variant="outline" className="bg-background/90 text-xs">Draft</Badge>
+                        )}
+                        {deck.is_free && (
                           <Badge className="bg-primary/90 hover:bg-primary text-primary-foreground text-xs">Free</Badge>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-2 mb-2">
