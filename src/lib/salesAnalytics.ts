@@ -16,7 +16,8 @@ export type SalesEvent =
   | "final_enter_temple_clicked"
   | "faq_opened"
   | "membership_checkout_started"
-  | "membership_checkout_completed";
+  | "membership_checkout_completed"
+  | "free_reading_cta";
 
 type EventParams = Record<string, string | number | boolean | null>;
 
