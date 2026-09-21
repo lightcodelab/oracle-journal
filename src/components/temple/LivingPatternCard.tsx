@@ -84,7 +84,7 @@ export function LivingPatternCard() {
           />
 
           <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 max-w-full sm:max-w-[62%] [text-shadow:0_1px_3px_rgba(0,0,0,0.45)]">
-            <p className="text-[0.65rem] tracking-[0.2em] uppercase text-primary-strong">
+            <p className="text-[0.65rem] tracking-[0.2em] uppercase text-on-image">
               Pause · Perceive · Practise
             </p>
             <h3 className="mt-1 font-serif text-2xl sm:text-3xl tracking-wide text-on-image">
