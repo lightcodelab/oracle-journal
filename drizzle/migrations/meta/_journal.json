@@ -267,6 +267,13 @@
       "when": 1789964936820,
       "tag": "0037_add_deck_card_back_url",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1790034291326,
+      "tag": "0038_add_free_reading_optin",
+      "breakpoints": true
     }
   ]
 }
