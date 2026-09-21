@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Layers, Sun, Moon, Heart, Compass, Eye } from "lucide-react";
+import { Sparkles, Layers, Sun, Moon, Heart, Compass, Eye, Lock } from "lucide-react";
 
 export interface SpreadType {
   id: string;
@@ -120,11 +120,18 @@ export const SpreadSelection = ({
                 <Badge variant="secondary" className="text-xs">
                   {spread.cardCount} {spread.cardCount === 1 ? "Card" : "Cards"}
                 </Badge>
+                {locked && (
+                  <Badge variant="outline" className="text-xs gap-1">
+                    <Lock className="w-3 h-3" aria-hidden />
+                    {lockedNote}
+                  </Badge>
+                )}
               </div>
             </div>
           </div>
         </motion.div>
-      ))}
+        );
+      })}
     </div>
   );
 };
