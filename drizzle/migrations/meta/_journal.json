@@ -253,6 +253,13 @@
       "when": 1789898500687,
       "tag": "0035_add_deck_publishing_controls",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1789956956939,
+      "tag": "0036_rank_search_results_by_match_location",
+      "breakpoints": true
     }
   ]
 }
