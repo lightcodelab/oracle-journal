@@ -66,6 +66,33 @@ const SacredSpreads = () => {
   const initializeSpreadReading = async (spread: SpreadType) => {
     if (!user) return;
 
+    // Free accounts draw through a server-side draw so the decks themselves
+    // stay closed until they join.
+    if (!hasFullAccess) {
+      const { data, error } = await supabase.rpc('draw_free_spread_cards', { _count: spread.cardCount });
+      const drawn = Array.isArray(data) ? (data as Record<string, any>[]) : [];
+      if (error || drawn.length !== spread.cardCount) {
+        toast({
+          title: "Your reading could not be drawn",
+          description: error?.message || "Please try again in a moment.",
+          variant: "destructive",
+        });
+        return;
+      }
+      const freeCards = drawn.map((card) => ({
+        ...card,
+        deck_name: card.deck_name || card.deck_name_resolved || null,
+        content_sections: (card.content_sections as Record<string, any>) || null,
+      })) as OracleCard[];
+
+      setActiveSpread(spread);
+      setSpreadCards(freeCards);
+      setSpreadRevealedPositions([]);
+      setJournalAnswers({ ...EMPTY_SPREAD_JOURNAL_ANSWERS });
+      setShowSpreadReading(true);
+      return;
+    }
+
     const { data: allDecks } = await supabase
       .from('decks')
       .select('id')
