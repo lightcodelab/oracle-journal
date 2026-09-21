@@ -38,6 +38,7 @@ interface DeckRow {
   description?: string | null;
   theme?: string | null;
   thumbnail_url?: string | null;
+  card_back_url?: string | null;
   image_color?: string | null;
   is_published: boolean;
 }
@@ -177,6 +178,7 @@ const CardDeckAdmin = () => {
     description: string;
     theme: string;
     thumbnail_url: string | null;
+    card_back_url: string | null;
     is_published: boolean;
   } | null>(null);
   const [deckTagIds, setDeckTagIds] = useState<string[]>([]);
