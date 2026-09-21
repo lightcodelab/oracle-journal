@@ -161,6 +161,7 @@ const Index = () => {
     if (!deck) return;
     setSelectedDeck(deck);
     setHasPremiumAccess(true);
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, [decks, resumeDeckId, resumeCardId, selectedDeck?.id]);
 
   const handleSelectDeck = async (deckId: string) => {
@@ -171,6 +172,9 @@ const Index = () => {
 
     // All authenticated users have full access
     setHasPremiumAccess(true);
+
+    // Open the deck at the top of the page, not wherever the grid was scrolled
+    window.scrollTo({ top: 0, behavior: "auto" });
   };
 
   const handleShuffle = async () => {
@@ -461,7 +465,7 @@ const Index = () => {
             {selectedDeck.description ? (
               <FormattedContent
                 content={selectedDeck.description}
-                className="text-left text-base md:text-lg text-foreground/80 prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-p:my-3 prose-ul:my-3 prose-ol:my-3"
+                className="text-left text-base md:text-lg text-foreground/80 prose-headings:text-primary prose-strong:text-foreground prose-a:text-primary prose-p:my-3 prose-ul:my-3 prose-ol:my-3"
               />
             ) : (
               <p className="text-xl md:text-2xl text-foreground/80 leading-relaxed">
