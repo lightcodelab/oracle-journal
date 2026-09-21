@@ -22,7 +22,7 @@ export const FormattedContent = ({ content, className = "" }: FormattedContentPr
   if (looksLikeHtml(content)) {
     return (
       <div
-        className={`prose prose-invert max-w-none prose-headings:font-serif prose-p:leading-relaxed ${className}`}
+        className={`prose prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:leading-relaxed [&_h1>strong]:text-primary [&_h2>strong]:text-primary [&_h3>strong]:text-primary [&_h4>strong]:text-primary ${className}`}
         dangerouslySetInnerHTML={{ __html: content }}
       />
     );
