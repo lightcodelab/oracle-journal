@@ -48,6 +48,7 @@ import AdminSessionReplays from "./pages/AdminSessionReplays";
 import UserManagement from "./pages/UserManagement";
 import MyCalendar from "./pages/MyCalendar";
 import Membership from "./pages/Membership";
+import FreeReadingLanding from "./pages/FreeReadingLanding";
 import MembershipSuccess from "./pages/MembershipSuccess";
 import MyAccount from "./pages/MyAccount";
 import DevotionSectionPage from "./pages/DevotionSectionPage";
@@ -126,6 +127,7 @@ const App = () => {
             <Route path="/remembrance/resources/:slug" element={<DevotionResourcePage />} />
             <Route path="/remembrance/courses/:slug" element={<DevotionCoursePage />} />
             <Route path="/remembrance/course/:courseId" element={<DevotionCoursePage />} />
+            <Route path="/free-reading" element={<FreeReadingLanding />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/import-cards" element={<ImportCards />} />
