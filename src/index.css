@@ -153,19 +153,7 @@ All colors MUST be HSL.
 
   body {
     @apply text-foreground;
-    background-image:
-      url('/__l5e/assets-v1/45eeda43-3cd0-4ba1-a4ea-d120229d2f5f/paper-texture-bg-v2.png');
     background-color: hsl(var(--background));
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-  }
-
-  .admin-theme body,
-  body:has(.admin-theme),
-  .dark-theme body,
-  body:has(.dark-theme) {
-    background-image: none;
   }
 }
 
