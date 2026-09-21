@@ -187,6 +187,7 @@ const CardDeckAdmin = () => {
 
   const [savingDeck, setSavingDeck] = useState(false);
   const [uploadingDeckThumb, setUploadingDeckThumb] = useState(false);
+  const [uploadingCardBack, setUploadingCardBack] = useState(false);
 
   // New-deck dialog state
   const [newDeckOpen, setNewDeckOpen] = useState(false);
@@ -254,6 +255,7 @@ const CardDeckAdmin = () => {
           description: d.description || '',
           theme: d.theme || '',
           thumbnail_url: d.thumbnail_url || null,
+          card_back_url: d.card_back_url || null,
           is_published: d.is_published,
         });
       }
@@ -608,6 +610,26 @@ const CardDeckAdmin = () => {
       toast({ title: 'Upload failed', description: err.message, variant: 'destructive' });
     } finally {
       setUploadingDeckThumb(false);
+    }
+  };
+
+  const handleDeckCardBackUpload = async (file: File) => {
+    setUploadingCardBack(true);
+    try {
+      const compressed = await compressImage(file);
+      const ext = compressed.name.split('.').pop() || 'webp';
+      const path = `card-backs/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from('content-images')
+        .upload(path, compressed, { contentType: compressed.type, upsert: false });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from('content-images').getPublicUrl(path);
+      setDeckDraft((d) => (d ? { ...d, card_back_url: pub.publicUrl } : d));
+      toast({ title: 'Card back uploaded', description: 'Save Deck Settings to apply it.' });
+    } catch (err: any) {
+      toast({ title: 'Upload failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setUploadingCardBack(false);
     }
   };
 
