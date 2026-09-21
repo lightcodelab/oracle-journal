@@ -36,7 +36,7 @@ const SacredSpreads = () => {
 
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { loading: accessLoading, hasFullAccess, isFreeAccount, freeReadingUsed, canUseFreeReading, refresh: refreshAccess } = useFreeAccess();
+  const { loading: accessLoading, hasFullAccess, isFreeAccount, freeReadingUsed, refresh: refreshAccess } = useFreeAccess();
 
   // Free accounts get one Past, Present, Future reading and nothing else.
   const FREE_SPREAD_ID = "past-present-future";
@@ -148,6 +148,8 @@ const SacredSpreads = () => {
       if (!data?.reading) throw new Error('The reading returned no content.');
       setGeneratedReading(data.reading);
       setGeneratedReadingModel(data.model || null);
+      // A free account's single reading is now spent.
+      if (!hasFullAccess) void refreshAccess();
     } catch (error) {
       setGenerationError(error instanceof Error ? error.message : 'Your reading could not be written. Please try again.');
     } finally {
