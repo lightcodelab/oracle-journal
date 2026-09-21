@@ -949,6 +949,58 @@ const CardDeckAdmin = () => {
                   Displayed on the Door of Remembrance deck grid. JPG/PNG/WebP, auto-compressed.
                 </p>
               </div>
+              <div className="space-y-2">
+                <Label>Card Back Image (shown face-down before a card is revealed)</Label>
+                {deckDraft.card_back_url ? (
+                  <div className="flex items-center gap-3 p-3 bg-background rounded-md border">
+                    <img
+                      src={deckDraft.card_back_url}
+                      alt="Card back"
+                      className="w-20 aspect-[2/3] object-cover rounded"
+                    />
+                    <span className="flex-1 text-xs truncate text-muted-foreground">{deckDraft.card_back_url}</span>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="w-44"
+                        disabled={uploadingCardBack}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleDeckCardBackUpload(file);
+                        }}
+                      />
+                      {uploadingCardBack && <Loader2 className="w-4 h-4 animate-spin" />}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        aria-label="Remove card back image"
+                        onClick={() => setDeckDraft({ ...deckDraft, card_back_url: null })}
+                      >
+                        <XIcon className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      disabled={uploadingCardBack}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleDeckCardBackUpload(file);
+                      }}
+                    />
+                    {uploadingCardBack && <Loader2 className="w-4 h-4 animate-spin" />}
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  Used for this deck's face-down cards and shuffle. Portrait images work best.
+                  If left empty, the deck falls back to its built-in card back.
+                </p>
+              </div>
               <CourseTagPicker
                 selectedTagIds={deckTagIds}
                 onChange={setDeckTagIds}
