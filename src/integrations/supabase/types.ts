@@ -8362,6 +8362,7 @@ export type Database = {
           id: string
           image_url: string
           kind: string
+          rank: number
           score: number
           subtitle: string
           tags: string[]
