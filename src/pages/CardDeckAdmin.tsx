@@ -648,6 +648,7 @@ const CardDeckAdmin = () => {
           description: deckDraft.description.trim() || null,
           theme: deckDraft.theme.trim() || null,
           thumbnail_url: deckDraft.thumbnail_url,
+          card_back_url: deckDraft.card_back_url,
           is_published: deckDraft.is_published,
         })
         .eq('id', selectedDeckId);
