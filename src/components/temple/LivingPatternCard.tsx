@@ -94,7 +94,7 @@ export function LivingPatternCard() {
               Follow one moment all the way through, and choose one small
               experiment. You can return to it later, when life has answered back.
             </p>
-            <div className="mt-4 flex w-full flex-nowrap items-center gap-2 sm:gap-3 sm:w-auto">
+            <div className="mt-4 flex w-full flex-nowrap items-center gap-2 sm:gap-3 sm:w-auto [text-shadow:none]">
               <Link
                 to="/living-pattern"
                 className="inline-flex min-w-0 flex-1 items-center justify-center whitespace-nowrap rounded-md bg-primary px-3 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:flex-none sm:px-4"
