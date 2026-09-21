@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SpreadSelection, type SpreadType } from "@/components/SpreadSelection";
@@ -40,6 +40,7 @@ const SacredSpreads = () => {
 
   // Free accounts get one Past, Present, Future reading and nothing else.
   const FREE_SPREAD_ID = "past-present-future";
+  const autoSavedRef = useRef(false);
   const allowedSpreadIds = hasFullAccess ? undefined : [FREE_SPREAD_ID];
 
   useEffect(() => {
