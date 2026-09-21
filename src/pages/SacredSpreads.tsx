@@ -5,6 +5,8 @@ import { SpreadSelection, type SpreadType } from "@/components/SpreadSelection";
 import { SpreadReading, EMPTY_SPREAD_JOURNAL_ANSWERS, type SpreadJournalAnswers } from "@/components/SpreadReading";
 
 import CardDetailDialog from "@/components/CardDetailDialog";
+import MembershipInvite from "@/components/MembershipInvite";
+import { useFreeAccess } from "@/hooks/useFreeAccess";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { DoorOpen, Sparkles } from "lucide-react";
