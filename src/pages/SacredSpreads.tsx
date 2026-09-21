@@ -36,6 +36,11 @@ const SacredSpreads = () => {
 
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { loading: accessLoading, hasFullAccess, isFreeAccount, freeReadingUsed, canUseFreeReading, refresh: refreshAccess } = useFreeAccess();
+
+  // Free accounts get one Past, Present, Future reading and nothing else.
+  const FREE_SPREAD_ID = "past-present-future";
+  const allowedSpreadIds = hasFullAccess ? undefined : [FREE_SPREAD_ID];
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -101,6 +106,22 @@ const SacredSpreads = () => {
   };
 
   const handleSelectSpread = async (spread: SpreadType) => {
+    if (!hasFullAccess) {
+      if (spread.id !== FREE_SPREAD_ID) {
+        toast({
+          title: "Included with membership",
+          description: "This spread opens when you join THE TEMPLE.",
+        });
+        return;
+      }
+      if (freeReadingUsed) {
+        toast({
+          title: "Your free reading has been drawn",
+          description: "You can revisit it any time in My Readings.",
+        });
+        return;
+      }
+    }
     await initializeSpreadReading(spread);
   };
 
@@ -268,7 +289,28 @@ const SacredSpreads = () => {
               </div>
             </div>
 
-            <SpreadSelection onSelectSpread={handleSelectSpread} />
+            {isFreeAccount && !accessLoading && (
+              <div className="max-w-3xl mx-auto mb-8">
+                {freeReadingUsed ? (
+                  <MembershipInvite
+                    heading="Your free reading has been drawn"
+                    body="Your Past, Present, Future reading is saved to your account and stays yours to read and write in. Membership opens the other five spreads, every card deck, the courses, the Remembrance Letters, Living Pattern and your private journal."
+                  />
+                ) : (
+                  <div className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-center">
+                    <p className="text-sm text-foreground/85 leading-relaxed">
+                      Your free account includes one <strong>Past, Present, Future</strong> reading.
+                      Take your time with it — the other spreads open with membership.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <SpreadSelection
+              onSelectSpread={handleSelectSpread}
+              allowedSpreadIds={allowedSpreadIds}
+            />
           </motion.div>
         )}
 
@@ -294,6 +336,12 @@ const SacredSpreads = () => {
               setJournalAnswers((prev) => ({ ...prev, [key]: value }))
             }
           />
+        )}
+
+        {activeSpread && showSpreadReading && isFreeAccount && generatedReading && (
+          <div className="max-w-3xl mx-auto mt-10">
+            <MembershipInvite />
+          </div>
         )}
       </div>
 
