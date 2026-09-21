@@ -247,6 +247,14 @@ const SacredSpreads = () => {
     setSaving(false);
   };
 
+  // A free account gets one reading, so it is kept for them automatically.
+  useEffect(() => {
+    if (hasFullAccess || !generatedReading || !activeSpread || autoSavedRef.current) return;
+    autoSavedRef.current = true;
+    void handleSaveSpread();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasFullAccess, generatedReading, activeSpread]);
+
   const handleBackToSpreads = () => {
     setActiveSpread(null);
     setSpreadCards([]);
