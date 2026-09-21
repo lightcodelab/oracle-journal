@@ -513,8 +513,9 @@ const CardDeckAdmin = () => {
     }
     setCreatingDeck(true);
     try {
-      // If user uploaded an image, compress + push to storage and store URL in image_color.
-      let imageColorValue = newDeck.image_color || '#8b5e3c';
+      // If the admin uploaded a card back, store it on the deck's card_back_url.
+      const imageColorValue = newDeck.image_color || '#8b5e3c';
+      let cardBackUrl: string | null = null;
       if (backMode === 'image' && backImageFile) {
         setUploadingImage(true);
         const compressed = await compressImage(backImageFile);
@@ -525,7 +526,7 @@ const CardDeckAdmin = () => {
           .upload(path, compressed, { contentType: compressed.type, upsert: false });
         if (upErr) throw upErr;
         const { data: pub } = supabase.storage.from('content-images').getPublicUrl(path);
-        imageColorValue = pub.publicUrl;
+        cardBackUrl = pub.publicUrl;
         setUploadingImage(false);
       }
 
@@ -537,6 +538,7 @@ const CardDeckAdmin = () => {
           theme: newDeck.theme.trim(),
           description: newDeck.description.trim() || null,
           image_color: imageColorValue,
+          card_back_url: cardBackUrl,
           display_order: nextOrder,
           is_free: false,
           is_starter: false,
