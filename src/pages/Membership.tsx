@@ -895,11 +895,7 @@ Begin with what is asking for your attention. The Guide can help you find the ne
               write privately — no payment, and your reading stays yours.
             </p>
             <div className="mt-7 flex justify-center">
-              <Button
-                asChild
-                variant="outline"
-                onClick={() => trackSalesEvent("free_reading_cta", { placement: "pricing" })}
-              >
+              <Button asChild variant="outline">
                 <a href="/free-reading">Draw my free reading</a>
               </Button>
             </div>
