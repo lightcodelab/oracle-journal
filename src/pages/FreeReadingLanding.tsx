@@ -179,6 +179,13 @@ const FreeReadingLanding = () => {
               </Link>
               .
             </p>
+            <img
+              src={cardBacksCollage}
+              alt="The four card decks available for the Past, Present, Future reading, spread across dark cloth in candlelight."
+              width={1500}
+              height={1000}
+              className="mt-6 aspect-[3/2] w-full rounded-lg border border-border/60 object-cover"
+            />
           </div>
 
           <form onSubmit={handleSubmit} className="rounded-lg border border-border bg-card p-6">
@@ -242,13 +249,6 @@ const FreeReadingLanding = () => {
                   "Draw my free reading"
                 )}
               </Button>
-              <img
-                src={cardBacksCollage}
-                alt="The four card decks available for the Past, Present, Future reading, spread across dark cloth in candlelight."
-                width={1500}
-                height={1000}
-                className="mt-5 aspect-[3/2] w-full rounded-lg border border-border/60 object-cover"
-              />
             </div>
           </form>
         </div>
