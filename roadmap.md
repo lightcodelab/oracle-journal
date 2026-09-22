@@ -23,3 +23,7 @@
 - [x] Welcome email and MailerLite free-signup group sync
 - [ ] Set MAILERLITE_FREE_GROUP_ID if a separate free-signup list is wanted (falls back to the existing group)
 - [x] Verify signup, one reading, refusal of a second, locked spreads, members unaffected
+
+## Card image dimensions
+- [x] Standardise every card face across all decks to 1050 × 1500 pixels
+- [x] Verify all card-face files and preview rendering
