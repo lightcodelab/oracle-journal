@@ -14,6 +14,8 @@ const SPREADS: Record<string, { name: string; positions: string[] }> = {
   "inner-compass": { name: "The Inner Compass", positions: ["Release", "Nurture", "Trust", "Walk Toward"] },
 };
 
+const FREE_SPREAD_ID = "past-present-future";
+
 const BodySchema = z.object({
   spreadType: z.string().min(1).max(80),
   cardIds: z.array(z.string().uuid()).min(1).max(4),
@@ -154,7 +156,15 @@ Deno.serve(async (req) => {
     const admin = createClient(supabaseUrl, serviceRoleKey);
     const { data: hasAccess, error: accessError } = await admin.rpc("has_full_temple_access", { _user_id: user.id });
     if (accessError) throw accessError;
-    if (!hasAccess) return json({ error: "An active membership is needed to create a Sacred Spread reading." }, 403);
+
+    // Free accounts get exactly one Past, Present, Future reading.
+    let freeReading = false;
+    if (!hasAccess) {
+      const { data: freeAvailable, error: freeError } = await admin.rpc("has_free_spread_access", { _user_id: user.id });
+      if (freeError) throw freeError;
+      if (!freeAvailable) return json({ error: "An active membership is needed to create another Sacred Spread reading." }, 403);
+      freeReading = true;
+    }
 
     const parsed = BodySchema.safeParse(await req.json());
     if (!parsed.success) return json({ error: "The selected spread is not valid." }, 400);
@@ -162,9 +172,16 @@ Deno.serve(async (req) => {
     if (!spread || parsed.data.cardIds.length !== spread.positions.length || new Set(parsed.data.cardIds).size !== parsed.data.cardIds.length) {
       return json({ error: "The selected cards do not match this spread." }, 400);
     }
+    if (freeReading && parsed.data.spreadType !== FREE_SPREAD_ID) {
+      return json({ error: "This spread opens when you join THE TEMPLE." }, 403);
+    }
 
-    // Read through the member-scoped client so draft decks remain admin-only.
-    const { data: cards, error: cardsError } = await userClient.from("cards").select("*, decks(name)").in("id", parsed.data.cardIds);
+    // Members read through their own client so draft decks stay admin-only;
+    // the free reading is served by the service role against published decks.
+    const cardQuery = freeReading
+      ? admin.from("cards").select("*, decks!inner(name, is_published, is_starter)").eq("decks.is_published", true).eq("decks.is_starter", false).in("id", parsed.data.cardIds)
+      : userClient.from("cards").select("*, decks(name)").in("id", parsed.data.cardIds);
+    const { data: cards, error: cardsError } = await cardQuery;
     if (cardsError) throw cardsError;
     if (!cards || cards.length !== parsed.data.cardIds.length) return json({ error: "One or more selected cards could not be found." }, 400);
     const byId = new Map(cards.map((card: Record<string, unknown>) => [String(card.id), card]));
@@ -192,6 +209,12 @@ Rules:
     const userPrompt = `Spread: ${spread.name}\n\nCards in their exact spread order:\n\n${cardsBlock}\n\nWrite the complete shared card reading now.`;
 
     const reading = await callGateway(apiKey, MODEL, systemPrompt, userPrompt);
+
+    if (freeReading) {
+      // Stamp the single free reading so it cannot be repeated.
+      await admin.from("profiles").update({ free_reading_used_at: new Date().toISOString() }).eq("id", user.id).is("free_reading_used_at", null);
+    }
+
     return json({ reading, model: MODEL });
   } catch (error) {
     console.error("generate-sacred-spread-reading failed", error);

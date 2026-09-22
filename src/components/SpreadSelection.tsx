@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Layers, Sun, Moon, Heart, Compass, Eye } from "lucide-react";
+import { Sparkles, Layers, Sun, Moon, Heart, Compass, Eye, Lock } from "lucide-react";
 
 export interface SpreadType {
   id: string;
@@ -64,18 +64,30 @@ export const SPREAD_TYPES: SpreadType[] = [
 
 interface SpreadSelectionProps {
   onSelectSpread: (spread: SpreadType) => void;
+  /** When set, only these spreads can be opened; the rest show as locked. */
+  allowedSpreadIds?: string[];
+  /** Short note shown on locked spreads. */
+  lockedNote?: string;
 }
 
-export const SpreadSelection = ({ onSelectSpread }: SpreadSelectionProps) => {
+export const SpreadSelection = ({
+  onSelectSpread,
+  allowedSpreadIds,
+  lockedNote = 'Included with membership',
+}: SpreadSelectionProps) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
-      {SPREAD_TYPES.map((spread) => (
+      {SPREAD_TYPES.map((spread) => {
+        const locked = Boolean(allowedSpreadIds) && !allowedSpreadIds!.includes(spread.id);
+        return (
         <motion.div
           key={spread.id}
-          onClick={() => onSelectSpread(spread)}
-          className="group cursor-pointer"
+          onClick={() => {
+            if (!locked) onSelectSpread(spread);
+          }}
+          className={locked ? 'group' : 'group cursor-pointer'}
         >
-          <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30 h-full">
+          <div className={`bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 h-full ${locked ? 'opacity-60' : 'group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30'}`}>
             {/* Visual header */}
             <div className="aspect-[3/1] w-full bg-gradient-to-br from-primary/20 via-accent/10 to-primary/5 flex items-center justify-center relative overflow-hidden">
               <div className="flex gap-2 items-center">
@@ -108,11 +120,18 @@ export const SpreadSelection = ({ onSelectSpread }: SpreadSelectionProps) => {
                 <Badge variant="secondary" className="text-xs">
                   {spread.cardCount} {spread.cardCount === 1 ? "Card" : "Cards"}
                 </Badge>
+                {locked && (
+                  <Badge variant="outline" className="text-xs gap-1">
+                    <Lock className="w-3 h-3" aria-hidden />
+                    {lockedNote}
+                  </Badge>
+                )}
               </div>
             </div>
           </div>
         </motion.div>
-      ))}
+        );
+      })}
     </div>
   );
 };

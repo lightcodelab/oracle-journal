@@ -5361,6 +5361,8 @@ export type Database = {
           created_at: string | null
           current_period_end: string | null
           email: string | null
+          free_reading_used_at: string | null
+          free_signup_source: string | null
           full_name: string | null
           full_name_encrypted: Json | null
           id: string
@@ -5379,6 +5381,8 @@ export type Database = {
           created_at?: string | null
           current_period_end?: string | null
           email?: string | null
+          free_reading_used_at?: string | null
+          free_signup_source?: string | null
           full_name?: string | null
           full_name_encrypted?: Json | null
           id: string
@@ -5397,6 +5401,8 @@ export type Database = {
           created_at?: string | null
           current_period_end?: string | null
           email?: string | null
+          free_reading_used_at?: string | null
+          free_signup_source?: string | null
           full_name?: string | null
           full_name_encrypted?: Json | null
           id?: string
@@ -7827,6 +7833,7 @@ export type Database = {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
       }
+      draw_free_spread_cards: { Args: { _count?: number }; Returns: Json }
       find_unpaid_accounts: {
         Args: { _older_than_days?: number }
         Returns: {
@@ -7873,6 +7880,7 @@ export type Database = {
       has_bucket_access:
         | { Args: { _bucket_key: string; _user_id: string }; Returns: boolean }
         | { Args: { bucket_key_param: string }; Returns: boolean }
+      has_free_spread_access: { Args: { _user_id: string }; Returns: boolean }
       has_full_temple_access: { Args: { _user_id: string }; Returns: boolean }
       has_manual_access: {
         Args: { _bucket_key: string; _user_id: string }
@@ -8355,6 +8363,7 @@ export type Database = {
         }
         Returns: Json
       }
+      saved_readings_count: { Args: { _user_id: string }; Returns: number }
       search_temple: {
         Args: { _q: string }
         Returns: {

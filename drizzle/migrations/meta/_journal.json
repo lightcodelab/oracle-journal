@@ -267,6 +267,27 @@
       "when": 1789964936820,
       "tag": "0037_add_deck_card_back_url",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1790034291326,
+      "tag": "0038_add_free_reading_optin",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1790034440056,
+      "tag": "0039_free_spread_card_draw",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1790035245259,
+      "tag": "0040_allow_free_reading_cta_event",
+      "breakpoints": true
     }
   ]
 }

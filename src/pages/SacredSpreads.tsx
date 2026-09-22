@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { SpreadSelection, type SpreadType } from "@/components/SpreadSelection";
 import { SpreadReading, EMPTY_SPREAD_JOURNAL_ANSWERS, type SpreadJournalAnswers } from "@/components/SpreadReading";
 
 import CardDetailDialog from "@/components/CardDetailDialog";
+import MembershipInvite from "@/components/MembershipInvite";
+import { useFreeAccess } from "@/hooks/useFreeAccess";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { DoorOpen, Sparkles } from "lucide-react";
@@ -34,6 +36,12 @@ const SacredSpreads = () => {
 
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { loading: accessLoading, hasFullAccess, isFreeAccount, freeReadingUsed, refresh: refreshAccess } = useFreeAccess();
+
+  // Free accounts get one Past, Present, Future reading and nothing else.
+  const FREE_SPREAD_ID = "past-present-future";
+  const autoSavedRef = useRef(false);
+  const allowedSpreadIds = hasFullAccess ? undefined : [FREE_SPREAD_ID];
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -58,6 +66,33 @@ const SacredSpreads = () => {
 
   const initializeSpreadReading = async (spread: SpreadType) => {
     if (!user) return;
+
+    // Free accounts draw through a server-side draw so the decks themselves
+    // stay closed until they join.
+    if (!hasFullAccess) {
+      const { data, error } = await supabase.rpc('draw_free_spread_cards', { _count: spread.cardCount });
+      const drawn = Array.isArray(data) ? (data as Record<string, any>[]) : [];
+      if (error || drawn.length !== spread.cardCount) {
+        toast({
+          title: "Your reading could not be drawn",
+          description: error?.message || "Please try again in a moment.",
+          variant: "destructive",
+        });
+        return;
+      }
+      const freeCards = drawn.map((card) => ({
+        ...card,
+        deck_name: card.deck_name || card.deck_name_resolved || null,
+        content_sections: (card.content_sections as Record<string, any>) || null,
+      })) as OracleCard[];
+
+      setActiveSpread(spread);
+      setSpreadCards(freeCards);
+      setSpreadRevealedPositions([]);
+      setJournalAnswers({ ...EMPTY_SPREAD_JOURNAL_ANSWERS });
+      setShowSpreadReading(true);
+      return;
+    }
 
     const { data: allDecks } = await supabase
       .from('decks')
@@ -99,6 +134,22 @@ const SacredSpreads = () => {
   };
 
   const handleSelectSpread = async (spread: SpreadType) => {
+    if (!hasFullAccess) {
+      if (spread.id !== FREE_SPREAD_ID) {
+        toast({
+          title: "Included with membership",
+          description: "This spread opens when you join THE TEMPLE.",
+        });
+        return;
+      }
+      if (freeReadingUsed) {
+        toast({
+          title: "Your free reading has been drawn",
+          description: "You can revisit it any time in My Readings.",
+        });
+        return;
+      }
+    }
     await initializeSpreadReading(spread);
   };
 
@@ -125,6 +176,8 @@ const SacredSpreads = () => {
       if (!data?.reading) throw new Error('The reading returned no content.');
       setGeneratedReading(data.reading);
       setGeneratedReadingModel(data.model || null);
+      // A free account's single reading is now spent.
+      if (!hasFullAccess) void refreshAccess();
     } catch (error) {
       setGenerationError(error instanceof Error ? error.message : 'Your reading could not be written. Please try again.');
     } finally {
@@ -194,6 +247,14 @@ const SacredSpreads = () => {
     }
     setSaving(false);
   };
+
+  // A free account gets one reading, so it is kept for them automatically.
+  useEffect(() => {
+    if (hasFullAccess || !generatedReading || !activeSpread || autoSavedRef.current) return;
+    autoSavedRef.current = true;
+    void handleSaveSpread();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasFullAccess, generatedReading, activeSpread]);
 
   const handleBackToSpreads = () => {
     setActiveSpread(null);
@@ -266,7 +327,28 @@ const SacredSpreads = () => {
               </div>
             </div>
 
-            <SpreadSelection onSelectSpread={handleSelectSpread} />
+            {isFreeAccount && !accessLoading && (
+              <div className="max-w-3xl mx-auto mb-8">
+                {freeReadingUsed ? (
+                  <MembershipInvite
+                    heading="Your free reading has been drawn"
+                    body="Your Past, Present, Future reading is saved to your account and stays yours to read and write in. Membership opens the other five spreads, every card deck, the courses, the Remembrance Letters, Living Pattern and your private journal."
+                  />
+                ) : (
+                  <div className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-center">
+                    <p className="text-sm text-foreground/85 leading-relaxed">
+                      Your free account includes one <strong>Past, Present, Future</strong> reading.
+                      Take your time with it — the other spreads open with membership.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <SpreadSelection
+              onSelectSpread={handleSelectSpread}
+              allowedSpreadIds={allowedSpreadIds}
+            />
           </motion.div>
         )}
 
@@ -292,6 +374,12 @@ const SacredSpreads = () => {
               setJournalAnswers((prev) => ({ ...prev, [key]: value }))
             }
           />
+        )}
+
+        {activeSpread && showSpreadReading && isFreeAccount && generatedReading && (
+          <div className="max-w-3xl mx-auto mt-10">
+            <MembershipInvite />
+          </div>
         )}
       </div>
 

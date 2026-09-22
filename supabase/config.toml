@@ -48,3 +48,7 @@ project_id = "gjaafbzhkdekgigmnafp"
     verify_jwt = false
   [functions.run-remembrance-letters]
     verify_jwt = false
+  [functions.free-signup-onboard]
+    verify_jwt = false
+  [functions.generate-sacred-spread-reading]
+    verify_jwt = false
