@@ -20,6 +20,7 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         "on-image": "hsl(var(--on-image))",
+        "image-overlay": "hsl(var(--image-overlay))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
