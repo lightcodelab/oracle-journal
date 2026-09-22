@@ -124,7 +124,14 @@ const FreeReadingLanding = () => {
           alt="Oracle cards laid out on a dark cloth in warm candlelight."
           className="absolute inset-0 -z-10 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 -z-10 bg-[hsl(22_24%_8%/0.86)]" aria-hidden />
+        <div
+          className="absolute inset-0 -z-10 bg-gradient-to-b from-image-overlay/65 via-image-overlay/75 to-image-overlay/95"
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0 -z-10 bg-gradient-to-r from-image-overlay/45 via-transparent to-image-overlay/45"
+          aria-hidden
+        />
         <div className="mx-auto max-w-3xl px-5 py-16 text-center md:py-24">
           <p className="mb-3 text-xs uppercase tracking-[0.2em] text-primary">A free card reading</p>
           <h1 className="font-serif text-[2rem] leading-tight text-on-image sm:text-5xl">
