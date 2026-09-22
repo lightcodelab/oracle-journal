@@ -149,13 +149,6 @@ const FreeReadingLanding = () => {
       <section className="px-5 py-12 md:py-16">
         <div className="mx-auto grid max-w-5xl gap-10 md:grid-cols-2 md:gap-14">
           <div>
-            <img
-              src={cardBacksCollage}
-              alt="The four card decks available for the Past, Present, Future reading, spread across dark cloth in candlelight."
-              width={1500}
-              height={1000}
-              className="mb-7 aspect-[3/2] w-full rounded-lg border border-border/60 object-cover"
-            />
             <h2 className="font-serif text-2xl text-foreground">What you receive</h2>
             <ul className="mt-5 space-y-4 text-sm leading-relaxed text-muted-foreground">
               <li className="flex gap-3">
@@ -249,6 +242,13 @@ const FreeReadingLanding = () => {
                   "Draw my free reading"
                 )}
               </Button>
+              <img
+                src={cardBacksCollage}
+                alt="The four card decks available for the Past, Present, Future reading, spread across dark cloth in candlelight."
+                width={1500}
+                height={1000}
+                className="mt-5 aspect-[3/2] w-full rounded-lg border border-border/60 object-cover"
+              />
             </div>
           </form>
         </div>
