@@ -281,6 +281,13 @@
       "when": 1790034440056,
       "tag": "0039_free_spread_card_draw",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1790035245259,
+      "tag": "0040_allow_free_reading_cta_event",
+      "breakpoints": true
     }
   ]
 }
