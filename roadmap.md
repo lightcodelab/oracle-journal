@@ -25,5 +25,5 @@
 - [x] Verify signup, one reading, refusal of a second, locked spreads, members unaffected
 
 ## Card image dimensions
-- [ ] Standardise every card face across all decks to 1050 × 1500 pixels
-- [ ] Verify all card-face files and preview rendering
+- [x] Standardise every card face across all decks to 1050 × 1500 pixels
+- [x] Verify all card-face files and preview rendering
