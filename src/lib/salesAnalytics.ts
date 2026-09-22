@@ -9,6 +9,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { getStoredAffiliateRef } from "@/lib/affiliateTracking";
 
+/** Allowed event names. Must stay in step with the launch_events constraint. */
 export type SalesEvent =
   | "sales_page_view"
   | "hero_enter_temple_clicked"
