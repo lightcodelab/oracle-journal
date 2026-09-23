@@ -38,7 +38,7 @@ export const MultiDeckShuffleAnimation = ({ onComplete }: MultiDeckShuffleAnimat
       {cards.map(({ index, cardBack }) => (
         <motion.div
           key={index}
-          className="absolute w-40 h-56 sm:w-52 sm:h-72"
+          className="absolute w-40 sm:w-52 aspect-[7/10]"
           initial={{
             x: 0,
             y: 0,

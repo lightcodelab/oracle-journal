@@ -26,7 +26,7 @@ export const OracleCardComponent = ({ card, isRevealed, onClick, cardBackImage }
 
   return (
     <motion.div
-      className="w-72 h-96 cursor-pointer perspective-1000"
+      className="w-72 aspect-[7/10] cursor-pointer perspective-1000"
       onClick={handleClick}
       whileHover={!isRevealed ? { scale: 1.05 } : {}}
       transition={{ duration: 0.3 }}

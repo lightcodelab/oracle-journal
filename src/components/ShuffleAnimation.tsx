@@ -15,7 +15,7 @@ export const ShuffleAnimation = ({ cardBackImage }: ShuffleAnimationProps) => {
       {cards.map((index) => (
         <motion.div
           key={index}
-          className="absolute w-64 h-80"
+          className="absolute w-64 aspect-[7/10]"
           initial={{
             x: 0,
             y: 0,

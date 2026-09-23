@@ -135,10 +135,10 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
           <img 
             src={cardImageSrc(card.image_file_name)} 
             alt={card.card_title}
-            className="w-72 h-96 object-cover rounded-2xl border border-border shadow-lg"
+            className="w-72 aspect-[7/10] object-cover rounded-2xl border border-border shadow-lg"
           />
         ) : (
-          <div className="w-72 h-96 bg-gradient-to-br from-purple-600 to-pink-500 rounded-2xl border border-border shadow-lg p-6 flex flex-col items-center justify-center text-center">
+          <div className="w-72 aspect-[7/10] bg-gradient-to-br from-purple-600 to-pink-500 rounded-2xl border border-border shadow-lg p-6 flex flex-col items-center justify-center text-center">
             <h2 className="font-serif text-3xl font-bold text-primary-foreground mb-4">
               {card.card_title}
             </h2>

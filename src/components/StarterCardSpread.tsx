@@ -113,7 +113,7 @@ export const StarterCardSpread = ({
               className="flex flex-col items-center gap-3"
             >
               <motion.div
-                className={`relative w-48 h-64 md:w-56 md:h-72 cursor-pointer ${!canReadToday && !viewed ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`relative w-48 md:w-56 aspect-[7/10] cursor-pointer ${!canReadToday && !viewed ? 'opacity-50 cursor-not-allowed' : ''}`}
                 whileHover={canReadToday || viewed ? { scale: 1.05, rotate: 0 } : {}}
                 whileTap={canReadToday || viewed ? { scale: 0.98 } : {}}
                 onClick={() => (canReadToday || viewed) && onSelectCard(card)}

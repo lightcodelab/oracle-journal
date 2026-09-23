@@ -104,10 +104,10 @@ const SaveReadingDialog = ({ open, onOpenChange, card, deckId }: SaveReadingDial
               <img
                 src={cardImageSrc(card.image_file_name)}
                 alt={card.card_title}
-                className="w-16 h-20 object-cover rounded-md border border-border"
+                className="w-16 aspect-[7/10] object-cover rounded-md border border-border"
               />
             ) : (
-              <div className="w-16 h-20 bg-gradient-to-br from-purple-600 to-pink-500 rounded-md flex items-center justify-center">
+              <div className="w-16 aspect-[7/10] bg-gradient-to-br from-purple-600 to-pink-500 rounded-md flex items-center justify-center">
                 <span className="text-white text-xs font-bold">{card.card_number}</span>
               </div>
             )}

@@ -27,3 +27,4 @@
 ## Card image dimensions
 - [x] Standardise every card face across all decks to 1050 × 1500 pixels
 - [x] Verify all card-face files and preview rendering
+- [x] Standardise every displayed card-face frame to 7:10 on desktop and mobile

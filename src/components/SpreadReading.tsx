@@ -120,7 +120,7 @@ export const SpreadReading = ({
               </span>
 
               <motion.div
-                className="relative w-40 h-56 md:w-48 md:h-64 cursor-pointer"
+                className="relative w-40 md:w-48 aspect-[7/10] cursor-pointer"
                 whileHover={{ scale: 1.05, rotate: 0 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => onSelectCard(card, index)}
