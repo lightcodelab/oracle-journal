@@ -238,10 +238,10 @@ const MyReadings = () => {
                             <img
                               src={cardImageSrc(sc.image_file_name)}
                               alt={sc.card_title}
-                              className="w-14 h-20 sm:w-16 sm:h-22 object-cover rounded-md border border-border shadow-sm"
+                              className="w-14 sm:w-16 aspect-[7/10] object-cover rounded-md border border-border shadow-sm"
                             />
                           ) : (
-                            <div className="w-14 h-20 sm:w-16 sm:h-22 rounded-md bg-primary/20 border border-primary/30 flex items-center justify-center">
+                            <div className="w-14 sm:w-16 aspect-[7/10] rounded-md bg-primary/20 border border-primary/30 flex items-center justify-center">
                               <Sparkles className="w-4 h-4 text-primary/40" />
                             </div>
                           )}
@@ -343,7 +343,7 @@ const MyReadings = () => {
                     className="group relative bg-card border border-border rounded-lg overflow-hidden hover:border-primary/50 transition-colors"
                   >
                     {/* Card Image */}
-                    <div className="aspect-[3/4] relative">
+                    <div className="aspect-[7/10] relative">
                       {reading.image_file_name ? (
                         <img
                           src={cardImageSrc(reading.image_file_name)}

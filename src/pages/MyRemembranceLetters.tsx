@@ -308,10 +308,10 @@ const MyRemembranceLetters = () => {
                               src={cardImageSrc(card.image_file_name)}
                               alt={`${card.card_title ?? "Card"}${card.deck_name ? ` — ${card.deck_name}` : ""}`}
                               loading="lazy"
-                              className="aspect-[2/3] w-full object-cover"
+                              className="aspect-[7/10] w-full object-cover"
                             />
                           ) : (
-                            <div className="aspect-[2/3] w-full flex items-center justify-center text-xs text-muted-foreground">
+                            <div className="aspect-[7/10] w-full flex items-center justify-center text-xs text-muted-foreground">
                               {card.card_title ?? "Card"}
                             </div>
                           )}

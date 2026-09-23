@@ -132,7 +132,7 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
                 </span>
 
                 <motion.div
-                  className="relative w-36 h-52 md:w-44 md:h-60 cursor-pointer"
+                  className="relative w-36 md:w-44 aspect-[7/10] cursor-pointer"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleCardClick(cardData)}

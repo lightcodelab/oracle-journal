@@ -780,7 +780,7 @@ const CardDeckAdmin = () => {
                             }}
                           />
                           {backImagePreview && (
-                            <div className="rounded-md border border-border overflow-hidden w-32 aspect-[2/3] bg-muted">
+                            <div className="rounded-md border border-border overflow-hidden w-32 aspect-[7/10] bg-muted">
                               <img src={backImagePreview} alt="Card back preview" className="w-full h-full object-cover" />
                             </div>
                           )}
@@ -958,7 +958,7 @@ const CardDeckAdmin = () => {
                     <img
                       src={deckDraft.card_back_url}
                       alt="Card back"
-                      className="w-20 aspect-[2/3] object-cover rounded"
+                      className="w-20 aspect-[7/10] object-cover rounded"
                     />
                     <span className="flex-1 text-xs truncate text-muted-foreground">{deckDraft.card_back_url}</span>
                     <div className="flex items-center gap-2">
@@ -1093,7 +1093,7 @@ const CardDeckAdmin = () => {
                       <img
                         src={cardImageSrc(draft.image_file_name)}
                         alt="Card image"
-                        className="w-20 aspect-[3/4] object-cover rounded"
+                        className="w-20 aspect-[7/10] object-cover rounded"
                       />
                       <span className="flex-1 text-xs truncate text-muted-foreground">
                         {draft.image_file_name}
