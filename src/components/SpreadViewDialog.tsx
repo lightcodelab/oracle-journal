@@ -124,6 +124,14 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
             </p>
           )}
 
+          {showJoinButton && (
+            <div className="mt-2 flex justify-center">
+              <Button asChild>
+                <Link to="/#membership">Join THE TEMPLE</Link>
+              </Button>
+            </div>
+          )}
+
           <div className="flex flex-wrap justify-center gap-6 md:gap-8 py-6">
             {spreadCards.map((cardData, index) => (
               <motion.div
@@ -180,6 +188,13 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
               <div className="whitespace-pre-line font-serif text-base sm:text-lg leading-8 text-foreground/85">
                 {generatedReading}
               </div>
+              {showJoinButton && (
+                <div className="mt-6 flex justify-center">
+                  <Button asChild>
+                    <Link to="/#membership">Join THE TEMPLE</Link>
+                  </Button>
+                </div>
+              )}
             </section>
           )}
 
@@ -226,14 +241,6 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
                 </Button>
               </div>
             </section>
-          )}
-
-          {showJoinButton && (
-            <div className="mt-6 flex justify-center">
-              <Button asChild>
-                <Link to="/#membership">Join THE TEMPLE</Link>
-              </Button>
-            </div>
           )}
 
           <p className="text-center text-sm text-muted-foreground italic">
