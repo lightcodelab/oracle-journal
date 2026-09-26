@@ -91,7 +91,7 @@ export default function DoorOfCommunion() {
     [isAdmin]
   );
 
-  const canAccessCommunion = hasAccess('communion');
+  const canAccessCommunion = true; // MembershipGate decides: full access or look-only preview
   const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
 
   useEffect(() => {
