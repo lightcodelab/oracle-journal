@@ -243,14 +243,6 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
             </section>
           )}
 
-          {showJoinButton && (
-            <div className="mt-6 flex justify-center">
-              <Button asChild>
-                <Link to="/#membership">Join THE TEMPLE</Link>
-              </Button>
-            </div>
-          )}
-
           <p className="text-center text-sm text-muted-foreground italic">
             Select any card to explore its full wisdom.
           </p>
