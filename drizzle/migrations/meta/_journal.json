@@ -295,6 +295,13 @@
       "when": 1790408649711,
       "tag": "0041_restrict_mapping_tier_reads",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1790408935888,
+      "tag": "0042_location_preview_rpc",
+      "breakpoints": true
     }
   ]
 }

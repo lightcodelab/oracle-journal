@@ -14,10 +14,12 @@ const INTERACTIVE =
 type Box = { top: number; left: number; width: number; height: number };
 
 // Links stay usable: the page they open shows the "join" screen itself.
+let allowLinks = true;
 const isAllowed = (el: Element) =>
-  !!el.closest("header,[data-preview-allow],a[href]");
+  !!el.closest(allowLinks ? "header,[data-preview-allow],a[href]" : "header,[data-preview-allow]");
 
-export const PreviewLock = ({ children }: { children: ReactNode }) => {
+export const PreviewLock = ({ children, allowLinks: links = true }: { children: ReactNode; allowLinks?: boolean }) => {
+  allowLinks = links;
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const [box, setBox] = useState<Box | null>(null);
