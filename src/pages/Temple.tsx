@@ -68,6 +68,7 @@ const Temple = () => {
 
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [profileLoaded, setProfileLoaded] = useState(false);
+  const [hasSavedReading, setHasSavedReading] = useState(false);
 
   // Redirect anonymous users. Do not run any member queries until we know who the user is.
   useEffect(() => {
