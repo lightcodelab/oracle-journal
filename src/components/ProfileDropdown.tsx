@@ -204,7 +204,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           <DropdownMenuItem
             key={item.route}
             onClick={() => navigate(item.route)}
-            className="cursor-pointer"
+            disabled={!hasFullTempleAccess && item.route !== '/readings'}
+            className={disabledItemClass(!hasFullTempleAccess && item.route !== '/readings')}
           >
             {item.icon}
             {item.label}
@@ -215,7 +216,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           <DropdownMenuItem
             key={item.route}
             onClick={() => navigate(item.route)}
-            className="cursor-pointer"
+            disabled={!hasFullTempleAccess}
+            className={disabledItemClass(!hasFullTempleAccess)}
           >
             {item.icon}
             {item.label}
@@ -223,7 +225,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
         ))}
         <DropdownMenuItem
           onClick={openInstallDialog}
-          className="cursor-pointer"
+          disabled={!hasFullTempleAccess}
+          className={disabledItemClass(!hasFullTempleAccess)}
         >
           <Smartphone className="w-4 h-4 mr-2" />
           Add App Icon to Phone
