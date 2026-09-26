@@ -41,6 +41,7 @@ const SacredSpreads = () => {
   // Free accounts get one Past, Present, Future reading and nothing else.
   const FREE_SPREAD_ID = "past-present-future";
   const autoSavedRef = useRef(false);
+  const savedReadingIdRef = useRef<string | null>(null);
   const allowedSpreadIds = hasFullAccess ? undefined : [FREE_SPREAD_ID];
 
   useEffect(() => {
@@ -231,6 +232,7 @@ const SacredSpreads = () => {
 
       // Free accounts keep one reading: if it was already saved, update it
       // instead of creating a second copy (which the one-reading limit refuses).
+      // Members always add a new reading, so no lookup for them.
       let existingId = savedReadingIdRef.current;
       if (!existingId && !hasFullAccess) {
         const { data: existing } = await supabase
@@ -255,7 +257,7 @@ const SacredSpreads = () => {
           .select('id')
           .single();
         if (error) throw error;
-        if (!hasFullAccess) savedReadingIdRef.current = data?.id ?? null;
+        savedReadingIdRef.current = data?.id ?? null;
       }
 
       toast({
@@ -273,13 +275,25 @@ const SacredSpreads = () => {
     setSaving(false);
   };
 
-  // A free account gets one reading, so it is kept for them automatically.
+  // Every reading is kept automatically as soon as it is generated.
   useEffect(() => {
-    if (hasFullAccess || !generatedReading || !activeSpread || autoSavedRef.current) return;
+    if (!generatedReading || !activeSpread || autoSavedRef.current) return;
     autoSavedRef.current = true;
     void handleSaveSpread();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasFullAccess, generatedReading, activeSpread]);
+  }, [generatedReading, activeSpread]);
+
+  // Journal writing on a saved reading is kept as the member types.
+  useEffect(() => {
+    if (!autoSavedRef.current || !savedReadingIdRef.current) return;
+    const t = setTimeout(() => {
+      void supabase
+        .from('saved_readings')
+        .update({ journal_answers: journalAnswers })
+        .eq('id', savedReadingIdRef.current!);
+    }, 800);
+    return () => clearTimeout(t);
+  }, [journalAnswers]);
 
   const handleBackToSpreads = () => {
     setActiveSpread(null);
@@ -385,8 +399,6 @@ const SacredSpreads = () => {
             onSelectCard={handleSelectSpreadCard}
             onBackToDecks={handleBackToSpreads}
             revealedPositions={spreadRevealedPositions}
-            onSaveSpread={handleSaveSpread}
-            saving={saving}
             generatedReading={generatedReading}
             generating={generating}
             generationError={generationError}

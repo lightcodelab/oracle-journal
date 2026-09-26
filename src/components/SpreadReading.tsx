@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles, Bookmark, Loader2, RefreshCw, ArrowLeft } from "lucide-react";
+import { Sparkles, Loader2, RefreshCw, ArrowLeft } from "lucide-react";
 import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
@@ -28,8 +28,6 @@ interface SpreadReadingProps {
   onSelectCard: (card: OracleCard, positionIndex: number) => void;
   onBackToDecks: () => void;
   revealedPositions: number[];
-  onSaveSpread?: () => void;
-  saving?: boolean;
   generatedReading?: string | null;
   generating?: boolean;
   generationError?: string | null;
@@ -53,8 +51,6 @@ export const SpreadReading = ({
   onSelectCard,
   onBackToDecks,
   revealedPositions,
-  onSaveSpread,
-  saving = false,
   generatedReading,
   generating = false,
   generationError,
@@ -237,26 +233,6 @@ export const SpreadReading = ({
             </section>
           )}
           {!generating && <p className="text-foreground/70 text-sm italic">Select any card to explore its full wisdom.</p>}
-          {!generating && onSaveSpread && (
-
-            <Button
-              onClick={onSaveSpread}
-              disabled={saving}
-              className="font-sans"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Bookmark className="w-4 h-4 mr-2" />
-                  Save This Reading
-                </>
-              )}
-            </Button>
-          )}
         </motion.div>
       )}
     </motion.div>
