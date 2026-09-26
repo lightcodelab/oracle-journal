@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -10,6 +11,8 @@ import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import CardDetailDialog from "./CardDetailDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useUpdateJournalAnswers } from "@/hooks/useSavedReadings";
+import { useMemberState } from "@/hooks/useMemberState";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import type { OracleCard } from "@/data/oracleCards";
 import { cardImageSrc } from "@/lib/cardImage";
