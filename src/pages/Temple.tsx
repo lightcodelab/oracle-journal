@@ -103,6 +103,29 @@ const Temple = () => {
     };
   }, [user]);
 
+  // A free member's one saved reading: offer a way back to it from the
+  // no-access screen instead of making them hunt through the app.
+  useEffect(() => {
+    let cancelled = false;
+    if (!user || hasFullAccess) {
+      setHasSavedReading(false);
+      return;
+    }
+    (async () => {
+      const { data } = await supabase
+        .from("saved_readings")
+        .select("id")
+        .eq("user_id", user.id)
+        .limit(1)
+        .maybeSingle();
+      if (cancelled) return;
+      setHasSavedReading(!!data);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user, hasFullAccess]);
+
   // Access resolution gate. Personal queries do NOT run until this is true.
   const accessResolved = !authLoading && !memberLoading && !!user;
   const hasFullAccess = accessResolved && hasFullTempleAccess;
