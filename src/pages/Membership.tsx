@@ -97,7 +97,8 @@ const Membership = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
-  const { isAdmin, loading: memberLoading } = useMemberState();
+  const { isAdmin, hasFullTempleAccess, loading: memberLoading } =
+    useMemberState();
 
   const foundingDeadlinePassed =
     new Date() > new Date("2026-12-15T00:00:00+10:00");

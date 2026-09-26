@@ -27,7 +27,7 @@ const MembershipInvite = ({
       </p>
       <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <Button asChild>
-          <Link to="/">Join THE TEMPLE</Link>
+          <Link to="/#membership">Join THE TEMPLE</Link>
         </Button>
         <Button asChild variant="outline">
           <Link to="/readings">View your saved reading</Link>
