@@ -62,7 +62,7 @@ const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
   const { hasAccess, loading: tierLoading } = useTierAccess();
-  const canAccessRemembrance = hasAccess('remembrance');
+  const canAccessRemembrance = true; // MembershipGate decides: full access or look-only preview
 
   useEffect(() => {
     // Check auth state

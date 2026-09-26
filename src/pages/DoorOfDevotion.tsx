@@ -20,7 +20,7 @@ const DoorOfDevotion = () => {
   const [loading, setLoading] = useState(true);
   const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
 
-  const canAccessDevotion = hasAccess('devotion');
+  const canAccessDevotion = true; // MembershipGate decides: full access or look-only preview
   const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
 
   useEffect(() => {
