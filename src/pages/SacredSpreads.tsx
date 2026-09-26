@@ -41,6 +41,7 @@ const SacredSpreads = () => {
   // Free accounts get one Past, Present, Future reading and nothing else.
   const FREE_SPREAD_ID = "past-present-future";
   const autoSavedRef = useRef(false);
+  const savedReadingIdRef = useRef<string | null>(null);
   const allowedSpreadIds = hasFullAccess ? undefined : [FREE_SPREAD_ID];
 
   useEffect(() => {
