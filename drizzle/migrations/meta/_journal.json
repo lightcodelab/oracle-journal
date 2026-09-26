@@ -288,6 +288,13 @@
       "when": 1790035245259,
       "tag": "0040_allow_free_reading_cta_event",
       "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1790408649711,
+      "tag": "0041_restrict_mapping_tier_reads",
+      "breakpoints": true
     }
   ]
 }

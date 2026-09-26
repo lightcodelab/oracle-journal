@@ -5,6 +5,7 @@ import NavActions from "@/components/NavActions";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useMemberState } from "@/hooks/useMemberState";
+import PreviewLock from "@/components/PreviewLock";
 
 /**
  * Site-wide gate: member content only renders once an active, paid
@@ -30,6 +31,11 @@ const isOpenPath = (path: string) =>
   OPEN_EXACT.has(path.replace(/\/+$/, "") || "/") ||
   OPEN_PREFIXES.some((p) => path.startsWith(p));
 
+const PREVIEW_EXACT = new Set(["/temple", "/remembrance", "/devotion", "/communion"]);
+const isPreviewPath = (path: string) =>
+  PREVIEW_EXACT.has(path.replace(/\/+$/, "")) ||
+  /^\/(remembrance|devotion)\/section\//.test(path);
+
 export const MembershipGate = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
   const { user, loading: authLoading } = useAuth();
@@ -46,6 +52,9 @@ export const MembershipGate = ({ children }: { children: ReactNode }) => {
   }
 
   if (user && hasFullTempleAccess) return <>{children}</>;
+
+  // Free accounts can look around the Temple and the three Doors, but not use them.
+  if (user && isPreviewPath(pathname)) return <PreviewLock>{children}</PreviewLock>;
 
   return (
     <div className="min-h-screen bg-background">
