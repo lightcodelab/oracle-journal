@@ -398,8 +398,6 @@ const SacredSpreads = () => {
             onSelectCard={handleSelectSpreadCard}
             onBackToDecks={handleBackToSpreads}
             revealedPositions={spreadRevealedPositions}
-            onSaveSpread={handleSaveSpread}
-            saving={saving}
             generatedReading={generatedReading}
             generating={generating}
             generationError={generationError}
