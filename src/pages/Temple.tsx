@@ -190,7 +190,7 @@ const Temple = () => {
             Return to the entrance to see what is currently open.
           </p>
           <Button asChild size="lg">
-            <Link to="/">Return to the entrance</Link>
+            <Link to="/#membership">Return to the entrance</Link>
           </Button>
         </div>
       </div>

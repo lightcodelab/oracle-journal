@@ -37,7 +37,7 @@ export function ScheduledAccess({ startsAt }: { startsAt: string | null }) {
           <p className="text-foreground font-medium mb-8">Starts {when}</p>
         )}
         <Button asChild variant="outline" size="lg">
-          <Link to="/">Return to the entrance</Link>
+          <Link to="/#membership">Return to the entrance</Link>
         </Button>
       </div>
     </div>

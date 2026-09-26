@@ -93,7 +93,7 @@ const PatternRecordDetail = () => {
             Your Living Pattern is private
           </h1>
           <Button asChild size="lg">
-            <Link to="/">Return to the entrance</Link>
+            <Link to="/#membership">Return to the entrance</Link>
           </Button>
         </div>
       </div>
