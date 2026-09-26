@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -10,6 +11,8 @@ import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import CardDetailDialog from "./CardDetailDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useUpdateJournalAnswers } from "@/hooks/useSavedReadings";
+import { useMemberState } from "@/hooks/useMemberState";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import type { OracleCard } from "@/data/oracleCards";
 import { cardImageSrc } from "@/lib/cardImage";
@@ -55,6 +58,9 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
   const [journalDraft, setJournalDraft] = useState<Record<string, string>>(emptyAnswers);
   const updateJournalAnswers = useUpdateJournalAnswers();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
+  const showJoinButton = Boolean(user) && !memberLoading && !hasFullTempleAccess;
 
   useEffect(() => {
     if (open) {
@@ -220,6 +226,14 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
                 </Button>
               </div>
             </section>
+          )}
+
+          {showJoinButton && (
+            <div className="mt-6 flex justify-center">
+              <Button asChild>
+                <Link to="/#membership">Join THE TEMPLE</Link>
+              </Button>
+            </div>
           )}
 
           <p className="text-center text-sm text-muted-foreground italic">
