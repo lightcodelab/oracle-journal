@@ -44,6 +44,12 @@ function ContinuationColumn({ item }: { item: Continuation }) {
   );
 }
 
+const SAMPLES: Continuation[] = [
+  { kind: "card", label: "Your last card", title: "The Prism", available: true, href: "/remembrance", fallbackHref: "/remembrance", emptyHint: "" },
+  { kind: "lesson", label: "Your next lesson", title: "Energy Hygiene · Lesson 2", available: true, href: "/courses", fallbackHref: "/courses", emptyHint: "" },
+  { kind: "resource", label: "Recently opened", title: "Grounding Meditation", available: true, href: "/devotion", fallbackHref: "/devotion", emptyHint: "" },
+] as unknown as Continuation[];
+
 export function ContinueJourney({ enabled }: ContinueJourneyProps) {
   const { data, isLoading } = useHomeContinuation(enabled);
 
@@ -62,7 +68,13 @@ export function ContinueJourney({ enabled }: ContinueJourneyProps) {
         Continue your journey
       </h2>
 
-      {isLoading || !data ? (
+      {!enabled ? (
+        <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(22rem,1fr))]">
+          {SAMPLES.map((item) => (
+            <ContinuationColumn key={item.kind} item={item} />
+          ))}
+        </div>
+      ) : isLoading || !data ? (
         <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(22rem,1fr))]">
           <Skeleton className="h-24 w-full rounded-lg" />
           <Skeleton className="h-24 w-full rounded-lg" />

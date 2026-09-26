@@ -13,7 +13,9 @@ const INTERACTIVE =
 
 type Box = { top: number; left: number; width: number; height: number };
 
-const isAllowed = (el: Element) => !!el.closest("header,[data-preview-allow]");
+// Links stay usable: the page they open shows the "join" screen itself.
+const isAllowed = (el: Element) =>
+  !!el.closest("header,[data-preview-allow],a[href]");
 
 export const PreviewLock = ({ children }: { children: ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
