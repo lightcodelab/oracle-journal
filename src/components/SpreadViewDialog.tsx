@@ -58,6 +58,9 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
   const [journalDraft, setJournalDraft] = useState<Record<string, string>>(emptyAnswers);
   const updateJournalAnswers = useUpdateJournalAnswers();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
+  const showJoinButton = Boolean(user) && !memberLoading && !hasFullTempleAccess;
 
   useEffect(() => {
     if (open) {
@@ -223,6 +226,14 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
                 </Button>
               </div>
             </section>
+          )}
+
+          {showJoinButton && (
+            <div className="mt-6 flex justify-center">
+              <Button asChild>
+                <Link to="/#membership">Join THE TEMPLE</Link>
+              </Button>
+            </div>
           )}
 
           <p className="text-center text-sm text-muted-foreground italic">
