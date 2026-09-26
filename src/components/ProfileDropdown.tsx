@@ -44,8 +44,10 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
   const { openInstallDialog } = useInstallApp();
   // LP-F.0: My Living Pattern stays behind exactly the same admin-only staging
   // gate as the Living Pattern card and routes.
-  const { hasFullTempleAccess, isAdmin: memberIsAdmin } = useMemberState();
+  const { hasFullTempleAccess, isAdmin: memberIsAdmin, loading: memberLoading } = useMemberState();
   const showLivingPattern = hasFullTempleAccess && memberIsAdmin;
+  // Free accounts (no active membership) see every item except My Readings greyed out.
+  const lockNonMember = !memberLoading && !hasFullTempleAccess;
 
 
   useEffect(() => {
@@ -171,6 +173,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
     },
   ];
 
+  const disabledItemClass = (isDisabled: boolean) =>
+    isDisabled
+      ? 'opacity-40 cursor-not-allowed pointer-events-none'
+      : 'cursor-pointer';
+
   return (
     <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
       <GlobalSearch />
@@ -204,7 +211,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           <DropdownMenuItem
             key={item.route}
             onClick={() => navigate(item.route)}
-            className="cursor-pointer"
+            disabled={lockNonMember && item.route !== '/readings'}
+            className={disabledItemClass(lockNonMember && item.route !== '/readings')}
           >
             {item.icon}
             {item.label}
@@ -215,7 +223,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           <DropdownMenuItem
             key={item.route}
             onClick={() => navigate(item.route)}
-            className="cursor-pointer"
+            disabled={lockNonMember}
+            className={disabledItemClass(lockNonMember)}
           >
             {item.icon}
             {item.label}
@@ -223,7 +232,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
         ))}
         <DropdownMenuItem
           onClick={openInstallDialog}
-          className="cursor-pointer"
+          disabled={lockNonMember}
+          className={disabledItemClass(lockNonMember)}
         >
           <Smartphone className="w-4 h-4 mr-2" />
           Add App Icon to Phone
@@ -236,7 +246,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           <DropdownMenuItem
             key={item.route}
             onClick={() => navigate(item.route)}
-            className="cursor-pointer"
+            disabled={lockNonMember}
+            className={disabledItemClass(lockNonMember)}
           >
             {item.icon}
             {item.label}
