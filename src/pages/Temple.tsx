@@ -213,9 +213,16 @@ const Temple = () => {
           <p className="text-muted-foreground mb-8">
             Return to the entrance to see what is currently open.
           </p>
-          <Button asChild size="lg">
-            <Link to="/#membership">Return to the entrance</Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Button asChild size="lg">
+              <Link to="/#membership">Return to the entrance</Link>
+            </Button>
+            {hasSavedReading && (
+              <Button asChild size="lg" variant="outline">
+                <Link to="/readings">Return to your saved reading</Link>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     );
