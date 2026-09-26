@@ -211,7 +211,7 @@ const Temple = () => {
             resource, every live gathering.
           </p>
           <p className="text-muted-foreground mb-8">
-            Return to the entrance to see what is currently open.
+            Return to the entrance to join us in THE TEMPLE now.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button asChild size="lg">
