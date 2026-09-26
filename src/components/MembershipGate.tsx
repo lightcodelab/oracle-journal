@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Home, Loader2 } from "lucide-react";
+import NavActions from "@/components/NavActions";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useMemberState } from "@/hooks/useMemberState";
@@ -48,7 +49,14 @@ export const MembershipGate = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-xl mx-auto px-4 pt-24 pb-16 text-center">
+      <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
+        <Link to="/" className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <Home className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <span className="font-medium truncate">THE TEMPLE of Sustainment</span>
+        </Link>
+        <NavActions />
+      </header>
+      <div className="max-w-xl mx-auto px-4 pt-16 pb-16 text-center">
         <h1 className="font-serif text-3xl text-foreground mb-4">THE TEMPLE awaits</h1>
         <p className="text-muted-foreground mb-8">
           An active membership opens THE TEMPLE. Return to the entrance to join us in THE TEMPLE now.
