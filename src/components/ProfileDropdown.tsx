@@ -44,8 +44,10 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
   const { openInstallDialog } = useInstallApp();
   // LP-F.0: My Living Pattern stays behind exactly the same admin-only staging
   // gate as the Living Pattern card and routes.
-  const { hasFullTempleAccess, isAdmin: memberIsAdmin } = useMemberState();
+  const { hasFullTempleAccess, isAdmin: memberIsAdmin, loading: memberLoading } = useMemberState();
   const showLivingPattern = hasFullTempleAccess && memberIsAdmin;
+  // Free accounts (no active membership) see every item except My Readings greyed out.
+  const lockNonMember = !memberLoading && !hasFullTempleAccess;
 
 
   useEffect(() => {
