@@ -130,9 +130,11 @@ const Membership = () => {
   }, []);
 
   useEffect(() => {
-    // Any authenticated user landing on the public sales page should be
-    // sent into the app, preserving a saved intended destination.
+    // Members and admins are sent into the app; signed-in visitors who are
+    // not yet members stay on the sales page so they can read it and check
+    // out — preserving a saved intended destination.
     if (authLoading || !user) return;
+    if (memberLoading) return;
 
     // A visitor who clicked "Enter THE TEMPLE" before registering returns
     // here after signup — resume their Stripe checkout straight away. Only
@@ -157,11 +159,22 @@ const Membership = () => {
     if (saved && saved.startsWith("/") && saved !== "/") {
       sessionStorage.removeItem("postLoginRedirect");
       navigate(saved, { replace: true });
-    } else {
+      return;
+    }
+    if (hasFullTempleAccess) {
       navigate("/temple", { replace: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, offerLoading, offer, user, navigate]);
+  }, [authLoading, memberLoading, offerLoading, offer, user, hasFullTempleAccess, navigate]);
+
+  // Land directly on the pay-membership section when arriving via #membership.
+  useEffect(() => {
+    if (location.hash !== "#membership") return;
+    if (authLoading || offerLoading || (user && memberLoading)) return;
+    document
+      .getElementById("membership")
+      ?.scrollIntoView({ behavior: "smooth" });
+  }, [location.hash, authLoading, offerLoading, memberLoading, user]);
 
   const state: OfferState = offer?.state ?? "pre_launch";
   const priceAud = useMemo(() => {
