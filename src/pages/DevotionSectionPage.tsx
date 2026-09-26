@@ -25,7 +25,7 @@ const DevotionSectionPage = () => {
   const [locationLoading, setLocationLoading] = useState(true);
   const { hasAccess, tierName, subscriptionStatus, loading: tierLoading } = useTierAccess();
 
-  const canAccessDevotion = hasAccess('devotion');
+  const canAccessDevotion = true; // MembershipGate decides: full access or look-only preview
   const isActiveMember = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
 
   // Fetch the location info from database based on URL section
