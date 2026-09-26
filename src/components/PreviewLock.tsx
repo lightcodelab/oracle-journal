@@ -16,6 +16,7 @@ type Box = { top: number; left: number; width: number; height: number };
 // Links stay usable: the page they open shows the "join" screen itself.
 let allowLinks = true;
 const isAllowed = (el: Element) =>
+  !el.closest("[data-preview-block]") &&
   !!el.closest(allowLinks ? "header,[data-preview-allow],a[href]" : "header,[data-preview-allow]");
 
 export const PreviewLock = ({ children, allowLinks: links = true }: { children: ReactNode; allowLinks?: boolean }) => {

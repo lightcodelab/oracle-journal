@@ -69,7 +69,7 @@ export function ContinueJourney({ enabled }: ContinueJourneyProps) {
       </h2>
 
       {!enabled ? (
-        <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(22rem,1fr))]">
+        <div data-preview-block className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(22rem,1fr))]">
           {SAMPLES.map((item) => (
             <ContinuationColumn key={item.kind} item={item} />
           ))}
