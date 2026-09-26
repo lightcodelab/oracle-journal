@@ -322,7 +322,7 @@ const MyAccount = () => {
                 <p className="text-muted-foreground mb-4">
                   Start your membership to access exclusive content
                 </p>
-                <Button onClick={() => navigate("/membership")}>
+                <Button onClick={() => navigate("/#membership")}>
                   View Membership Options
                   <ArrowUpRight className="w-4 h-4 ml-2" />
                 </Button>
