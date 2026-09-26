@@ -94,6 +94,7 @@ import ThemeScope from "./components/ThemeScope";
 import { ThemeModeProvider } from "./hooks/useThemeMode";
 import { captureRefFromQueryString } from "@/lib/affiliateTracking";
 import { useEffect } from "react";
+import MembershipGate from "@/components/MembershipGate";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -115,6 +116,7 @@ const App = () => {
         <BrowserRouter>
           <ThemeScope />
           <main id="main-content" tabIndex={-1}>
+          <MembershipGate>
           <Routes>
             <Route path="/" element={<Membership />} />
             <Route path="/membership" element={<Navigate to="/" replace />} />
@@ -210,6 +212,7 @@ const App = () => {
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </MembershipGate>
           </main>
         </BrowserRouter>
         </InstallAppProvider>
