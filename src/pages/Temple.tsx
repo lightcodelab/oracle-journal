@@ -68,6 +68,7 @@ const Temple = () => {
 
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [profileLoaded, setProfileLoaded] = useState(false);
+  const [hasSavedReading, setHasSavedReading] = useState(false);
 
   // Redirect anonymous users. Do not run any member queries until we know who the user is.
   useEffect(() => {
@@ -105,6 +106,29 @@ const Temple = () => {
   // Access resolution gate. Personal queries do NOT run until this is true.
   const accessResolved = !authLoading && !memberLoading && !!user;
   const hasFullAccess = accessResolved && hasFullTempleAccess;
+
+  // A free member's one saved reading: offer a way back to it from the
+  // no-access screen instead of making them hunt through the app.
+  useEffect(() => {
+    let cancelled = false;
+    if (!user || hasFullAccess) {
+      setHasSavedReading(false);
+      return;
+    }
+    (async () => {
+      const { data } = await supabase
+        .from("saved_readings")
+        .select("id")
+        .eq("user_id", user.id)
+        .limit(1)
+        .maybeSingle();
+      if (cancelled) return;
+      setHasSavedReading(!!data);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user, hasFullAccess]);
 
   if (authLoading || memberLoading || !user) {
     return (
@@ -189,9 +213,16 @@ const Temple = () => {
           <p className="text-muted-foreground mb-8">
             Return to the entrance to see what is currently open.
           </p>
-          <Button asChild size="lg">
-            <Link to="/#membership">Return to the entrance</Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Button asChild size="lg">
+              <Link to="/#membership">Return to the entrance</Link>
+            </Button>
+            {hasSavedReading && (
+              <Button asChild size="lg" variant="outline">
+                <Link to="/readings">Return to your saved reading</Link>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     );
