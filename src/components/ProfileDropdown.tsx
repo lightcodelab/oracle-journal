@@ -211,8 +211,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           <DropdownMenuItem
             key={item.route}
             onClick={() => navigate(item.route)}
-            disabled={!hasFullTempleAccess && item.route !== '/readings'}
-            className={disabledItemClass(!hasFullTempleAccess && item.route !== '/readings')}
+            disabled={lockNonMember && item.route !== '/readings'}
+            className={disabledItemClass(lockNonMember && item.route !== '/readings')}
           >
             {item.icon}
             {item.label}
@@ -223,8 +223,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           <DropdownMenuItem
             key={item.route}
             onClick={() => navigate(item.route)}
-            disabled={!hasFullTempleAccess}
-            className={disabledItemClass(!hasFullTempleAccess)}
+            disabled={lockNonMember}
+            className={disabledItemClass(lockNonMember)}
           >
             {item.icon}
             {item.label}
@@ -232,8 +232,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
         ))}
         <DropdownMenuItem
           onClick={openInstallDialog}
-          disabled={!hasFullTempleAccess}
-          className={disabledItemClass(!hasFullTempleAccess)}
+          disabled={lockNonMember}
+          className={disabledItemClass(lockNonMember)}
         >
           <Smartphone className="w-4 h-4 mr-2" />
           Add App Icon to Phone
@@ -246,8 +246,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           <DropdownMenuItem
             key={item.route}
             onClick={() => navigate(item.route)}
-            disabled={!hasFullTempleAccess}
-            className={disabledItemClass(!hasFullTempleAccess)}
+            disabled={lockNonMember}
+            className={disabledItemClass(lockNonMember)}
           >
             {item.icon}
             {item.label}
