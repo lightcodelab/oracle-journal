@@ -54,7 +54,7 @@ export const MembershipGate = ({ children }: { children: ReactNode }) => {
   if (user && hasFullTempleAccess) return <>{children}</>;
 
   // Free accounts can look around the Temple and the three Doors, but not use them.
-  if (user && isPreviewPath(pathname)) return <PreviewLock>{children}</PreviewLock>;
+  if (user && isPreviewPath(pathname)) return <PreviewLock allowLinks={pathname.replace(/\/+$/, "") === "/temple"}>{children}</PreviewLock>;
 
   return (
     <div className="min-h-screen bg-background">

@@ -218,8 +218,30 @@ export const useContentByLocation = (locationSlug: string): UseContentByLocation
           },
         })) as ContentResource[];
 
+        // Free accounts can't read member rows: fall back to a look-only
+        // preview (titles, summaries, thumbnails — no media).
+        let previewItems: ContentResource[] = [];
+        if (session?.user && !userIsAdmin && transformedContent.length === 0 && transformedHealing.length === 0) {
+          const { data: preview } = await supabase.rpc('get_location_preview', { _location_id: locationData.id });
+          previewItems = (preview || []).map((p: any) => ({
+            id: p.id,
+            title: p.title,
+            slug: p.slug,
+            summary: p.summary,
+            thumbnail_url: getPublicUrl(p.source === 'healing' ? 'healing-resource-images' : 'content-thumbnails', p.thumbnail_path),
+            main_media_kind: null,
+            main_media_file_url: null,
+            main_media_embed_url: null,
+            secondary_audio_url: null,
+            is_course: false,
+            status: 'published' as const,
+            source: p.source,
+            resource_type: p.type_id ? { id: p.type_id, name: p.type_name, slug: p.type_slug } : null,
+          })) as ContentResource[];
+        }
+
         // Merge all sources
-        const allResources = [...transformedContent, ...transformedHealing, ...transformedLegacy];
+        const allResources = [...transformedContent, ...transformedHealing, ...previewItems, ...transformedLegacy];
         
         setResources(allResources);
       } catch (err) {
