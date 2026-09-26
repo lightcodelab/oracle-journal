@@ -244,7 +244,8 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
           <DropdownMenuItem
             key={item.route}
             onClick={() => navigate(item.route)}
-            className="cursor-pointer"
+            disabled={!hasFullTempleAccess}
+            className={disabledItemClass(!hasFullTempleAccess)}
           >
             {item.icon}
             {item.label}
