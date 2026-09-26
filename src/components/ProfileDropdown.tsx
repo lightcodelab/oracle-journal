@@ -207,17 +207,20 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
             <DropdownMenuSeparator />
           </>
         )}
-        {menuItems.map((item) => (
-          <DropdownMenuItem
-            key={item.route}
-            onClick={() => navigate(item.route)}
-            disabled={lockNonMember && item.route !== '/readings'}
-            className={disabledItemClass(lockNonMember && item.route !== '/readings')}
-          >
-            {item.icon}
-            {item.label}
-          </DropdownMenuItem>
-        ))}
+        {menuItems.map((item) => {
+          const alwaysOpen = ['/readings', '/profile', '/account'].includes(item.route);
+          return (
+            <DropdownMenuItem
+              key={item.route}
+              onClick={() => navigate(item.route)}
+              disabled={lockNonMember && !alwaysOpen}
+              className={disabledItemClass(lockNonMember && !alwaysOpen)}
+            >
+              {item.icon}
+              {item.label}
+            </DropdownMenuItem>
+          );
+        })}
         <DropdownMenuSeparator />
         {engagementItems.map((item) => (
           <DropdownMenuItem
