@@ -7855,6 +7855,20 @@ export type Database = {
           woocommerce_order_id: string
         }[]
       }
+      get_location_preview: {
+        Args: { _location_id: string }
+        Returns: {
+          id: string
+          slug: string
+          source: string
+          summary: string
+          thumbnail_path: string
+          title: string
+          type_id: string
+          type_name: string
+          type_slug: string
+        }[]
+      }
       get_member_state: { Args: { _user_id: string }; Returns: Json }
       get_stripe_price_id_for_current_offer: {
         Args: { _mode: string }
