@@ -99,6 +99,7 @@ const Membership = () => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, hasFullTempleAccess, loading: memberLoading } =
     useMemberState();
+  const location = useLocation();
 
   const foundingDeadlinePassed =
     new Date() > new Date("2026-12-15T00:00:00+10:00");
