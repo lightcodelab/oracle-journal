@@ -26,7 +26,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useMemberState } from '@/hooks/useMemberState';
 import ProfileDropdown from '@/components/ProfileDropdown';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import SpreadViewDialog from '@/components/SpreadViewDialog';
@@ -37,6 +39,8 @@ import { cardImageSrc } from "@/lib/cardImage";
 const MyReadings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
+  const showJoinBanner = !memberLoading && !hasFullTempleAccess;
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -168,6 +172,19 @@ const MyReadings = () => {
           <ProfileDropdown />
         </div>
       </div>
+
+      {showJoinBanner && (
+        <div className="bg-gradient-to-r from-primary/15 via-accent/10 to-primary/15 border-b border-primary/30">
+          <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-center gap-3 flex-wrap text-center">
+            <p className="text-xs sm:text-sm text-foreground/90">
+              Join THE TEMPLE to access everything in THE TEMPLE.
+            </p>
+            <Button asChild size="sm" className="h-7 text-xs">
+              <Link to="/#membership">Join THE TEMPLE</Link>
+            </Button>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Search Bar */}
