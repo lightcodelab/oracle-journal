@@ -6,7 +6,7 @@ interface NavActionsProps {
 
 const NavActions = ({ onSignOut }: NavActionsProps) => {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1" data-preview-allow>
       <ProfileDropdown onSignOut={onSignOut} />
     </div>
   );

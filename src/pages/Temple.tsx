@@ -188,9 +188,11 @@ const Temple = () => {
     if (manualFullAccess.state === "expired") {
       return <ExpiredAccess expiresAt={manualFullAccess.expiresAt} />;
     }
-    // 'revoked_only' and 'none' both fall through to the general
-    // no-access state below. Revoked history never renders the
-    // expired/join CTA copy.
+    // 'revoked_only' and 'none': show the Temple as a look-only preview
+    // (MembershipGate wraps it in PreviewLock). The old screen below is kept
+    // only as an unreachable fallback.
+  }
+  if (!hasFullAccess && (memberError || manualFullAccess.state === "scheduled" || manualFullAccess.state === "expired")) {
     return (
       <div className="min-h-screen bg-background relative">
         <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -252,8 +254,8 @@ const Temple = () => {
         </section>
         <ContinueJourney enabled={hasFullAccess} />
         {isAdmin && <LivingPatternCard />}
-        {hasFullAccess && <RemembranceLettersCard />}
-        {hasFullAccess && <SacredSpreadsCard />}
+        <RemembranceLettersCard />
+        <SacredSpreadsCard />
         <BeginPractice />
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />
