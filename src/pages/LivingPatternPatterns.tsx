@@ -48,7 +48,7 @@ const LivingPatternPatterns = () => {
           </h1>
           <p className="text-muted-foreground mb-8">An active membership opens this record.</p>
           <Button asChild size="lg">
-            <Link to="/">Return to the entrance</Link>
+            <Link to="/#membership">Return to the entrance</Link>
           </Button>
         </div>
       </div>

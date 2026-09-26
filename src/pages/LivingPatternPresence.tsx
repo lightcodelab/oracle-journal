@@ -314,7 +314,7 @@ const LivingPatternPresence = ({ embedded = false }: { embedded?: boolean }) => 
             open.
           </p>
           <Button asChild size="lg">
-            <Link to="/">Return to the entrance</Link>
+            <Link to="/#membership">Return to the entrance</Link>
           </Button>
         </div>
       </div>
