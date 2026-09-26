@@ -215,23 +215,48 @@ const SacredSpreads = () => {
         card_number: card.card_number,
       }));
 
-      const { error } = await supabase
-        .from('saved_readings')
-        .insert({
-          user_id: user.id,
-          card_title: activeSpread.name,
-          spread_type: activeSpread.id,
-          spread_name: activeSpread.name,
-          spread_cards: spreadCardsData,
-          image_file_name: spreadCards[0]?.image_file_name || null,
-          deck_name: 'Spread',
-          generated_reading: generatedReading,
-          generated_reading_model: generatedReadingModel,
-          journal_answers: journalAnswers,
-          saved_at: new Date().toISOString(),
-        });
+      const payload = {
+        user_id: user.id,
+        card_title: activeSpread.name,
+        spread_type: activeSpread.id,
+        spread_name: activeSpread.name,
+        spread_cards: spreadCardsData,
+        image_file_name: spreadCards[0]?.image_file_name || null,
+        deck_name: 'Spread',
+        generated_reading: generatedReading,
+        generated_reading_model: generatedReadingModel,
+        journal_answers: journalAnswers,
+        saved_at: new Date().toISOString(),
+      };
 
-      if (error) throw error;
+      // Free accounts keep one reading: if it was already saved, update it
+      // instead of creating a second copy (which the one-reading limit refuses).
+      let existingId = savedReadingIdRef.current;
+      if (!existingId && !hasFullAccess) {
+        const { data: existing } = await supabase
+          .from('saved_readings')
+          .select('id')
+          .eq('user_id', user.id)
+          .limit(1)
+          .maybeSingle();
+        existingId = existing?.id ?? null;
+      }
+
+      if (existingId) {
+        const { error } = await supabase
+          .from('saved_readings')
+          .update(payload)
+          .eq('id', existingId);
+        if (error) throw error;
+      } else {
+        const { data, error } = await supabase
+          .from('saved_readings')
+          .insert(payload)
+          .select('id')
+          .single();
+        if (error) throw error;
+        if (!hasFullAccess) savedReadingIdRef.current = data?.id ?? null;
+      }
 
       toast({
         title: 'Spread Saved',
