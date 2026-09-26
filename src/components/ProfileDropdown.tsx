@@ -171,6 +171,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
     },
   ];
 
+  const disabledItemClass = (isDisabled: boolean) =>
+    isDisabled
+      ? 'opacity-40 cursor-not-allowed pointer-events-none'
+      : 'cursor-pointer';
+
   return (
     <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
       <GlobalSearch />
