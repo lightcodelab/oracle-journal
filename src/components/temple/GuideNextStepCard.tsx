@@ -5,7 +5,7 @@ import guideLogoAsset from "@/assets/areekeera-guide-logo-8-2.png.asset.json";
 
 export function GuideNextStepCard() {
   return (
-    <div className="rounded-lg border border-border/50 bg-card/50 p-8 h-full flex flex-row items-start gap-6">
+    <div className="rounded-lg border border-border/50 bg-card/50 p-8 h-full min-w-0 overflow-hidden flex flex-col-reverse items-start gap-4">
       <div className="flex-1 flex flex-col">
         <h2
           id="guide-next-step-heading"
@@ -27,11 +27,11 @@ export function GuideNextStepCard() {
           </Button>
         </div>
       </div>
-      <div className="hidden sm:flex items-start pt-1 shrink-0">
+      <div className="flex items-start shrink-0">
         <img
           src={guideLogoAsset.url}
           alt="AreekeerA Guide"
-          className="h-auto w-auto max-w-[100px] md:max-w-[140px] object-contain"
+          className="h-20 w-20 object-contain"
         />
       </div>
     </div>
