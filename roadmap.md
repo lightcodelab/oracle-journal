@@ -30,7 +30,7 @@
 - [x] Standardise every displayed card-face frame to 7:10 on desktop and mobile
 
 ## Four Door structure
-- [ ] Make Remembrance card-focused and move the Rites into Devotion
-- [ ] Add the Door of Becoming for Alchemy of Becoming courses
-- [ ] Add Becoming to the Temple door grid and course navigation
-- [ ] Verify the four Door pages, course links, preview locks, and build health
+- [x] Make Remembrance card-focused and move the Rites into Devotion
+- [x] Add the Door of Becoming for Alchemy of Becoming courses
+- [x] Add Becoming to the Temple door grid and course navigation
+- [x] Verify the four Door pages, course links, preview locks, and build health
