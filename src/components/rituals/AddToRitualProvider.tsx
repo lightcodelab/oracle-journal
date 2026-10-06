@@ -6,6 +6,7 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useMemberState } from "@/hooks/useMemberState";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Check } from "lucide-react";
@@ -13,14 +14,16 @@ import {
   RHYTHMS, RitualAddItem, RitualRhythm, appendRitualStep, itemTypeLabel, useCreateRitual, useRituals,
 } from "@/lib/rituals";
 
-type Ctx = { open: (item: RitualAddItem, origin?: HTMLElement | null) => void };
-const AddToRitualContext = createContext<Ctx>({ open: () => {} });
+type Ctx = { open: (item: RitualAddItem, origin?: HTMLElement | null) => void; canAdd: boolean };
+const AddToRitualContext = createContext<Ctx>({ open: () => {}, canAdd: false });
 export const useAddToRitual = () => useContext(AddToRitualContext);
 
 export function AddToRitualProvider({ children }: { children: ReactNode }) {
   const [item, setItem] = useState<RitualAddItem | null>(null);
   const origin = useRef<HTMLElement | null>(null);
   const isMobile = useIsMobile();
+  const { hasFullTempleAccess, loading } = useMemberState();
+  const canAdd = !loading && hasFullTempleAccess;
 
   const open = useCallback((next: RitualAddItem, el?: HTMLElement | null) => {
     origin.current = el ?? (document.activeElement as HTMLElement | null);
@@ -39,7 +42,7 @@ export function AddToRitualProvider({ children }: { children: ReactNode }) {
   const desc = item ? `${item.name} · ${itemTypeLabel(item.kind)}` : "";
 
   return (
-    <AddToRitualContext.Provider value={{ open }}>
+    <AddToRitualContext.Provider value={{ open, canAdd }}>
       {children}
       {isMobile ? (
         <Drawer open={!!item} onOpenChange={close}>

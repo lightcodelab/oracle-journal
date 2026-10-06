@@ -1,15 +1,13 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useMemberState } from "@/hooks/useMemberState";
 import { RitualAddItem } from "@/lib/rituals";
 import { useAddToRitual } from "./AddToRitualProvider";
 
 /** Round "+" for thumbnails. Separate control: never opens the item itself. */
 export function AddToRitualPlus({ item, className = "" }: { item: RitualAddItem; className?: string }) {
-  const { open } = useAddToRitual();
-  const { hasFullTempleAccess, loading } = useMemberState();
-  if (loading || !hasFullTempleAccess) return null;
+  const { open, canAdd } = useAddToRitual();
+  if (!canAdd) return null;
   return (
     <TooltipProvider delayDuration={200}>
       <Tooltip>
@@ -32,9 +30,8 @@ export function AddToRitualPlus({ item, className = "" }: { item: RitualAddItem;
 
 /** Labelled secondary action for detail pages. */
 export function AddToRitualAction({ item, className }: { item: RitualAddItem; className?: string }) {
-  const { open } = useAddToRitual();
-  const { hasFullTempleAccess, loading } = useMemberState();
-  if (loading || !hasFullTempleAccess) return null;
+  const { open, canAdd } = useAddToRitual();
+  if (!canAdd) return null;
   return (
     <Button type="button" variant="outline" size="sm" className={className} onClick={(e) => open(item, e.currentTarget)}>
       <Plus className="h-4 w-4 mr-1" aria-hidden /> Add to Ritual
