@@ -13,6 +13,7 @@ import ReflectionFooter from '@/components/temple/living/ReflectionFooter';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import ResourceAudioPlayers from '@/components/ResourceAudioPlayers';
 import ShareButton from '@/components/ShareButton';
+import { AddToRitualAction } from '@/components/rituals/AddToRitualButton';
 
 import { useRecordLastActivity } from '@/hooks/useRecordLastActivity';
 
@@ -590,7 +591,19 @@ const DevotionResourcePage = () => {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <ShareButton title={resource.title} />
+          <div className="flex items-center gap-2">
+            {resource.status === 'published' && !(resource as any).is_course && (
+              <AddToRitualAction
+                item={{
+                  kind: 'resource',
+                  source: slug?.startsWith('healing-') ? 'healing' : 'content',
+                  resourceId: resource.id,
+                  name: resource.title,
+                }}
+              />
+            )}
+            <ShareButton title={resource.title} />
+          </div>
         </div>
 
 
