@@ -302,6 +302,13 @@
       "when": 1790408935888,
       "tag": "0042_location_preview_rpc",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1791265205643,
+      "tag": "0043_ritual_builder",
+      "breakpoints": true
     }
   ]
 }
