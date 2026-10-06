@@ -17,7 +17,6 @@ export interface Continuation {
 
 export interface HomeContinuations {
   card: Continuation;
-  lesson: Continuation;
   resource: Continuation;
 }
 
@@ -31,16 +30,6 @@ const EMPTY: HomeContinuations = {
     available: false,
     emptyHint: "Draw your first card",
     fallbackHref: "/remembrance",
-  },
-  lesson: {
-    kind: "lesson",
-    label: "Return to the last course lesson you began",
-    title: "No lesson opened yet",
-    href: "/courses",
-    timestamp: null,
-    available: false,
-    emptyHint: "Explore the courses",
-    fallbackHref: "/courses",
   },
   resource: {
     kind: "resource",
