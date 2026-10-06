@@ -59,7 +59,7 @@ export function ContinueJourney({ enabled }: ContinueJourneyProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       aria-labelledby="continue-heading"
-      className="mb-10"
+      className="mb-10 h-full"
     >
       <h2
         id="continue-heading"

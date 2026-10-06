@@ -15,6 +15,7 @@ import { MyRitualsCard } from "@/components/temple/MyRitualsCard";
 import { BeginPractice } from "@/components/temple/BeginPractice";
 import { ExploreDoors } from "@/components/temple/ExploreDoors";
 import { GuideNextStepCard } from "@/components/temple/GuideNextStepCard";
+import { SearchTheTempleCard } from "@/components/temple/SearchTheTempleCard";
 import { LiveAndSupport } from "@/components/temple/LiveAndSupport";
 import { RecommendationGrid } from "@/components/temple/RecommendationGrid";
 import { useHomeRecommendations } from "@/hooks/useHomeRecommendations";
