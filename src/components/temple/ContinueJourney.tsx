@@ -22,20 +22,20 @@ function ContinuationColumn({ item }: { item: Continuation }) {
   return (
     <Link to={href} className="block group h-full min-w-0">
       <Card className="h-full bg-card border-border/60 group-hover:border-primary/40 transition-colors">
-        <CardContent className="p-4 flex items-start gap-3 h-full">
-          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <Icon className="h-5 w-5 text-primary" aria-hidden />
+        <CardContent className="p-3 flex items-start gap-3 h-full">
+          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <Icon className="h-4 w-4 text-primary" aria-hidden />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
               {item.label}
             </p>
-            <p className="font-serif text-lg text-foreground break-words">
+            <p className="font-serif text-base text-foreground break-words line-clamp-2">
               {item.available ? item.title : item.emptyHint}
             </p>
           </div>
           <ArrowRight
-            className="h-5 w-5 text-primary flex-shrink-0 mt-0.5"
+            className="h-4 w-4 text-primary flex-shrink-0 mt-0.5"
             aria-hidden
           />
         </CardContent>
@@ -46,7 +46,6 @@ function ContinuationColumn({ item }: { item: Continuation }) {
 
 const SAMPLES: Continuation[] = [
   { kind: "card", label: "Your last card", title: "The Prism", available: true, href: "/remembrance", fallbackHref: "/remembrance", emptyHint: "" },
-  { kind: "lesson", label: "Your next lesson", title: "Energy Hygiene · Lesson 2", available: true, href: "/courses", fallbackHref: "/courses", emptyHint: "" },
   { kind: "resource", label: "Recently opened", title: "Grounding Meditation", available: true, href: "/devotion", fallbackHref: "/devotion", emptyHint: "" },
 ] as unknown as Continuation[];
 
@@ -76,14 +75,12 @@ export function ContinueJourney({ enabled }: ContinueJourneyProps) {
         </div>
       ) : isLoading || !data ? (
         <div className="grid grid-cols-[minmax(0,1fr)] gap-4">
-          <Skeleton className="h-24 w-full rounded-lg" />
-          <Skeleton className="h-24 w-full rounded-lg" />
-          <Skeleton className="h-24 w-full rounded-lg" />
+          <Skeleton className="h-16 w-full rounded-lg" />
+          <Skeleton className="h-16 w-full rounded-lg" />
         </div>
       ) : (
         <div className="grid grid-cols-[minmax(0,1fr)] gap-4">
           <ContinuationColumn item={data.card} />
-          <ContinuationColumn item={data.lesson} />
           <ContinuationColumn item={data.resource} />
         </div>
       )}

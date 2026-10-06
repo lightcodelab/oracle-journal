@@ -17,7 +17,6 @@ export interface Continuation {
 
 export interface HomeContinuations {
   card: Continuation;
-  lesson: Continuation;
   resource: Continuation;
 }
 
@@ -32,16 +31,6 @@ const EMPTY: HomeContinuations = {
     emptyHint: "Draw your first card",
     fallbackHref: "/remembrance",
   },
-  lesson: {
-    kind: "lesson",
-    label: "Return to the last course lesson you began",
-    title: "No lesson opened yet",
-    href: "/courses",
-    timestamp: null,
-    available: false,
-    emptyHint: "Explore the courses",
-    fallbackHref: "/courses",
-  },
   resource: {
     kind: "resource",
     label: "Return to the last resource you used",
@@ -55,7 +44,7 @@ const EMPTY: HomeContinuations = {
 };
 
 /**
- * Returns three RLS-scoped return paths for the member: their most recent card
+ * Returns two RLS-scoped return paths for the member: their most recent card
  * draw, the last course lesson they opened, and the last resource they used.
  *
  * Privacy: never reads or exposes protocol intake, journal contents,
@@ -87,7 +76,6 @@ export function useHomeContinuation(enabled: boolean) {
 
       const result: HomeContinuations = {
         card: { ...EMPTY.card },
-        lesson: { ...EMPTY.lesson },
         resource: { ...EMPTY.resource },
       };
 
@@ -131,7 +119,7 @@ export function useHomeContinuation(enabled: boolean) {
           href: string;
           occurred_at: string;
         }>) {
-          if (row.kind !== "lesson" && row.kind !== "resource") continue;
+          if (row.kind !== "resource") continue;
           result[row.kind] = {
             ...result[row.kind],
             title: row.title,
