@@ -539,7 +539,7 @@ const DevotionResourcePage = () => {
                 {isActiveMember ? 'Upgrade Membership' : 'View Memberships'}
                 <ArrowUpRight className="w-4 h-4 ml-2" />
               </Button>
-              <Button variant="ghost" onClick={() => navigate('/devotion')}>
+              <Button variant="ghost" onClick={() => navigate(doorPath)}>
                 Return to {doorLabel}
               </Button>
             </div>
@@ -550,6 +550,7 @@ const DevotionResourcePage = () => {
   }
 
   const getBackPath = () => {
+    if (isBecomingResource) return '/becoming';
     if (resource.location?.slug) {
       // Map location slug to section path
       const sectionMap: Record<string, string> = {
