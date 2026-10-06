@@ -133,21 +133,20 @@ const DoorOfDevotion = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-12">
             <GuideNextStepCard />
             <SearchTheTempleCard />
+            <Link
+              to="/rituals"
+              className="rounded-lg border border-border/50 bg-card/50 p-8 h-full min-w-0 flex flex-col items-start hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <h3 className="font-serif text-2xl text-foreground mb-1">My Rituals</h3>
+              <p className="text-sm text-muted-foreground mb-5">
+                Gather cards, spreads and resources into your own daily, weekly and monthly rituals.
+              </p>
+              <span className="text-primary text-sm font-medium">Open →</span>
+            </Link>
           </div>
-
-          <Link
-            to="/rituals"
-            className="mb-8 flex items-center justify-between gap-4 rounded-lg border border-border bg-card p-5 hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <span>
-              <span className="block font-serif text-xl text-foreground">My Rituals</span>
-              <span className="block text-sm text-muted-foreground">Gather cards, spreads and resources into your own daily, weekly and monthly rituals.</span>
-            </span>
-            <span className="text-primary text-sm font-medium shrink-0">Open →</span>
-          </Link>
 
           <section aria-labelledby="foundational-rites-heading" className="mb-12 scroll-mt-24">
             <div className="text-center mb-8">
