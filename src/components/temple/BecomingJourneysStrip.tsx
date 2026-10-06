@@ -9,7 +9,7 @@ export function BecomingJourneysStrip() {
           Your Becoming journeys
         </h2>
         <Link to="/becoming" className="text-sm text-primary hover:underline">
-          Open the Door of Becoming →
+          Open the Door of Becoming for more →
         </Link>
       </div>
       <BecomingCoursesSection limit={3} />
