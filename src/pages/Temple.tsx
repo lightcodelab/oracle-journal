@@ -260,26 +260,15 @@ const Temple = () => {
           <SearchTheTempleCard />
           <ContinueJourney enabled={hasFullAccess} />
         </section>
-        <ExploreDoors />
-        <BeginPractice />
-        <section aria-labelledby="cards-speak-heading" className="mb-12">
-          <h2
-            id="cards-speak-heading"
-            className="font-serif text-2xl text-foreground mb-3"
-          >
-            Let the Cards speak to you
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2 items-stretch">
-            <RemembranceLettersCard />
-            <SacredSpreadsCard />
-          </div>
-        </section>
-        <MyRitualsCard />
-        {isAdmin && <LivingPatternCard />}
-        <RecommendedSection enabled={hasFullAccess} />
-        <SeasonalSection enabled={hasFullAccess} />
-        <ToolsForReturn />
-        <LiveAndSupport enabled={hasFullAccess} />
+        <ExploreDoors focus={focus} onChangeFocus={() => setFocusOpen(true)} />
+        {orderedSections.map((key) => <div key={key}>{sections[key]}</div>)}
+        <WelcomeFocusDialog
+          open={focusOpen}
+          initial={focus}
+          onChoose={saveFocus}
+          onClose={() => saveFocus(focus, true)}
+        />
+
       </div>
     </div>
   );
