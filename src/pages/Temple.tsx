@@ -329,8 +329,10 @@ const Temple = () => {
           <SearchTheTempleCard />
           <ContinueJourney enabled={hasFullAccess} />
         </section>
+        {/* Focus sections lead straight under the top row, above Explore. */}
+        {front.map((key) => <div key={key}>{sections[key]}</div>)}
         <ExploreDoors focus={focus} onChangeFocus={() => setFocusOpen(true)} />
-        {orderedSections.map((key) => <div key={key}>{sections[key]}</div>)}
+        {orderedSections.filter((k) => !front.includes(k)).map((key) => <div key={key}>{sections[key]}</div>)}
         <WelcomeFocusDialog
           open={focusOpen}
           initial={focus}
