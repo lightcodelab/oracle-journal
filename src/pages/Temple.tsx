@@ -133,6 +133,10 @@ const Temple = () => {
   const accessResolved = !authLoading && !memberLoading && !!user;
   const hasFullAccess = accessResolved && hasFullTempleAccess;
 
+  useEffect(() => {
+    if (hasFullAccess && profileLoaded && !focusPrompted) setFocusOpen(true);
+  }, [hasFullAccess, profileLoaded, focusPrompted]);
+
   // A free member's one saved reading: offer a way back to it from the
   // no-access screen instead of making them hunt through the app.
   useEffect(() => {
