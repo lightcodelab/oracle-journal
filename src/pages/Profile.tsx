@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import { FOCUS_OPTIONS } from "@/lib/templeFocus";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
   const [newsletterOptIn, setNewsletterOptIn] = useState(false);
+  const [focus, setFocus] = useState<string>("");
 
   useEffect(() => {
     const checkAuthAndLoadProfile = async () => {
@@ -36,7 +38,7 @@ const Profile = () => {
       // Load profile data
       const { data: profile, error } = await supabase
         .from("profiles")
-        .select("full_name, email, newsletter_opt_in")
+        .select("full_name, email, newsletter_opt_in, primary_focus")
         .eq("id", session.user.id)
         .single();
 
@@ -46,6 +48,7 @@ const Profile = () => {
         setFullName(profile.full_name || "");
         if (profile.email) setEmail(profile.email);
         setNewsletterOptIn(profile.newsletter_opt_in ?? false);
+        setFocus(profile.primary_focus || "");
       }
 
       setLoading(false);
@@ -72,6 +75,8 @@ const Profile = () => {
       .update({
         full_name: fullName.trim(),
         newsletter_opt_in: newsletterOptIn,
+        primary_focus: focus || null,
+        focus_prompted_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
       .eq("id", userId);
@@ -185,6 +190,23 @@ const Profile = () => {
                 onCheckedChange={setNewsletterOptIn}
               />
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="focus">My focus</Label>
+              <select
+                id="focus"
+                value={focus}
+                onChange={(e) => setFocus(e.target.value)}
+                className="w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm text-foreground"
+              >
+                <option value="">No preference</option>
+                {FOCUS_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+              <p className="text-xs text-muted-foreground">Brings that Door forward on your home page.</p>
+            </div>
+
 
             <Button
               onClick={handleSave}
