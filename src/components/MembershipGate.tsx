@@ -31,10 +31,10 @@ const isOpenPath = (path: string) =>
   OPEN_EXACT.has(path.replace(/\/+$/, "") || "/") ||
   OPEN_PREFIXES.some((p) => path.startsWith(p));
 
-const PREVIEW_EXACT = new Set(["/temple", "/remembrance", "/devotion", "/communion"]);
+const PREVIEW_EXACT = new Set(["/temple", "/remembrance", "/devotion", "/becoming", "/communion"]);
 const isPreviewPath = (path: string) =>
   PREVIEW_EXACT.has(path.replace(/\/+$/, "")) ||
-  /^\/(remembrance|devotion)\/section\//.test(path);
+  /^\/(remembrance|devotion|becoming)\/section\//.test(path);
 
 export const MembershipGate = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
@@ -53,7 +53,7 @@ export const MembershipGate = ({ children }: { children: ReactNode }) => {
 
   if (user && hasFullTempleAccess) return <>{children}</>;
 
-  // Free accounts can look around the Temple and the three Doors, but not use them.
+  // Free accounts can look around the Temple and the four Doors, but not use them.
   if (user && isPreviewPath(pathname)) return <PreviewLock allowLinks={pathname.replace(/\/+$/, "") === "/temple"}>{children}</PreviewLock>;
 
   return (

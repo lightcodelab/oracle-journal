@@ -3,12 +3,14 @@ import { motion } from "framer-motion";
 import doorRemembrance from "@/assets/door-of-remembrance-4.webp";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
+import doorBecoming from "@/assets/companion-courses-header.png.asset.json";
 
 
 const doors = [
-  { name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance, label: "RITUALS, CARD DECKS & COURSES", description: "Explore the patterns, stories and inheritances shaping you." },
-  { name: "The Door of Devotion", href: "/devotion", image: doorDevotion.url, label: "AREEKEERA HEALING TEMPLATES & MEDITATIONS", description: "Return to yourself through guided meditation and restorative practice." },
-  { name: "The Door of Communion", href: "/communion", image: doorCommunion.url, label: "LIVE READINGS, CLASSES, WORKSHOPS & REPLAYS", description: "Find connection, reflection and support within our community." },
+  { name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance, label: "CARD DECKS & SACRED SPREADS", description: "Explore the mirrors, archetypes and inheritances shaping you through the cards." },
+  { name: "The Door of Devotion", href: "/devotion", image: doorDevotion.url, label: "RITES, AREEKEERA® TEMPLATES & MEDITATIONS", description: "Return to yourself through foundational rites and restorative practice." },
+  { name: "The Door of Becoming", href: "/becoming", image: doorBecoming.url, label: "COURSES, INTEGRATION & SELF-INQUIRY", description: "Journeys for personal development, self-awareness and conscious identity." },
+  { name: "The Door of Communion", href: "/communion", image: doorCommunion.url, label: "LIVE GATHERINGS, CIRCLES & COMMUNITY", description: "Find connection, reflection and support within our community." },
 ];
 
 
@@ -19,9 +21,9 @@ export function ExploreDoors() {
         Explore THE TEMPLE
       </h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Three pathways for exploring THE TEMPLE. Every pathway is open to every active member.
+        Four pathways for exploring THE TEMPLE. Every pathway is open to every active member.
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {doors.map((door, i) => (
           <motion.div
             key={door.name}

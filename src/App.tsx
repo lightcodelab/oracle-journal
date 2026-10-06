@@ -42,6 +42,7 @@ import LiveSessions from "./pages/LiveSessions";
 import LiveSessionJoin from "./pages/LiveSessionJoin";
 import AdminLiveSessions from "./pages/AdminLiveSessions";
 import DoorOfCommunion from "./pages/DoorOfCommunion";
+import DoorOfBecoming from "./pages/DoorOfBecoming";
 import CommunionLiveReadings from "./pages/CommunionLiveReadings";
 import CommunionLiveClasses from "./pages/CommunionLiveClasses";
 import CommunionLiveWorkshops from "./pages/CommunionLiveWorkshops";
@@ -143,6 +144,11 @@ const App = () => {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/import-cards" element={<ImportCards />} />
             <Route path="/devotion" element={<DoorOfDevotion />} />
+            <Route path="/becoming" element={<DoorOfBecoming />} />
+            <Route path="/becoming/resources/:slug" element={<DevotionResourcePage />} />
+            <Route path="/becoming/courses/:slug" element={<DevotionResourcePage />} />
+            <Route path="/becoming/course/:courseId" element={<DevotionCoursePage />} />
+            <Route path="/becoming/course/:courseId/lesson/:lessonId" element={<DevotionLessonPage />} />
             <Route path="/devotion/healing-bot" element={<Navigate to="/devotion/areekeera" replace />} />
             <Route path="/devotion/protocols" element={<MyProtocols />} />
             <Route path="/devotion/protocols/:protocolId" element={<ProtocolDetailPage />} />

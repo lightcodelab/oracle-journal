@@ -157,7 +157,8 @@ const DevotionCoursePage = () => {
   });
 
   const handleLessonClick = (lessonId: string) => {
-    navigate(`/devotion/course/${courseId}/lesson/${lessonId}`);
+    const isBecoming = (course as any)?.location?.slug === 'loc-remembrance-courses';
+    navigate(`${isBecoming ? '/becoming' : '/devotion'}/course/${courseId}/lesson/${lessonId}`);
   };
 
   const isDeepeningCourse = (course as any)?.location?.name === 'Deepening Courses';
@@ -201,17 +202,22 @@ const DevotionCoursePage = () => {
           {(() => {
             const locName = (course as any).location?.name as string | undefined;
             const locSlug = (course as any).location?.slug as string | undefined;
-            const isRemembrance = locName === 'The Alchemy of Becoming' || locName === 'The Rites of Remembrance' || locName === 'Deepening Courses';
+            const isBecoming = locName === 'The Alchemy of Becoming' || locSlug === 'loc-remembrance-courses';
+            const isRemembrance = locName === 'Deepening Courses';
             const isDeepening = locName === 'Deepening Courses';
-            const doorCrumb = isRemembrance
-              ? { label: 'The Door of Remembrance', href: '/remembrance', icon: DoorOpen }
-              : { label: 'The Door of Devotion', href: '/devotion', icon: DoorOpen };
+            const doorCrumb = isBecoming
+              ? { label: 'The Door of Becoming', href: '/becoming', icon: DoorOpen }
+              : isRemembrance
+                ? { label: 'The Door of Remembrance', href: '/remembrance', icon: DoorOpen }
+                : { label: 'The Door of Devotion', href: '/devotion', icon: DoorOpen };
             const sectionCrumb = locName
               ? {
                   label: isDeepening ? 'Companion Courses' : locName,
                   href: isDeepening
                     ? '/remembrance/companion-courses'
-                    : isRemembrance
+                    : isBecoming
+                      ? '/becoming'
+                      : isRemembrance
                       ? `/remembrance/section/${locSlug?.replace(/^loc-/, '') ?? ''}`
                       : `/devotion/section/${locSlug?.replace(/^loc-/, '') ?? ''}`,
                 }

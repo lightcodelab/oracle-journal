@@ -327,6 +327,7 @@ const SearchResults = () => {
 
   // Determine base path for a result based on its door
   const getBasePath = (resource: SearchResult) => {
+    if (resource.doorBucket === 'becoming') return '/becoming';
     if (resource.doorBucket === 'remembrance') return '/remembrance';
     if (resource.doorBucket === 'communion') return '/communion';
     return '/devotion';
