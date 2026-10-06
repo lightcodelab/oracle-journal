@@ -254,11 +254,11 @@ const Temple = () => {
           <GuideNextStepCard />
         </section>
         <MyRitualsCard />
+        <BeginPractice />
         <ContinueJourney enabled={hasFullAccess} />
         <RemembranceLettersCard />
         <SacredSpreadsCard />
         {isAdmin && <LivingPatternCard />}
-        <BeginPractice />
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />
         <SeasonalSection enabled={hasFullAccess} />
