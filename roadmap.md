@@ -28,3 +28,9 @@
 - [x] Standardise every card face across all decks to 1050 × 1500 pixels
 - [x] Verify all card-face files and preview rendering
 - [x] Standardise every displayed card-face frame to 7:10 on desktop and mobile
+
+## Four Door structure
+- [ ] Make Remembrance card-focused and move the Rites into Devotion
+- [ ] Add the Door of Becoming for Alchemy of Becoming courses
+- [ ] Add Becoming to the Temple door grid and course navigation
+- [ ] Verify the four Door pages, course links, preview locks, and build health
