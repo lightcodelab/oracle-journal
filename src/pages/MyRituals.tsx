@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { format } from "date-fns";
 import { Plus, Loader2, Flame } from "lucide-react";
 import NavActions from "@/components/NavActions";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
@@ -117,4 +116,3 @@ const MyRituals = () => {
 };
 
 export default MyRituals;
-export { format };
