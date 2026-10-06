@@ -255,9 +255,9 @@ const Temple = () => {
         </section>
         <MyRitualsCard />
         <ContinueJourney enabled={hasFullAccess} />
-        {isAdmin && <LivingPatternCard />}
         <RemembranceLettersCard />
         <SacredSpreadsCard />
+        {isAdmin && <LivingPatternCard />}
         <BeginPractice />
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />
