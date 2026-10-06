@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMemberState } from "@/hooks/useMemberState";
+import { RitualReturnPill } from "./RitualReturnPill";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Check } from "lucide-react";
@@ -44,6 +45,7 @@ export function AddToRitualProvider({ children }: { children: ReactNode }) {
   return (
     <AddToRitualContext.Provider value={{ open, canAdd }}>
       {children}
+      <RitualReturnPill />
       {isMobile ? (
         <Drawer open={!!item} onOpenChange={close}>
           <DrawerContent className="max-h-[90vh]">
