@@ -192,6 +192,7 @@ const DevotionCoursePage = () => {
           completedLessonIds={journalEntries || []}
           courseId={courseId}
           courseTitle={course.title}
+          basePath={(course as any)?.location?.slug === 'loc-remembrance-courses' ? '/becoming' : '/devotion'}
         />
       )}
 

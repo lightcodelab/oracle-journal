@@ -21,6 +21,7 @@ interface CourseSessionNavProps {
   courseId: string;
   currentLessonId?: string;
   courseTitle?: string;
+  basePath?: '/devotion' | '/becoming';
 }
 
 export default function CourseSessionNav({
@@ -29,13 +30,14 @@ export default function CourseSessionNav({
   courseId,
   currentLessonId,
   courseTitle,
+  basePath = '/devotion',
 }: CourseSessionNavProps) {
   const navigate = useNavigate();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const handleLessonClick = (lessonId: string) => {
     setIsMobileOpen(false);
-    navigate(`/devotion/course/${courseId}/lesson/${lessonId}`);
+    navigate(`${basePath}/course/${courseId}/lesson/${lessonId}`);
   };
 
   const { data: trackingTools } = useQuery({
@@ -64,7 +66,7 @@ export default function CourseSessionNav({
       }
     }
 
-    navigate(`/devotion/course/${courseId}?tool=${encodeURIComponent(slug)}`);
+    navigate(`${basePath}/course/${courseId}?tool=${encodeURIComponent(slug)}`);
   };
 
 
