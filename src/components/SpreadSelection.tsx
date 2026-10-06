@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { AddToRitualPlus } from "@/components/rituals/AddToRitualButton";
 import { Sparkles, Layers, Sun, Moon, Heart, Compass, Eye, Lock } from "lucide-react";
 
 export interface SpreadType {
@@ -101,9 +102,14 @@ export const SpreadSelection = ({
                   />
                 ))}
               </div>
-              <div className="absolute top-2 right-2 text-primary/60">
+              <div className="absolute top-2 left-2 text-primary/60">
                 {spread.icon}
               </div>
+              {!locked && (
+                <div className="absolute top-2 right-2">
+                  <AddToRitualPlus item={{ kind: "spread", spreadType: spread.id, name: spread.name }} />
+                </div>
+              )}
             </div>
 
             {/* Content */}

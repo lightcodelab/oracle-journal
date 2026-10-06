@@ -1,3 +1,4 @@
+import { AddToRitualPlus } from "@/components/rituals/AddToRitualButton";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -248,12 +249,15 @@ export const DeckSelection = ({
                           <Sparkles className="w-12 h-12 text-white/80" />
                         </div>
                       )}
-                      <div className="absolute top-2 right-2 flex gap-2">
+                      <div className="absolute top-2 right-2 flex items-center gap-2">
                         {deck.is_published === false && (
                           <Badge variant="outline" className="bg-background/90 text-xs">Draft</Badge>
                         )}
                         {deck.is_free && (
                           <Badge className="bg-primary/90 hover:bg-primary text-primary-foreground text-xs">Free</Badge>
+                        )}
+                        {deck.is_published !== false && (
+                          <AddToRitualPlus item={{ kind: "deck", deckId: deck.id, name: deck.name }} />
                         )}
                       </div>
                     </div>

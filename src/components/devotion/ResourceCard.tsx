@@ -4,6 +4,7 @@ import { Play, Headphones, FileText, BookOpen, Pencil } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { ContentResource } from '@/hooks/useContentByLocation';
+import { AddToRitualPlus } from '@/components/rituals/AddToRitualButton';
 
 interface ResourceCardProps {
   resource: ContentResource;
@@ -47,6 +48,9 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
   };
 
   const isDraft = resource.status === 'draft';
+  // Courses, legacy courses, drafts and coming-soon items can't be ritual steps.
+  const ritualEligible = !comingSoon && !isDraft && !resource.is_course && !resource.slug.startsWith('legacy-course-')
+    && (resource.source === 'content' || resource.source === 'healing');
 
   return (
     <motion.div
@@ -84,9 +88,10 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
             </div>
           )}
           
-          {/* Draft badge and edit button overlay */}
+          {/* Top-right controls: draft/edit, then the Add to Ritual plus (always rightmost) */}
+          <div className="absolute top-2 right-2 flex items-center gap-2">
           {showDraftBadge && isDraft && (
-            <div className="absolute top-2 right-2 flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <Button
                 variant="secondary"
                 size="sm"
@@ -108,6 +113,12 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
               </Badge>
             </div>
           )}
+          {ritualEligible && (
+            <AddToRitualPlus
+              item={{ kind: 'resource', source: resource.source === 'healing' ? 'healing' : 'content', resourceId: resource.id, name: resource.title }}
+            />
+          )}
+          </div>
         </div>
 
         {/* Content */}
