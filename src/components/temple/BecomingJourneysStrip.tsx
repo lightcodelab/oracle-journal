@@ -12,7 +12,7 @@ export function BecomingJourneysStrip() {
           Open the Door of Becoming →
         </Link>
       </div>
-      <BecomingCoursesSection />
+      <BecomingCoursesSection limit={3} />
     </section>
   );
 }
