@@ -2,8 +2,9 @@ import { motion } from "framer-motion";
 import ResourceCard from "@/components/devotion/ResourceCard";
 import { useRemembranceCourses } from "@/hooks/useRemembranceCourses";
 
-export function BecomingCoursesSection() {
+export function BecomingCoursesSection({ limit }: { limit?: number }) {
   const { courses, loading, error, isAdmin } = useRemembranceCourses();
+  const visibleCourses = typeof limit === "number" ? courses.slice(0, limit) : courses;
 
   if (loading) {
     return (
@@ -31,7 +32,7 @@ export function BecomingCoursesSection() {
       animate={{ opacity: 1 }}
       className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
     >
-      {courses.map((course, index) => (
+      {visibleCourses.map((course, index) => (
         <ResourceCard
           key={course.id}
           resource={course}
