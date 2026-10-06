@@ -278,6 +278,7 @@ const Temple = () => {
         {isAdmin && <LivingPatternCard />}
         <RecommendedSection enabled={hasFullAccess} />
         <SeasonalSection enabled={hasFullAccess} />
+        <ToolsForReturn />
         <LiveAndSupport enabled={hasFullAccess} />
       </div>
     </div>
