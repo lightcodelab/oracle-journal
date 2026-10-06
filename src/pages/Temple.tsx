@@ -259,6 +259,7 @@ const Temple = () => {
           <SearchTheTempleCard />
           <ContinueJourney enabled={hasFullAccess} />
         </section>
+        <ExploreDoors />
         <BeginPractice />
         <section aria-labelledby="cards-speak-heading" className="mb-12">
           <h2
@@ -274,7 +275,6 @@ const Temple = () => {
         </section>
         <MyRitualsCard />
         {isAdmin && <LivingPatternCard />}
-        <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />
         <SeasonalSection enabled={hasFullAccess} />
         <LiveAndSupport enabled={hasFullAccess} />
