@@ -261,8 +261,10 @@ const Temple = () => {
         </section>
         <BeginPractice />
         <MyRitualsCard />
-        <RemembranceLettersCard />
-        <SacredSpreadsCard />
+        <section className="mb-12 grid gap-4 md:grid-cols-2 items-stretch">
+          <RemembranceLettersCard />
+          <SacredSpreadsCard />
+        </section>
         {isAdmin && <LivingPatternCard />}
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />
