@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import { FOCUS_OPTIONS } from "@/lib/templeFocus";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
   const [newsletterOptIn, setNewsletterOptIn] = useState(false);
+  const [focus, setFocus] = useState<string>("");
 
   useEffect(() => {
     const checkAuthAndLoadProfile = async () => {
