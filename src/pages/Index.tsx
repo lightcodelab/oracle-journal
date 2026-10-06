@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { AddToRitualAction } from "@/components/rituals/AddToRitualButton";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { OracleCardComponent } from "@/components/OracleCardComponent";
@@ -453,6 +454,11 @@ const Index = () => {
                   {selectedDeck.name}
                 </h1>
               </>
+            )}
+            {selectedDeck.is_published !== false && (
+              <div className="flex justify-center mb-4">
+                <AddToRitualAction item={{ kind: "deck", deckId: selectedDeck.id, name: selectedDeck.name }} />
+              </div>
             )}
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
