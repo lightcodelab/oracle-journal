@@ -1,4 +1,5 @@
 import recognitionBanner from "@/assets/recognition-banner-1-v2.png.asset.json";
+import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
 
 const lines = [
   "You can name what hurts, but the explanation you have been given does not feel like the whole story. You suspect your physical experience may sit alongside something emotional, relational, traumatic or energetic, but you do not know how to explore that without blaming yourself or turning your body into the enemy.",
@@ -55,9 +56,11 @@ export function RecognitionSection() {
 
           {/* Image */}
           <div className="aspect-[8/3] overflow-hidden rounded-sm border border-border/50 shadow-2xl">
-            <img
+            <AdminEditableImage
               src={recognitionBanner.url}
+              imageKey="sales-recognition-banner"
               alt="A quiet sunlit room opening toward an olive grove, inviting a slower breath."
+              wrapperClassName="h-full w-full"
               className="h-full w-full object-cover"
               loading="lazy"
             />

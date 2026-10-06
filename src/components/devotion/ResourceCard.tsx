@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { ContentResource } from '@/hooks/useContentByLocation';
 import { AddToRitualPlus } from '@/components/rituals/AddToRitualButton';
+import { AdminEditableImage } from '@/components/admin/AdminEditableImage';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ResourceCardProps {
   resource: ContentResource;
@@ -52,6 +54,16 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
   const ritualEligible = !comingSoon && !isDraft && !resource.is_course && !resource.slug.startsWith('legacy-course-')
     && (resource.source === 'content' || resource.source === 'healing');
 
+  const saveThumbnail = async (url: string) => {
+    const target = resource.slug.startsWith('legacy-course-')
+      ? { table: 'courses' as const, column: 'image_url' as const }
+      : resource.source === 'healing'
+        ? { table: 'healing_resources' as const, column: 'display_image_url' as const }
+        : { table: 'content_resources' as const, column: 'thumbnail_url' as const };
+    const { error } = await supabase.from(target.table).update({ [target.column]: url }).eq('id', resource.id);
+    if (error) throw error;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -66,9 +78,11 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
         {/* Thumbnail */}
         <div className={`${squareThumb ? 'aspect-square' : 'aspect-video'} w-full overflow-hidden bg-muted relative`}>
           {resource.thumbnail_url ? (
-            <img
+            <AdminEditableImage
               src={resource.thumbnail_url}
+              onSave={showDraftBadge ? saveThumbnail : undefined}
               alt={resource.title}
+              wrapperClassName="h-full w-full"
               className={`w-full h-full object-cover transition-transform duration-300 ${comingSoon ? 'grayscale opacity-60' : 'group-hover:scale-105'}`}
             />
           ) : (

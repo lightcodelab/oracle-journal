@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/landing-page-banner-v2.webp";
+import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
 
 interface SalesHeroProps {
   cta: ReactNode;
@@ -10,19 +11,21 @@ interface SalesHeroProps {
 export function SalesHero({ cta, signIn }: SalesHeroProps) {
   return (
     <section className="relative isolate min-h-[42rem] overflow-hidden md:mx-auto md:mt-0 md:mb-8 md:aspect-video md:min-h-0 md:max-w-[1600px]">
-      <img
+      <AdminEditableImage
         src={heroImage}
+        imageKey="sales-main-banner"
         width={1672}
         height={941}
         alt="A woman stands at an open conservatory doorway looking out over a sunlit garden and distant water, beside a lived-in timber table and garden plants."
         fetchPriority="high"
-        className="absolute inset-0 -z-10 h-full w-full object-cover object-[65%_center] md:object-center"
+        wrapperClassName="absolute inset-0 h-full w-full"
+        className="h-full w-full object-cover object-[65%_center] md:object-center"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-[5] bg-gradient-to-r from-[hsl(22_24%_8%/0.92)] via-[hsl(22_24%_8%/0.55)] via-50% to-transparent"
+        className="pointer-events-none absolute inset-0 z-[5] bg-gradient-to-r from-[hsl(22_24%_8%/0.92)] via-[hsl(22_24%_8%/0.55)] via-50% to-transparent"
       />
-      <div className="mx-auto flex h-full min-h-[42rem] max-w-7xl items-end px-5 pb-10 pt-28 md:min-h-0 md:items-center md:px-8 md:py-12 lg:px-14">
+      <div className="relative z-10 mx-auto flex h-full min-h-[42rem] max-w-7xl items-end px-5 pb-10 pt-28 md:min-h-0 md:items-center md:px-8 md:py-12 lg:px-14">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}

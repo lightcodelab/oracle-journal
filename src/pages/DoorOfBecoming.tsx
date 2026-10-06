@@ -55,7 +55,7 @@ export default function DoorOfBecoming() {
           transition={{ duration: 0.8 }}
           className="mb-12 text-center"
         >
-          <DoorHeader image={becomingHeader.url} title="The Door of Becoming" />
+          <DoorHeader image={becomingHeader.url} imageKey="door-becoming-header" title="The Door of Becoming" />
           <div className="mx-auto max-w-2xl space-y-3 font-sans text-base text-muted-foreground">
             <p className="font-bold text-primary-strong">A space for self-awareness, identity integration, and conscious evolution.</p>
             <p>Mini-courses and deep-dive journeys to integrate what is revealed in the silence.</p>

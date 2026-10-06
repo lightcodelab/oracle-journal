@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import spreadsImg from "@/assets/sacred-spreads-temple.jpg";
+import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
 
 /**
  * Home doorway: Sacred Spreads.
@@ -13,14 +14,16 @@ export function SacredSpreadsCard() {
   return (
     <section aria-labelledby="sacred-spreads-heading" className="h-full min-w-0">
       <article className="relative overflow-hidden rounded-lg border border-border/50 w-full min-w-0 min-h-[280px] h-full">
-          <img
+          <AdminEditableImage
             src={spreadsImg}
+            imageKey="temple-sacred-spreads"
             alt=""
             aria-hidden="true"
             loading="lazy"
             width={1920}
             height={768}
-            className="absolute inset-0 h-full w-full object-cover"
+            wrapperClassName="absolute inset-0 h-full w-full"
+            className="h-full w-full object-cover"
           />
           <div aria-hidden="true" className="absolute inset-0 bg-[#2a1a12]/40" />
           <div

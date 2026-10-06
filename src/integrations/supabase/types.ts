@@ -6741,6 +6741,27 @@ export type Database = {
         }
         Relationships: []
       }
+      site_images: {
+        Row: {
+          image_key: string
+          image_url: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          image_key: string
+          image_url: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          image_key?: string
+          image_url?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       snail_mail_letters: {
         Row: {
           card_ids: string[]

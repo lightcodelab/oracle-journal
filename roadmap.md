@@ -34,3 +34,9 @@
 - [x] Add the Door of Becoming for Alchemy of Becoming courses
 - [x] Add Becoming to the Temple door grid and course navigation
 - [x] Verify the four Door pages, course links, preview locks, and build health
+
+## Admin image editing
+- [x] Add a protected catalogue for fixed content artwork
+- [x] Add the shared admin replacement control with upload and image-library choices
+- [x] Enable editing for Door artwork, primary banners, and content thumbnails
+- [x] Verify admin replacement controls, member-only presentation, and responsive layouts

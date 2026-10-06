@@ -70,7 +70,7 @@ export const DeckSelection = ({
           transition={{ duration: 0.8 }}
           className="text-center"
         >
-          <DoorHeader image={remembranceHeader.url} title="The Door of Remembrance" />
+          <DoorHeader image={remembranceHeader.url} imageKey="door-remembrance-header" title="The Door of Remembrance" />
           <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
             <span className="font-bold text-primary-strong">A space to remember who you are beneath distortion, protection, and pattern.</span>
             <br />

@@ -125,7 +125,7 @@ const DoorOfDevotion = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <DoorHeader image={devotionHeader.url} title="The Door of Devotion" />
+          <DoorHeader image={devotionHeader.url} imageKey="door-devotion-header" title="The Door of Devotion" />
            <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto mb-6">
               <span className="font-bold text-primary-strong">A space to restore your body, regulate your nervous system, and return to yourself.</span>
               <br />
