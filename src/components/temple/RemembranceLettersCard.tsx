@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRemembranceLetters } from "@/hooks/useRemembranceLetters";
 import remembranceLettersHomeAsset from "@/assets/remembrance-letters-home.png.asset.json";
+import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
 
 /**
  * Home doorway: The Remembrance Letters.
@@ -49,12 +50,14 @@ export function RemembranceLettersCard() {
   return (
     <section aria-labelledby="remembrance-letters-heading" className="h-full min-w-0">
       <div className="relative overflow-hidden rounded-xl border border-border/60 h-full">
-        <img
+        <AdminEditableImage
           src={remembranceLettersHomeAsset.url}
+          imageKey="temple-remembrance-letters"
           alt=""
           aria-hidden="true"
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover"
+          wrapperClassName="absolute inset-0 h-full w-full"
+          className="h-full w-full object-cover"
         />
         <div aria-hidden="true" className="absolute inset-0 bg-[#2a1a12]/45" />
         <div

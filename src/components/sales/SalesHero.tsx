@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/landing-page-banner-v2.webp";
+import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
 
 interface SalesHeroProps {
   cta: ReactNode;
@@ -10,13 +11,15 @@ interface SalesHeroProps {
 export function SalesHero({ cta, signIn }: SalesHeroProps) {
   return (
     <section className="relative isolate min-h-[42rem] overflow-hidden md:mx-auto md:mt-0 md:mb-8 md:aspect-video md:min-h-0 md:max-w-[1600px]">
-      <img
+      <AdminEditableImage
         src={heroImage}
+        imageKey="sales-main-banner"
         width={1672}
         height={941}
         alt="A woman stands at an open conservatory doorway looking out over a sunlit garden and distant water, beside a lived-in timber table and garden plants."
         fetchPriority="high"
-        className="absolute inset-0 -z-10 h-full w-full object-cover object-[65%_center] md:object-center"
+        wrapperClassName="absolute inset-0 -z-10 h-full w-full"
+        className="h-full w-full object-cover object-[65%_center] md:object-center"
       />
       <div
         aria-hidden="true"

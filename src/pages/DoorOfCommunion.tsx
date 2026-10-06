@@ -193,7 +193,7 @@ export default function DoorOfCommunion() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <DoorHeader image={communionHeader.url} title="The Door of Communion" />
+          <DoorHeader image={communionHeader.url} imageKey="door-communion-header" title="The Door of Communion" />
           <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto">
             <span className="font-bold text-primary-strong">A space to connect through live sessions, readings, and shared experiences.</span>
             <br />

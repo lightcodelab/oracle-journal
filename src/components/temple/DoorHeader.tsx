@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
 
 interface DoorHeaderProps {
   image: string;
@@ -9,13 +10,14 @@ interface DoorHeaderProps {
   imageAlt?: string;
   /** Which side the text sits on for desktop widths. */
   align?: "left" | "right";
+  imageKey?: string;
 }
 
 /**
  * Wide, shallow page header for the four Door pages.
  * The title/description remain live HTML text; the image is background only.
  */
-export function DoorHeader({ image, title, description, imageAlt = "", align = "right" }: DoorHeaderProps) {
+export function DoorHeader({ image, title, description, imageAlt = "", align = "right", imageKey }: DoorHeaderProps) {
   const isLeft = align === "left";
   return (
     <motion.div
@@ -24,10 +26,12 @@ export function DoorHeader({ image, title, description, imageAlt = "", align = "
       transition={{ duration: 0.6 }}
       className="relative w-full overflow-hidden rounded-lg mb-8"
     >
-      <img
+      <AdminEditableImage
         src={image}
+        imageKey={imageKey}
         alt={imageAlt}
         aria-hidden={imageAlt ? undefined : true}
+        wrapperClassName="w-full"
         className="w-full h-[180px] sm:h-[240px] md:h-[300px] object-cover object-center"
         loading="eager"
       />
