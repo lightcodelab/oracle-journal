@@ -14,6 +14,7 @@ import { SacredSpreadsCard } from "@/components/temple/SacredSpreadsCard";
 import { MyRitualsCard } from "@/components/temple/MyRitualsCard";
 import { BeginPractice } from "@/components/temple/BeginPractice";
 import { ExploreDoors } from "@/components/temple/ExploreDoors";
+import { ToolsForReturn } from "@/components/temple/ToolsForReturn";
 import { GuideNextStepCard } from "@/components/temple/GuideNextStepCard";
 import { SearchTheTempleCard } from "@/components/temple/SearchTheTempleCard";
 import { LiveAndSupport } from "@/components/temple/LiveAndSupport";
@@ -277,6 +278,7 @@ const Temple = () => {
         {isAdmin && <LivingPatternCard />}
         <RecommendedSection enabled={hasFullAccess} />
         <SeasonalSection enabled={hasFullAccess} />
+        <ToolsForReturn />
         <LiveAndSupport enabled={hasFullAccess} />
       </div>
     </div>
