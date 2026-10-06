@@ -124,6 +124,23 @@ const Index = () => {
   const resumeDeckId = searchParams.get("deck");
   const resumeCardId = searchParams.get("card");
 
+  // Ritual visit step: the first card drawn for this deck is stored on the
+  // visit step, so returning reopens it instead of drawing again. Captured
+  // once because shuffling clears the URL params.
+  const ritualStepRef = useRef<{ stepId: string; deckId: string } | null>(
+    searchParams.get("ritualStep") && resumeDeckId
+      ? { stepId: searchParams.get("ritualStep")!, deckId: resumeDeckId }
+      : null,
+  );
+  const linkDrawToRitual = async (deckId: string, cardId: string) => {
+    const link = ritualStepRef.current;
+    if (!link || link.deckId !== deckId) return;
+    ritualStepRef.current = null;
+    await (supabase as any).rpc("attach_ritual_visit_experience", {
+      _visit_step_id: link.stepId, _saved_reading_id: null, _drawn_card_id: cardId,
+    });
+  };
+
   useEffect(() => {
     if (!user || !resumeDeckId || !resumeCardId || decks.length === 0) return;
     if (selectedCard?.id === resumeCardId) return;
@@ -214,6 +231,7 @@ const Index = () => {
           card_id: randomCard.id,
           deck_id: selectedDeck.id,
         });
+        await linkDrawToRitual(selectedDeck.id, randomCard.id);
 
         setIsShuffling(false);
         setShowCard(true);
@@ -264,6 +282,7 @@ const Index = () => {
         card_id: card.id,
         deck_id: selectedDeck.id,
       });
+      await linkDrawToRitual(selectedDeck.id, card.id);
 
       setShowCard(true);
     } catch (error) {
