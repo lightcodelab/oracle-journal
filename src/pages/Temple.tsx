@@ -253,11 +253,11 @@ const Temple = () => {
         <section aria-labelledby="guide-next-step-heading" className="mb-12">
           <GuideNextStepCard />
         </section>
+        <MyRitualsCard />
         <ContinueJourney enabled={hasFullAccess} />
         {isAdmin && <LivingPatternCard />}
         <RemembranceLettersCard />
         <SacredSpreadsCard />
-        <MyRitualsCard />
         <BeginPractice />
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />
