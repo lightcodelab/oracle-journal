@@ -11,14 +11,6 @@ const doors = [
   { name: "The Door of Communion", href: "/communion", image: doorCommunion.url, label: "LIVE READINGS, CLASSES, WORKSHOPS & REPLAYS", description: "Find connection, reflection and support within our community." },
 ];
 
-const tools = [
-  { label: "Journal", href: "/journal", icon: BookHeart },
-  { label: "Playlists", href: "/playlists", icon: ListMusic },
-  { label: "My Living Pattern", href: "/living-pattern", icon: Sprout },
-  { label: "Tracking", href: "/tracking", icon: LineChart },
-  { label: "Readings", href: "/readings", icon: Sparkles },
-  { label: "Protocols", href: "/devotion/protocols", icon: HeartPulse },
-];
 
 export function ExploreDoors() {
   return (
