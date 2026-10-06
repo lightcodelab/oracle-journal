@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import doorRemembrance from "@/assets/door-of-remembrance-4.webp";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
-import { Button } from "@/components/ui/button";
-import { BookHeart, ListMusic, LineChart, Sparkles, HeartPulse, Sprout } from "lucide-react";
+
 
 const doors = [
   { name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance, label: "RITUALS, CARD DECKS & COURSES", description: "Explore the patterns, stories and inheritances shaping you." },
