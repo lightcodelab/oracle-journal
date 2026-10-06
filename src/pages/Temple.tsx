@@ -260,11 +260,11 @@ const Temple = () => {
           <ContinueJourney enabled={hasFullAccess} />
         </section>
         <BeginPractice />
-        <MyRitualsCard />
         <section className="mb-12 grid gap-4 md:grid-cols-2 items-stretch">
           <RemembranceLettersCard />
           <SacredSpreadsCard />
         </section>
+        <MyRitualsCard />
         {isAdmin && <LivingPatternCard />}
         <ExploreDoors />
         <RecommendedSection enabled={hasFullAccess} />
