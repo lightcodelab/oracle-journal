@@ -6,8 +6,6 @@ import { supabase } from "@/integrations/supabase/client";
 import NavActions from "@/components/NavActions";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { DoorHeader } from "@/components/temple/DoorHeader";
-import { GuideNextStepCard } from "@/components/temple/GuideNextStepCard";
-import { SearchTheTempleCard } from "@/components/temple/SearchTheTempleCard";
 import { BecomingCoursesSection } from "@/components/becoming/BecomingCoursesSection";
 import becomingHeader from "@/assets/companion-courses-header.png.asset.json";
 
@@ -61,11 +59,6 @@ export default function DoorOfBecoming() {
             <p>Mini-courses and deep-dive journeys to integrate what is revealed in the silence.</p>
           </div>
         </motion.div>
-
-        <div className="mb-12 grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <GuideNextStepCard />
-          <SearchTheTempleCard />
-        </div>
 
         <section aria-labelledby="alchemy-heading">
           <div className="mb-8 text-center">
