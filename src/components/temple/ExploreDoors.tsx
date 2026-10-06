@@ -5,6 +5,7 @@ import doorBecoming from "@/assets/door-of-remembrance-4.webp";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
 import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
+import type { TempleFocus } from "@/lib/templeFocus";
 
 
 const doors = [
@@ -15,17 +16,34 @@ const doors = [
 ];
 
 
-export function ExploreDoors() {
+const focusKey: Record<TempleFocus, string> = {
+  remembrance: "temple-door-remembrance",
+  devotion: "temple-door-devotion",
+  becoming: "temple-door-becoming",
+  communion: "temple-door-communion",
+};
+
+export function ExploreDoors({ focus, onChangeFocus }: { focus?: TempleFocus | null; onChangeFocus?: () => void }) {
+  const ordered = focus
+    ? [...doors].sort((a, b) => Number(b.key === focusKey[focus]) - Number(a.key === focusKey[focus]))
+    : doors;
   return (
     <section aria-labelledby="explore-heading" className="mb-12">
-      <h2 id="explore-heading" className="font-serif text-2xl text-foreground mb-1">
-        Explore THE TEMPLE
-      </h2>
+      <div className="flex items-baseline justify-between gap-3 mb-1">
+        <h2 id="explore-heading" className="font-serif text-2xl text-foreground">
+          Explore THE TEMPLE
+        </h2>
+        {onChangeFocus && (
+          <button type="button" onClick={onChangeFocus} className="text-sm text-primary hover:underline">
+            {focus ? "Change focus" : "Choose your focus"}
+          </button>
+        )}
+      </div>
       <p className="text-sm text-muted-foreground mb-4">
         Four pathways for exploring THE TEMPLE. Every pathway is open to every active member.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {doors.map((door, i) => (
+        {ordered.map((door, i) => (
           <motion.div
             key={door.name}
             initial={{ opacity: 0, y: 12 }}
@@ -48,6 +66,13 @@ export function ExploreDoors() {
                   className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               </div>
+              {focus && door.key === focusKey[focus] && (
+                <p className="mt-2 text-center">
+                  <span className="inline-block rounded-full border border-primary/60 bg-primary/10 px-2 py-0.5 text-[11px] uppercase tracking-wider text-primary">
+                    Your focus
+                  </span>
+                </p>
+              )}
               <p className="mt-2 font-serif text-lg text-foreground text-center">
                 {door.name}
               </p>
