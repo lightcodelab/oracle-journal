@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -135,6 +136,17 @@ const DoorOfDevotion = () => {
             <GuideNextStepCard />
             <SearchTheTempleCard />
           </div>
+
+          <Link
+            to="/rituals"
+            className="mb-8 flex items-center justify-between gap-4 rounded-lg border border-border bg-card p-5 hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <span>
+              <span className="block font-serif text-xl text-foreground">My Rituals</span>
+              <span className="block text-sm text-muted-foreground">Gather cards, spreads and resources into your own daily, weekly and monthly rituals.</span>
+            </span>
+            <span className="text-primary text-sm font-medium shrink-0">Open →</span>
+          </Link>
 
           <AllResourcesSection />
       </div>
