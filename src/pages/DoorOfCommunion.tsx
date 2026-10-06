@@ -19,6 +19,7 @@ import imgMeditations from '@/assets/communion-live-meditation-classes.png.asset
 import imgAllSessions from '@/assets/communion-all-sessions.png.asset.json';
 import imgReplays from '@/assets/communion-live-replays.png.asset.json';
 import imgMirror from '@/assets/communion-the-mirror-exchange.png.asset.json';
+import { AdminEditableImage } from '@/components/admin/AdminEditableImage';
 
 interface CommunionCategory {
   id: string;
@@ -221,12 +222,14 @@ export default function DoorOfCommunion() {
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background'
                   )}
                 >
-                  <img
+                  <AdminEditableImage
                     src={category.image}
+                    imageKey={`communion-${category.id}`}
                     alt=""
                     aria-hidden
                     loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover"
+                    wrapperClassName="absolute inset-0 h-full w-full"
+                    className="h-full w-full object-cover"
                   />
                   <div
                     aria-hidden

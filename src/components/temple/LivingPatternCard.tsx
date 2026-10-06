@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import presenceImg from "@/assets/presence-img.png.asset.json";
+import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
 
 /**
  * Home doorway: the Living Pattern Lab.
@@ -66,12 +67,14 @@ export function LivingPatternCard() {
         </div>
 
         <article className="relative mt-6 overflow-hidden rounded-lg border border-border/50 w-full min-w-0 sm:aspect-[21/9] sm:min-h-[280px]">
-          <img
+          <AdminEditableImage
             src={presenceImg.url}
+            imageKey="temple-living-pattern"
             alt=""
             aria-hidden="true"
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover"
+            wrapperClassName="absolute inset-0 h-full w-full"
+            className="h-full w-full object-cover"
           />
           <div aria-hidden="true" className="absolute inset-0 bg-[#2a1a12]/40" />
           <div

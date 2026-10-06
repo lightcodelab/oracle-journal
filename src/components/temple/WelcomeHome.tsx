@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { FounderBadge } from "@/components/FounderBadge";
 import templeBannerAsset from "@/assets/homepage-banner.webp.asset.json";
+import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
 
 interface WelcomeHomeProps {
   displayName: string | null;
@@ -19,10 +20,12 @@ export function WelcomeHome({ displayName, showFounderBadge, foundingSince }: We
       aria-labelledby="temple-welcome-heading"
     >
       <div className="relative w-full overflow-hidden rounded-lg">
-        <img
+        <AdminEditableImage
           src={templeBannerAsset.url}
+          imageKey="temple-welcome-banner"
           alt=""
           aria-hidden="true"
+          wrapperClassName="w-full"
           className="w-full h-[120px] sm:h-[150px] md:h-[180px] object-cover object-center"
         />
         {/* Legibility scrim behind the text only (left-to-right, fades out) */}

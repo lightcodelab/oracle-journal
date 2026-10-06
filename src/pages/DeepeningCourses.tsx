@@ -130,6 +130,7 @@ const DeepeningCourses = () => {
         <div className="mb-12">
           <DoorHeader
             image={companionCoursesHeader.url}
+            imageKey="deepening-courses-header"
             title={PAGE_TITLE}
             description={PAGE_DESCRIPTION}
             align="left"
