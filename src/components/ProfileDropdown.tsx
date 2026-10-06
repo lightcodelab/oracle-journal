@@ -26,7 +26,8 @@ import {
   LineChart,
   Share2,
   Compass,
-  Mail
+  Mail,
+  Target
 } from 'lucide-react';
 import { useInstallApp } from '@/components/InstallAppDialog';
 import GlobalSearch from '@/components/GlobalSearch';
@@ -105,6 +106,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       label: 'My Account',
       icon: <CreditCard className="w-4 h-4 mr-2" />,
       route: '/account',
+    },
+    {
+      label: 'My Focus',
+      icon: <Target className="w-4 h-4 mr-2" />,
+      route: '/temple?focus=1',
     },
     {
       label: 'My Calendar',
