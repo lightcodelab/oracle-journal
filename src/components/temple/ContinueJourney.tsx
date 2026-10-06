@@ -69,19 +69,19 @@ export function ContinueJourney({ enabled }: ContinueJourneyProps) {
       </h2>
 
       {!enabled ? (
-        <div data-preview-block className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(22rem,1fr))]">
+        <div data-preview-block className="grid gap-4">
           {SAMPLES.map((item) => (
             <ContinuationColumn key={item.kind} item={item} />
           ))}
         </div>
       ) : isLoading || !data ? (
-        <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(22rem,1fr))]">
+        <div className="grid gap-4">
           <Skeleton className="h-24 w-full rounded-lg" />
           <Skeleton className="h-24 w-full rounded-lg" />
           <Skeleton className="h-24 w-full rounded-lg" />
         </div>
       ) : (
-        <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(22rem,1fr))]">
+        <div className="grid gap-4">
           <ContinuationColumn item={data.card} />
           <ContinuationColumn item={data.lesson} />
           <ContinuationColumn item={data.resource} />
