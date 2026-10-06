@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Home } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -61,6 +61,7 @@ function SeasonalSection({ enabled }: { enabled: boolean }) {
 
 const Temple = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user, loading: authLoading } = useAuth();
   const {
     isAdmin,
@@ -136,6 +137,16 @@ const Temple = () => {
   useEffect(() => {
     if (hasFullAccess && profileLoaded && !focusPrompted) setFocusOpen(true);
   }, [hasFullAccess, profileLoaded, focusPrompted]);
+
+  // "My Focus" in the profile menu links here with ?focus=1 to reopen the question.
+  useEffect(() => {
+    if (hasFullAccess && profileLoaded && searchParams.get("focus") === "1") {
+      setFocusOpen(true);
+      const next = new URLSearchParams(searchParams);
+      next.delete("focus");
+      setSearchParams(next, { replace: true });
+    }
+  }, [hasFullAccess, profileLoaded, searchParams, setSearchParams]);
 
   // A free member's one saved reading: offer a way back to it from the
   // no-access screen instead of making them hunt through the app.
