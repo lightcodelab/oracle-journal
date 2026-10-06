@@ -140,7 +140,7 @@ const DoorOfDevotion = () => {
               to="/rituals"
               className="rounded-lg border border-border/50 bg-card/50 p-8 h-full min-w-0 flex flex-col items-start hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <h3 className="font-serif text-2xl text-foreground mb-1">My Rituals</h3>
+              <h3 className="font-serif text-2xl text-foreground mb-1">Create Your Own Rituals</h3>
               <p className="text-sm text-muted-foreground mb-5">
                 Gather cards, spreads and resources into your own daily, weekly and monthly rituals.
               </p>
