@@ -24,7 +24,7 @@ export function SearchTheTempleCard() {
       <p className="text-sm text-muted-foreground mb-5">
         Find teachings, resources, and pathways by symptom, resources name, or keyword. Use this if you can't remember the resources name, or you know your symptoms but not which resources will help.
       </p>
-      <form onSubmit={handleSearch} className="flex items-center gap-2 mt-auto">
+      <form onSubmit={handleSearch} className="flex items-center gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden />
           <Input
@@ -36,7 +36,7 @@ export function SearchTheTempleCard() {
             aria-label="Search THE TEMPLE"
           />
         </div>
-        <Button type="submit" variant="secondary" disabled={!searchQuery.trim()}>
+        <Button type="submit" disabled={!searchQuery.trim()}>
           Search
         </Button>
       </form>
