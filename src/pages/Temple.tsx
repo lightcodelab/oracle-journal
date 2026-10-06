@@ -261,7 +261,6 @@ const Temple = () => {
         </section>
         <MyRitualsCard />
         <BeginPractice />
-        <ContinueJourney enabled={hasFullAccess} />
         <RemembranceLettersCard />
         <SacredSpreadsCard />
         {isAdmin && <LivingPatternCard />}
