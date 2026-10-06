@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { AddToRitualAction } from "@/components/rituals/AddToRitualButton";
+import { SPREAD_TYPES } from "@/components/SpreadSelection";
 import { supabase } from "@/integrations/supabase/client";
 import { SpreadSelection, type SpreadType } from "@/components/SpreadSelection";
 import { SpreadReading, EMPTY_SPREAD_JOURNAL_ANSWERS, type SpreadJournalAnswers } from "@/components/SpreadReading";
@@ -134,6 +136,32 @@ const SacredSpreads = () => {
     setShowSpreadReading(true);
   };
 
+  // Opened from a ritual visit: /remembrance/spreads?spread=<id>&ritualStep=<visitStepId>.
+  // If that step already has a reading, reopen it instead of drawing again.
+  const [searchParams] = useSearchParams();
+  const ritualStepRef = useRef<string | null>(searchParams.get('ritualStep'));
+  const ritualSpreadHandled = useRef(false);
+  useEffect(() => {
+    const spreadId = searchParams.get('spread');
+    if (ritualSpreadHandled.current || !spreadId || loading || accessLoading || !user) return;
+    const spread = SPREAD_TYPES.find((s) => s.id === spreadId);
+    if (!spread) return;
+    ritualSpreadHandled.current = true;
+    (async () => {
+      const stepId = ritualStepRef.current;
+      if (stepId) {
+        const { data } = await (supabase as any)
+          .from('ritual_visit_steps').select('saved_reading_id').eq('id', stepId).maybeSingle();
+        if (data?.saved_reading_id) {
+          navigate(`/readings?reading=${data.saved_reading_id}`, { replace: true });
+          return;
+        }
+      }
+      await handleSelectSpread(spread);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, loading, accessLoading, user]);
+
   const handleSelectSpread = async (spread: SpreadType) => {
     if (!hasFullAccess) {
       if (spread.id !== FREE_SPREAD_ID) {
@@ -258,6 +286,14 @@ const SacredSpreads = () => {
           .single();
         if (error) throw error;
         savedReadingIdRef.current = data?.id ?? null;
+        // Link this reading to the ritual visit step it was drawn for (once).
+        if (data?.id && ritualStepRef.current) {
+          const stepId = ritualStepRef.current;
+          ritualStepRef.current = null;
+          await (supabase as any).rpc('attach_ritual_visit_experience', {
+            _visit_step_id: stepId, _saved_reading_id: data.id, _drawn_card_id: null,
+          });
+        }
       }
 
       toast({
@@ -392,6 +428,11 @@ const SacredSpreads = () => {
         )}
 
         {/* Spread reading */}
+        {activeSpread && showSpreadReading && hasFullAccess && (
+          <div className="flex justify-end max-w-6xl mx-auto mb-2">
+            <AddToRitualAction item={{ kind: 'spread', spreadType: activeSpread.id, name: activeSpread.name }} />
+          </div>
+        )}
         {activeSpread && showSpreadReading && (
           <SpreadReading
             spread={activeSpread}

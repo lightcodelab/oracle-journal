@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import RitualVisitHistory from '@/components/rituals/RitualVisitHistory';
+import { useRituals, useRitualVisits } from '@/lib/rituals';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -59,7 +61,14 @@ import type { Json } from '@/integrations/supabase/types';
 import { useToast } from '@/hooks/use-toast';
 
 type ViewMode = 'list' | 'editor';
-type FilterType = 'all' | 'pinned' | 'card' | 'lesson' | 'course';
+
+/** Ritual visits read straight from the visit records — nothing is copied into the journal. */
+function JournalRitualVisits() {
+  const { data: visits = [] } = useRitualVisits();
+  const { data: rituals = [] } = useRituals();
+  return <RitualVisitHistory visits={visits} rituals={rituals} showFilter />;
+}
+type FilterType = 'all' | 'pinned' | 'card' | 'lesson' | 'course' | 'rituals';
 
 const JournalContent = () => {
   const navigate = useNavigate();
@@ -303,6 +312,7 @@ const JournalContent = () => {
                     <SelectItem value="card">Card Reflections</SelectItem>
                     <SelectItem value="lesson">Lesson Notes</SelectItem>
                     <SelectItem value="course">Course Notes</SelectItem>
+                    <SelectItem value="rituals">Ritual Visits</SelectItem>
                   </SelectContent>
                 </Select>
                 <Button onClick={handleNewEntry} disabled={createEntry.isPending}>
@@ -338,7 +348,9 @@ const JournalContent = () => {
               </div>
 
               {/* Entries List */}
-              {sortedEntries.length > 0 ? (
+              {filterType === 'rituals' ? (
+                <JournalRitualVisits />
+              ) : sortedEntries.length > 0 ? (
                 <div className="grid gap-4">
                   {sortedEntries.map((entry) => (
                     <JournalEntryCard

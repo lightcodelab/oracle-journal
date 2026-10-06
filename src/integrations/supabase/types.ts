@@ -6271,6 +6271,210 @@ export type Database = {
           },
         ]
       }
+      ritual_steps: {
+        Row: {
+          client_request_id: string | null
+          created_at: string
+          deck_id: string | null
+          id: string
+          journal_prompt: string | null
+          kind: Database["public"]["Enums"]["ritual_step_kind"]
+          label: string | null
+          position: number
+          resource_id: string | null
+          resource_source: string | null
+          ritual_id: string
+          spread_type: string | null
+          user_id: string
+        }
+        Insert: {
+          client_request_id?: string | null
+          created_at?: string
+          deck_id?: string | null
+          id?: string
+          journal_prompt?: string | null
+          kind: Database["public"]["Enums"]["ritual_step_kind"]
+          label?: string | null
+          position?: number
+          resource_id?: string | null
+          resource_source?: string | null
+          ritual_id: string
+          spread_type?: string | null
+          user_id: string
+        }
+        Update: {
+          client_request_id?: string | null
+          created_at?: string
+          deck_id?: string | null
+          id?: string
+          journal_prompt?: string | null
+          kind?: Database["public"]["Enums"]["ritual_step_kind"]
+          label?: string | null
+          position?: number
+          resource_id?: string | null
+          resource_source?: string | null
+          ritual_id?: string
+          spread_type?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ritual_steps_ritual_id_fkey"
+            columns: ["ritual_id"]
+            isOneToOne: false
+            referencedRelation: "rituals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ritual_visit_steps: {
+        Row: {
+          deck_id: string | null
+          drawn_card_id: string | null
+          id: string
+          journal_prompt: string | null
+          kind: Database["public"]["Enums"]["ritual_step_kind"]
+          label: string | null
+          marked_done: boolean
+          note: string | null
+          position: number
+          resource_id: string | null
+          resource_source: string | null
+          saved_reading_id: string | null
+          source_step_id: string | null
+          spread_type: string | null
+          updated_at: string
+          user_id: string
+          visit_id: string
+        }
+        Insert: {
+          deck_id?: string | null
+          drawn_card_id?: string | null
+          id?: string
+          journal_prompt?: string | null
+          kind: Database["public"]["Enums"]["ritual_step_kind"]
+          label?: string | null
+          marked_done?: boolean
+          note?: string | null
+          position: number
+          resource_id?: string | null
+          resource_source?: string | null
+          saved_reading_id?: string | null
+          source_step_id?: string | null
+          spread_type?: string | null
+          updated_at?: string
+          user_id: string
+          visit_id: string
+        }
+        Update: {
+          deck_id?: string | null
+          drawn_card_id?: string | null
+          id?: string
+          journal_prompt?: string | null
+          kind?: Database["public"]["Enums"]["ritual_step_kind"]
+          label?: string | null
+          marked_done?: boolean
+          note?: string | null
+          position?: number
+          resource_id?: string | null
+          resource_source?: string | null
+          saved_reading_id?: string | null
+          source_step_id?: string | null
+          spread_type?: string | null
+          updated_at?: string
+          user_id?: string
+          visit_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ritual_visit_steps_visit_id_fkey"
+            columns: ["visit_id"]
+            isOneToOne: false
+            referencedRelation: "ritual_visits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ritual_visits: {
+        Row: {
+          closing_reflection: string | null
+          id: string
+          ritual_id: string
+          ritual_intention: string | null
+          ritual_name: string
+          ritual_rhythm: Database["public"]["Enums"]["ritual_rhythm"]
+          saved_at: string | null
+          started_at: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          closing_reflection?: string | null
+          id?: string
+          ritual_id: string
+          ritual_intention?: string | null
+          ritual_name: string
+          ritual_rhythm: Database["public"]["Enums"]["ritual_rhythm"]
+          saved_at?: string | null
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          closing_reflection?: string | null
+          id?: string
+          ritual_id?: string
+          ritual_intention?: string | null
+          ritual_name?: string
+          ritual_rhythm?: Database["public"]["Enums"]["ritual_rhythm"]
+          saved_at?: string | null
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ritual_visits_ritual_id_fkey"
+            columns: ["ritual_id"]
+            isOneToOne: false
+            referencedRelation: "rituals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rituals: {
+        Row: {
+          created_at: string
+          id: string
+          intention: string | null
+          name: string
+          rhythm: Database["public"]["Enums"]["ritual_rhythm"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          intention?: string | null
+          name: string
+          rhythm: Database["public"]["Enums"]["ritual_rhythm"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          intention?: string | null
+          name?: string
+          rhythm?: Database["public"]["Enums"]["ritual_rhythm"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       saved_readings: {
         Row: {
           card_id: string | null
@@ -7820,6 +8024,14 @@ export type Database = {
       }
       arrival_start_or_resume: { Args: never; Returns: Json }
       assert_caller_is_admin: { Args: never; Returns: string }
+      attach_ritual_visit_experience: {
+        Args: {
+          _drawn_card_id: string
+          _saved_reading_id: string
+          _visit_step_id: string
+        }
+        Returns: Json
+      }
       attribute_affiliate_referral: {
         Args: { _code: string; _commission_model?: string; _link_code?: string }
         Returns: string
@@ -8397,6 +8609,10 @@ export type Database = {
       }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
+      start_or_resume_ritual_visit: {
+        Args: { _ritual_id: string }
+        Returns: string
+      }
       stripe_webhook_complete_event: {
         Args: {
           _event_id: string
@@ -8519,6 +8735,8 @@ export type Database = {
         | "recipe"
       resource_status: "draft" | "review" | "published"
       resource_tier: "free" | "paid"
+      ritual_rhythm: "daily" | "weekly" | "monthly"
+      ritual_step_kind: "deck" | "spread" | "resource"
       severity_band: "mild" | "moderate" | "severe" | "critical"
       subscription_status:
         | "active"
@@ -8684,6 +8902,8 @@ export const Constants = {
       ],
       resource_status: ["draft", "review", "published"],
       resource_tier: ["free", "paid"],
+      ritual_rhythm: ["daily", "weekly", "monthly"],
+      ritual_step_kind: ["deck", "spread", "resource"],
       severity_band: ["mild", "moderate", "severe", "critical"],
       subscription_status: [
         "active",
