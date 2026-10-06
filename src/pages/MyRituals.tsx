@@ -14,7 +14,7 @@ export function RitualsShell({ crumbs, children }: { crumbs: { label: string; hr
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-5xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
-        <PageBreadcrumb items={[{ label: "THE TEMPLE", href: "/temple" }, ...crumbs]} />
+        <PageBreadcrumb items={crumbs} />
         <NavActions />
       </div>
       <div className="max-w-5xl mx-auto px-4 pb-24">{children}</div>
