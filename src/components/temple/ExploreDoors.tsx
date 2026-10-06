@@ -31,18 +31,20 @@ export function ExploreDoors() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: i * 0.05 }}
+            className="relative"
           >
             <Link
               to={door.href}
-              className="block group rounded-lg overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="absolute inset-0 z-10 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-label={`Open ${door.name}`}
-            >
+            />
+            <div className="group">
               <div className="overflow-hidden rounded-lg aspect-square">
                 <AdminEditableImage
                   src={door.image}
                   imageKey={door.key}
                   alt={door.name}
-                  wrapperClassName="h-full w-full"
+                  wrapperClassName="pointer-events-none relative z-20 h-full w-full"
                   className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               </div>
@@ -55,7 +57,7 @@ export function ExploreDoors() {
               <p className="mt-2 text-sm text-muted-foreground text-center leading-relaxed">
                 {door.description}
               </p>
-            </Link>
+            </div>
           </motion.div>
         ))}
       </div>

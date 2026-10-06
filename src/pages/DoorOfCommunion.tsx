@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Sparkles, Lock, ArrowUpRight } from 'lucide-react';
@@ -213,29 +213,32 @@ export default function DoorOfCommunion() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="group"
               >
-                <button
-                  type="button"
-                  onClick={() => navigate(category.route)}
+                <div
                   className={cn(
                     'relative block w-full text-left aspect-video overflow-hidden rounded-lg',
                     'transition-transform duration-300 group-hover:scale-[1.01]',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background'
                   )}
                 >
+                  <Link
+                    to={category.route}
+                    aria-label={`Open ${category.title}`}
+                    className="absolute inset-0 z-10 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  />
                   <AdminEditableImage
                     src={category.image}
                     imageKey={`communion-${category.id}`}
                     alt=""
                     aria-hidden
                     loading="lazy"
-                    wrapperClassName="absolute inset-0 h-full w-full"
+                    wrapperClassName="pointer-events-none absolute inset-0 z-20 h-full w-full"
                     className="h-full w-full object-cover"
                   />
                   <div
                     aria-hidden
                     className="absolute inset-0 bg-gradient-to-t from-[hsl(28_45%_6%/0.92)] via-[hsl(28_40%_10%/0.55)] to-transparent"
                   />
-                  <div className="absolute inset-x-0 bottom-0 p-5">
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 p-5">
                     <h2 className="font-serif text-2xl text-[hsl(38_60%_94%)] mb-1.5">
                       {category.title}
                     </h2>
@@ -243,7 +246,7 @@ export default function DoorOfCommunion() {
                       {category.description}
                     </p>
                   </div>
-                </button>
+                </div>
               </motion.div>
             );
           })}
