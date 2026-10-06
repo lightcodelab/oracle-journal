@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { 
@@ -142,6 +142,15 @@ const MyReadings = () => {
     setEditingId(null);
     setEditNotes('');
   };
+
+  // Deep link: /readings?reading=<id> opens that saved spread (used by rituals).
+  const [readingParams] = useSearchParams();
+  const deepLinkReadingId = readingParams.get('reading');
+  useEffect(() => {
+    if (!deepLinkReadingId || !readings.length) return;
+    const r = readings.find((x) => x.id === deepLinkReadingId);
+    if (r?.spread_type && r.spread_cards) setSpreadViewReading(r);
+  }, [deepLinkReadingId, readings]);
 
   const handleReadingClick = (reading: SavedReading) => {
     if (reading.spread_type && reading.spread_cards) {
