@@ -4,6 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { AddToRitualProvider } from "@/components/rituals/AddToRitualProvider";
+import MyRituals from "./pages/MyRituals";
+import RitualDetail from "./pages/RitualDetail";
+import RitualVisitPage from "./pages/RitualVisit";
 import { EncryptionProvider } from "@/hooks/useEncryption";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -116,8 +120,13 @@ const App = () => {
         <BrowserRouter>
           <ThemeScope />
           <main id="main-content" tabIndex={-1}>
+          <AddToRitualProvider>
           <MembershipGate>
           <Routes>
+            <Route path="/rituals" element={<MyRituals />} />
+            <Route path="/rituals/:id" element={<RitualDetail />} />
+            <Route path="/rituals/:id/visit" element={<RitualVisitPage />} />
+            <Route path="/rituals/visits/:visitId" element={<RitualVisitPage />} />
             <Route path="/" element={<Membership />} />
             <Route path="/membership" element={<Navigate to="/" replace />} />
             <Route path="/temple" element={<Temple />} />
@@ -213,6 +222,7 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
           </MembershipGate>
+          </AddToRitualProvider>
           </main>
         </BrowserRouter>
         </InstallAppProvider>
