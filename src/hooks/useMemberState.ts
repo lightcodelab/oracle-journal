@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -101,16 +101,21 @@ export function useMemberState() {
   const { user } = useAuth();
   const [state, setState] = useState<MemberState>(EMPTY);
   const [loading, setLoading] = useState(true);
+  const userId = user?.id ?? null;
+  const loadedFor = useRef<string | null>(null);
 
   const refetch = useCallback(async () => {
-    if (!user) {
+    if (!userId) {
+      loadedFor.current = null;
       setState(EMPTY);
       setLoading(false);
       return;
     }
-    setLoading(true);
+    // Only show a loading state on the first check for this person, so
+    // background refreshes (e.g. returning to the tab) don't unmount pages.
+    if (loadedFor.current !== userId) setLoading(true);
     const { data, error } = await supabase.rpc("get_member_state", {
-      _user_id: user.id,
+      _user_id: userId,
     });
     if (error) {
       // Fail closed: never masquerade as "no access". Callers must
@@ -150,8 +155,9 @@ export function useMemberState() {
         hasFullTempleAccess,
       });
     }
+    loadedFor.current = userId;
     setLoading(false);
-  }, [user]);
+  }, [userId]);
 
   useEffect(() => {
     refetch();
