@@ -13,8 +13,6 @@ export interface AllCoursesItem {
 }
 
 const REMEMBRANCE_LOCATIONS = new Set([
-  'loc-rites-of-remembrance',
-  'loc-remembrance-courses',
   'loc-deepening-courses',
 ]);
 
@@ -78,7 +76,11 @@ export const useAllCourses = (): UseAllCoursesResult => {
           return {
             categoryName: course.location?.name ?? 'Other Courses',
             categorySlug: locationSlug,
-            basePath: REMEMBRANCE_LOCATIONS.has(locationSlug) ? '/remembrance' : '/devotion',
+            basePath: locationSlug === 'loc-remembrance-courses'
+              ? '/becoming'
+              : REMEMBRANCE_LOCATIONS.has(locationSlug)
+                ? '/remembrance'
+                : '/devotion',
             resource: {
               id: course.id,
               title: course.title,

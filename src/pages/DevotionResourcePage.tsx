@@ -498,13 +498,17 @@ const DevotionResourcePage = () => {
     );
   }
 
+  const isBecomingResource = resource.location?.slug === 'loc-remembrance-courses';
+  const doorPath = isBecomingResource ? '/becoming' : '/devotion';
+  const doorLabel = isBecomingResource ? 'The Door of Becoming' : 'The Door of Devotion';
+
   // Show access denied if user doesn't have devotion access
   if (!canAccessDevotion) {
     return (
       <div className="min-h-screen bg-background py-12 px-4 relative">
         <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
           <PageBreadcrumb items={[
-             { label: 'The Door of Devotion', href: '/devotion' },
+             { label: doorLabel, href: doorPath },
             { label: resource.title }
           ]} />
           <ProfileDropdown />
@@ -535,8 +539,8 @@ const DevotionResourcePage = () => {
                 {isActiveMember ? 'Upgrade Membership' : 'View Memberships'}
                 <ArrowUpRight className="w-4 h-4 ml-2" />
               </Button>
-              <Button variant="ghost" onClick={() => navigate('/devotion')}>
-                Return to Door of Devotion
+              <Button variant="ghost" onClick={() => navigate(doorPath)}>
+                Return to {doorLabel}
               </Button>
             </div>
           </motion.div>
@@ -546,6 +550,7 @@ const DevotionResourcePage = () => {
   }
 
   const getBackPath = () => {
+    if (isBecomingResource) return '/becoming';
     if (resource.location?.slug) {
       // Map location slug to section path
       const sectionMap: Record<string, string> = {
@@ -565,7 +570,7 @@ const DevotionResourcePage = () => {
       {/* Navigation Header */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <PageBreadcrumb items={[
-          { label: 'The Door of Devotion', href: '/devotion' },
+          { label: doorLabel, href: doorPath },
           { label: resource.location?.name || 'Resource', href: getBackPath() },
           { label: resource.title }
         ]} />

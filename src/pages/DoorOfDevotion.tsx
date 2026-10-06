@@ -14,6 +14,7 @@ import { DoorHeader } from '@/components/temple/DoorHeader';
 import { GuideNextStepCard } from '@/components/temple/GuideNextStepCard';
 import { SearchTheTempleCard } from '@/components/temple/SearchTheTempleCard';
 import devotionHeader from '@/assets/door-devotion-header-v1.webp.asset.json';
+import RitesOfRemembranceSection from '@/components/RitesOfRemembranceSection';
 
 
 const DoorOfDevotion = () => {
@@ -128,7 +129,7 @@ const DoorOfDevotion = () => {
            <p className="text-muted-foreground font-sans text-base max-w-2xl mx-auto mb-6">
               <span className="font-bold text-primary-strong">A space to restore your body, regulate your nervous system, and return to yourself.</span>
               <br />
-              Guided meditations and Energetic Healing for embodied repair.
+              Foundational rites, guided meditations, and energetic healing for embodied repair.
             </p>
           </motion.div>
 
@@ -147,6 +148,22 @@ const DoorOfDevotion = () => {
             </span>
             <span className="text-primary text-sm font-medium shrink-0">Open →</span>
           </Link>
+
+          <section aria-labelledby="foundational-rites-heading" className="mb-12 scroll-mt-24">
+            <div className="text-center mb-8">
+              <div className="text-3xl mb-2" aria-hidden="true">🜂</div>
+              <h2 id="foundational-rites-heading" className="font-serif text-2xl md:text-3xl text-foreground mb-3">
+                The Foundational Rites
+              </h2>
+              <p className="font-bold text-primary font-sans text-base mb-3">The Rites of Remembrance</p>
+              <div className="text-muted-foreground font-sans text-base max-w-2xl mx-auto space-y-3">
+                <p>These foundational rites prepare your inner field for the work within THE TEMPLE.</p>
+                <p>They stabilise the nervous system, clear inherited distortion, and establish energetic sovereignty.</p>
+                <p>Walk them in order, without rush, and return whenever your system asks.</p>
+              </div>
+            </div>
+            <RitesOfRemembranceSection />
+          </section>
 
           <AllResourcesSection />
       </div>

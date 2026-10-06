@@ -1,12 +1,9 @@
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
 import { useRemembranceCourses } from "@/hooks/useRemembranceCourses";
 import ResourceCard from "@/components/devotion/ResourceCard";
 
 const RemembranceCourseSection = () => {
   const { courses, loading, error, isAdmin } = useRemembranceCourses();
-  const navigate = useNavigate();
 
   // Don't render if no courses and not admin (nothing to show)
   if (!loading && courses.length === 0 && !isAdmin) {

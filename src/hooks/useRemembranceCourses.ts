@@ -65,7 +65,8 @@ export const useRemembranceCourses = (): UseRemembranceCoursesResult => {
           setIsAdmin(userIsAdmin);
         }
 
-        // Get the Door of Remembrance Courses location
+        // The Becoming Door currently uses the established course location so
+        // existing course records move without a database retagging migration.
         const { data: locationData, error: locationError } = await supabase
           .from('content_categories')
           .select('id, name')

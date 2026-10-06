@@ -12,7 +12,7 @@ interface DoorHeaderProps {
 }
 
 /**
- * Wide, shallow page header for the three Door pages.
+ * Wide, shallow page header for the four Door pages.
  * The title/description remain live HTML text; the image is background only.
  */
 export function DoorHeader({ image, title, description, imageAlt = "", align = "right" }: DoorHeaderProps) {

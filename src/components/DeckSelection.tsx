@@ -2,14 +2,12 @@ import { AddToRitualPlus } from "@/components/rituals/AddToRitualButton";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Sparkles, DoorOpen, BookOpen } from "lucide-react";
+import { Sparkles, BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import tsrBanner from "@/assets/sacred-rewrite-thumbnail.png.asset.json";
 import mnlBanner from "@/assets/magic-not-logic-thumbnail.png.asset.json";
 import areekeeraBanner from "@/assets/areekeera-thumbnail.png.asset.json";
 import taoshBanner from "@/assets/taosh-thumbnail.png.asset.json";
-import RemembranceCourseSection from "@/components/RemembranceCourseSection";
-import RitesOfRemembranceSection from "@/components/RitesOfRemembranceSection";
 import sacredSpreadsBanner from "@/assets/sacred-spreads-thumbnail.png.asset.json";
 import companionCoursesBanner from "@/assets/companion-courses-header.png.asset.json";
 import remembranceHeader from "@/assets/door-remembrance-header-v1.webp.asset.json";
@@ -83,45 +81,12 @@ export const DeckSelection = ({
 
       <div className="container mx-auto px-4"><hr className="border-t border-primary/30" /></div>
 
-      {/* Section 1: The Rites of Remembrance — default bg */}
-      <motion.div
-        id="rites-of-remembrance"
-        className="py-16 scroll-mt-24"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-      >
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <div className="text-3xl mb-2">🜂</div>
-            <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-              The Rites of Remembrance
-            </h2>
-            <p className="font-bold text-primary font-sans text-base mb-3">
-              The Foundation of All Temple Work
-            </p>
-            <div className="text-muted-foreground font-sans text-base max-w-2xl mx-auto space-y-3">
-              <p>
-                These five foundational rites prepare your inner field for all work within the Temple.
-                They stabilise the nervous system, clear inherited distortion, and establish energetic sovereignty.
-              </p>
-              <p>Walk these rites in order. There is no rush.</p>
-              <p>You may return to any Rite whenever your system asks.</p>
-            </div>
-          </div>
-
-          <RitesOfRemembranceSection />
-        </div>
-      </motion.div>
-
-      <div className="container mx-auto px-4"><hr className="border-t border-primary/30" /></div>
-
-      {/* Section 2: The Mirrors of Sacred Undoing — muted bg */}
+      {/* The Mirrors of Sacred Undoing */}
       <motion.div
         id="mirrors-of-sacred-undoing"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
         className="bg-muted/30 py-16 scroll-mt-24"
       >
         <div className="container mx-auto px-4">
@@ -293,43 +258,6 @@ export const DeckSelection = ({
       </motion.div>
 
 
-      {/* Section 3: The Alchemy of Becoming — default bg */}
-      <motion.div
-        id="alchemy-of-becoming"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="py-16 scroll-mt-24"
-      >
-        <div className="container mx-auto px-4">
-          <RemembranceCourseSection />
-        </div>
-      </motion.div>
-
-      <div className="container mx-auto px-4"><hr className="border-t border-primary/30" /></div>
-
-      {/* Footer: How to move through this Door */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="bg-muted/30 py-16"
-      >
-        <div className="container mx-auto px-4 text-center max-w-2xl">
-          <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-6">
-            How to Move Through This Door
-          </h2>
-          <div className="text-muted-foreground font-sans text-base space-y-2">
-            <p>Begin with the Rites.</p>
-            <p>Work with the Mirrors.</p>
-            <p>Integrate through Alchemy.</p>
-            <p>Return as often as needed.</p>
-          </div>
-          <p className="text-muted-foreground font-sans text-sm italic mt-6">
-            There is no finish line here — only deepening truth.
-          </p>
-        </div>
-      </motion.div>
     </motion.div>
   );
 };
