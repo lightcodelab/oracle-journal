@@ -24,6 +24,7 @@ import { ExpiredAccess } from "@/components/temple/ExpiredAccess";
 import { ScheduledAccess } from "@/components/temple/ScheduledAccess";
 import { WelcomeFocusDialog } from "@/components/temple/WelcomeFocusDialog";
 import { BecomingJourneysStrip } from "@/components/temple/BecomingJourneysStrip";
+import { FocusDoorBanner } from "@/components/temple/FocusDoorBanner";
 import { TempleFocus, isTempleFocus } from "@/lib/templeFocus";
 
 /** Wrapper that only mounts recommendation queries once member access is resolved. */
@@ -329,6 +330,7 @@ const Temple = () => {
           <SearchTheTempleCard />
           <ContinueJourney enabled={hasFullAccess} />
         </section>
+        {focus && <FocusDoorBanner focus={focus} />}
         {/* Focus sections lead straight under the top row, above Explore. */}
         {front.map((key) => <div key={key}>{sections[key]}</div>)}
         <ExploreDoors focus={focus} onChangeFocus={() => setFocusOpen(true)} />

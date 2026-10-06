@@ -8,7 +8,7 @@ import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
 import type { TempleFocus } from "@/lib/templeFocus";
 
 
-const doors = [
+export const doors = [
   { key: "temple-door-remembrance", name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance, label: "CARD DECKS & SACRED SPREADS", description: "Explore the mirrors, archetypes and inheritances shaping you through the cards." },
   { key: "temple-door-devotion", name: "The Door of Devotion", href: "/devotion", image: doorDevotion.url, label: "RITES, AREEKEERA® TEMPLATES & MEDITATIONS", description: "Return to yourself through foundational rites and restorative practice." },
   { key: "temple-door-becoming", name: "The Door of Becoming", href: "/becoming", image: doorBecoming, label: "COURSES, INTEGRATION & SELF-INQUIRY", description: "Journeys for personal development, self-awareness and conscious identity." },
@@ -16,7 +16,7 @@ const doors = [
 ];
 
 
-const focusKey: Record<TempleFocus, string> = {
+export const focusKey: Record<TempleFocus, string> = {
   remembrance: "temple-door-remembrance",
   devotion: "temple-door-devotion",
   becoming: "temple-door-becoming",
@@ -24,9 +24,9 @@ const focusKey: Record<TempleFocus, string> = {
 };
 
 export function ExploreDoors({ focus, onChangeFocus }: { focus?: TempleFocus | null; onChangeFocus?: () => void }) {
-  const ordered = focus
-    ? [...doors].sort((a, b) => Number(b.key === focusKey[focus]) - Number(a.key === focusKey[focus]))
-    : doors;
+  // The focused Door gets the full-width FocusDoorBanner above, so the
+  // grid here shows only the remaining three Doors.
+  const visible = focus ? doors.filter((d) => d.key !== focusKey[focus]) : doors;
   return (
     <section aria-labelledby="explore-heading" className="mb-12">
       <div className="flex items-baseline justify-between gap-3 mb-1">
@@ -42,8 +42,8 @@ export function ExploreDoors({ focus, onChangeFocus }: { focus?: TempleFocus | n
       <p className="text-sm text-muted-foreground mb-4">
         Four pathways for exploring THE TEMPLE. Every pathway is open to every active member.
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {ordered.map((door, i) => (
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${focus ? "lg:grid-cols-3" : "lg:grid-cols-4"} gap-4 mb-6`}>
+        {visible.map((door, i) => (
           <motion.div
             key={door.name}
             initial={{ opacity: 0, y: 12 }}
@@ -66,13 +66,6 @@ export function ExploreDoors({ focus, onChangeFocus }: { focus?: TempleFocus | n
                   className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               </div>
-              {focus && door.key === focusKey[focus] && (
-                <p className="mt-2 text-center">
-                  <span className="inline-block rounded-full border border-primary/60 bg-primary/10 px-2 py-0.5 text-[11px] uppercase tracking-wider text-primary">
-                    Your focus
-                  </span>
-                </p>
-              )}
               <p className="mt-2 font-serif text-lg text-foreground text-center">
                 {door.name}
               </p>
