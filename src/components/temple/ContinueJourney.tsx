@@ -20,9 +20,9 @@ function ContinuationColumn({ item }: { item: Continuation }) {
   const href = item.available ? item.href : item.fallbackHref;
 
   return (
-    <Link to={href} className="block group h-full">
+    <Link to={href} className="block group h-full min-w-0">
       <Card className="h-full bg-card border-border/60 group-hover:border-primary/40 transition-colors">
-        <CardContent className="p-5 flex items-start gap-4 h-full">
+        <CardContent className="p-4 flex items-start gap-3 h-full">
           <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
             <Icon className="h-5 w-5 text-primary" aria-hidden />
           </div>
@@ -30,7 +30,7 @@ function ContinuationColumn({ item }: { item: Continuation }) {
             <p className="text-xs uppercase tracking-wider text-muted-foreground">
               {item.label}
             </p>
-            <p className="font-serif text-lg text-foreground truncate">
+            <p className="font-serif text-lg text-foreground break-words">
               {item.available ? item.title : item.emptyHint}
             </p>
           </div>
@@ -59,7 +59,7 @@ export function ContinueJourney({ enabled }: ContinueJourneyProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       aria-labelledby="continue-heading"
-      className="mb-10 h-full"
+      className="mb-10 h-full min-w-0"
     >
       <h2
         id="continue-heading"
@@ -69,19 +69,19 @@ export function ContinueJourney({ enabled }: ContinueJourneyProps) {
       </h2>
 
       {!enabled ? (
-        <div data-preview-block className="grid gap-4">
+        <div data-preview-block className="grid grid-cols-[minmax(0,1fr)] gap-4">
           {SAMPLES.map((item) => (
             <ContinuationColumn key={item.kind} item={item} />
           ))}
         </div>
       ) : isLoading || !data ? (
-        <div className="grid gap-4">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-4">
           <Skeleton className="h-24 w-full rounded-lg" />
           <Skeleton className="h-24 w-full rounded-lg" />
           <Skeleton className="h-24 w-full rounded-lg" />
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-4">
           <ContinuationColumn item={data.card} />
           <ContinuationColumn item={data.lesson} />
           <ContinuationColumn item={data.resource} />
