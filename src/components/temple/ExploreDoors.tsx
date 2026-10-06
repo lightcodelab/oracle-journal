@@ -4,7 +4,6 @@ import doorRemembrance from "@/assets/door-of-remembrance-4.webp";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
 import { Button } from "@/components/ui/button";
-import { SearchTheTempleCard } from "./SearchTheTempleCard";
 import { BookHeart, ListMusic, LineChart, Sparkles, HeartPulse, Sprout } from "lucide-react";
 
 const doors = [
@@ -63,10 +62,6 @@ export function ExploreDoors() {
             </Link>
           </motion.div>
         ))}
-      </div>
-
-      <div className="mb-8">
-        <SearchTheTempleCard />
       </div>
 
       <div className="rounded-lg border border-border/50 bg-card/50 p-4">
