@@ -39,4 +39,4 @@
 - [x] Add a protected catalogue for fixed content artwork
 - [x] Add the shared admin replacement control with upload and image-library choices
 - [x] Enable editing for Door artwork, primary banners, and content thumbnails
-- [ ] Verify admin replacement, member-only presentation, and responsive layouts
+- [x] Verify admin replacement controls, member-only presentation, and responsive layouts
