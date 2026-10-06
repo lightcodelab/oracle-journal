@@ -22,6 +22,9 @@ import { RecommendationGrid } from "@/components/temple/RecommendationGrid";
 import { useHomeRecommendations } from "@/hooks/useHomeRecommendations";
 import { ExpiredAccess } from "@/components/temple/ExpiredAccess";
 import { ScheduledAccess } from "@/components/temple/ScheduledAccess";
+import { WelcomeFocusDialog } from "@/components/temple/WelcomeFocusDialog";
+import { BecomingJourneysStrip } from "@/components/temple/BecomingJourneysStrip";
+import { TempleFocus, isTempleFocus } from "@/lib/templeFocus";
 
 /** Wrapper that only mounts recommendation queries once member access is resolved. */
 function RecommendedSection({ enabled }: { enabled: boolean }) {
@@ -82,6 +85,10 @@ const Temple = () => {
     }
   }, [authLoading, user, navigate]);
 
+  const [focus, setFocus] = useState<TempleFocus | null>(null);
+  const [focusPrompted, setFocusPrompted] = useState(true);
+  const [focusOpen, setFocusOpen] = useState(false);
+
   // Preferred name: profiles.full_name if present. Never fall back to email.
   useEffect(() => {
     let cancelled = false;
@@ -93,18 +100,34 @@ const Temple = () => {
     (async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("full_name")
+        .select("full_name, primary_focus, focus_prompted_at")
         .eq("id", user.id)
         .maybeSingle();
       if (cancelled) return;
       const name = (data?.full_name || "").toString().trim();
       setDisplayName(name ? name.split(/\s+/)[0] : null);
+      setFocus(isTempleFocus(data?.primary_focus) ? data.primary_focus : null);
+      setFocusPrompted(!!data?.focus_prompted_at);
       setProfileLoaded(true);
     })();
     return () => {
       cancelled = true;
     };
   }, [user]);
+
+  const saveFocus = async (value: TempleFocus | null, keepExisting = false) => {
+    setFocusOpen(false);
+    setFocusPrompted(true);
+    if (!keepExisting) setFocus(value);
+    if (!user) return;
+    await supabase
+      .from("profiles")
+      .update({
+        ...(keepExisting ? {} : { primary_focus: value }),
+        focus_prompted_at: new Date().toISOString(),
+      })
+      .eq("id", user.id);
+  };
 
   // Access resolution gate. Personal queries do NOT run until this is true.
   const accessResolved = !authLoading && !memberLoading && !!user;
@@ -232,6 +255,37 @@ const Temple = () => {
       </div>
     );
   }
+
+  const sections: Record<string, JSX.Element> = {
+    practice: <BeginPractice />,
+    cards: (
+      <section aria-labelledby="cards-speak-heading" className="mb-12">
+        <h2 id="cards-speak-heading" className="font-serif text-2xl text-foreground mb-3">
+          Let the Cards speak to you
+        </h2>
+        <div className="grid gap-4 md:grid-cols-2 items-stretch">
+          <RemembranceLettersCard />
+          <SacredSpreadsCard />
+        </div>
+      </section>
+    ),
+    rituals: <MyRitualsCard />,
+    living: isAdmin ? <LivingPatternCard /> : <></>,
+    becoming: focus === "becoming" ? <BecomingJourneysStrip /> : <></>,
+    recommended: <RecommendedSection enabled={hasFullAccess} />,
+    seasonal: <SeasonalSection enabled={hasFullAccess} />,
+    tools: <ToolsForReturn />,
+    live: <LiveAndSupport enabled={hasFullAccess} />,
+  };
+  const defaultOrder = ["practice", "cards", "rituals", "living", "becoming", "recommended", "seasonal", "tools", "live"];
+  const lead: Record<TempleFocus, string[]> = {
+    devotion: ["practice", "rituals"],
+    remembrance: ["cards"],
+    becoming: ["becoming", "tools"],
+    communion: ["live"],
+  };
+  const front = focus ? lead[focus] : [];
+  const orderedSections = [...front, ...defaultOrder.filter((k) => !front.includes(k))];
 
   return (
     <div className="min-h-screen bg-background">
