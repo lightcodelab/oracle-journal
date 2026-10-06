@@ -5361,6 +5361,7 @@ export type Database = {
           created_at: string | null
           current_period_end: string | null
           email: string | null
+          focus_prompted_at: string | null
           free_reading_used_at: string | null
           free_signup_source: string | null
           full_name: string | null
@@ -5372,6 +5373,7 @@ export type Database = {
           must_change_password: boolean | null
           newsletter_opt_in: boolean
           plan_cadence: string | null
+          primary_focus: string | null
           stripe_customer_id: string | null
           subscription_status: string | null
           updated_at: string | null
@@ -5381,6 +5383,7 @@ export type Database = {
           created_at?: string | null
           current_period_end?: string | null
           email?: string | null
+          focus_prompted_at?: string | null
           free_reading_used_at?: string | null
           free_signup_source?: string | null
           full_name?: string | null
@@ -5392,6 +5395,7 @@ export type Database = {
           must_change_password?: boolean | null
           newsletter_opt_in?: boolean
           plan_cadence?: string | null
+          primary_focus?: string | null
           stripe_customer_id?: string | null
           subscription_status?: string | null
           updated_at?: string | null
@@ -5401,6 +5405,7 @@ export type Database = {
           created_at?: string | null
           current_period_end?: string | null
           email?: string | null
+          focus_prompted_at?: string | null
           free_reading_used_at?: string | null
           free_signup_source?: string | null
           full_name?: string | null
@@ -5412,6 +5417,7 @@ export type Database = {
           must_change_password?: boolean | null
           newsletter_opt_in?: boolean
           plan_cadence?: string | null
+          primary_focus?: string | null
           stripe_customer_id?: string | null
           subscription_status?: string | null
           updated_at?: string | null
