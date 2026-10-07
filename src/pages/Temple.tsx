@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Home } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useMemberState } from "@/hooks/useMemberState";
@@ -201,7 +200,7 @@ const Temple = () => {
       return (
         <div className="min-h-screen bg-background relative">
           <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-sm text-muted-foreground">
-            <Home className="h-3.5 w-3.5" aria-hidden="true" />
+            <ArchIcon className="h-4 w-4 text-primary" aria-hidden="true" />
             <span className="font-medium hover:text-foreground transition-colors">
               THE TEMPLE of Sustainment
             </span>
@@ -244,7 +243,7 @@ const Temple = () => {
     return (
       <div className="min-h-screen bg-background relative">
         <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Home className="h-3.5 w-3.5" aria-hidden="true" />
+          <ArchIcon className="h-4 w-4 text-primary" aria-hidden="true" />
           <span className="font-medium hover:text-foreground transition-colors">
             THE TEMPLE of Sustainment
           </span>
