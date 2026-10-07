@@ -40,7 +40,7 @@ export function DevotionPracticesSection() {
         id="devotion-practices-heading"
         className="font-serif text-2xl text-foreground mb-3"
       >
-        All Resources
+        Choose a Devotion Practice to Begin
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {locations.map(({ id, name, slug }) => (
