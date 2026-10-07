@@ -210,7 +210,7 @@ const MyPlaylists = () => {
                 Open any audio resource or lesson in the Door of Devotion.
               </li>
               <li>
-                Choose <span className="text-foreground">Add to Playlist</span> and pick the playlist you would like it in — or create a new one on the spot.
+                Go to the audio, and choose <span className="text-foreground">Add to Playlist</span> and pick the playlist you would like it in — or create a new one on the spot.
               </li>
               <li>
                 Return here whenever you want to listen.
