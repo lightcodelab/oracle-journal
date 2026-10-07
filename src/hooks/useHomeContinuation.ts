@@ -161,7 +161,7 @@ export function useHomeContinuation(enabled: boolean) {
         result.reading = {
           ...result.reading,
           title: cardTitle
-            ? spreadName
+            ? spreadName && spreadName !== cardTitle
               ? `${cardTitle} — ${spreadName}`
               : cardTitle
             : "Your latest saved reading",
