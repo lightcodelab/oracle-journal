@@ -15,7 +15,7 @@ export function FocusDoorBanner({ focus }: { focus: TempleFocus }) {
   return (
     <section aria-labelledby="focus-door-heading" className="mb-12">
       <div className="grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-lg border border-border/50 bg-card/50">
-        <div className="h-56 md:h-auto min-w-0">
+        <div className="relative h-56 md:h-auto min-w-0">
           <Link
             to={door.href}
             aria-label={`Open ${door.name}`}
@@ -25,7 +25,7 @@ export function FocusDoorBanner({ focus }: { focus: TempleFocus }) {
               src={door.image}
               imageKey={door.key}
               alt={door.name}
-              wrapperClassName="h-full w-full"
+              wrapperClassName="absolute inset-0 h-full w-full"
               className="h-full w-full object-cover object-center"
             />
           </Link>
