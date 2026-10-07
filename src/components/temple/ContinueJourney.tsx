@@ -16,7 +16,8 @@ const ICONS = {
   reading: BookMarked,
 } as const;
 
-function ContinuationColumn({ item }: { item: Continuation }) {
+function ContinuationColumn({ item }: { item?: Continuation }) {
+  if (!item) return null;
   const Icon = ICONS[item.kind];
   const href = item.available ? item.href : item.fallbackHref;
 
