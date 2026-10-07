@@ -8,6 +8,7 @@ export function AccessPlaylistCard() {
   if (loading) return null;
 
   const hasPlaylists = playlists.length > 0;
+  const visiblePlaylists = playlists.slice(0, 5);
 
   return (
     <section
@@ -23,7 +24,7 @@ export function AccessPlaylistCard() {
       </h2>
       {hasPlaylists ? (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {playlists.map((playlist) => (
+          {visiblePlaylists.map((playlist) => (
             <Link
               key={playlist.id}
               to="/playlists"
