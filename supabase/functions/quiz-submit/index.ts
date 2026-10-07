@@ -82,12 +82,22 @@ Deno.serve(async (req) => {
     }
     if (!winner && results && results.length > 0) winner = results[0] as any;
 
+    // Link the response to the signed-in member, when there is one
+    let userId: string | null = null;
+    const authHeader = req.headers.get("Authorization") ?? "";
+    const token = authHeader.replace(/^Bearer\s+/i, "");
+    if (token && token !== Deno.env.get("SUPABASE_ANON_KEY")) {
+      const { data: u } = await supabase.auth.getUser(token);
+      userId = u?.user?.id ?? null;
+    }
+
     // Insert response
     const { data: response, error: respErr } = await supabase
       .from("quiz_responses")
       .insert({
         quiz_id: quiz.id,
         result_id: winner?.id ?? null,
+        user_id: userId,
         name: body.name ?? null,
         email: body.email ?? null,
         answers: body.answers,
