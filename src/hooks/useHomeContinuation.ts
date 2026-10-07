@@ -146,7 +146,28 @@ export function useHomeContinuation(enabled: boolean) {
             timestamp: row.occurred_at,
             available: true,
           };
-        }
+      }
+
+      if (readingRes.status === "fulfilled" && readingRes.value.data) {
+        const row = readingRes.value.data as {
+          card_title: string | null;
+          deck_name: string | null;
+          spread_name: string | null;
+          saved_at: string;
+        };
+        const cardTitle = row.card_title?.trim() || "";
+        const spreadName = row.spread_name?.trim() || "";
+        result.reading = {
+          ...result.reading,
+          title: cardTitle
+            ? spreadName
+              ? `${cardTitle} — ${spreadName}`
+              : cardTitle
+            : "Your latest saved reading",
+          href: "/readings",
+          timestamp: row.saved_at,
+          available: true,
+        };
       }
 
       return result;
