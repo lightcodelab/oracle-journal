@@ -79,10 +79,12 @@ export function ContinueJourney({ enabled }: ContinueJourneyProps) {
         <div className="grid grid-cols-[minmax(0,1fr)] gap-4">
           <Skeleton className="h-16 w-full rounded-lg" />
           <Skeleton className="h-16 w-full rounded-lg" />
+          <Skeleton className="h-16 w-full rounded-lg" />
         </div>
       ) : (
         <div className="grid grid-cols-[minmax(0,1fr)] gap-4">
           <ContinuationColumn item={data.card} />
+          <ContinuationColumn item={data.reading} />
           <ContinuationColumn item={data.resource} />
         </div>
       )}
