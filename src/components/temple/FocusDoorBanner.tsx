@@ -16,13 +16,19 @@ export function FocusDoorBanner({ focus }: { focus: TempleFocus }) {
     <section aria-labelledby="focus-door-heading" className="mb-12">
       <div className="grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-lg border border-border/50 bg-card/50">
         <div className="h-56 md:h-auto min-w-0">
-          <AdminEditableImage
-            src={door.image}
-            imageKey={door.key}
-            alt={door.name}
-            wrapperClassName="h-full w-full"
-            className="h-full w-full object-cover object-center"
-          />
+          <Link
+            to={door.href}
+            aria-label={`Open ${door.name}`}
+            className="block h-full w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <AdminEditableImage
+              src={door.image}
+              imageKey={door.key}
+              alt={door.name}
+              wrapperClassName="h-full w-full"
+              className="h-full w-full object-cover object-center"
+            />
+          </Link>
         </div>
         <div className="flex flex-col justify-center p-8 min-w-0">
           <span className="inline-block self-start rounded-full border border-primary/60 bg-primary/10 px-2 py-0.5 text-[11px] uppercase tracking-wider text-primary">
