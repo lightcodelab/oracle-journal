@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import presenceImg from "@/assets/presence-img.png.asset.json";
 import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
+import { TOOL_ICONS } from "@/lib/toolIcons";
 
 /**
  * Home doorway: the Living Pattern Lab.
@@ -87,6 +88,7 @@ export function LivingPatternCard() {
           />
 
           <div className="relative flex h-full flex-col justify-end p-5 sm:p-7 max-w-full sm:max-w-[62%] [text-shadow:0_1px_3px_rgba(0,0,0,0.45)]">
+            <TOOL_ICONS.livingPattern className="mb-2 h-7 w-7 text-primary" aria-hidden />
             <p className="text-[0.65rem] tracking-[0.2em] uppercase text-on-image">
               Pause · Perceive · Practise
             </p>
