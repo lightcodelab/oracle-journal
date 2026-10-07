@@ -43,18 +43,6 @@ export function DevotionPracticesSection() {
         All Resources
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <Link
-          to="/devotion"
-          className="group flex items-center gap-3 p-4 rounded-lg border border-border/60 bg-card/60 hover:border-primary/40 hover:bg-card transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[64px]"
-        >
-          <LayoutGrid
-            className="h-5 w-5 text-primary flex-shrink-0"
-            aria-hidden
-          />
-          <span className="font-serif text-foreground text-sm sm:text-base">
-            All
-          </span>
-        </Link>
         {locations.map(({ id, name, slug }) => (
           <Link
             key={id}
