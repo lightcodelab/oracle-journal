@@ -5,6 +5,7 @@ import ResourceCard from '@/components/devotion/ResourceCard';
 import type { ContentResource } from '@/hooks/useContentByLocation';
 import { LayoutGrid } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useSearchParams } from 'react-router-dom';
 
 interface LocationCategory {
   id: string;
@@ -25,6 +26,17 @@ const AllResourcesSection = () => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
+  const [searchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+
+  useEffect(() => {
+    if (loading || !tabParam) return;
+    const match = locations.find(l => l.slug === tabParam || l.slug === `loc-${tabParam}`);
+    if (match) setActiveTab(match.id);
+    requestAnimationFrame(() => {
+      document.getElementById('all-resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }, [loading, tabParam, locations]);
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -206,7 +218,8 @@ const AllResourcesSection = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="col-span-full"
+      id="all-resources"
+      className="col-span-full scroll-mt-24"
     >
       <div className="bg-card border border-border rounded-lg p-6 md:p-8">
         <div className="flex items-center gap-3 mb-6">
