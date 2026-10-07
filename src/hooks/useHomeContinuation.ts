@@ -146,6 +146,7 @@ export function useHomeContinuation(enabled: boolean) {
             timestamp: row.occurred_at,
             available: true,
           };
+        }
       }
 
       if (readingRes.status === "fulfilled" && readingRes.value.data) {
