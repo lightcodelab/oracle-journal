@@ -33,9 +33,13 @@ const AllResourcesSection = () => {
     if (loading || !tabParam) return;
     const match = locations.find(l => l.slug === tabParam || l.slug === `loc-${tabParam}`);
     if (match) setActiveTab(match.id);
-    requestAnimationFrame(() => {
+    // Scroll to the section, then re-aim as late-loading images/animations
+    // above shift the layout and cut the smooth scroll short.
+    const scrollNow = () => {
       document.getElementById('all-resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    };
+    const timers = [400, 1200, 2500, 4000].map(d => setTimeout(scrollNow, d));
+    return () => timers.forEach(clearTimeout);
   }, [loading, tabParam, locations]);
 
   useEffect(() => {
