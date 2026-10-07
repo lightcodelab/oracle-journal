@@ -47,7 +47,7 @@ export function FocusDoorBanner({ focus }: { focus: TempleFocus }) {
             to={door.href}
             className="mt-4 inline-flex items-center gap-1 text-sm text-primary hover:underline"
           >
-            Open {door.name}
+            Open The Door of Devotion for all resources
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
