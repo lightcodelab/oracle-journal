@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-export type ContinuationKind = "card" | "lesson" | "resource";
+export type ContinuationKind = "card" | "lesson" | "resource" | "reading";
 
 export interface Continuation {
   kind: ContinuationKind;
@@ -18,6 +18,7 @@ export interface Continuation {
 export interface HomeContinuations {
   card: Continuation;
   resource: Continuation;
+  reading: Continuation;
 }
 
 const EMPTY: HomeContinuations = {
@@ -40,6 +41,16 @@ const EMPTY: HomeContinuations = {
     available: false,
     emptyHint: "Explore the Door of Devotion",
     fallbackHref: "/devotion",
+  },
+  reading: {
+    kind: "reading",
+    label: "Open your latest saved reading",
+    title: "No saved reading yet",
+    href: "/readings",
+    timestamp: null,
+    available: false,
+    emptyHint: "Save a reading to see it here",
+    fallbackHref: "/readings",
   },
 };
 
