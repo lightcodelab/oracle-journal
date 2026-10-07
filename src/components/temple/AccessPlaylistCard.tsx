@@ -8,6 +8,7 @@ export function AccessPlaylistCard() {
   if (loading) return null;
 
   const hasPlaylists = playlists.length > 0;
+  const visiblePlaylists = playlists.slice(0, 5);
 
   return (
     <section
