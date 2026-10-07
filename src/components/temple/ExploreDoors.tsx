@@ -31,7 +31,7 @@ export function ExploreDoors({ focus, onChangeFocus }: { focus?: TempleFocus | n
     <section aria-labelledby="explore-heading" className="mb-12">
       <div className="flex items-baseline justify-between gap-3 mb-1">
         <h2 id="explore-heading" className="font-serif text-2xl text-foreground">
-          Explore THE TEMPLE
+          Explore the rest of THE TEMPLE
         </h2>
         {onChangeFocus && (
           <button type="button" onClick={onChangeFocus} className="text-sm text-primary hover:underline">
