@@ -1,6 +1,4 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CheckCircle, Sparkles, Menu, X } from 'lucide-react';
+import { CheckCircle, Sparkles, Menu, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
