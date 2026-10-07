@@ -24,7 +24,7 @@ export function AccessPlaylistCard() {
       </h2>
       {hasPlaylists ? (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {playlists.map((playlist) => (
+          {visiblePlaylists.map((playlist) => (
             <Link
               key={playlist.id}
               to="/playlists"
