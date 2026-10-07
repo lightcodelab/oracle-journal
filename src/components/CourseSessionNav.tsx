@@ -34,6 +34,7 @@ export default function CourseSessionNav({
 }: CourseSessionNavProps) {
   const navigate = useNavigate();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [areTrackingToolsExpanded, setAreTrackingToolsExpanded] = useState(false);
 
   const handleLessonClick = (lessonId: string) => {
     setIsMobileOpen(false);
