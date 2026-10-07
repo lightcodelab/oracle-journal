@@ -602,17 +602,18 @@ const DevotionLessonPage = () => {
                           default: return children;
                         }
                       };
-                      return renderNode(lesson.body_richtext);
-                    } catch { return lesson.content || ''; }
+                      return stripQuizMarkers(renderNode(lesson.body_richtext));
+                    } catch { return stripQuizMarkers(lesson.content || ''); }
                   })()
                 ) }}
               />
             ) : (
               <div 
-                className={`text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap${isDeepeningCourse ? ' companion-lesson-content' : ''}`}
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(lesson.content) }}
+                className={`text-foreground/90 font-sans leading-relaxed ProseMirror${isDeepeningCourse ? ' companion-lesson-content' : ''}`}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(stripQuizMarkers(lesson.content || '')) }}
               />
             )}
+            {embeddedQuizSlug && <QuizEmbed slug={embeddedQuizSlug} />}
           </motion.div>
 
           {/* Downloadables */}

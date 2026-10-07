@@ -21,6 +21,7 @@ import {
 } from "recharts";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import ProfileDropdown from "@/components/ProfileDropdown";
+import SignsSignalsDashboard from "@/components/tracking/SignsSignalsDashboard";
 
 const Icon = ({ name, className }: { name: string | null; className?: string }) => {
   const C = (Icons as any)[name || "Sparkles"] || Sparkles;
@@ -125,6 +126,8 @@ const MyTracking = () => {
             </Card>
           ))}
         </div>
+
+        <SignsSignalsDashboard userId={user?.id} entries={entries} tools={tools} />
 
         <Tabs defaultValue="trends">
           <TabsList>
