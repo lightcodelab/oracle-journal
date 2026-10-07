@@ -330,6 +330,13 @@
       "when": 1791332447711,
       "tag": "0046_free_reading_limit_counts_free_spread_only",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1791342458089,
+      "tag": "0047_quiz_responses_member_select",
+      "breakpoints": true
     }
   ]
 }
