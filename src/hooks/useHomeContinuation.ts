@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-export type ContinuationKind = "card" | "lesson" | "resource";
+export type ContinuationKind = "card" | "lesson" | "resource" | "reading";
 
 export interface Continuation {
   kind: ContinuationKind;
@@ -18,6 +18,7 @@ export interface Continuation {
 export interface HomeContinuations {
   card: Continuation;
   resource: Continuation;
+  reading: Continuation;
 }
 
 const EMPTY: HomeContinuations = {
@@ -41,6 +42,16 @@ const EMPTY: HomeContinuations = {
     emptyHint: "Explore the Door of Devotion",
     fallbackHref: "/devotion",
   },
+  reading: {
+    kind: "reading",
+    label: "Open your latest saved reading",
+    title: "No saved reading yet",
+    href: "/readings",
+    timestamp: null,
+    available: false,
+    emptyHint: "Save a reading to see it here",
+    fallbackHref: "/readings",
+  },
 };
 
 /**
@@ -60,7 +71,7 @@ export function useHomeContinuation(enabled: boolean) {
     queryFn: async () => {
       if (!user) return EMPTY;
 
-      const [cardRes, activityRes] = await Promise.allSettled([
+      const [cardRes, activityRes, readingRes] = await Promise.allSettled([
         supabase
           .from("card_draws")
           .select("card_id, deck_id, drawn_at, decks(name)")
@@ -72,11 +83,19 @@ export function useHomeContinuation(enabled: boolean) {
           .from("member_last_activity")
           .select("kind, ref_id, title, href, occurred_at")
           .eq("user_id", user.id),
+        supabase
+          .from("saved_readings")
+          .select("card_title, deck_name, spread_name, saved_at")
+          .eq("user_id", user.id)
+          .order("saved_at", { ascending: false })
+          .limit(1)
+          .maybeSingle(),
       ]);
 
       const result: HomeContinuations = {
         card: { ...EMPTY.card },
         resource: { ...EMPTY.resource },
+        reading: { ...EMPTY.reading },
       };
 
       if (cardRes.status === "fulfilled" && cardRes.value.data) {
@@ -128,6 +147,28 @@ export function useHomeContinuation(enabled: boolean) {
             available: true,
           };
         }
+      }
+
+      if (readingRes.status === "fulfilled" && readingRes.value.data) {
+        const row = readingRes.value.data as {
+          card_title: string | null;
+          deck_name: string | null;
+          spread_name: string | null;
+          saved_at: string;
+        };
+        const cardTitle = row.card_title?.trim() || "";
+        const spreadName = row.spread_name?.trim() || "";
+        result.reading = {
+          ...result.reading,
+          title: cardTitle
+            ? spreadName && spreadName !== cardTitle
+              ? `${cardTitle} — ${spreadName}`
+              : cardTitle
+            : "Your latest saved reading",
+          href: "/readings",
+          timestamp: row.saved_at,
+          available: true,
+        };
       }
 
       return result;
