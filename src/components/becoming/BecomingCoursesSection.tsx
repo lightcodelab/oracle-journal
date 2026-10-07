@@ -1,10 +1,20 @@
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import ResourceCard from "@/components/devotion/ResourceCard";
 import { useRemembranceCourses } from "@/hooks/useRemembranceCourses";
 
 export function BecomingCoursesSection({ limit }: { limit?: number }) {
   const { courses, loading, error, isAdmin } = useRemembranceCourses();
-  const visibleCourses = typeof limit === "number" ? courses.slice(0, limit) : courses;
+  // With a limit (home page strip), show a random selection that stays put for this visit.
+  const visibleCourses = useMemo(() => {
+    if (typeof limit !== "number") return courses;
+    const shuffled = [...courses];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.slice(0, limit);
+  }, [courses, limit]);
 
   if (loading) {
     return (
