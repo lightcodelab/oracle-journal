@@ -199,7 +199,24 @@ const MyPlaylists = () => {
             <ListMusic className="w-8 h-8 text-primary" />
           </div>
           <h1 className="text-3xl font-serif text-foreground mb-2">My Playlists</h1>
-          <p className="text-muted-foreground">Curate your personal audio collections</p>
+          <p className="text-muted-foreground mb-4">Curate your personal audio collections</p>
+          <div className="max-w-xl mx-auto text-left rounded-lg border border-border/60 bg-card/60 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Headphones className="w-4 h-4 text-primary flex-shrink-0" aria-hidden />
+              <p className="font-serif text-sm text-foreground">How to add audios to a playlist:</p>
+            </div>
+            <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
+              <li>
+                Open any audio resource or lesson in the Door of Devotion.
+              </li>
+              <li>
+                Choose <span className="text-foreground">Add to Playlist</span> and pick the playlist you would like it in — or create a new one on the spot.
+              </li>
+              <li>
+                Return here whenever you want to listen.
+              </li>
+            </ol>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6">
