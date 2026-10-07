@@ -12,6 +12,7 @@ import { LivingPatternCard } from "@/components/temple/LivingPatternCard";
 import { RemembranceLettersCard } from "@/components/temple/RemembranceLettersCard";
 import { SacredSpreadsCard } from "@/components/temple/SacredSpreadsCard";
 import { MyRitualsCard } from "@/components/temple/MyRitualsCard";
+import { DevotionPracticesSection } from "@/components/temple/DevotionPracticesSection";
 import { BeginPractice } from "@/components/temple/BeginPractice";
 import { ExploreDoors } from "@/components/temple/ExploreDoors";
 import { ToolsForReturn } from "@/components/temple/ToolsForReturn";
@@ -288,6 +289,7 @@ const Temple = () => {
       </section>
     ),
     rituals: <MyRitualsCard />,
+    devotionPractices: focus === "devotion" ? <DevotionPracticesSection /> : <></>,
     living: isAdmin ? <LivingPatternCard /> : <></>,
     becoming: focus === "becoming" ? <BecomingJourneysStrip /> : <></>,
     recommended: <RecommendedSection enabled={hasFullAccess} />,
@@ -297,7 +299,7 @@ const Temple = () => {
   };
   const defaultOrder = ["practice", "cards", "rituals", "living", "becoming", "recommended", "seasonal", "tools", "live"];
   const lead: Record<TempleFocus, string[]> = {
-    devotion: ["rituals", "practice"],
+    devotion: ["rituals", "practice", "devotionPractices"],
     remembrance: ["cards"],
     becoming: ["becoming", "tools"],
     communion: ["live"],
