@@ -6,11 +6,11 @@ const tools = [
   { label: "My Rituals", href: "/rituals", icon: TOOL_ICONS.rituals },
   { label: "My Remembrance Letters", href: "/remembrance-letters", icon: TOOL_ICONS.remembranceLetters },
   { label: "My Calendar", href: "/my-calendar", icon: TOOL_ICONS.calendar },
-  { label: "Playlists", href: "/playlists", icon: TOOL_ICONS.playlists },
+  { label: "My Playlists", href: "/playlists", icon: TOOL_ICONS.playlists },
   { label: "My Living Pattern", href: "/living-pattern", icon: TOOL_ICONS.livingPattern },
-  { label: "Tracking", href: "/tracking", icon: TOOL_ICONS.tracking },
-  { label: "Readings", href: "/readings", icon: TOOL_ICONS.readings },
-  { label: "Protocols", href: "/devotion/protocols", icon: TOOL_ICONS.protocols },
+  { label: "My Tracking", href: "/tracking", icon: TOOL_ICONS.tracking },
+  { label: "My Readings", href: "/readings", icon: TOOL_ICONS.readings },
+  { label: "My Protocols", href: "/devotion/protocols", icon: TOOL_ICONS.protocols },
 ];
 
 export function ToolsForReturn() {
