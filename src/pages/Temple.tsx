@@ -19,6 +19,7 @@ import { ExploreDoors } from "@/components/temple/ExploreDoors";
 import { ToolsForReturn } from "@/components/temple/ToolsForReturn";
 import { GuideNextStepCard } from "@/components/temple/GuideNextStepCard";
 import { SearchTheTempleCard } from "@/components/temple/SearchTheTempleCard";
+import { CommunionEventsCalendar } from "@/components/temple/CommunionEventsCalendar";
 import { LiveAndSupport } from "@/components/temple/LiveAndSupport";
 import { RecommendationGrid } from "@/components/temple/RecommendationGrid";
 import { useHomeRecommendations } from "@/hooks/useHomeRecommendations";
@@ -298,13 +299,14 @@ const Temple = () => {
     seasonal: <SeasonalSection enabled={hasFullAccess} />,
     tools: <ToolsForReturn />,
     live: <LiveAndSupport enabled={hasFullAccess} />,
+    events: focus === "communion" ? <CommunionEventsCalendar enabled={hasFullAccess} /> : <></>,
   };
   const defaultOrder = ["practice", "cards", "rituals", "devotionPractices", "living", "becoming", "recommended", "seasonal", "tools", "live"];
   const lead: Record<TempleFocus, string[]> = {
     devotion: ["devotionPractices", "rituals", "playlist"],
     remembrance: ["cards"],
     becoming: ["becoming", "tools"],
-    communion: ["live"],
+    communion: ["events", "live"],
   };
   const front = focus ? lead[focus] : [];
   const orderedSections = [...front, ...defaultOrder.filter((k) => !front.includes(k))];
