@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, BookOpen, Compass } from "lucide-react";
+import { ArrowRight, Sparkles, BookOpen, Compass, BookMarked } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useHomeContinuation, type Continuation } from "@/hooks/useHomeContinuation";
@@ -13,6 +13,7 @@ const ICONS = {
   card: Sparkles,
   lesson: BookOpen,
   resource: Compass,
+  reading: BookMarked,
 } as const;
 
 function ContinuationColumn({ item }: { item: Continuation }) {
@@ -46,6 +47,7 @@ function ContinuationColumn({ item }: { item: Continuation }) {
 
 const SAMPLES: Continuation[] = [
   { kind: "card", label: "Your last card", title: "The Prism", available: true, href: "/remembrance", fallbackHref: "/remembrance", emptyHint: "" },
+  { kind: "reading", label: "Open your latest saved reading", title: "The Vanishing Star — The Sacred Rewrite", available: true, href: "/readings", fallbackHref: "/readings", emptyHint: "" },
   { kind: "resource", label: "Recently opened", title: "Grounding Meditation", available: true, href: "/devotion", fallbackHref: "/devotion", emptyHint: "" },
 ] as unknown as Continuation[];
 
