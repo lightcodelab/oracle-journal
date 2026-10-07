@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, Sparkles, Menu, X } from 'lucide-react';
+import { CheckCircle, Sparkles, Menu, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -34,6 +34,7 @@ export default function CourseSessionNav({
 }: CourseSessionNavProps) {
   const navigate = useNavigate();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [areTrackingToolsExpanded, setAreTrackingToolsExpanded] = useState(false);
 
   const handleLessonClick = (lessonId: string) => {
     setIsMobileOpen(false);
@@ -191,23 +192,35 @@ export default function CourseSessionNav({
 
       {trackingTools && trackingTools.length > 0 && (
         <div className="border-t border-border p-2">
-          <div className="px-3 pt-2 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Tracking Tools
-          </div>
-          <div className="space-y-0.5">
-            {trackingTools.map((tool: any) => (
-              <button
-                key={tool.id}
-                onClick={() => handleToolClick(tool.slug)}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-left text-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
-              >
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Sparkles className="w-3.5 h-3.5 text-primary" />
-                </div>
-                <span className="text-sm leading-tight">{tool.title}</span>
-              </button>
-            ))}
-          </div>
+          <button
+            onClick={() => setAreTrackingToolsExpanded(prev => !prev)}
+            aria-expanded={areTrackingToolsExpanded}
+            className="w-full flex items-center justify-between px-3 pt-2 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <span>Tracking Tools</span>
+            <ChevronDown className={cn("w-4 h-4 transition-transform duration-200", areTrackingToolsExpanded && "rotate-180")} />
+          </button>
+          {!areTrackingToolsExpanded && (
+            <p className="px-3 pb-1 text-xs text-muted-foreground/70">
+              Expand to view all tools
+            </p>
+          )}
+          {areTrackingToolsExpanded && (
+            <div className="space-y-0.5">
+              {trackingTools.map((tool: any) => (
+                <button
+                  key={tool.id}
+                  onClick={() => handleToolClick(tool.slug)}
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-left text-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
+                >
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Sparkles className="w-3.5 h-3.5 text-primary" />
+                  </div>
+                  <span className="text-sm leading-tight">{tool.title}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </>
