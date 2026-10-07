@@ -19,6 +19,7 @@ import { ExploreDoors } from "@/components/temple/ExploreDoors";
 import { ToolsForReturn } from "@/components/temple/ToolsForReturn";
 import { GuideNextStepCard } from "@/components/temple/GuideNextStepCard";
 import { SearchTheTempleCard } from "@/components/temple/SearchTheTempleCard";
+import { ArchIcon } from "@/components/icons/ArchIcon";
 import { CommunionEventsCalendar } from "@/components/temple/CommunionEventsCalendar";
 import { LiveAndSupport } from "@/components/temple/LiveAndSupport";
 import { RecommendationGrid } from "@/components/temple/RecommendationGrid";
@@ -315,7 +316,7 @@ const Temple = () => {
     <div className="min-h-screen bg-background">
       <header className="max-w-6xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
-          <Home className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <ArchIcon className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
           <span className="font-medium truncate">
             THE TEMPLE of Sustainment
           </span>
