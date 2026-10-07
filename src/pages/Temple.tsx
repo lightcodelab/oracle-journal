@@ -301,7 +301,7 @@ const Temple = () => {
   };
   const defaultOrder = ["practice", "cards", "rituals", "devotionPractices", "living", "becoming", "recommended", "seasonal", "tools", "live"];
   const lead: Record<TempleFocus, string[]> = {
-    devotion: ["rituals", "practice", "playlist"],
+    devotion: ["rituals", "playlist"],
     remembrance: ["cards"],
     becoming: ["becoming", "tools"],
     communion: ["live"],
