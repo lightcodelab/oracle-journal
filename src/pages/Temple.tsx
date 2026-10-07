@@ -289,7 +289,7 @@ const Temple = () => {
       </section>
     ),
     rituals: <MyRitualsCard />,
-    devotionPractices: focus === "devotion" ? <DevotionPracticesSection /> : <></>,
+    devotionPractices: <DevotionPracticesSection />,
     living: isAdmin ? <LivingPatternCard /> : <></>,
     becoming: focus === "becoming" ? <BecomingJourneysStrip /> : <></>,
     recommended: <RecommendedSection enabled={hasFullAccess} />,
@@ -297,9 +297,9 @@ const Temple = () => {
     tools: <ToolsForReturn />,
     live: <LiveAndSupport enabled={hasFullAccess} />,
   };
-  const defaultOrder = ["practice", "cards", "rituals", "living", "becoming", "recommended", "seasonal", "tools", "live"];
+  const defaultOrder = ["practice", "cards", "rituals", "devotionPractices", "living", "becoming", "recommended", "seasonal", "tools", "live"];
   const lead: Record<TempleFocus, string[]> = {
-    devotion: ["rituals", "practice", "devotionPractices"],
+    devotion: ["rituals", "practice"],
     remembrance: ["cards"],
     becoming: ["becoming", "tools"],
     communion: ["live"],
