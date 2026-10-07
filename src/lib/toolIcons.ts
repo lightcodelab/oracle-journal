@@ -1,4 +1,4 @@
-import { BookHeart, ListMusic, LineChart, Sparkles, HeartPulse, Sprout } from "lucide-react";
+import { BookHeart, ListMusic, LineChart, Sparkles, HeartPulse, Sprout, Flame, Feather, Calendar } from "lucide-react";
 
 /** One icon per member tool, reused wherever that tool is named across the site. */
 export const TOOL_ICONS = {
@@ -8,4 +8,7 @@ export const TOOL_ICONS = {
   tracking: LineChart,
   readings: Sparkles,
   protocols: HeartPulse,
+  rituals: Flame,
+  remembranceLetters: Feather,
+  calendar: Calendar,
 } as const;
