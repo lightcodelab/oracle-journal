@@ -44,7 +44,8 @@ const SacredSpreads = () => {
   const FREE_SPREAD_ID = "past-present-future";
   const autoSavedRef = useRef(false);
   const savedReadingIdRef = useRef<string | null>(null);
-  const allowedSpreadIds = hasFullAccess ? undefined : [FREE_SPREAD_ID];
+  // Don't show locks until access is known, so members never see them flash.
+  const allowedSpreadIds = hasFullAccess || accessLoading ? undefined : [FREE_SPREAD_ID];
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -163,6 +164,10 @@ const SacredSpreads = () => {
   }, [searchParams, loading, accessLoading, user]);
 
   const handleSelectSpread = async (spread: SpreadType) => {
+    if (accessLoading) {
+      toast({ title: "One moment", description: "Checking your access…" });
+      return;
+    }
     if (!hasFullAccess) {
       if (spread.id !== FREE_SPREAD_ID) {
         toast({
@@ -267,6 +272,7 @@ const SacredSpreads = () => {
           .from('saved_readings')
           .select('id')
           .eq('user_id', user.id)
+          .eq('spread_type', FREE_SPREAD_ID)
           .limit(1)
           .maybeSingle();
         existingId = existing?.id ?? null;
@@ -332,6 +338,10 @@ const SacredSpreads = () => {
   }, [journalAnswers]);
 
   const handleBackToSpreads = () => {
+    // Detach from the previous reading before clearing the journal, so the
+    // journal autosave can't blank it and the next spread saves fresh.
+    autoSavedRef.current = false;
+    savedReadingIdRef.current = null;
     setActiveSpread(null);
     setSpreadCards([]);
     setSpreadRevealedPositions([]);

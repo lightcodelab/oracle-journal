@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FOCUS_OPTIONS, TempleFocus } from "@/lib/templeFocus";
@@ -14,6 +14,11 @@ interface Props {
 export function WelcomeFocusDialog({ open, initial, onChoose, onClose }: Props) {
   const [selected, setSelected] = useState<TempleFocus | null>(initial ?? null);
   const [saving, setSaving] = useState(false);
+
+  // Preselect the current focus each time the dialog opens.
+  useEffect(() => {
+    if (open) setSelected(initial ?? null);
+  }, [open, initial]);
 
   const submit = async (value: TempleFocus | null) => {
     setSaving(true);

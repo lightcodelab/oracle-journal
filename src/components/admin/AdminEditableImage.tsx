@@ -154,7 +154,7 @@ export function AdminEditableImage({
         </div>
       ) : null}
       {isAdmin ? (
-        <>
+        <div onClick={stopInteraction} onPointerDown={(event) => event.stopPropagation()} className="contents">
           <input
             ref={fileInputRef}
             type="file"
@@ -167,7 +167,7 @@ export function AdminEditableImage({
             }}
           />
           <ImageLibraryDialog open={libraryOpen} onOpenChange={setLibraryOpen} onSelect={(url) => void save(url)} />
-        </>
+        </div>
       ) : null}
     </div>
   );

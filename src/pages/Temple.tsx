@@ -117,7 +117,9 @@ const Temple = () => {
     };
   }, [user]);
 
-  const saveFocus = async (value: TempleFocus | null, keepExisting = false) => {
+  const saveFocus = async (value: TempleFocus | null, keepExistingArg = false) => {
+    // "Skip for now" (null) never erases a focus the member already chose.
+    const keepExisting = keepExistingArg || value === null;
     setFocusOpen(false);
     setFocusPrompted(true);
     if (!keepExisting) setFocus(value);

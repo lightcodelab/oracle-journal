@@ -8616,6 +8616,7 @@ export type Database = {
         }
         Returns: Json
       }
+      saved_free_spread_count: { Args: { _user_id: string }; Returns: number }
       saved_readings_count: { Args: { _user_id: string }; Returns: number }
       search_temple: {
         Args: { _q: string }
