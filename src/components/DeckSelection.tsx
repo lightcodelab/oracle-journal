@@ -100,9 +100,13 @@ export const DeckSelection = ({
             </p>
             <div className="text-muted-foreground font-sans text-base max-w-2xl mx-auto space-y-3">
               <p>
-                Each deck is a mirror — revealing the distortion shaping your life and the higher truth waiting beneath it.
+                Each deck is a mirror, revealing what is ready to be seen.
               </p>
-              <p>Choose a deck. Draw a card. Let it walk with you.</p>
+              <p>
+                Choose a deck. Draw a card. Let it walk with you.
+                <br />
+                Then journal what you discover and return with how it shows up in your life.
+              </p>
               <p>
                 Many work with one card for a week or more.
                 <br />
