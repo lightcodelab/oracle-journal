@@ -1,20 +1,13 @@
 import { Link } from "react-router-dom";
-import {
-  BookHeart,
-  ListMusic,
-  LineChart,
-  Sparkles,
-  HeartPulse,
-  Sprout,
-} from "lucide-react";
+import { TOOL_ICONS } from "@/lib/toolIcons";
 
 const tools = [
-  { label: "Journal", href: "/journal", icon: BookHeart },
-  { label: "Playlists", href: "/playlists", icon: ListMusic },
-  { label: "My Living Pattern", href: "/living-pattern", icon: Sprout },
-  { label: "Tracking", href: "/tracking", icon: LineChart },
-  { label: "Readings", href: "/readings", icon: Sparkles },
-  { label: "Protocols", href: "/devotion/protocols", icon: HeartPulse },
+  { label: "Journal", href: "/journal", icon: TOOL_ICONS.journal },
+  { label: "Playlists", href: "/playlists", icon: TOOL_ICONS.playlists },
+  { label: "My Living Pattern", href: "/living-pattern", icon: TOOL_ICONS.livingPattern },
+  { label: "Tracking", href: "/tracking", icon: TOOL_ICONS.tracking },
+  { label: "Readings", href: "/readings", icon: TOOL_ICONS.readings },
+  { label: "Protocols", href: "/devotion/protocols", icon: TOOL_ICONS.protocols },
 ];
 
 export function ToolsForReturn() {
