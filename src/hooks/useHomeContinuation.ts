@@ -71,7 +71,7 @@ export function useHomeContinuation(enabled: boolean) {
     queryFn: async () => {
       if (!user) return EMPTY;
 
-      const [cardRes, activityRes] = await Promise.allSettled([
+      const [cardRes, activityRes, readingRes] = await Promise.allSettled([
         supabase
           .from("card_draws")
           .select("card_id, deck_id, drawn_at, decks(name)")
@@ -83,11 +83,19 @@ export function useHomeContinuation(enabled: boolean) {
           .from("member_last_activity")
           .select("kind, ref_id, title, href, occurred_at")
           .eq("user_id", user.id),
+        supabase
+          .from("saved_readings")
+          .select("card_title, deck_name, spread_name, saved_at")
+          .eq("user_id", user.id)
+          .order("saved_at", { ascending: false })
+          .limit(1)
+          .maybeSingle(),
       ]);
 
       const result: HomeContinuations = {
         card: { ...EMPTY.card },
         resource: { ...EMPTY.resource },
+        reading: { ...EMPTY.reading },
       };
 
       if (cardRes.status === "fulfilled" && cardRes.value.data) {
