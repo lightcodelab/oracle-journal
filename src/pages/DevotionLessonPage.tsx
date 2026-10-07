@@ -16,6 +16,11 @@ import CourseSessionNav from '@/components/CourseSessionNav';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import DOMPurify from 'dompurify';
 import LessonFormRenderer from '@/components/lesson/LessonFormRenderer';
+import QuizEmbed from '@/components/quiz/QuizEmbed';
+
+// Lessons can embed a Quiz Builder quiz with a [[quiz:slug]] marker in their text.
+const QUIZ_MARKER = /\[\[quiz:([a-z0-9-]+)\]\]/i;
+const stripQuizMarkers = (html: string) => html.replace(/(<p[^>]*>)?\s*\[\[quiz:[a-z0-9-]+\]\]\s*(<\/p>)?/gi, '');
 import {
   LessonFormQuestion,
   LessonFormResponses,
@@ -461,6 +466,9 @@ const DevotionLessonPage = () => {
   ];
 
   const isDeepeningCourse = (course as any)?.location?.name === 'Deepening Courses';
+  const embeddedQuizSlug =
+    (lesson.content || '').match(QUIZ_MARKER)?.[1] ??
+    (lesson.body_richtext ? JSON.stringify(lesson.body_richtext).match(QUIZ_MARKER)?.[1] : undefined);
 
   return (
     <div className="min-h-screen bg-background">
@@ -609,7 +617,7 @@ const DevotionLessonPage = () => {
               />
             ) : (
               <div 
-                className={`text-foreground/90 font-sans leading-relaxed ProseMirror${isDeepeningCourse ? ' companion-lesson-content' : ''}`}
+                className={`text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap${isDeepeningCourse ? ' companion-lesson-content' : ''}`}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(stripQuizMarkers(lesson.content || '')) }}
               />
             )}
