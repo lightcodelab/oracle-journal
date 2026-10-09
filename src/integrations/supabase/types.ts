@@ -6747,6 +6747,69 @@ export type Database = {
         }
         Relationships: []
       }
+      site_analytics_events: {
+        Row: {
+          browser: string | null
+          created_at: string
+          device_type: string | null
+          door: string | null
+          event_type: string
+          id: string
+          local_dow: number | null
+          local_hour: number | null
+          os: string | null
+          page_title: string | null
+          path: string | null
+          prev_path: string | null
+          region: string | null
+          results_count: number | null
+          search_query: string | null
+          session_id: string
+          timezone: string | null
+          user_id: string | null
+        }
+        Insert: {
+          browser?: string | null
+          created_at?: string
+          device_type?: string | null
+          door?: string | null
+          event_type?: string
+          id?: string
+          local_dow?: number | null
+          local_hour?: number | null
+          os?: string | null
+          page_title?: string | null
+          path?: string | null
+          prev_path?: string | null
+          region?: string | null
+          results_count?: number | null
+          search_query?: string | null
+          session_id: string
+          timezone?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          browser?: string | null
+          created_at?: string
+          device_type?: string | null
+          door?: string | null
+          event_type?: string
+          id?: string
+          local_dow?: number | null
+          local_hour?: number | null
+          os?: string | null
+          page_title?: string | null
+          path?: string | null
+          prev_path?: string | null
+          region?: string | null
+          results_count?: number | null
+          search_query?: string | null
+          session_id?: string
+          timezone?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       site_images: {
         Row: {
           image_key: string
@@ -8011,6 +8074,10 @@ export type Database = {
       admin_revoke_manual_full_access: {
         Args: { _grant_id: string; _notes?: string }
         Returns: undefined
+      }
+      admin_site_analytics: {
+        Args: { _from: string; _to: string }
+        Returns: Json
       }
       admin_test_get_membership_offer_at: {
         Args: { _as_of: string; _mode: string }

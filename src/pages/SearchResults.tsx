@@ -1,3 +1,4 @@
+import { trackSearch } from '@/lib/siteAnalytics';
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -311,8 +312,10 @@ const SearchResults = () => {
         return (ta || '').localeCompare(tb || '');
       });
 
-      setItems(mixed.filter((i) => i.type !== 'resource' || !!i.resource.slug));
+      const finalItems = mixed.filter((i) => i.type !== 'resource' || !!i.resource.slug);
+      setItems(finalItems);
       setLoading(false);
+      trackSearch(query, finalItems.length);
     };
 
     search();

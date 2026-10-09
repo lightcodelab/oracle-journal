@@ -1,3 +1,5 @@
+import { RouteAnalytics } from "@/components/RouteAnalytics";
+import AdminSiteAnalytics from "./pages/AdminSiteAnalytics";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -120,6 +122,7 @@ const App = () => {
           <NewsletterBanner />
         <BrowserRouter>
           <ThemeScope />
+          <RouteAnalytics />
           <main id="main-content" tabIndex={-1}>
           <AddToRitualProvider>
           <MembershipGate>
@@ -218,6 +221,7 @@ const App = () => {
             <Route path="/affiliate" element={<AffiliatePortal />} />
             <Route path="/admin/affiliates" element={<AdminAffiliates />} />
             <Route path="/admin/launch" element={<AdminLaunchDashboard />} />
+            <Route path="/admin/analytics" element={<AdminSiteAnalytics />} />
             <Route path="/admin/quizzes" element={<AdminQuizzes />} />
             <Route path="/admin/quizzes/:id" element={<AdminQuizEditor />} />
             <Route path="/admin/quizzes/:id/analytics" element={<AdminQuizAnalytics />} />
