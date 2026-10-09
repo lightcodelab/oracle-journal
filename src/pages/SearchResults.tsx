@@ -311,8 +311,10 @@ const SearchResults = () => {
         return (ta || '').localeCompare(tb || '');
       });
 
-      setItems(mixed.filter((i) => i.type !== 'resource' || !!i.resource.slug));
+      const finalItems = mixed.filter((i) => i.type !== 'resource' || !!i.resource.slug);
+      setItems(finalItems);
       setLoading(false);
+      trackSearch(query, finalItems.length);
     };
 
     search();

@@ -16,6 +16,12 @@ const adminTasks = [
     href: '/admin/launch',
   },
   {
+    title: 'Member Analytics',
+    description: 'Most-used resources, time of day, location, devices, journeys, searches and member avatars',
+    icon: LineChart,
+    href: '/admin/analytics',
+  },
+  {
     title: 'Manage Live Sessions',
     description: 'Create, edit, and manage live readings, classes, and workshops',
     icon: Calendar,
