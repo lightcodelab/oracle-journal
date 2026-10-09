@@ -6,3 +6,4 @@
 - Member tool icons (Journal, Playlists, Living Pattern, Tracking, Readings, Protocols) come from one shared map in src/lib/toolIcons.ts; why: the same tool always shows the same icon everywhere.
 - Lessons embed a Quiz Builder quiz with a `[[quiz:slug]]` marker in their text, rendered inline by QuizEmbed; why: admins can place quizzes in any lesson without new fields.
 - Intuition Builder Clairs, tracker slugs and quiz slug live in src/lib/intuitionClairs.ts and drive the Signs & Signals dashboard on My Tracking; why: one source for which trackers count toward each Clair.
+- Site analytics: privacy-first events table + admin_site_analytics aggregate RPC; admin views show group patterns only (avatar groups need 3+ members); why: member insight without exposing individuals.
