@@ -13,6 +13,7 @@ import RitualVisitPage from "./pages/RitualVisit";
 import { EncryptionProvider } from "@/hooks/useEncryption";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import JoinTemple from "./pages/JoinTemple";
 import ResetPassword from "./pages/ResetPassword";
 import Temple from "./pages/Temple";
 import ImportCards from "./pages/ImportCards";
@@ -144,6 +145,7 @@ const App = () => {
             <Route path="/remembrance/course/:courseId" element={<DevotionCoursePage />} />
             <Route path="/free-reading" element={<FreeReadingLanding />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/join" element={<JoinTemple />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/import-cards" element={<ImportCards />} />
             <Route path="/devotion" element={<DoorOfDevotion />} />
