@@ -1,9 +1,9 @@
 # Roadmap
 
 ## Simple membership signup
-- [ ] Create a banner-only signup page with membership features and monthly pricing
-- [ ] Connect the form to the existing account creation and Stripe monthly checkout
-- [ ] Verify the public page and checkout handoff
+- [x] Create a banner-only signup page with membership features and monthly pricing
+- [x] Connect the form to the existing account creation and Stripe monthly checkout
+- [x] Verify the public page and monthly checkout intent; no real signup or payment submitted
 
 - [x] Replace and recompose the public hero with the approved photograph
 - [x] Reorder and rebuild the landing-page sections
