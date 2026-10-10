@@ -62,22 +62,27 @@ export default function JoinTemple() {
   };
 
   return (
-    <section className="dark-theme relative isolate min-h-screen bg-background text-foreground">
-      <AdminEditableImage src={heroImage} imageKey="sales-main-banner" alt="An open conservatory doorway overlooking a sunlit garden." fetchPriority="high" wrapperClassName="absolute inset-0 -z-10 h-full w-full" className="h-full w-full object-cover object-[65%_center]" />
-      <div className="min-h-screen w-full bg-background/95 px-6 py-10 sm:px-10 md:w-[520px] md:px-12 md:py-12">
-        <p className="mb-3 text-sm text-primary-strong">THE TEMPLE of Sustainment</p>
-        <h1 className="font-serif text-3xl leading-tight sm:text-4xl">Join THE TEMPLE</h1>
-        <p className="mt-5 font-serif text-3xl">$35 AUD <span className="font-sans text-base text-muted-foreground">per month</span></p>
-        <p className="mt-2 text-sm text-muted-foreground">Monthly membership. Full Temple access.</p>
-        <ul className="my-7 space-y-3 text-sm leading-relaxed">
-          {features.map(feature => <li key={feature} className="flex items-start gap-3"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" /><span>{feature}</span></li>)}
-        </ul>
-        <div className="mb-7 border-t border-border" />
-        {loading || authLoading ? <Loader2 className="h-6 w-6 animate-spin text-primary" aria-label="Loading membership" /> : !available ? (
-          <div><p className="text-sm text-muted-foreground">The $35 monthly offer is not currently available.</p><Button asChild variant="outline" className="mt-4"><Link to="/#membership">View current membership</Link></Button></div>
-        ) : user ? (
-          <><Button size="lg" className="w-full" disabled={checkingOut} onClick={checkout}>{checkingOut ? "Opening payment page…" : "Join The Temple"}</Button><p className="mt-3 text-center text-xs text-muted-foreground">Continue to secure payment with Stripe.</p></>
-        ) : <Auth membershipSignup />}
+    <section className="dark-theme min-h-screen bg-background text-foreground">
+      <div className="grid min-h-screen grid-cols-1 lg:grid-cols-3">
+        <div className="px-6 py-10 sm:px-10 lg:px-10 lg:py-12">
+          <p className="mb-3 text-sm text-primary-strong">THE TEMPLE of Sustainment</p>
+          <h1 className="font-serif text-3xl leading-tight sm:text-4xl">Join THE TEMPLE</h1>
+          <p className="mt-5 font-serif text-3xl">$35 AUD <span className="font-sans text-base text-muted-foreground">per month</span></p>
+          <p className="mt-2 text-sm text-muted-foreground">Monthly membership. Full Temple access.</p>
+          <ul className="mt-7 space-y-3 text-sm leading-relaxed">
+            {features.map(feature => <li key={feature} className="flex items-start gap-3"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" /><span>{feature}</span></li>)}
+          </ul>
+        </div>
+        <div className="border-t border-border px-6 py-10 sm:px-10 lg:border-l lg:border-t-0 lg:px-10 lg:py-12">
+          {loading || authLoading ? <Loader2 className="h-6 w-6 animate-spin text-primary" aria-label="Loading membership" /> : !available ? (
+            <div><p className="text-sm text-muted-foreground">The $35 monthly offer is not currently available.</p><Button asChild variant="outline" className="mt-4"><Link to="/#membership">View current membership</Link></Button></div>
+          ) : user ? (
+            <><Button size="lg" className="w-full" disabled={checkingOut} onClick={checkout}>{checkingOut ? "Opening payment page…" : "Join The Temple"}</Button><p className="mt-3 text-center text-xs text-muted-foreground">Continue to secure payment with Stripe.</p></>
+          ) : <Auth membershipSignup />}
+        </div>
+        <div className="relative min-h-[320px] lg:min-h-screen">
+          <AdminEditableImage src={heroImage} imageKey="join-page-image" alt="An open conservatory doorway overlooking a sunlit garden." fetchPriority="high" wrapperClassName="absolute inset-0 h-full w-full" className="h-full w-full object-cover" />
+        </div>
       </div>
     </section>
   );
