@@ -13,7 +13,7 @@ import { Eye, EyeOff } from "lucide-react";
 import templeBannerAsset from "@/assets/homepage-banner.webp.asset.json";
 const templeBanner = templeBannerAsset.url;
 
-const Auth = () => {
+const Auth = ({ membershipSignup = false }: { membershipSignup?: boolean }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -43,7 +43,7 @@ const Auth = () => {
   const mode = searchParams.get("mode"); // 'signup' for trial flow, otherwise login-only
   const priceId = searchParams.get("priceId"); // For trial checkout
   
-  const isSignupMode = mode === "signup";
+  const isSignupMode = membershipSignup || mode === "signup";
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
@@ -402,14 +402,14 @@ const Auth = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className={membershipSignup ? "w-full" : "min-h-screen bg-background flex items-center justify-center p-4"}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className={membershipSignup ? "w-full" : "w-full max-w-md"}
       >
-        <div className="text-center mb-8">
+        {!membershipSignup && <div className="text-center mb-8">
           <h1 className="sr-only">THE TEMPLE of Sustainment</h1>
 
           <motion.div
@@ -430,10 +430,10 @@ const Auth = () => {
               : "Sign in to access our digital card decks, AreekeerA® Templates, Energy Hygiene Resources, Guided Meditations, Courses, and a Digital Journal."
             }
           </p>
-        </div>
+        </div>}
 
-        <Card>
-          <CardHeader>
+        <Card className={membershipSignup ? "border-0 bg-transparent shadow-none" : undefined}>
+          <CardHeader className={membershipSignup ? "px-0 pt-0" : undefined}>
             <h2 className="text-2xl font-semibold leading-none tracking-tight">{forgotMode ? "Reset Your Password" : isSignupMode ? "Create Your Account" : "Welcome Back"}</h2>
             <CardDescription>
               {forgotMode
@@ -444,7 +444,7 @@ const Auth = () => {
               }
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className={membershipSignup ? "p-0" : undefined}>
             {forgotMode ? (
               // Password recovery mode
               resetEmailSent ? (
@@ -556,10 +556,10 @@ const Auth = () => {
                   className="w-full"
                   disabled={loading}
                 >
-                  {loading ? "Creating account..." : "Create Account & Continue"}
+                  {loading ? "Creating account..." : membershipSignup ? "Join The Temple" : "Create Account & Continue"}
                 </Button>
                 
-                <SocialAuthButtons />
+                {!membershipSignup && <SocialAuthButtons />}
                 
                 <p className="text-center text-sm text-muted-foreground mt-4">
                   Already have an account?{" "}
