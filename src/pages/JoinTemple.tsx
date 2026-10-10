@@ -81,7 +81,7 @@ export default function JoinTemple() {
           ) : <Auth membershipSignup />}
         </div>
         <div className="relative min-h-[320px] lg:min-h-screen">
-          <AdminEditableImage src={heroImage} imageKey="join-page-image" alt="An open conservatory doorway overlooking a sunlit garden." fetchPriority="high" wrapperClassName="absolute inset-0 h-full w-full" className="h-full w-full object-cover" />
+          <AdminEditableImage src={heroImage} imageKey="join-page-image" pencilAlwaysVisible alt="An open conservatory doorway overlooking a sunlit garden." fetchPriority="high" wrapperClassName="absolute inset-0 h-full w-full" className="h-full w-full object-cover" />
         </div>
       </div>
     </section>
