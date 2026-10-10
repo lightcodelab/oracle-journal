@@ -18,6 +18,7 @@ interface AdminEditableImageProps extends Omit<ImgHTMLAttributes<HTMLImageElemen
   imageKey?: string;
   onSave?: (url: string) => Promise<void>;
   wrapperClassName?: string;
+  pencilAlwaysVisible?: boolean;
 }
 
 const stopInteraction = (event: React.SyntheticEvent) => {
@@ -30,6 +31,7 @@ export function AdminEditableImage({
   imageKey,
   onSave,
   wrapperClassName,
+  pencilAlwaysVisible,
   className,
   alt = '',
   ...imageProps
