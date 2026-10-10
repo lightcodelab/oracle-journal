@@ -167,13 +167,6 @@ const Auth = ({ membershipSignup = false }: { membershipSignup?: boolean }) => {
       return;
     }
 
-    const joinOfferTier = membershipSignup ? sessionStorage.getItem("joinOfferTier") : null;
-    if (joinOfferTier) {
-      // Only queue the monthly checkout once someone actually creates an account on /join.
-      sessionStorage.setItem("pendingCheckoutOffer", joinOfferTier);
-      sessionStorage.setItem("pendingCheckoutCadence", "monthly");
-    }
-
     // Strong password validation
     const passwordErrors: string[] = [];
     if (password.length < 8) {
