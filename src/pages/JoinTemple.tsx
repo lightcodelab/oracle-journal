@@ -33,13 +33,9 @@ export default function JoinTemple() {
       if (!active) return;
       const current = data as unknown as Offer | null;
       setOffer(current);
-      // Signing in here must not start a payment — checkout is only queued when an account is created.
-      sessionStorage.removeItem("pendingCheckoutOffer");
-      sessionStorage.removeItem("pendingCheckoutCadence");
       if (current?.checkout_available && current.unit_amount_cents === 3500 && current.currency.toLowerCase() === "aud") {
-        sessionStorage.setItem("joinOfferTier", current.tier);
-      } else {
-        sessionStorage.removeItem("joinOfferTier");
+        sessionStorage.setItem("pendingCheckoutOffer", current.tier);
+        sessionStorage.setItem("pendingCheckoutCadence", "monthly");
       }
       setLoading(false);
     });
