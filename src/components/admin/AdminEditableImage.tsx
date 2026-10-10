@@ -126,7 +126,12 @@ export function AdminEditableImage({
       <img src={currentSrc} alt={alt} className={className} {...imageProps} />
       {isAdmin && (imageKey || onSave) ? (
         <div
-          className="pointer-events-auto absolute right-2 top-2 z-30 opacity-100 transition-opacity sm:opacity-0 sm:group-hover/admin-image:opacity-100 sm:group-focus-within/admin-image:opacity-100"
+          className={cn(
+            'pointer-events-auto absolute right-2 top-2 z-30',
+            pencilAlwaysVisible
+              ? 'opacity-100'
+              : 'opacity-100 transition-opacity sm:opacity-0 sm:group-hover/admin-image:opacity-100 sm:group-focus-within/admin-image:opacity-100',
+          )}
           onClick={stopInteraction}
           onPointerDown={(event) => event.stopPropagation()}
         >
