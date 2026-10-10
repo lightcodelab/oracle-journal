@@ -42,6 +42,17 @@ export default function JoinTemple() {
     return () => { active = false; };
   }, []);
 
+  const [wasManual, setWasManual] = useState(false);
+  useEffect(() => {
+    if (!user) { setWasManual(false); return; }
+    let active = true;
+    void Promise.all([
+      supabase.from("manual_full_access_grants").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+      supabase.from("manual_access_grants").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+    ]).then(([a, b]) => { if (active) setWasManual((a.count ?? 0) + (b.count ?? 0) > 0); });
+    return () => { active = false; };
+  }, [user]);
+
   const available = offer?.checkout_available && offer.unit_amount_cents === 3500 && offer.currency.toLowerCase() === "aud";
   const checkout = async () => {
     if (!available || checkingOut) return;
@@ -77,7 +88,7 @@ export default function JoinTemple() {
           {loading || authLoading ? <Loader2 className="h-6 w-6 animate-spin text-primary" aria-label="Loading membership" /> : !available ? (
             <div><p className="text-sm text-muted-foreground">The $35 monthly offer is not currently available.</p><Button asChild variant="outline" className="mt-4"><Link to="/#membership">View current membership</Link></Button></div>
           ) : user ? (
-            <><Button size="lg" className="w-full" disabled={checkingOut} onClick={checkout}>{checkingOut ? "Opening payment page…" : "Join The Temple"}</Button><p className="mt-3 text-center text-xs text-muted-foreground">Continue to secure payment with Stripe.</p></>
+            <><p className="mb-5 font-serif text-xl leading-snug">{wasManual ? "We are so happy you love The Temple so much and want to continue using it." : "Welcome back, we can't wait to see you inside The Temple."}</p><Button size="lg" className="w-full" disabled={checkingOut} onClick={checkout}>{checkingOut ? "Opening payment page…" : "Join The Temple"}</Button><p className="mt-3 text-center text-xs text-muted-foreground">Continue to secure payment with Stripe.</p></>
           ) : <Auth membershipSignup />}
         </div>
         <div className="relative min-h-[320px] lg:min-h-screen">
