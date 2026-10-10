@@ -91,8 +91,8 @@ export default function JoinTemple() {
             <><p className="mb-5 font-serif text-xl leading-snug">{wasManual ? "We are so happy you love The Temple so much and want to continue using it." : "Welcome back, we can't wait to see you inside The Temple."}</p><Button size="lg" className="w-full" disabled={checkingOut} onClick={checkout}>{checkingOut ? "Opening payment page…" : "Join The Temple"}</Button><p className="mt-3 text-center text-xs text-muted-foreground">Continue to secure payment with Stripe.</p></>
           ) : <Auth membershipSignup />}
         </div>
-        <div className="md:relative md:min-h-screen">
-          <AdminEditableImage src={heroImage} imageKey="join-page-image" pencilAlwaysVisible alt="An open conservatory doorway overlooking a sunlit garden." fetchPriority="high" wrapperClassName="md:absolute md:inset-0 md:h-full md:w-full" className="block h-auto w-full md:h-full md:w-full md:object-cover" />
+        <div className="md:flex md:items-center">
+          <AdminEditableImage src={heroImage} imageKey="join-page-image" pencilAlwaysVisible alt="An open conservatory doorway overlooking a sunlit garden." fetchPriority="high" wrapperClassName="w-full" className="block h-auto w-full" />
         </div>
       </div>
     </section>
