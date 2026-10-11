@@ -2705,6 +2705,39 @@ export type Database = {
         }
         Relationships: []
       }
+      experience_feedback: {
+        Row: {
+          created_at: string
+          experience: string | null
+          helpful: string | null
+          id: string
+          more_useful: string | null
+          unclear_or_missing: string | null
+          used_or_explored: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          experience?: string | null
+          helpful?: string | null
+          id?: string
+          more_useful?: string | null
+          unclear_or_missing?: string | null
+          used_or_explored?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          experience?: string | null
+          helpful?: string | null
+          id?: string
+          more_useful?: string | null
+          unclear_or_missing?: string | null
+          used_or_explored?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       feature_suggestions: {
         Row: {
           created_at: string
