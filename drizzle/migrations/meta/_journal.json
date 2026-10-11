@@ -365,6 +365,13 @@
       "when": 1791689726778,
       "tag": "0051_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1791690650088,
+      "tag": "0052_founding_yearly_price_recognised",
+      "breakpoints": true
     }
   ]
 }
