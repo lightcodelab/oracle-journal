@@ -84,6 +84,7 @@ import AllCourses from "./pages/AllCourses";
 import SearchResults from "./pages/SearchResults";
 import FeatureSuggestions from "./pages/FeatureSuggestions";
 import ShareExperience from "./pages/ShareExperience";
+import AdminFeedback from "./pages/AdminFeedback";
 import BugReports from "./pages/BugReports";
 import InstallAppProvider from "./components/InstallAppDialog";
 import NewsletterBanner from "./components/NewsletterBanner";
@@ -226,6 +227,7 @@ const App = () => {
             <Route path="/admin/affiliates" element={<AdminAffiliates />} />
             <Route path="/admin/launch" element={<AdminLaunchDashboard />} />
             <Route path="/admin/analytics" element={<AdminSiteAnalytics />} />
+            <Route path="/admin/feedback" element={<AdminFeedback />} />
             <Route path="/admin/quizzes" element={<AdminQuizzes />} />
             <Route path="/admin/quizzes/:id" element={<AdminQuizEditor />} />
             <Route path="/admin/quizzes/:id/analytics" element={<AdminQuizAnalytics />} />

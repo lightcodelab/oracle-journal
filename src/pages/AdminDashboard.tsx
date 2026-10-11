@@ -22,6 +22,12 @@ const adminTasks = [
     href: '/admin/analytics',
   },
   {
+    title: 'Member Feedback',
+    description: 'Shared experiences and bug reports from members, all in one place',
+    icon: ClipboardList,
+    href: '/admin/feedback',
+  },
+  {
     title: 'Manage Live Sessions',
     description: 'Create, edit, and manage live readings, classes, and workshops',
     icon: Calendar,
