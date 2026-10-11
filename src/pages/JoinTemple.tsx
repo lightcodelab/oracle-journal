@@ -73,7 +73,7 @@ export default function JoinTemple() {
   };
 
   return (
-    <section className="dark-theme min-h-screen bg-background text-foreground">
+    <section className="light-theme min-h-screen bg-background text-foreground">
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="px-6 py-10 sm:px-10 md:px-10 md:py-12">
           <p className="mb-3 text-sm text-primary-strong">THE TEMPLE of Sustainment</p>
