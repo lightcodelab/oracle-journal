@@ -53,6 +53,7 @@ interface ManualUser {
   revoked_at: string | null;
   notes: string | null;
   state: GrantState;
+  paid: { status: string; cadence: string | null; ends_at: string | null; cancel_at_period_end: boolean } | null;
 }
 
 interface AuditRow {
@@ -191,12 +192,17 @@ const UserManagement = () => {
         return;
       }
       const ids = Array.from(new Set(grants.map((g) => g.user_id)));
-      const { data: profiles } = await supabase
-        .from("profiles")
-        .select("id, email, full_name")
-        .in("id", ids);
+      const [{ data: profiles }, { data: subs }] = await Promise.all([
+        supabase.from("profiles").select("id, email, full_name").in("id", ids),
+        supabase
+          .from("subscriptions")
+          .select("profile_id, status, cadence, current_period_end, cancel_at_period_end, updated_at")
+          .in("profile_id", ids)
+          .order("updated_at", { ascending: false }),
+      ]);
       const result: ManualUser[] = grants.map((g) => {
         const p = profiles?.find((x) => x.id === g.user_id);
+        const s = subs?.find((x) => x.profile_id === g.user_id);
         return {
           grant_id: g.id,
           user_id: g.user_id,
@@ -207,6 +213,14 @@ const UserManagement = () => {
           revoked_at: g.revoked_at,
           notes: g.notes,
           state: deriveState(g),
+          paid: s
+            ? {
+                status: s.status as string,
+                cadence: (s.cadence as string) ?? null,
+                ends_at: s.current_period_end as string | null,
+                cancel_at_period_end: !!s.cancel_at_period_end,
+              }
+            : null,
         };
       });
       const order: Record<GrantState, number> = { active: 0, scheduled: 1, expired: 2, revoked: 3 };
