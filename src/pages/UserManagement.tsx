@@ -709,11 +709,30 @@ If you'd like to continue after this date, you can become a member at ${SITE_CON
                     </CardHeader>
                     <CardContent>
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        <span>{formatWindow(u)}</span>
+                        <span>Manual access: {formatWindow(u)}</span>
                         {u.revoked_at && (
                           <span className="text-destructive">Revoked {formatMelbourneShort(u.revoked_at)}</span>
                         )}
                       </div>
+                      {u.paid && (
+                        <div className="mt-2 flex flex-wrap items-center gap-2 text-sm" data-testid="paid-membership">
+                          <Badge className={cn(u.paid.status !== "active" && u.paid.status !== "trialing" && "bg-muted text-muted-foreground")}>
+                            {u.paid.status === "active" || u.paid.status === "trialing"
+                              ? "Paid member"
+                              : `Paid membership ${u.paid.status.replace("_", " ")}`}
+                          </Badge>
+                          <span className="text-muted-foreground">
+                            {u.paid.cadence === "yearly" ? "Yearly" : u.paid.cadence === "monthly" ? "Monthly" : ""}
+                            {u.paid.ends_at && (
+                              <>
+                                {u.paid.cadence ? " · " : ""}
+                                {u.paid.cancel_at_period_end || u.paid.status === "canceled" ? "Ends" : "Renews"}{" "}
+                                <span className="text-foreground">{formatMelbourneShort(u.paid.ends_at)}</span>
+                              </>
+                            )}
+                          </span>
+                        </div>
+                      )}
                       {u.notes && <p className="text-xs text-muted-foreground mt-2">{u.notes}</p>}
 
                       <Collapsible
