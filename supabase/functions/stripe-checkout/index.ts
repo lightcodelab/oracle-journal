@@ -259,6 +259,19 @@ serve(async (req) => {
 
     console.log("Checkout session created:", session.id);
 
+    // Launch Dashboard: count people who genuinely reached the payment page.
+    if (stripeMode === "live") {
+      const { data: adminRow } = await supabaseAdmin
+        .from("user_roles").select("role")
+        .eq("user_id", user.id).eq("role", "admin").maybeSingle();
+      const { error: evErr } = await supabaseAdmin.from("launch_events").insert({
+        event: "membership_payment_page_opened",
+        is_admin: !!adminRow,
+        metadata: { cadence },
+      });
+      if (evErr) console.error("payment page event failed:", evErr);
+    }
+
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,

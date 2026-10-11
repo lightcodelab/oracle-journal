@@ -15,6 +15,7 @@ interface LaunchStats {
   funnel: Record<string, number>;
   unique_visitors: number;
   signups: number;
+  payment_page_opened?: number;
   paying_members: number;
   payments: { count: number; revenue_cents: number; currency: string };
   plan_mix: { plan_code: string | null; cadence: string | null; count: number }[];
@@ -23,6 +24,7 @@ interface LaunchStats {
     views: number;
     cta_clicks: number;
     checkouts_started: number;
+    payment_pages?: number;
     signups: number;
     payments: number;
     revenue_cents: number;
@@ -97,15 +99,17 @@ const AdminLaunchDashboard = () => {
     (funnel["midpage_enter_temple_clicked"] ?? 0) +
     (funnel["final_enter_temple_clicked"] ?? 0);
   const checkoutsStarted = funnel["membership_checkout_started"] ?? 0;
+  const paymentPages = stats?.payment_page_opened ?? 0;
   const signups = stats?.signups ?? 0;
   const payments = stats?.payments?.count ?? 0;
 
   const summary = [
     { label: "Sales page visits", value: views.toLocaleString(), note: `${(stats?.unique_visitors ?? 0).toLocaleString()} unique sessions` },
     { label: "Sign-up button clicks", value: ctaClicks.toLocaleString(), note: `${pct(ctaClicks, views)} of visits` },
-    { label: "Checkouts started", value: checkoutsStarted.toLocaleString(), note: `${pct(checkoutsStarted, ctaClicks)} of clicks` },
+    { label: "Join button clicks", value: checkoutsStarted.toLocaleString(), note: "Clicked a price — not yet at payment" },
     { label: "New accounts", value: signups.toLocaleString(), note: `${pct(signups, views)} of visits` },
-    { label: "Payments received", value: payments.toLocaleString(), note: `${pct(payments, signups)} of new accounts` },
+    { label: "Reached payment page", value: paymentPages.toLocaleString(), note: `${pct(paymentPages, checkoutsStarted)} of join clicks` },
+    { label: "Payments received", value: payments.toLocaleString(), note: `${pct(payments, paymentPages)} of payment page visits` },
     {
       label: "Revenue",
       value: money(stats?.payments?.revenue_cents ?? 0, stats?.payments?.currency ?? "AUD"),
@@ -143,6 +147,7 @@ const AdminLaunchDashboard = () => {
 
         <section aria-labelledby="summary-heading" className="space-y-3">
           <h2 id="summary-heading" className="font-serif text-lg text-foreground">How the launch is going</h2>
+          <p className="text-sm text-muted-foreground">Admin accounts and admin visits are left out of every figure.</p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {summary.map((s) => (
               <Card key={s.label}>
@@ -168,8 +173,9 @@ const AdminLaunchDashboard = () => {
                     <TableHead>Day</TableHead>
                     <TableHead className="text-right">Visits</TableHead>
                     <TableHead className="text-right">Clicks</TableHead>
-                    <TableHead className="text-right">Checkouts</TableHead>
+                    <TableHead className="text-right">Join clicks</TableHead>
                     <TableHead className="text-right">Accounts</TableHead>
+                    <TableHead className="text-right">Payment page</TableHead>
                     <TableHead className="text-right">Payments</TableHead>
                     <TableHead className="text-right">Revenue</TableHead>
                   </TableRow>
@@ -182,6 +188,7 @@ const AdminLaunchDashboard = () => {
                       <TableCell className="text-right">{d.cta_clicks}</TableCell>
                       <TableCell className="text-right">{d.checkouts_started}</TableCell>
                       <TableCell className="text-right">{d.signups}</TableCell>
+                      <TableCell className="text-right">{d.payment_pages ?? 0}</TableCell>
                       <TableCell className="text-right">{d.payments}</TableCell>
                       <TableCell className="text-right">{money(d.revenue_cents)}</TableCell>
                     </TableRow>
@@ -202,7 +209,7 @@ const AdminLaunchDashboard = () => {
                     <TableRow>
                       <TableHead>Source</TableHead>
                       <TableHead className="text-right">Visits</TableHead>
-                      <TableHead className="text-right">Checkouts</TableHead>
+                      <TableHead className="text-right">Join clicks</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
