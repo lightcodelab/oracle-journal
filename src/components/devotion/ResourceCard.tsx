@@ -15,9 +15,10 @@ interface ResourceCardProps {
   basePath?: string; // e.g., '/devotion' or '/remembrance'
   comingSoon?: boolean;
   squareThumb?: boolean;
+  className?: string;
 }
 
-const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/devotion', comingSoon = false, squareThumb = false }: ResourceCardProps) => {
+const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/devotion', comingSoon = false, squareThumb = false, className }: ResourceCardProps) => {
   const navigate = useNavigate();
 
   const getMediaIcon = () => {
@@ -70,7 +71,7 @@ const ResourceCard = ({ resource, index, showDraftBadge = false, basePath = '/de
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
       onClick={comingSoon ? undefined : handleClick}
-      className={`group ${comingSoon ? 'cursor-default' : 'cursor-pointer'}`}
+      className={`group ${comingSoon ? 'cursor-default' : 'cursor-pointer'} ${className ?? ''}`}
     >
       <div className={`bg-card border rounded-lg overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:border-primary/30 ${
         isDraft ? 'border-amber-500/50' : 'border-border'
