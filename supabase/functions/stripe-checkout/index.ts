@@ -208,11 +208,13 @@ serve(async (req) => {
       });
       customerId = customer.id;
 
-      // Save customer ID to profile
-      await supabaseClient
+      // Save customer ID to profile. Members can't write this column
+      // themselves (a guard reverts it), so save it with server rights.
+      const { error: custSaveError } = await supabaseAdmin
         .from("profiles")
         .update({ stripe_customer_id: customerId })
         .eq("id", user.id);
+      if (custSaveError) console.error("Saving stripe_customer_id failed:", custSaveError);
 
       console.log("Created new Stripe customer:", customerId);
     } else {
