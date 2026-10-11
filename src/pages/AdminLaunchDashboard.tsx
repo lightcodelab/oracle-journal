@@ -15,6 +15,7 @@ interface LaunchStats {
   funnel: Record<string, number>;
   unique_visitors: number;
   signups: number;
+  payment_page_opened?: number;
   paying_members: number;
   payments: { count: number; revenue_cents: number; currency: string };
   plan_mix: { plan_code: string | null; cadence: string | null; count: number }[];
@@ -23,6 +24,7 @@ interface LaunchStats {
     views: number;
     cta_clicks: number;
     checkouts_started: number;
+    payment_pages?: number;
     signups: number;
     payments: number;
     revenue_cents: number;
@@ -145,6 +147,7 @@ const AdminLaunchDashboard = () => {
 
         <section aria-labelledby="summary-heading" className="space-y-3">
           <h2 id="summary-heading" className="font-serif text-lg text-foreground">How the launch is going</h2>
+          <p className="text-sm text-muted-foreground">Admin accounts and admin visits are left out of every figure.</p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {summary.map((s) => (
               <Card key={s.label}>
@@ -170,8 +173,9 @@ const AdminLaunchDashboard = () => {
                     <TableHead>Day</TableHead>
                     <TableHead className="text-right">Visits</TableHead>
                     <TableHead className="text-right">Clicks</TableHead>
-                    <TableHead className="text-right">Checkouts</TableHead>
+                    <TableHead className="text-right">Join clicks</TableHead>
                     <TableHead className="text-right">Accounts</TableHead>
+                    <TableHead className="text-right">Payment page</TableHead>
                     <TableHead className="text-right">Payments</TableHead>
                     <TableHead className="text-right">Revenue</TableHead>
                   </TableRow>
@@ -184,6 +188,7 @@ const AdminLaunchDashboard = () => {
                       <TableCell className="text-right">{d.cta_clicks}</TableCell>
                       <TableCell className="text-right">{d.checkouts_started}</TableCell>
                       <TableCell className="text-right">{d.signups}</TableCell>
+                      <TableCell className="text-right">{d.payment_pages ?? 0}</TableCell>
                       <TableCell className="text-right">{d.payments}</TableCell>
                       <TableCell className="text-right">{money(d.revenue_cents)}</TableCell>
                     </TableRow>
@@ -204,7 +209,7 @@ const AdminLaunchDashboard = () => {
                     <TableRow>
                       <TableHead>Source</TableHead>
                       <TableHead className="text-right">Visits</TableHead>
-                      <TableHead className="text-right">Checkouts</TableHead>
+                      <TableHead className="text-right">Join clicks</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
