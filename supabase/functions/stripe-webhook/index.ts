@@ -289,7 +289,14 @@ async function handleSubscriptionChange(
 
   const tierCode = planCode ? planToTier[planCode] : null;
   const priceId = subscription.items.data[0]?.price.id;
-  const cadence = subscription.items.data[0]?.price.recurring?.interval === "year" ? "yearly" : "monthly";
+  // A year can be configured in Stripe as interval "year" or as 12 months,
+  // so derive cadence from the real billing length.
+  const recurring = subscription.items.data[0]?.price.recurring;
+  const monthsPerCycle = recurring
+    ? (recurring.interval === "year" ? 12 : recurring.interval === "month" ? 1 : 0) * (recurring.interval_count ?? 1)
+    : 0;
+  const periodDays = (subscription.current_period_end - subscription.current_period_start) / 86400;
+  const cadence = monthsPerCycle >= 12 || periodDays > 300 ? "yearly" : "monthly";
 
   // Map Stripe status to our status
   let status = subscription.status;
