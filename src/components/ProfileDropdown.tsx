@@ -27,7 +27,8 @@ import {
   Share2,
   Compass,
   Mail,
-  Target
+  Target,
+  Heart
 } from 'lucide-react';
 import { useInstallApp } from '@/components/InstallAppDialog';
 import GlobalSearch from '@/components/GlobalSearch';
@@ -168,6 +169,11 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       label: 'Feature Suggestions',
       icon: <MessageSquarePlus className="w-4 h-4 mr-2" />,
       route: '/suggestions',
+    },
+    {
+      label: 'Share Your Experience',
+      icon: <Heart className="w-4 h-4 mr-2" />,
+      route: '/share-experience',
     },
   ];
 

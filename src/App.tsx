@@ -83,6 +83,7 @@ import SacredSpreads from "./pages/SacredSpreads";
 import AllCourses from "./pages/AllCourses";
 import SearchResults from "./pages/SearchResults";
 import FeatureSuggestions from "./pages/FeatureSuggestions";
+import ShareExperience from "./pages/ShareExperience";
 import BugReports from "./pages/BugReports";
 import InstallAppProvider from "./components/InstallAppDialog";
 import NewsletterBanner from "./components/NewsletterBanner";
@@ -218,6 +219,7 @@ const App = () => {
             <Route path="/membership/success" element={<MembershipSuccess />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/suggestions" element={<FeatureSuggestions />} />
+            <Route path="/share-experience" element={<ShareExperience />} />
             <Route path="/bugs" element={<BugReports />} />
             <Route path="/r/:code" element={<AffiliateRedirect />} />
             <Route path="/affiliate" element={<AffiliatePortal />} />
