@@ -105,7 +105,7 @@ const AdminSiteAnalytics = () => {
         </div>
         <p className="flex items-start gap-2 text-sm text-muted-foreground">
           <ShieldCheck className="h-4 w-4 mt-0.5 text-primary shrink-0" />
-          Group patterns only — no individual member is shown. Location comes from each visitor's time zone and language setting, never their IP address. Times are in the visitor's own local time. Admin pages are not counted.
+          Group patterns only — no individual member is shown. Location comes from each visitor's time zone and language setting, never their IP address. Times are in the visitor's own local time. Admin accounts and admin visits are left out of every figure.
         </p>
         {error && <p className="text-sm text-destructive">{error}</p>}
 
