@@ -294,7 +294,7 @@ const Temple = () => {
     devotionPractices: <DevotionPracticesSection />,
     playlist: <AccessPlaylistCard />,
     living: isAdmin ? <LivingPatternCard /> : <></>,
-    becoming: focus === "becoming" ? <BecomingJourneysStrip /> : <></>,
+    becoming: !focus || focus === "becoming" ? <BecomingJourneysStrip /> : <></>,
     recommended: <RecommendedSection enabled={hasFullAccess} />,
     seasonal: <SeasonalSection enabled={hasFullAccess} />,
     tools: <ToolsForReturn />,

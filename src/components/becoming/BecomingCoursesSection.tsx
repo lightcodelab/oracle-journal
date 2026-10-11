@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import ResourceCard from "@/components/devotion/ResourceCard";
 import { useRemembranceCourses } from "@/hooks/useRemembranceCourses";
 
-export function BecomingCoursesSection({ limit }: { limit?: number }) {
+export function BecomingCoursesSection({ limit, mobileLimit }: { limit?: number; mobileLimit?: number }) {
   const { courses, loading, error, isAdmin } = useRemembranceCourses();
   // With a limit (home page strip), show a random selection that stays put for this visit.
   const visibleCourses = useMemo(() => {
@@ -49,6 +49,7 @@ export function BecomingCoursesSection({ limit }: { limit?: number }) {
           index={index}
           showDraftBadge={isAdmin}
           basePath="/becoming"
+          className={typeof mobileLimit === "number" && index >= mobileLimit ? "hidden md:block" : undefined}
         />
       ))}
     </motion.div>
