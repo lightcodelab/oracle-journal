@@ -439,7 +439,10 @@ const Auth = ({ membershipSignup = false }: { membershipSignup?: boolean }) => {
               {forgotMode
                 ? "We'll email you a secure reset link"
                 : isSignupMode 
-                ? "Create your account first. You’ll then be taken to the secure payment page to choose your membership."
+                ? <>
+                    <span className="block font-medium text-foreground">Step 1 of 2: create your login</span>
+                    <span className="block">Enter your name, email and a password you'll remember. Next, you'll go straight to our secure payment page (Step 2) to start your membership. Your account is only used to sign you in to The Temple.</span>
+                  </>
                 : "Sign in to your account"
               }
             </CardDescription>

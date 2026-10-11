@@ -97,15 +97,17 @@ const AdminLaunchDashboard = () => {
     (funnel["midpage_enter_temple_clicked"] ?? 0) +
     (funnel["final_enter_temple_clicked"] ?? 0);
   const checkoutsStarted = funnel["membership_checkout_started"] ?? 0;
+  const paymentPages = stats?.payment_page_opened ?? 0;
   const signups = stats?.signups ?? 0;
   const payments = stats?.payments?.count ?? 0;
 
   const summary = [
     { label: "Sales page visits", value: views.toLocaleString(), note: `${(stats?.unique_visitors ?? 0).toLocaleString()} unique sessions` },
     { label: "Sign-up button clicks", value: ctaClicks.toLocaleString(), note: `${pct(ctaClicks, views)} of visits` },
-    { label: "Checkouts started", value: checkoutsStarted.toLocaleString(), note: `${pct(checkoutsStarted, ctaClicks)} of clicks` },
+    { label: "Join button clicks", value: checkoutsStarted.toLocaleString(), note: "Clicked a price — not yet at payment" },
     { label: "New accounts", value: signups.toLocaleString(), note: `${pct(signups, views)} of visits` },
-    { label: "Payments received", value: payments.toLocaleString(), note: `${pct(payments, signups)} of new accounts` },
+    { label: "Reached payment page", value: paymentPages.toLocaleString(), note: `${pct(paymentPages, checkoutsStarted)} of join clicks` },
+    { label: "Payments received", value: payments.toLocaleString(), note: `${pct(payments, paymentPages)} of payment page visits` },
     {
       label: "Revenue",
       value: money(stats?.payments?.revenue_cents ?? 0, stats?.payments?.currency ?? "AUD"),
