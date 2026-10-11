@@ -498,19 +498,34 @@ async function handleInvoicePaid(
   // Re-retrieve canonical subscription state and drive the same recovery
   // path used by customer.subscription.updated. Applies to both
   // invoice.paid and invoice.payment_succeeded.
+  let canonical: Stripe.Subscription | null = null;
   try {
-    const subscription = await stripeClient.subscriptions.retrieve(
+    canonical = await stripeClient.subscriptions.retrieve(
       invoice.subscription as string
     );
-    await handleSubscriptionChange(subscription, "updated", stripeEnv, eventCreatedUnix);
+    await handleSubscriptionChange(canonical, "updated", stripeEnv, eventCreatedUnix);
   } catch (e) {
     console.error("invoice.paid canonical retrieve failed:", e);
   }
 
   if (stripeEnv !== "live") return; // Test invoices are not mirrored.
 
-  const userIdToUse = await getUserIdFromCustomer(invoice.customer as string);
-  if (!userIdToUse) return;
+  // Members who existed before paying (e.g. hand-added) may not have a
+  // stripe_customer_id yet, so fall back to the subscription's metadata.
+  const userIdToUse =
+    (await getUserIdFromCustomer(invoice.customer as string)) ??
+    (canonical ? await getUserIdFromSubscription(canonical) : null);
+  if (!userIdToUse) {
+    console.error("invoice.paid: no member found for", invoice.id);
+    return;
+  }
+  if (invoice.customer) {
+    await supabaseAdmin
+      .from("profiles")
+      .update({ stripe_customer_id: invoice.customer as string })
+      .eq("id", userIdToUse)
+      .is("stripe_customer_id", null);
+  }
 
   // Record invoice. Local ids are uuids, so Stripe ids live in the
   // provider_* columns and the local subscription row is resolved by lookup.
