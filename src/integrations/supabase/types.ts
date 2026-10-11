@@ -3449,6 +3449,7 @@ export type Database = {
           created_at: string
           event: string
           id: string
+          is_admin: boolean
           metadata: Json
           path: string | null
           referrer: string | null
@@ -3463,6 +3464,7 @@ export type Database = {
           created_at?: string
           event: string
           id?: string
+          is_admin?: boolean
           metadata?: Json
           path?: string | null
           referrer?: string | null
@@ -3477,6 +3479,7 @@ export type Database = {
           created_at?: string
           event?: string
           id?: string
+          is_admin?: boolean
           metadata?: Json
           path?: string | null
           referrer?: string | null
