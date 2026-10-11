@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Loader2 } from "lucide-react";
 import NavActions from "@/components/NavActions";
@@ -40,7 +40,22 @@ const isPreviewPath = (path: string) =>
 export const MembershipGate = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
   const { user, loading: authLoading } = useAuth();
-  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
+  const { hasFullTempleAccess, loading: memberLoading, refetch } = useMemberState();
+
+  // The gate stays mounted for the whole visit, so a person who was locked
+  // out (e.g. just paid, before the payment confirmation landed) must be
+  // re-checked as they move around or return to the tab — never cached as locked.
+  useEffect(() => {
+    if (user && !hasFullTempleAccess && !memberLoading) refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+  useEffect(() => {
+    if (!user || hasFullTempleAccess) return;
+    const onFocus = () => refetch();
+    window.addEventListener("focus", onFocus);
+    const t = window.setInterval(refetch, 15000);
+    return () => { window.removeEventListener("focus", onFocus); window.clearInterval(t); };
+  }, [user, hasFullTempleAccess, refetch]);
 
   if (isOpenPath(pathname)) return <>{children}</>;
 
