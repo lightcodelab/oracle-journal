@@ -45,3 +45,8 @@
 - [x] Add the shared admin replacement control with upload and image-library choices
 - [x] Enable editing for Door artwork, primary banners, and content thumbnails
 - [x] Verify admin replacement controls, member-only presentation, and responsive layouts
+
+## Join page photo layout
+- [x] Show the whole photo with no trimming at any screen width
+- [x] Place Join The Temple and Create your Account side by side with the photo full width underneath
+- [x] Verify the photo is uncropped and the edit control works on phone, tablet and desktop widths
