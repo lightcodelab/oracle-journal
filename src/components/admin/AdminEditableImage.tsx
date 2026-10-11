@@ -150,7 +150,7 @@ export function AdminEditableImage({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onSelect={() => fileInputRef.current?.click()}>
+              <DropdownMenuItem onSelect={() => window.setTimeout(() => fileInputRef.current?.click(), 0)}>
                 <Upload className="mr-2 h-4 w-4" /> Upload replacement
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setLibraryOpen(true)}>
@@ -161,7 +161,7 @@ export function AdminEditableImage({
         </div>
       ) : null}
       {isAdmin ? (
-        <div onClick={stopInteraction} onPointerDown={(event) => event.stopPropagation()} className="contents">
+        <div onClick={(event) => event.stopPropagation()} onPointerDown={(event) => event.stopPropagation()} className="contents">
           <input
             ref={fileInputRef}
             type="file"
