@@ -84,7 +84,7 @@ export default function JoinTemple() {
             {features.map(feature => <li key={feature} className="flex items-start gap-3"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" /><span>{feature}</span></li>)}
           </ul>
         </div>
-        <div className="border-t border-border px-6 py-10 sm:px-10 md:border-l md:border-t-0 md:px-10 md:py-12">
+        <div className="border-t border-border px-6 py-10 sm:px-10 md:grid md:content-center md:border-l md:border-t-0 md:px-10 md:py-12">
           {loading || authLoading ? <Loader2 className="h-6 w-6 animate-spin text-primary" aria-label="Loading membership" /> : !available ? (
             <div><p className="text-sm text-muted-foreground">The $35 monthly offer is not currently available.</p><Button asChild variant="outline" className="mt-4"><Link to="/#membership">View current membership</Link></Button></div>
           ) : user ? (
