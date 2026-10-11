@@ -74,8 +74,8 @@ export default function JoinTemple() {
 
   return (
     <section className="dark-theme min-h-screen bg-background text-foreground">
-      <div className="grid min-h-screen grid-cols-1 md:grid-cols-3">
-        <div className="px-6 py-10 sm:px-10 md:px-6 md:py-12 lg:px-10">
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="px-6 py-10 sm:px-10 md:px-10 md:py-12">
           <p className="mb-3 text-sm text-primary-strong">THE TEMPLE of Sustainment</p>
           <h1 className="font-serif text-3xl leading-tight sm:text-4xl">Join THE TEMPLE</h1>
           <p className="mt-5 font-serif text-3xl">$35 AUD <span className="font-sans text-base text-muted-foreground">per month</span></p>
@@ -84,16 +84,16 @@ export default function JoinTemple() {
             {features.map(feature => <li key={feature} className="flex items-start gap-3"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" /><span>{feature}</span></li>)}
           </ul>
         </div>
-        <div className="border-t border-border px-6 py-10 sm:px-10 md:border-l md:border-t-0 md:px-6 md:py-12 lg:px-10">
+        <div className="border-t border-border px-6 py-10 sm:px-10 md:grid md:content-center md:border-l md:border-t-0 md:px-10 md:py-12">
           {loading || authLoading ? <Loader2 className="h-6 w-6 animate-spin text-primary" aria-label="Loading membership" /> : !available ? (
             <div><p className="text-sm text-muted-foreground">The $35 monthly offer is not currently available.</p><Button asChild variant="outline" className="mt-4"><Link to="/#membership">View current membership</Link></Button></div>
           ) : user ? (
             <><p className="mb-5 font-serif text-xl leading-snug">{wasManual ? "We are so happy you love The Temple so much and want to continue using it." : "Welcome back, we can't wait to see you inside The Temple."}</p><Button size="lg" className="w-full" disabled={checkingOut} onClick={checkout}>{checkingOut ? "Opening payment page…" : "Join The Temple"}</Button><p className="mt-3 text-center text-xs text-muted-foreground">Continue to secure payment with Stripe.</p></>
           ) : <Auth membershipSignup />}
         </div>
-        <div className="md:flex md:items-center">
-          <AdminEditableImage src={heroImage} imageKey="join-page-image" pencilAlwaysVisible alt="An open conservatory doorway overlooking a sunlit garden." fetchPriority="high" wrapperClassName="w-full" className="block h-auto w-full" />
-        </div>
+      </div>
+      <div className="border-t border-border">
+        <AdminEditableImage src={heroImage} imageKey="join-page-image" pencilAlwaysVisible alt="An open conservatory doorway overlooking a sunlit garden." fetchPriority="high" wrapperClassName="w-full" className="block h-auto w-full" />
       </div>
     </section>
   );
