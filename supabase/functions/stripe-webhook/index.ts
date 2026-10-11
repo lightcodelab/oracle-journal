@@ -393,6 +393,17 @@ async function handleSubscriptionChange(
   // ---------------------------------------------------------------
   try {
     const priceIdForIngest = subscription.items.data[0]?.price?.id ?? null;
+    // Yearly price IDs live in secrets; mirror them into app_settings so
+    // ingest_stripe_subscription can recognise the Founding yearly price.
+    for (const tier of ["founding", "standard"]) {
+      const v = Deno.env.get(`STRIPE_${tier.toUpperCase()}_YEARLY_PRICE_ID_${stripeEnv.toUpperCase()}`);
+      if (v) {
+        await supabaseAdmin.from("app_settings").upsert(
+          { key: `${tier}_yearly_price_id_${stripeEnv}`, value: v },
+          { onConflict: "key" },
+        );
+      }
+    }
     const { error: ingestError } = await supabaseAdmin.rpc(
       "ingest_stripe_subscription",
       {
@@ -415,6 +426,11 @@ async function handleSubscriptionChange(
       }
     );
     if (ingestError) console.error("ingest_stripe_subscription error:", ingestError);
+    else {
+      await supabaseAdmin.from("subscriptions")
+        .update({ cadence })
+        .eq("provider_subscription_id", subscription.id);
+    }
   } catch (e) {
     console.error("ingest_stripe_subscription threw:", e);
   }
