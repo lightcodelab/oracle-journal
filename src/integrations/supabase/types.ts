@@ -6758,6 +6758,7 @@ export type Database = {
           door: string | null
           event_type: string
           id: string
+          is_admin: boolean
           local_dow: number | null
           local_hour: number | null
           os: string | null
@@ -6778,6 +6779,7 @@ export type Database = {
           door?: string | null
           event_type?: string
           id?: string
+          is_admin?: boolean
           local_dow?: number | null
           local_hour?: number | null
           os?: string | null
@@ -6798,6 +6800,7 @@ export type Database = {
           door?: string | null
           event_type?: string
           id?: string
+          is_admin?: boolean
           local_dow?: number | null
           local_hour?: number | null
           os?: string | null
