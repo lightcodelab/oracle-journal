@@ -13,6 +13,7 @@ import { SacredSpreadsCard } from "@/components/temple/SacredSpreadsCard";
 import { MyRitualsCard } from "@/components/temple/MyRitualsCard";
 import { DevotionPracticesSection } from "@/components/temple/DevotionPracticesSection";
 import { AccessPlaylistCard } from "@/components/temple/AccessPlaylistCard";
+import { CelestialGuidanceSection } from "@/components/temple/CelestialGuidanceSection";
 import { BeginPractice } from "@/components/temple/BeginPractice";
 import { ExploreDoors } from "@/components/temple/ExploreDoors";
 import { ToolsForReturn } from "@/components/temple/ToolsForReturn";
@@ -293,6 +294,7 @@ const Temple = () => {
     rituals: <MyRitualsCard />,
     devotionPractices: <DevotionPracticesSection />,
     playlist: <AccessPlaylistCard />,
+    celestial: focus === "devotion" ? <CelestialGuidanceSection /> : <></>,
     living: isAdmin ? <LivingPatternCard /> : <></>,
     becoming: !focus || focus === "becoming" ? <BecomingJourneysStrip /> : <></>,
     recommended: <RecommendedSection enabled={hasFullAccess} />,
@@ -303,7 +305,7 @@ const Temple = () => {
   };
   const defaultOrder = ["practice", "cards", "rituals", "devotionPractices", "living", "becoming", "recommended", "seasonal", "tools", "live"];
   const lead: Record<TempleFocus, string[]> = {
-    devotion: ["devotionPractices", "rituals", "playlist"],
+    devotion: ["devotionPractices", "rituals", "playlist", "celestial"],
     remembrance: ["cards"],
     becoming: ["becoming", "tools"],
     communion: ["events", "live"],
