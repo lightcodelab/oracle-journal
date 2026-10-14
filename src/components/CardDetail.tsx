@@ -230,7 +230,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
           {/* Mini reading (replaces the full teaching, which lives in the Companion Course) */}
           {showMiniReading && (
             <>
-              <div className={`bg-card border border-border rounded-lg p-6 ${!getContent('card_details') ? 'pt-12' : ''}`}>
+              <div className={`border-t border-border ${!getContent('card_details') ? 'pt-12' : 'pt-8'}`}>
                 <h3 className="font-serif text-xl text-foreground mb-4">Your Reading</h3>
                 <FormattedContent content={miniReading!} className="text-foreground/90 font-sans leading-relaxed" />
               </div>
