@@ -438,15 +438,18 @@ const SacredSpreads = () => {
         )}
 
         {/* Spread reading */}
-        {activeSpread && showSpreadReading && hasFullAccess && (
-          <div className="flex justify-end max-w-6xl mx-auto mb-2">
-            <AddToRitualAction item={{ kind: 'spread', spreadType: activeSpread.id, name: activeSpread.name }} />
-          </div>
-        )}
         {activeSpread && showSpreadReading && (
           <SpreadReading
             spread={activeSpread}
             cards={spreadCards}
+            ritualAction={
+              hasFullAccess ? (
+                <AddToRitualAction
+                  className="h-10 font-sans"
+                  item={{ kind: 'spread', spreadType: activeSpread.id, name: activeSpread.name }}
+                />
+              ) : undefined
+            }
             onSelectCard={handleSelectSpreadCard}
             onBackToDecks={handleBackToSpreads}
             revealedPositions={spreadRevealedPositions}
