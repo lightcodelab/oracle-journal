@@ -249,7 +249,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
                   aria-expanded={deeperOpen}
                   onClick={() => setDeeperOpen((o) => !o)}
                 >
-                  {deeperOpen ? "Fold the Deeper Inquiries & Ritual" : "Unfold the Deeper Inquiries & Ritual"}
+                  {deeperOpen ? "Fold the Deeper Inquiries & Ritual" : "Click to Unfold the Deeper Inquiries & Ritual"}
                   <ChevronDown className={`w-4 h-4 ml-2 transition-transform ${deeperOpen ? "rotate-180" : ""}`} />
                 </Button>
                 {!deeperOpen && (
