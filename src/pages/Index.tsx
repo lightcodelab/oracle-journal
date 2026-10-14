@@ -163,6 +163,13 @@ const Index = () => {
         .maybeSingle();
 
       if (cancelled || error || !data) return;
+      try {
+        await loadCardImages([deck.card_back_url || getCardBackForDeck(deck.name), cardImageSrc(data.image_file_name)]);
+      } catch {
+        if (!cancelled) toast({ title: 'Your card image could not be loaded', description: 'Please try opening the card again.', variant: 'destructive' });
+        return;
+      }
+      if (cancelled) return;
       setSelectedDeck(deck);
       setHasPremiumAccess(true);
       setSelectedCard(data as OracleCard);
