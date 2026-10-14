@@ -284,3 +284,35 @@ All colors MUST be HSL.
   padding-top: 1.75rem;
   margin-top: 2.25rem;
 }
+
+/* Admin-only yellow flag on guided audio sections that are still placeholders */
+.admin-guided-audio-todo {
+  border: 2px dashed hsl(52 92% 50% / 0.85);
+  background: hsl(52 92% 50% / 0.16);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.admin-guided-audio-todo > :first-child {
+  margin-top: 0;
+}
+
+.admin-guided-audio-todo-label {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 9999px;
+  background: hsl(52 92% 55%);
+  color: hsl(30 30% 12%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.companion-lesson-content .admin-guided-audio-todo > :first-child {
+  border-top: none !important;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}

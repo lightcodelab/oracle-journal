@@ -7,6 +7,13 @@ import { motion } from "framer-motion";
 import { FormattedContent } from "./FormattedContent";
 import { VimeoEmbed } from "./VimeoEmbed";
 import ReflectionFooter from "@/components/temple/living/ReflectionFooter";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  GUIDED_AUDIO_TODO_CLASS,
+  GUIDED_AUDIO_TODO_LABEL,
+  GUIDED_AUDIO_TODO_LABEL_CLASS,
+  isGuidedAudioPlaceholder,
+} from "@/lib/guidedAudioTodo";
 import SaveReadingDialog from "./SaveReadingDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
@@ -74,6 +81,9 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
   const miniReading = getContent('mini_reading');
   const miniQuestion = getContent('mini_reflection_question');
   const showMiniReading = isSacredRewrite && !!miniReading;
+  const { isAdmin } = useAuth();
+  const guidedAudio = getContent('guided_audio_content');
+  const guidedAudioIsTodo = isGuidedAudioPlaceholder(guidedAudio);
 
   // Find the matching Companion Course lesson for this card (Sacred Rewrite only).
   useEffect(() => {
@@ -319,13 +329,16 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
                 </div>
               )}
 
-              {/* 7. Guided Audio */}
-              {getContent('guided_audio_content') && (
-                <div className="border-t border-border pt-8">
+              {/* 7. Guided Audio - hidden from members until a recording replaces the placeholder */}
+              {guidedAudio && !(guidedAudioIsTodo && !isAdmin) && (
+                <div className={guidedAudioIsTodo ? GUIDED_AUDIO_TODO_CLASS : "border-t border-border pt-8"}>
                   <h3 className="font-serif text-xl text-foreground mb-4">
                     {getContent('guided_audio_heading') || "Guided Audio Journey"}
                   </h3>
-                  <FormattedContent content={getContent('guided_audio_content')!} className="text-foreground/90 font-sans leading-relaxed" />
+                  <FormattedContent content={guidedAudio} className="text-foreground/90 font-sans leading-relaxed" />
+                  {guidedAudioIsTodo && (
+                    <p className={GUIDED_AUDIO_TODO_LABEL_CLASS}>{GUIDED_AUDIO_TODO_LABEL}</p>
+                  )}
                 </div>
               )}
 

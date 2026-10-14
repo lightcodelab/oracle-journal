@@ -15,6 +15,8 @@ import ReflectionFooter from '@/components/temple/living/ReflectionFooter';
 import CourseSessionNav from '@/components/CourseSessionNav';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import DOMPurify from 'dompurify';
+import { useAuth } from '@/hooks/useAuth';
+import { applyGuidedAudioTodoToHtml, applyGuidedAudioTodoToText } from '@/lib/guidedAudioTodo';
 import LessonFormRenderer from '@/components/lesson/LessonFormRenderer';
 import QuizEmbed from '@/components/quiz/QuizEmbed';
 
@@ -62,6 +64,7 @@ const safeDownloadFileName = (fileName: string) =>
 const DevotionLessonPage = () => {
   const navigate = useNavigate();
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
+  const { isAdmin } = useAuth();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [journalText, setJournalText] = useState('');
