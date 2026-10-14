@@ -161,7 +161,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
           {/* Card Content - always shown */}
           {getContent('card_content') && (
-            <div className="bg-card border border-border rounded-lg p-6">
+            <div className="border-t border-border pt-8">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-5 h-5 text-primary" />
                 <h3 className="font-serif text-xl text-foreground">Card Guidance</h3>
@@ -172,7 +172,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
           {/* Exercise - only show if not in Starter Collection */}
           {!showBasicOnly && getContent('exercise') && (
-            <div className="bg-card border border-border rounded-lg p-6">
+            <div className="border-t border-border pt-8">
               <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('exercise_heading') || "Exercise"}
               </h3>
@@ -192,7 +192,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
           {/* Teaching - always shown */}
           {getContent('teaching') && (
-            <div className="bg-card border border-border rounded-lg p-6">
+            <div className="border-t border-border pt-8">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-5 h-5 text-primary" />
                 <h3 className="font-serif text-xl text-foreground">Teaching</h3>
@@ -203,7 +203,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
           {/* Activity - only show if not in Starter Collection */}
           {!showBasicOnly && getContent('activity') && (
-            <div className="bg-card border border-border rounded-lg p-6">
+            <div className="border-t border-border pt-8">
               <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('activity_heading') || "Activity"}
               </h3>
@@ -218,7 +218,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         <>
           {/* 1. The Card */}
           {getContent('card_details') && (
-            <div className="bg-card border border-border rounded-lg p-6 pt-12">
+            <div className="border-t border-border pt-12">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-5 h-5 text-primary" />
                 <h3 className="font-serif text-xl text-foreground">The Card</h3>
@@ -236,7 +236,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
               </div>
 
               {miniQuestion && (
-                <div className="bg-card border border-border rounded-lg p-6">
+                <div className="border-t border-border pt-8">
                   <h3 className="font-serif text-xl text-foreground mb-3">Sit With This</h3>
                   <p className="text-foreground/90 font-sans italic leading-relaxed">{miniQuestion}</p>
                 </div>
@@ -268,7 +268,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
           {/* 2. Opening Invocation */}
           {(!showMiniReading || deeperOpen) && !showBasicOnly && getContent('opening_invocation_content') && (
-            <div className="bg-card border border-border rounded-lg p-6">
+            <div className="border-t border-border pt-8">
               <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('opening_invocation_heading') || "Opening Invocation"}
               </h3>
@@ -278,7 +278,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
           {/* 3. Spiral of Inquiry */}
           {(!showMiniReading || deeperOpen) && getContent('spiral_of_inquiry_content') && (
-            <div className="bg-card border border-border rounded-lg p-6">
+            <div className="border-t border-border pt-8">
               <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('spiral_of_inquiry_heading') || "Spiral of Inquiry"}
               </h3>
@@ -291,7 +291,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
             <>
               {/* 4. Acknowledgement */}
               {getContent('acknowledgement_content') && (
-                <div className="bg-card border border-border rounded-lg p-6">
+                <div className="border-t border-border pt-8">
                   <h3 className="font-serif text-xl text-foreground mb-4">
                     {getContent('acknowledgement_heading') || "Acknowledgement of Distortion as Protection"}
                   </h3>
@@ -301,7 +301,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
               {/* 5. Spiral of Seeing */}
               {getContent('spiral_of_seeing_content') && (
-                <div className="bg-card border border-border rounded-lg p-6">
+                <div className="border-t border-border pt-8">
                   <h3 className="font-serif text-xl text-foreground mb-4">
                     {getContent('spiral_of_seeing_heading') || "Spiral of Seeing"}
                   </h3>
@@ -311,7 +311,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
               {/* 6. Living Inquiry */}
               {getContent('living_inquiry_content') && (
-                <div className="bg-card border border-border rounded-lg p-6">
+                <div className="border-t border-border pt-8">
                   <h3 className="font-serif text-xl text-foreground mb-4">
                     {getContent('living_inquiry_heading') || "Living Inquiry"}
                   </h3>
@@ -321,7 +321,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
               {/* 7. Guided Audio */}
               {getContent('guided_audio_content') && (
-                <div className="bg-card border border-border rounded-lg p-6">
+                <div className="border-t border-border pt-8">
                   <h3 className="font-serif text-xl text-foreground mb-4">
                     {getContent('guided_audio_heading') || "Guided Audio Journey"}
                   </h3>
@@ -331,7 +331,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
               {/* 8. Premium Content - Embodiment Ritual */}
               {hasPremiumAccess && getContent('embodiment_ritual_content') && (
-                <div className="bg-card border border-primary/30 rounded-lg p-6">
+                <div className="border-t border-primary/40 pt-8">
                   <div className="flex items-center gap-2 mb-4">
                     <Sparkles className="w-5 h-5 text-primary animate-pulse" />
                     <h3 className="font-serif text-xl text-foreground">
@@ -344,7 +344,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
               {/* 9. Benediction */}
               {getContent('benediction_content') && (
-                <div className="bg-card border border-border rounded-lg p-6">
+                <div className="border-t border-border pt-8">
                   <h3 className="font-serif text-xl text-foreground mb-4">
                     {getContent('benediction_heading') || "Closing Benediction"}
                   </h3>
@@ -358,7 +358,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
       {/* Magic not Logic - Card Details */}
       {isMagicNotLogic && getContent('card_details') && (
-        <div className="bg-card border border-border rounded-lg p-6 pt-12">
+        <div className="border-t border-border pt-12">
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-primary" />
             <h3 className="font-serif text-xl text-foreground">The Card</h3>
@@ -371,7 +371,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         <>
           {/* Journalling Activity */}
           {getContent('journalling_activity') && (
-            <div className="bg-card border border-border rounded-lg p-6">
+            <div className="border-t border-border pt-8">
               <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('journalling_activity_heading') || "Journalling Activity"}
               </h3>
@@ -381,7 +381,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
           {/* Vimeo Video Section */}
           {getContent('vimeo_video') && (
-            <div className="bg-card border border-border rounded-lg p-6">
+            <div className="border-t border-border pt-8">
               <h3 className="font-serif text-xl text-foreground mb-4">
                 Clearing Video
               </h3>
@@ -396,7 +396,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
       {/* Custom sections added in the Card Deck Editor */}
       {customSections.map((section) => (
-        <div key={section.id} className="bg-card border border-border rounded-lg p-6">
+        <div key={section.id} className="border-t border-border pt-8">
           {section.title && (
             <h3 className="font-serif text-xl text-foreground mb-4">{section.title}</h3>
           )}
@@ -406,7 +406,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
       {/* Linked resources for deepening the experience */}
       {linkedResources.length > 0 && (
-        <div className="bg-card border border-border rounded-lg p-6">
+        <div className="border-t border-border pt-8">
           <h3 className="font-serif text-xl text-foreground mb-4">
             Linked Resources for deepening the experience
           </h3>
