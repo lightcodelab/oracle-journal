@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { OracleCard } from "@/data/oracleCards";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Sparkles, RefreshCw, Bookmark, ArrowRight } from "lucide-react";
+import { Sparkles, RefreshCw, Bookmark, ArrowRight, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { FormattedContent } from "./FormattedContent";
 import { VimeoEmbed } from "./VimeoEmbed";
@@ -26,6 +26,8 @@ interface CardDetailProps {
 export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isStarterDeck = false, deckId, hideActions = false }: CardDetailProps) => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [companionLessonPath, setCompanionLessonPath] = useState<string | null>(null);
+  const [deeperOpen, setDeeperOpen] = useState(false);
+  useEffect(() => { setDeeperOpen(false); }, [card.id]);
   const [linkedResources, setLinkedResources] = useState<LinkableResource[]>([]);
 
   // Linked resources chosen for this card in the Card Deck uploader
@@ -240,29 +242,42 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
                 </div>
               )}
 
-              <div className="flex justify-center">
-                <Button asChild variant="outline" className="font-sans">
-                  <Link to={companionLessonPath || '/remembrance/companion-courses'}>
-                    Go deeper in the Companion Course
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Link>
+              <div className="flex flex-col items-center gap-3">
+                <Button
+                  variant="outline"
+                  className="font-sans"
+                  aria-expanded={deeperOpen}
+                  onClick={() => setDeeperOpen((o) => !o)}
+                >
+                  {deeperOpen ? "Fold the Deeper Inquiries & Ritual" : "Unfold the Deeper Inquiries & Ritual"}
+                  <ChevronDown className={`w-4 h-4 ml-2 transition-transform ${deeperOpen ? "rotate-180" : ""}`} />
                 </Button>
+                {!deeperOpen && (
+                  <p className="text-sm text-muted-foreground font-sans">When you have time to sit with this card</p>
+                )}
+                <Link
+                  to={companionLessonPath || '/remembrance/companion-courses'}
+                  className="text-sm text-muted-foreground hover:text-primary font-sans inline-flex items-center"
+                >
+                  Or walk the full Companion Course
+                  <ArrowRight className="w-3 h-3 ml-1" />
+                </Link>
               </div>
             </>
           )}
 
-          {/* 2. Opening Invocation - only show if NOT in Starter Collection */}
-          {!showMiniReading && !showBasicOnly && getContent('opening_invocation_content') && (
+          {/* 2. Opening Invocation */}
+          {(!showMiniReading || deeperOpen) && !showBasicOnly && getContent('opening_invocation_content') && (
             <div className="bg-card border border-border rounded-lg p-6">
               <h3 className="font-serif text-xl text-foreground mb-4">
-                {getContent('opening_invocation_heading') || "Opening Invocation & Altar Ritual"}
+                {getContent('opening_invocation_heading') || "Opening Invocation"}
               </h3>
               <FormattedContent content={getContent('opening_invocation_content')!} className="text-foreground/90 font-sans leading-relaxed" />
             </div>
           )}
 
-          {/* 3. Spiral of Inquiry (always shown for basic version) */}
-          {!showMiniReading && getContent('spiral_of_inquiry_content') && (
+          {/* 3. Spiral of Inquiry */}
+          {(!showMiniReading || deeperOpen) && getContent('spiral_of_inquiry_content') && (
             <div className="bg-card border border-border rounded-lg p-6">
               <h3 className="font-serif text-xl text-foreground mb-4">
                 {getContent('spiral_of_inquiry_heading') || "Spiral of Inquiry"}
@@ -271,8 +286,8 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
             </div>
           )}
 
-          {/* Additional content - only shown if NOT in Starter Collection */}
-          {!showMiniReading && !showBasicOnly && (
+          {/* Additional deeper content */}
+          {(!showMiniReading || deeperOpen) && !showBasicOnly && (
             <>
               {/* 4. Acknowledgement */}
               {getContent('acknowledgement_content') && (
