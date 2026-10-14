@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,6 +36,7 @@ interface SpreadReadingProps {
   onRetryGeneration?: () => void;
   journalAnswers?: SpreadJournalAnswers;
   onJournalAnswerChange?: (key: keyof SpreadJournalAnswers, value: string) => void;
+  ritualAction?: ReactNode;
 }
 
 const getDeckBadgeClass = (deckName: string | null | undefined) => {
@@ -58,6 +60,7 @@ export const SpreadReading = ({
   onRetryGeneration,
   journalAnswers,
   onJournalAnswerChange,
+  ritualAction,
 }: SpreadReadingProps) => {
   const allRevealed = revealedPositions.length === spread.cardCount;
   const images = useCardImagesReady(cards.map((card) => cardImageSrc(card.image_file_name)));
@@ -80,7 +83,7 @@ export const SpreadReading = ({
       className="text-center space-y-8 max-w-5xl mx-auto min-h-[80vh] flex flex-col justify-center py-8"
     >
 
-      <div className="w-full flex justify-start">
+      <div className="w-full flex items-center justify-between gap-3">
         <Button
           variant="outline"
           onClick={onBackToDecks}
@@ -89,6 +92,7 @@ export const SpreadReading = ({
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Spreads
         </Button>
+        {ritualAction}
       </div>
 
       <div className="space-y-4">
