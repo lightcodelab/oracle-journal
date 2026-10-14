@@ -427,18 +427,6 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         </div>
       )}
 
-      {/* Reflection footer: staging Field Notes, otherwise generic Journal Notes */}
-
-      <ReflectionFooter
-        resourceFamily="card"
-        resourceId={card.id}
-        contextType="card"
-        contextId={card.id}
-        contextTitle={`${card.deck_name || 'Card'}: ${card.card_title}`}
-        placeholder="Reflect on what this card means to you..."
-        className="mt-8"
-      />
-
       {/* Action Buttons */}
       {!hideActions && (
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-border mt-8">
@@ -460,6 +448,18 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
           </Button>
         </div>
       )}
+
+      {/* Reflection footer: staging Field Notes, otherwise generic Journal Notes */}
+
+      <ReflectionFooter
+        resourceFamily="card"
+        resourceId={card.id}
+        contextType="card"
+        contextId={card.id}
+        contextTitle={`${card.deck_name || 'Card'}: ${card.card_title}`}
+        placeholder="Reflect on what this card means to you..."
+        className="mt-8"
+      />
 
       {/* Save Reading Dialog */}
       <SaveReadingDialog
