@@ -9,3 +9,4 @@
 - Lessons embed a Quiz Builder quiz with a `[[quiz:slug]]` marker in their text, rendered inline by QuizEmbed; why: admins can place quizzes in any lesson without new fields.
 - Intuition Builder Clairs, tracker slugs and quiz slug live in src/lib/intuitionClairs.ts and drive the Signs & Signals dashboard on My Tracking; why: one source for which trackers count toward each Clair.
 - Site analytics: privacy-first events table + admin_site_analytics aggregate RPC; admin views show group patterns only (avatar groups need 3+ members); why: member insight without exposing individuals.
+- Not-yet-recorded guided audio sections are hidden from members and shown to admins as a yellow to-do flag; the placeholder detection and hide/flag rules live in src/lib/guidedAudioTodo.ts, used by CardDetail and DevotionLessonPage; why: one source of the rule for both cards and lessons, and real content replaces the placeholder without code changes.

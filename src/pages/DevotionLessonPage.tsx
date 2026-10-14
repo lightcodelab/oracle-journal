@@ -15,6 +15,8 @@ import ReflectionFooter from '@/components/temple/living/ReflectionFooter';
 import CourseSessionNav from '@/components/CourseSessionNav';
 import AddToPlaylistDialog from '@/components/AddToPlaylistDialog';
 import DOMPurify from 'dompurify';
+import { useAuth } from '@/hooks/useAuth';
+import { applyGuidedAudioTodoToHtml, applyGuidedAudioTodoToText } from '@/lib/guidedAudioTodo';
 import LessonFormRenderer from '@/components/lesson/LessonFormRenderer';
 import QuizEmbed from '@/components/quiz/QuizEmbed';
 
@@ -62,6 +64,7 @@ const safeDownloadFileName = (fileName: string) =>
 const DevotionLessonPage = () => {
   const navigate = useNavigate();
   const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
+  const { isAdmin } = useAuth();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [journalText, setJournalText] = useState('');
@@ -577,6 +580,7 @@ const DevotionLessonPage = () => {
               <div 
                 className={`text-foreground/90 font-sans leading-relaxed ProseMirror${isDeepeningCourse ? ' companion-lesson-content' : ''}`}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(
+                  applyGuidedAudioTodoToHtml(
                   (() => {
                     // Render TipTap JSON to HTML (simplified)
                     try {
@@ -611,14 +615,14 @@ const DevotionLessonPage = () => {
                         }
                       };
                       return stripQuizMarkers(renderNode(lesson.body_richtext));
-                    } catch { return stripQuizMarkers(lesson.content || ''); }
-                  })()
+                    } catch { return applyGuidedAudioTodoToText(stripQuizMarkers(lesson.content || ''), isAdmin); }
+                  })(), isAdmin)
                 ) }}
               />
             ) : (
               <div 
                 className={`text-foreground/90 font-sans leading-relaxed whitespace-pre-wrap${isDeepeningCourse ? ' companion-lesson-content' : ''}`}
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(stripQuizMarkers(lesson.content || '')) }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(applyGuidedAudioTodoToText(stripQuizMarkers(lesson.content || ''), isAdmin)) }}
               />
             )}
             {embeddedQuizSlug && <QuizEmbed slug={embeddedQuizSlug} />}
