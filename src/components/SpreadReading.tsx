@@ -7,6 +7,7 @@ import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
 import { cardImageSrc } from "@/lib/cardImage";
+import { useCardImagesReady } from "@/hooks/useCardImagesReady";
 
 export type SpreadJournalAnswers = {
   asking_to_be_seen: string;
@@ -59,6 +60,17 @@ export const SpreadReading = ({
   onJournalAnswerChange,
 }: SpreadReadingProps) => {
   const allRevealed = revealedPositions.length === spread.cardCount;
+  const images = useCardImagesReady(cards.map((card) => cardImageSrc(card.image_file_name)));
+
+  if (!images.ready) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center gap-4" role="status" aria-busy={!images.error}>
+        <p className="font-serif text-2xl text-foreground/80">{images.error || 'Preparing your cards…'}</p>
+        {images.error && <Button variant="outline" onClick={images.retry}><RefreshCw className="w-4 h-4" />Try again</Button>}
+        <Button variant="ghost" onClick={onBackToDecks}><ArrowLeft className="w-4 h-4" />Back to Spreads</Button>
+      </div>
+    );
+  }
 
   return (
     <motion.div

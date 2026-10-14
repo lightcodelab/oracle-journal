@@ -1,5 +1,7 @@
 # Project Architecture Rules
 
+- Card draws preload and decode required artwork through loadCardImages before mounting the animation; animation completion, not a timer, unlocks reveal so slow images cannot race the draw.
+
 - The simple membership signup reuses the existing Auth form and server-selected monthly Stripe checkout; why: one account-creation flow and no client-supplied payment prices.
 
 - Keep the four member Doors aligned to their distinct purposes: Remembrance for cards, Devotion for rites and healing practices, Becoming for personal-development courses, and Communion for community; this keeps navigation consistent with member focus choices.

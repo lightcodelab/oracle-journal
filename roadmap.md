@@ -1,5 +1,10 @@
 # Roadmap
 
+## Smooth card drawing
+- [x] Replace the erratic shuffle with a centered rotation and gentle settled motion
+- [x] Wait for card backs and selected faces to load and decode before animation
+- [x] Verify delayed images, reveal, repeat draws and reduced motion
+
 ## Simple membership signup
 - [x] Create a banner-only signup page with membership features and monthly pricing
 - [x] Connect the form to the existing account creation and Stripe monthly checkout
