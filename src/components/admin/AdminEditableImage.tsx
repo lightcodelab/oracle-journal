@@ -34,32 +34,40 @@ export function AdminEditableImage({
   pencilAlwaysVisible,
   className,
   alt = '',
+  onLoad,
   ...imageProps
 }: AdminEditableImageProps) {
   const { isAdmin } = useAuth();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [currentSrc, setCurrentSrc] = useState(src);
+  const [resolvedIdentity, setResolvedIdentity] = useState('');
+  const [loadedSrc, setLoadedSrc] = useState('');
+  const identity = JSON.stringify([imageKey, src]);
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => setCurrentSrc(src), [src]);
-
   useEffect(() => {
-    if (!imageKey) return;
     let active = true;
+    if (!imageKey) {
+      setCurrentSrc(src);
+      setResolvedIdentity(identity);
+      return;
+    }
     void supabase
       .from('site_images')
       .select('image_url')
       .eq('image_key', imageKey)
       .maybeSingle()
       .then(({ data }) => {
-        if (active && data?.image_url) setCurrentSrc(data.image_url);
+        if (!active) return;
+        setCurrentSrc(data?.image_url || src);
+        setResolvedIdentity(identity);
       });
     return () => {
       active = false;
     };
-  }, [imageKey]);
+  }, [imageKey, src, identity]);
 
   const save = async (url: string) => {
     const previous = currentSrc;
@@ -123,7 +131,18 @@ export function AdminEditableImage({
 
   return (
     <div className={cn('group/admin-image relative', wrapperClassName)}>
-      <img src={currentSrc} alt={alt} className={className} {...imageProps} />
+      <img
+        src={resolvedIdentity === identity ? currentSrc : undefined}
+        alt={alt}
+        className={cn(className, (resolvedIdentity !== identity || loadedSrc !== currentSrc) && 'invisible')}
+        {...imageProps}
+        onLoad={(event) => {
+          const image = event.currentTarget;
+          const source = image.getAttribute('src') || '';
+          void image.decode().then(() => setLoadedSrc(source)).catch(() => setLoadedSrc(source));
+          onLoad?.(event);
+        }}
+      />
       {isAdmin && (imageKey || onSave) ? (
         <div
           className={cn(
