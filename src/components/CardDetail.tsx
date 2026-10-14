@@ -257,7 +257,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
                 )}
                 <Link
                   to={companionLessonPath || '/remembrance/companion-courses'}
-                  className="text-sm text-muted-foreground hover:text-primary font-sans inline-flex items-center"
+                  className="text-sm text-muted-foreground hover:text-primary font-sans inline-flex items-center underline underline-offset-4"
                 >
                   Or access all of the cards and walk the full Companion Course
                   <ArrowRight className="w-3 h-3 ml-1" />
