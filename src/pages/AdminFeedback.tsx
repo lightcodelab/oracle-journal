@@ -24,7 +24,7 @@ type Row = Record<string, string | null> & { id: string; user_id: string; create
 const fmt = (d: string) => new Date(d).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 
 const AdminFeedback = () => {
-  const { isAdmin, loading } = useAuth() as { isAdmin: boolean; loading?: boolean };
+  const { isAdmin, rolesLoading } = useAuth();
   const navigate = useNavigate();
   const [experiences, setExperiences] = useState<Row[]>([]);
   const [bugs, setBugs] = useState<Row[]>([]);
@@ -47,10 +47,10 @@ const AdminFeedback = () => {
   };
 
   useEffect(() => {
-    if (loading) return;
+    if (rolesLoading) return;
     if (!isAdmin) { navigate('/admin'); return; }
     load();
-  }, [isAdmin, loading]);
+  }, [isAdmin, rolesLoading]);
 
   const setStatus = async (id: string, status: string) => {
     await supabase.from('bug_reports').update({ status, updated_at: new Date().toISOString() } as never).eq('id', id);

@@ -5,7 +5,7 @@ import { Sparkles } from "lucide-react";
 
 const CELESTIAL_DECK_NAMES = [
   "The Art of Self-Healing",
-  "AreekeerA Energy Medicine",
+  "AreekeerA", // exact deck name (displayed on the card as AreekeerA Energy Medicine)
 ];
 
 interface DeckOption {
