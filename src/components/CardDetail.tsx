@@ -253,7 +253,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
                   <ChevronDown className={`w-4 h-4 ml-2 transition-transform ${deeperOpen ? "rotate-180" : ""}`} />
                 </Button>
                 {!deeperOpen && (
-                  <p className="text-sm text-muted-foreground font-sans italic">When you have time to sit with this card</p>
+                  <p className="text-sm text-muted-foreground font-sans italic">Do this when you have time to sit with this card</p>
                 )}
                 <Link
                   to={companionLessonPath || '/remembrance/companion-courses'}
