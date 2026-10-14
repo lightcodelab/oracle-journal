@@ -244,7 +244,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
 
               <div className="flex flex-col items-center gap-3">
                 <Button
-                  variant="outline"
+                  variant="default"
                   className="font-sans"
                   aria-expanded={deeperOpen}
                   onClick={() => setDeeperOpen((o) => !o)}
