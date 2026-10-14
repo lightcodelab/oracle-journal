@@ -1,9 +1,9 @@
 # Roadmap
 
 ## Smooth card drawing
-- [ ] Replace the erratic shuffle with a centered rotation and gentle settled motion
-- [ ] Wait for card backs and selected faces to load and decode before animation
-- [ ] Verify delayed images, reveal, repeat draws and reduced motion
+- [x] Replace the erratic shuffle with a centered rotation and gentle settled motion
+- [x] Wait for card backs and selected faces to load and decode before animation
+- [x] Verify delayed images, reveal, repeat draws and reduced motion
 
 ## Simple membership signup
 - [x] Create a banner-only signup page with membership features and monthly pricing
