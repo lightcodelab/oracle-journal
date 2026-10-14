@@ -1,4 +1,6 @@
 const loadedImages = new Map<string, Promise<void>>();
+// Keep decoded images referenced so the browser does not discard them before the draw mounts.
+const retainedImages = new Map<string, HTMLImageElement>();
 
 /** Resolve only once an image is downloaded and decoded, never on an error. */
 export const loadCardImages = (sources: (string | null | undefined)[]) =>
@@ -10,6 +12,7 @@ export const loadCardImages = (sources: (string | null | undefined)[]) =>
       image.onload = async () => {
         try {
           await image.decode();
+          retainedImages.set(src, image);
           resolve();
         } catch {
           reject(new Error('A card image could not be loaded. Please try again.'));
