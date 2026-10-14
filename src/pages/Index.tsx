@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { AddToRitualAction } from "@/components/rituals/AddToRitualButton";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { OracleCardComponent } from "@/components/OracleCardComponent";
+import { cardImageSrc } from "@/lib/cardImage";
+import { loadCardImages } from "@/lib/loadCardImages";
 import { CardDetail } from "@/components/CardDetail";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
 
@@ -54,6 +55,9 @@ const Index = () => {
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
   const [selectedCard, setSelectedCard] = useState<OracleCard | null>(null);
   const [isShuffling, setIsShuffling] = useState(false);
+  const [isPreparing, setIsPreparing] = useState(false);
+  const drawRequestRef = useRef(0);
+  useEffect(() => () => { drawRequestRef.current += 1; }, []);
   const [showCard, setShowCard] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
   const [hasPremiumAccess, setHasPremiumAccess] = useState(true);
@@ -196,10 +200,11 @@ const Index = () => {
   };
 
   const handleShuffle = async () => {
-    if (!selectedDeck || !user) return;
+    if (!selectedDeck || !user || isPreparing || isShuffling) return;
+    const request = ++drawRequestRef.current;
 
     if (resumeCardId || resumeDeckId) setSearchParams({}, { replace: true });
-    setIsShuffling(true);
+    setIsPreparing(true);
     setShowCard(false);
     setIsRevealed(false);
 
@@ -218,13 +223,13 @@ const Index = () => {
           description: "No cards found in this deck",
           variant: "destructive",
         });
-        setIsShuffling(false);
+        setIsPreparing(false);
         return;
       }
 
-      setTimeout(async () => {
-        const randomCard = cards[Math.floor(Math.random() * cards.length)];
-        setSelectedCard(randomCard as OracleCard);
+      const randomCard = cards[Math.floor(Math.random() * cards.length)];
+      await loadCardImages([getCardBackImage(), cardImageSrc(randomCard.image_file_name)]);
+      if (request !== drawRequestRef.current) return;
 
         // Record the draw
         await supabase.from('card_draws').insert({
@@ -234,10 +239,12 @@ const Index = () => {
         });
         await linkDrawToRitual(selectedDeck.id, randomCard.id);
 
-        setIsShuffling(false);
-        setShowCard(true);
-      }, 1500);
+      if (request !== drawRequestRef.current) return;
+      setSelectedCard(randomCard as OracleCard);
+      setIsPreparing(false);
+      setIsShuffling(true);
     } catch (error) {
+      if (request !== drawRequestRef.current) return;
       console.error('Error drawing card:', error);
       toast({
         title: "Error",
@@ -245,11 +252,14 @@ const Index = () => {
         variant: "destructive",
       });
       setIsShuffling(false);
+      setIsPreparing(false);
     }
   };
 
   const handleSelectCardNumber = async (cardNumber: number) => {
-    if (!selectedDeck || !user) return;
+    if (!selectedDeck || !user || isPreparing || isShuffling) return;
+    const request = ++drawRequestRef.current;
+    setIsPreparing(true);
 
     setShowCard(false);
     setIsRevealed(false);
@@ -267,6 +277,7 @@ const Index = () => {
       if (error) throw error;
 
       if (!card) {
+        setIsPreparing(false);
         toast({
           title: "Card Not Found",
           description: `Card number ${cardNumber} not found in this deck`,
@@ -275,6 +286,8 @@ const Index = () => {
         return;
       }
 
+      await loadCardImages([getCardBackImage(), cardImageSrc(card.image_file_name)]);
+      if (request !== drawRequestRef.current) return;
       setSelectedCard(card as OracleCard);
 
       // Record the draw
@@ -285,8 +298,12 @@ const Index = () => {
       });
       await linkDrawToRitual(selectedDeck.id, card.id);
 
+      if (request !== drawRequestRef.current) return;
+      setIsPreparing(false);
       setShowCard(true);
     } catch (error) {
+      if (request !== drawRequestRef.current) return;
+      setIsPreparing(false);
       console.error('Error selecting card:', error);
       toast({
         title: "Error",
@@ -307,6 +324,9 @@ const Index = () => {
   };
 
   const handleBackToDecks = () => {
+    drawRequestRef.current += 1;
+    setIsPreparing(false);
+    setIsShuffling(false);
     setSelectedDeck(null);
     setShowCard(false);
     setIsRevealed(false);
@@ -419,7 +439,7 @@ const Index = () => {
         )}
 
         {/* Regular deck UI */}
-        {selectedDeck && !showCard && !isShuffling && (
+        {selectedDeck && !showCard && !isShuffling && !isPreparing && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -500,36 +520,21 @@ const Index = () => {
           </motion.div>
         )}
 
-        {isShuffling && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="min-h-[80vh] flex justify-center items-center"
-          >
-            <ShuffleAnimation cardBackImage={getCardBackImage()} />
-          </motion.div>
+        {isPreparing && (
+          <div className="min-h-[80vh] flex justify-center items-center" role="status" aria-busy="true">
+            <p className="font-serif text-2xl text-foreground/80">Preparing your card…</p>
+          </div>
         )}
 
-        {showCard && selectedCard && !isRevealed && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="min-h-[80vh] flex flex-col justify-center items-center space-y-4"
-          >
-            {/* Breadcrumb handles navigation now */}
-
-            <h2 className="font-serif text-4xl text-foreground pt-6">
-              Your Card Awaits
-            </h2>
-            <OracleCardComponent
-              card={selectedCard}
-              isRevealed={isRevealed}
-              onClick={handleReveal}
+        {(isShuffling || showCard) && selectedCard && !isRevealed && !isPreparing && (
+          <div className="min-h-[80vh] flex justify-center items-center">
+            <ShuffleAnimation
+              key={selectedCard.id}
               cardBackImage={getCardBackImage()}
+              onComplete={() => { setIsShuffling(false); setShowCard(true); }}
+              onReveal={handleReveal}
             />
-            <p className="text-foreground/70 text-lg">Click the card to reveal</p>
-          </motion.div>
+          </div>
         )}
 
         {isRevealed && selectedCard && (
