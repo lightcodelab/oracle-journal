@@ -25,7 +25,7 @@ function useRecentlyAdded(enabled: boolean) {
         supabase
           .from("content_resources")
           .select(
-            "id, title, description, image_url, slug, is_course, created_at, location:content_categories!location_id(page)",
+            "id, title, summary, thumbnail_url, slug, is_course, created_at, location:content_categories!location_id(page)",
           )
           .eq("status", "published")
           .gte("created_at", since)
@@ -52,8 +52,8 @@ function useRecentlyAdded(enabled: boolean) {
           id: `res-${r.id}`,
           kind: (r as { is_course?: boolean }).is_course ? "Course" : "Practice",
           title: r.title as string,
-          description: (r.description as string | null) ?? null,
-          image_url: (r.image_url as string | null) ?? null,
+          description: (r.summary as string | null) ?? null,
+          image_url: (r.thumbnail_url as string | null) ?? null,
           href,
           created_at: r.created_at as string,
         });
