@@ -29,6 +29,7 @@ import { ScheduledAccess } from "@/components/temple/ScheduledAccess";
 import { WelcomeFocusDialog } from "@/components/temple/WelcomeFocusDialog";
 import { BecomingJourneysStrip } from "@/components/temple/BecomingJourneysStrip";
 import { FocusDoorBanner } from "@/components/temple/FocusDoorBanner";
+import { RecentlyAddedSection } from "@/components/temple/RecentlyAddedSection";
 import { TempleFocus, isTempleFocus } from "@/lib/templeFocus";
 
 /** Wrapper that only mounts recommendation queries once member access is resolved. */
@@ -299,11 +300,12 @@ const Temple = () => {
     becoming: !focus || focus === "becoming" ? <BecomingJourneysStrip /> : <></>,
     recommended: <RecommendedSection enabled={hasFullAccess} />,
     seasonal: <SeasonalSection enabled={hasFullAccess} />,
+    recent: <RecentlyAddedSection enabled={hasFullAccess} />,
     tools: <ToolsForReturn />,
     live: <LiveAndSupport enabled={hasFullAccess} />,
     events: focus === "communion" ? <CommunionEventsCalendar enabled={hasFullAccess} /> : <></>,
   };
-  const defaultOrder = ["practice", "cards", "rituals", "devotionPractices", "living", "becoming", "recommended", "seasonal", "tools", "live"];
+  const defaultOrder = ["practice", "cards", "rituals", "devotionPractices", "living", "becoming", "recent", "recommended", "seasonal", "tools", "live"];
   const lead: Record<TempleFocus, string[]> = {
     devotion: ["devotionPractices", "rituals", "playlist", "celestial"],
     remembrance: ["cards"],
