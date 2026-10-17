@@ -188,13 +188,12 @@ export function RecentlyAddedSection({ enabled }: { enabled: boolean }) {
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {tagged.map((item) => (
-          <Link
+          <Card
             key={item.id}
-            to={item.href}
-            className="group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+            className="h-full overflow-hidden bg-card/70 border-border/60 hover:border-primary/40 transition-colors"
           >
-            <Card className="h-full overflow-hidden bg-card/70 border-border/60 group-hover:border-primary/40 transition-colors">
-              {item.image_url && (
+            {item.image_url && (
+              <Link to={item.href} aria-label={item.title}>
                 <img
                   src={item.image_url}
                   alt=""
@@ -202,20 +201,28 @@ export function RecentlyAddedSection({ enabled }: { enabled: boolean }) {
                   className="w-full h-40 object-cover"
                   loading="lazy"
                 />
-              )}
-              <CardContent className="p-4">
-                <p className="text-xs uppercase tracking-wide text-primary mb-1">
-                  New tag: {item.tagName}
-                </p>
-                <h3 className="font-serif text-lg text-foreground">{item.title}</h3>
+              </Link>
+            )}
+            <CardContent className="p-4">
+              <Link
+                to={`/search?q=${encodeURIComponent(item.tagName)}`}
+                className="inline-block text-xs uppercase tracking-wide text-primary mb-2 px-2 py-1 rounded border border-primary/40 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                New tag: {item.tagName}
+              </Link>
+              <Link
+                to={item.href}
+                className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+              >
+                <h3 className="font-serif text-lg text-foreground hover:text-primary transition-colors">{item.title}</h3>
                 {item.summary && (
                   <p className="text-sm text-muted-foreground mt-1 line-clamp-3">
                     {item.summary}
                   </p>
                 )}
-              </CardContent>
-            </Card>
-          </Link>
+              </Link>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </section>
