@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tag } from "lucide-react";
+import { useNewlyTagged } from "@/hooks/useNewlyTagged";
 
 interface RecentItem {
   id: string;
@@ -11,22 +14,6 @@ interface RecentItem {
   image_url: string | null;
   href: string;
   created_at: string;
-}
-
-interface TaggedItem {
-  id: string;
-  tagName: string;
-  title: string;
-  summary: string | null;
-  image_url: string | null;
-  href: string;
-  created_at: string;
-}
-
-function resourceHref(r: { slug: string | null; is_course?: boolean; location?: { page?: string } | null }): string | null {
-  const page = r.location?.page;
-  if (!r.slug || (page !== "devotion" && page !== "remembrance" && page !== "becoming")) return null;
-  return r.is_course ? `/${page}/courses/${r.slug}` : `/${page}/resources/${r.slug}`;
 }
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
@@ -92,50 +79,6 @@ function useRecentlyAdded(enabled: boolean) {
   });
 }
 
-function useNewlyTagged(enabled: boolean) {
-  return useQuery<TaggedItem[]>({
-    queryKey: ["newly-tagged"],
-    enabled,
-    queryFn: async () => {
-      const since = new Date(Date.now() - SEVEN_DAYS_MS).toISOString();
-      const { data, error } = await supabase
-        .from("content_resource_tag_assignments")
-        .select(
-          "created_at, tag:resource_tags!tag_id(name), resource:content_resources!resource_id(id, title, summary, thumbnail_url, slug, is_course, status, location:content_categories!location_id(page))",
-        )
-        .gte("created_at", since)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-
-      const seen = new Set<string>();
-      const items: TaggedItem[] = [];
-      for (const row of data || []) {
-        const r = row.resource as {
-          id: string; title: string; summary: string | null; thumbnail_url: string | null;
-          slug: string | null; is_course?: boolean; status: string;
-          location?: { page?: string } | null;
-        } | null;
-        if (!r || r.status !== "published" || seen.has(r.id)) continue;
-        const href = resourceHref(r);
-        if (!href) continue;
-        seen.add(r.id);
-        items.push({
-          id: `tag-${r.id}`,
-          tagName: (row.tag as { name?: string } | null)?.name ?? "New tag",
-          title: r.title,
-          summary: r.summary,
-          image_url: r.thumbnail_url,
-          href,
-          created_at: row.created_at as string,
-        });
-      }
-      return items;
-    },
-    staleTime: 60_000,
-    retry: 1,
-  });
-}
-
 export function RecentlyAddedSection({ enabled }: { enabled: boolean }) {
   const { data } = useRecentlyAdded(enabled);
   const { data: tagged } = useNewlyTagged(enabled);
@@ -186,43 +129,14 @@ export function RecentlyAddedSection({ enabled }: { enabled: boolean }) {
       <h2 id="newly-tagged-heading" className="font-serif text-2xl text-foreground mb-3">
         Newly tagged
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="flex flex-wrap gap-3">
         {tagged.map((item) => (
-          <Card
-            key={item.id}
-            className="h-full overflow-hidden bg-card/70 border-border/60 hover:border-primary/40 transition-colors"
-          >
-            {item.image_url && (
-              <Link to={item.href} aria-label={item.title}>
-                <img
-                  src={item.image_url}
-                  alt=""
-                  aria-hidden
-                  className="w-full h-40 object-cover"
-                  loading="lazy"
-                />
-              </Link>
-            )}
-            <CardContent className="p-4">
-              <Link
-                to={`/search?q=${encodeURIComponent(item.tagName)}`}
-                className="inline-block text-xs uppercase tracking-wide text-primary mb-2 px-2 py-1 rounded border border-primary/40 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                New tag: {item.tagName}
-              </Link>
-              <Link
-                to={item.href}
-                className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
-              >
-                <h3 className="font-serif text-lg text-foreground hover:text-primary transition-colors">{item.title}</h3>
-                {item.summary && (
-                  <p className="text-sm text-muted-foreground mt-1 line-clamp-3">
-                    {item.summary}
-                  </p>
-                )}
-              </Link>
-            </CardContent>
-          </Card>
+          <Button key={item.name.toLocaleLowerCase()} asChild variant="outline" className="text-primary border-primary/40">
+            <Link to={item.href}>
+              <Tag className="h-4 w-4 shrink-0" aria-hidden="true" />
+              {item.name}
+            </Link>
+          </Button>
         ))}
       </div>
     </section>
