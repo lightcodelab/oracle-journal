@@ -305,7 +305,7 @@ const Temple = () => {
     live: <LiveAndSupport enabled={hasFullAccess} />,
     events: focus === "communion" ? <CommunionEventsCalendar enabled={hasFullAccess} /> : <></>,
   };
-  const defaultOrder = ["practice", "cards", "rituals", "devotionPractices", "living", "becoming", "recommended", "seasonal", "tools", "live"];
+  const defaultOrder = ["practice", "cards", "rituals", "devotionPractices", "living", "becoming", "recent", "recommended", "seasonal", "tools", "live"];
   const lead: Record<TempleFocus, string[]> = {
     devotion: ["devotionPractices", "rituals", "playlist", "celestial"],
     remembrance: ["cards"],
