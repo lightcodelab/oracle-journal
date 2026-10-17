@@ -13,6 +13,22 @@ interface RecentItem {
   created_at: string;
 }
 
+interface TaggedItem {
+  id: string;
+  tagName: string;
+  title: string;
+  summary: string | null;
+  image_url: string | null;
+  href: string;
+  created_at: string;
+}
+
+function resourceHref(r: { slug: string | null; is_course?: boolean; location?: { page?: string } | null }): string | null {
+  const page = r.location?.page;
+  if (!r.slug || (page !== "devotion" && page !== "remembrance" && page !== "becoming")) return null;
+  return r.is_course ? `/${page}/courses/${r.slug}` : `/${page}/resources/${r.slug}`;
+}
+
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 function useRecentlyAdded(enabled: boolean) {
