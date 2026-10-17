@@ -1,5 +1,9 @@
 # Roadmap
 
+## Newly tagged discovery
+- [ ] Include newly created and newly assigned tags from all available tag catalogues
+- [ ] Verify Gastro appears and opens its search results
+
 ## Smooth card drawing
 - [x] Replace the erratic shuffle with a centered rotation and gentle settled motion
 - [x] Wait for card backs and selected faces to load and decode before animation
