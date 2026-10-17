@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Newly tagged discovery
-- [x] Include newly created tags from all available catalogues and newly assigned tags wherever assignment dates exist
+- [x] Include only newly created tags from all available catalogues; exclude assignment activity
 - [x] Verify Gastro appears and opens its search results
 
 ## Smooth card drawing
