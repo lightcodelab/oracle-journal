@@ -81,11 +81,8 @@ function useRecentlyAdded(enabled: boolean) {
 
 export function RecentlyAddedSection({ enabled }: { enabled: boolean }) {
   const { data } = useRecentlyAdded(enabled);
-  const { data: tagged } = useNewlyTagged(enabled);
-  if ((!data || data.length === 0) && (!tagged || tagged.length === 0)) return null;
+  if (!data || data.length === 0) return null;
   return (
-    <>
-      {data && data.length > 0 && (
     <section aria-labelledby="recently-added-heading" className="mb-12">
       <h2 id="recently-added-heading" className="font-serif text-2xl text-foreground mb-3">
         Recently added
@@ -123,15 +120,25 @@ export function RecentlyAddedSection({ enabled }: { enabled: boolean }) {
         ))}
       </div>
     </section>
-      )}
-      {tagged && tagged.length > 0 && (
+  );
+}
+
+export function NewlyTaggedSection({ enabled }: { enabled: boolean }) {
+  const { data: tagged } = useNewlyTagged(enabled);
+  if (!tagged || tagged.length === 0) return null;
+  return (
     <section aria-labelledby="newly-tagged-heading" className="mb-12">
       <h2 id="newly-tagged-heading" className="font-serif text-2xl text-foreground mb-3">
         Newly tagged
       </h2>
       <div className="flex flex-wrap gap-3">
         {tagged.map((item) => (
-          <Button key={item.name.toLocaleLowerCase()} asChild variant="outline" className="text-primary border-primary/40">
+          <Button
+            key={item.name.toLocaleLowerCase()}
+            asChild
+            variant="outline"
+            className="text-primary border-primary/40"
+          >
             <Link to={item.href}>
               <Tag className="h-4 w-4 shrink-0" aria-hidden="true" />
               {item.name}
@@ -140,7 +147,5 @@ export function RecentlyAddedSection({ enabled }: { enabled: boolean }) {
         ))}
       </div>
     </section>
-      )}
-    </>
   );
 }
