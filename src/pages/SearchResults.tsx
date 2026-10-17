@@ -166,6 +166,31 @@ const SearchResults = () => {
         .select('id')
         .or(nameFilter);
 
+      // Resolve both shared tag catalogues so every new tag link can find its resources.
+      const [courseTags, resourceTags] = await Promise.all([
+        supabase.from('course_tags').select('id').or(nameFilter),
+        supabase.from('resource_tags').select('id').or(nameFilter),
+      ]);
+      const [contentTags, healingTags] = await Promise.all([
+        courseTags.data?.length
+          ? supabase.from('content_resource_tag_assignments').select('resource_id').in('tag_id', courseTags.data.map(t => t.id))
+          : Promise.resolve({ data: [] }),
+        resourceTags.data?.length
+          ? supabase.from('resource_tag_assignments').select('resource_id').in('tag_id', resourceTags.data.map(t => t.id))
+          : Promise.resolve({ data: [] }),
+      ]);
+      const contentTagIds = new Set((contentTags.data || []).map(t => t.resource_id));
+      const extraContentIds = [...contentTagIds].filter(id => !(contentData || []).some(r => r.id === id));
+      const { data: taggedContent } = extraContentIds.length
+        ? await supabase.from('content_resources').select(`
+          id, title, slug, summary, thumbnail_url,
+          main_media_kind, main_media_file_url, main_media_embed_url,
+          is_course, status,
+          resource_type:content_categories!content_resources_resource_type_id_fkey(id, name, slug),
+          location:content_categories!content_resources_location_id_fkey(id, page)
+        `).eq('status', 'published').in('id', extraContentIds)
+        : { data: [] };
+
       // Collect resource IDs from title/summary matches
       const directHealingIds = new Set((healingData || []).map((r: any) => r.id));
 
@@ -192,7 +217,10 @@ const SearchResults = () => {
       }
 
       // Combine tag-matched IDs that aren't already in direct results
-      const tagResourceIds = [...new Set([...symptomResourceIds, ...conditionResourceIds])];
+      const tagResourceIds = [...new Set([
+        ...symptomResourceIds, ...conditionResourceIds,
+        ...(healingTags.data || []).map(t => t.resource_id),
+      ])];
       const tagMatchedIds = new Set(tagResourceIds);
       const extraTagIds = tagResourceIds.filter(id => !directHealingIds.has(id));
 
@@ -254,7 +282,7 @@ const SearchResults = () => {
         });
       }
 
-      for (const r of contentData || []) {
+      for (const r of [...(contentData || []), ...(taggedContent || [])]) {
         const resource: SearchResult = {
           id: r.id,
           title: r.title,
@@ -273,7 +301,7 @@ const SearchResults = () => {
         };
         mixed.push({
           type: 'resource',
-          rank: clientRank(r.title, r.summary, terms, false),
+          rank: clientRank(r.title, r.summary, terms, contentTagIds.has(r.id)),
           score: 0,
           resource,
         });
