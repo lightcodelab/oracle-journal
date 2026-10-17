@@ -180,5 +180,46 @@ export function RecentlyAddedSection({ enabled }: { enabled: boolean }) {
         ))}
       </div>
     </section>
+      )}
+      {tagged && tagged.length > 0 && (
+    <section aria-labelledby="newly-tagged-heading" className="mb-12">
+      <h2 id="newly-tagged-heading" className="font-serif text-2xl text-foreground mb-3">
+        Newly tagged
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {tagged.map((item) => (
+          <Link
+            key={item.id}
+            to={item.href}
+            className="group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+          >
+            <Card className="h-full overflow-hidden bg-card/70 border-border/60 group-hover:border-primary/40 transition-colors">
+              {item.image_url && (
+                <img
+                  src={item.image_url}
+                  alt=""
+                  aria-hidden
+                  className="w-full h-40 object-cover"
+                  loading="lazy"
+                />
+              )}
+              <CardContent className="p-4">
+                <p className="text-xs uppercase tracking-wide text-primary mb-1">
+                  New tag: {item.tagName}
+                </p>
+                <h3 className="font-serif text-lg text-foreground">{item.title}</h3>
+                {item.summary && (
+                  <p className="text-sm text-muted-foreground mt-1 line-clamp-3">
+                    {item.summary}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
+    </section>
+      )}
+    </>
   );
 }
