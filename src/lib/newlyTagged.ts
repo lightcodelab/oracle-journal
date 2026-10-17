@@ -5,7 +5,7 @@ export interface TagActivity {
   created_at: string;
 }
 
-/** One search link per name, including creation and later assignment activity. */
+/** One search link per name, using catalogue creation timestamps only. */
 export function collectNewTags(activity: TagActivity[], now = Date.now()) {
   const tags = new Map<string, TagActivity>();
   for (const item of activity) {

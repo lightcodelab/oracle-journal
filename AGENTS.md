@@ -1,6 +1,6 @@
 # Project Architecture Rules
 
-- Newly tagged discovery merges creation timestamps from all four tag catalogues and available dated assignments through useNewlyTagged; global search resolves both shared tag catalogues as well as symptoms and conditions so every tag link can find published resources.
+- Newly tagged discovery reads creation timestamps only from all four tag catalogues through useNewlyTagged, never assignment timestamps; why: applying an existing tag must not count as creating a new tag. Global search resolves both shared tag catalogues as well as symptoms and conditions so every tag link can find published resources.
 
 - Card draws preload and decode required artwork through loadCardImages before mounting the animation; animation completion, not a timer, unlocks reveal so slow images cannot race the draw.
 

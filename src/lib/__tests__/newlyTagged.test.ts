@@ -13,7 +13,12 @@ describe("newly tagged discovery", () => {
       { name: "Expired", created_at: "2026-10-10T05:02:59Z" },
     ], now).map(tag => tag.name)).toEqual(["Included"]);
   });
-  it("includes newly assigned old tags and merges names across catalogues", () => {
+  it("excludes existing tags created more than seven days ago", () => {
+    expect(collectNewTags([
+      { name: "Lilac Light", created_at: "2026-08-01T00:00:00Z" },
+    ], now)).toEqual([]);
+  });
+  it("merges newly created tag names across catalogues", () => {
     expect(collectNewTags([
       { name: "Lilac Light", created_at: "2026-08-01T00:00:00Z" },
       { name: "Lilac Light", created_at: "2026-10-13T21:10:10Z" },
