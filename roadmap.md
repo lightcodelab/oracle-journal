@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Newly tagged discovery
-- [ ] Include newly created and newly assigned tags from all available tag catalogues
-- [ ] Verify Gastro appears and opens its search results
+- [x] Include newly created tags from all available catalogues and newly assigned tags wherever assignment dates exist
+- [x] Verify Gastro appears and opens its search results
 
 ## Smooth card drawing
 - [x] Replace the erratic shuffle with a centered rotation and gentle settled motion
