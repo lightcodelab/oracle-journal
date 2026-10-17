@@ -92,10 +92,57 @@ function useRecentlyAdded(enabled: boolean) {
   });
 }
 
+function useNewlyTagged(enabled: boolean) {
+  return useQuery<TaggedItem[]>({
+    queryKey: ["newly-tagged"],
+    enabled,
+    queryFn: async () => {
+      const since = new Date(Date.now() - SEVEN_DAYS_MS).toISOString();
+      const { data, error } = await supabase
+        .from("content_resource_tag_assignments")
+        .select(
+          "created_at, tag:resource_tags!tag_id(name), resource:content_resources!resource_id(id, title, summary, thumbnail_url, slug, is_course, status, location:content_categories!location_id(page))",
+        )
+        .gte("created_at", since)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+
+      const seen = new Set<string>();
+      const items: TaggedItem[] = [];
+      for (const row of data || []) {
+        const r = row.resource as {
+          id: string; title: string; summary: string | null; thumbnail_url: string | null;
+          slug: string | null; is_course?: boolean; status: string;
+          location?: { page?: string } | null;
+        } | null;
+        if (!r || r.status !== "published" || seen.has(r.id)) continue;
+        const href = resourceHref(r);
+        if (!href) continue;
+        seen.add(r.id);
+        items.push({
+          id: `tag-${r.id}`,
+          tagName: (row.tag as { name?: string } | null)?.name ?? "New tag",
+          title: r.title,
+          summary: r.summary,
+          image_url: r.thumbnail_url,
+          href,
+          created_at: row.created_at as string,
+        });
+      }
+      return items;
+    },
+    staleTime: 60_000,
+    retry: 1,
+  });
+}
+
 export function RecentlyAddedSection({ enabled }: { enabled: boolean }) {
   const { data } = useRecentlyAdded(enabled);
-  if (!data || data.length === 0) return null;
+  const { data: tagged } = useNewlyTagged(enabled);
+  if ((!data || data.length === 0) && (!tagged || tagged.length === 0)) return null;
   return (
+    <>
+      {data && data.length > 0 && (
     <section aria-labelledby="recently-added-heading" className="mb-12">
       <h2 id="recently-added-heading" className="font-serif text-2xl text-foreground mb-3">
         Recently added
