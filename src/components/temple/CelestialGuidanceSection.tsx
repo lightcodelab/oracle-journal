@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Sparkles } from "lucide-react";
 
-const CELESTIAL_DECK_NAMES = [
-  "The Art of Self-Healing",
-  "AreekeerA", // exact deck name (displayed on the card as AreekeerA Energy Medicine)
+// Matched by deck id so renaming a deck never hides it from this section.
+const CELESTIAL_DECK_IDS = [
+  "2f12b093-0e8d-4f3c-a25e-b31900ff40f6", // The Art of Self-Healing
+  "7ac3ad44-85b6-4e5e-96bf-d69044b54274", // AreekeerA Energy Medicine
 ];
 
 interface DeckOption {
@@ -29,7 +30,7 @@ export function CelestialGuidanceSection() {
       const { data } = await supabase
         .from("decks")
         .select("id, name, thumbnail_url")
-        .in("name", CELESTIAL_DECK_NAMES)
+        .in("id", CELESTIAL_DECK_IDS)
         .eq("is_published", true)
         .order("display_order");
       if (cancelled) return;
