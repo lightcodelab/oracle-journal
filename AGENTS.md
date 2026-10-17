@@ -1,5 +1,7 @@
 # Project Architecture Rules
 
+- Newly tagged discovery merges creation timestamps from all four tag catalogues and available dated assignments through useNewlyTagged; global search resolves both shared tag catalogues as well as symptoms and conditions so every tag link can find published resources.
+
 - Card draws preload and decode required artwork through loadCardImages before mounting the animation; animation completion, not a timer, unlocks reveal so slow images cannot race the draw.
 
 - The simple membership signup reuses the existing Auth form and server-selected monthly Stripe checkout; why: one account-creation flow and no client-supplied payment prices.
