@@ -102,7 +102,7 @@ export default function JoinTemple() {
             {/* Brand mark: the temple archway with the Temple name set as a wordmark */}
             <div className="mb-6 flex items-center gap-3">
               <ArchIcon className="h-7 w-7 shrink-0 text-primary sm:h-8 sm:w-8" aria-hidden="true" />
-              <span className="font-serif text-base leading-none tracking-[0.16em] text-on-image sm:text-xl">
+              <span className="font-palatino text-base leading-none tracking-[0.16em] text-on-image sm:text-xl">
                 THE TEMPLE of Sustainment
               </span>
             </div>
