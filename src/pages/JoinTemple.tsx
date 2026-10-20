@@ -20,6 +20,11 @@ const features = [
   "DOOR OF COMMUNION:\n- Live Gatherings\n- Live Readings\n- Live Meditation Classes\n- Open Office Hours if you need guided support or recommendations\n- Connection with likeminded people on the same journey\n",
 ];
 
+const introText = `THE TEMPLE of Sustainment is a quiet, sacred space for your self-discovery.
+A place to listen to your intuition, reconnect with what your body and soul already know, and come home to yourself.
+And it is also practical: healing practices for the days that feel heavy, rituals to steady your energy, courses and tracking tools to help you change what you want to be different in your daily life.
+Whether you are just beginning to listen inward or have been walking this path for years, The Temple meets you where you are and walks beside you as you boldly step into who you are becoming.`;
+
 export default function JoinTemple() {
   const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
