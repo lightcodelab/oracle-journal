@@ -88,7 +88,6 @@ export default function JoinTemple() {
           imageKey="join-page-image"
           pencilAlwaysVisible
           alt="An open conservatory doorway overlooking a sunlit garden."
-          fetchPriority="high"
           wrapperClassName="absolute inset-0 h-full w-full"
           className="h-full w-full object-cover object-left md:object-center"
         />
