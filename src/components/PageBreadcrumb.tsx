@@ -48,22 +48,25 @@ const PageBreadcrumb = ({ items, showHome = true }: PageBreadcrumbProps) => {
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
         const isClickable = !isLast && (item.href || item.onClick);
+        // On pages that skip the Temple home crumb, the first crumb is the Door:
+        // phones have no room for both it and the page name, so it keeps its full width.
+        const isLead = index === 0 && !showHome;
         
         return (
           <div
             key={index}
-            className={`${isLast || (index === 0 && !showHome) ? 'flex' : 'hidden sm:flex'} min-w-0 items-center gap-1 sm:gap-1.5`}
+            className={`${isLast || isLead ? 'flex' : 'hidden sm:flex'} min-w-0 items-center gap-1 sm:gap-1.5`}
           >
-            {!(!showHome && index === 0) && (
+            {!isLead && (
               <ChevronRight className="w-3.5 h-3.5 shrink-0 text-muted-foreground/50" />
             )}
             {isClickable ? (
               <button
                 onClick={() => handleClick(item)}
-                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors truncate max-w-[140px] sm:max-w-[200px]"
+                className={`flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors truncate max-w-[140px] sm:max-w-[200px] ${isLead ? 'shrink-0' : ''}`}
                 title={item.label}
               >
-                {item.icon && <item.icon className="w-3.5 h-3.5 shrink-0" />}
+                {item.icon && <item.icon className={`w-3.5 h-3.5 shrink-0 ${isLead ? 'hidden sm:block' : ''}`} />}
                 {item.shortLabel ? (
                   <>
                     <span className="sm:hidden">{item.shortLabel}</span>
