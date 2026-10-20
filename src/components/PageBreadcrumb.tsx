@@ -10,9 +10,11 @@ export interface BreadcrumbItem {
 
 interface PageBreadcrumbProps {
   items: BreadcrumbItem[];
+  /** Hide the leading Temple home crumb on pages whose trail starts at a Door. */
+  showHome?: boolean;
 }
 
-const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
+const PageBreadcrumb = ({ items, showHome = true }: PageBreadcrumbProps) => {
   const navigate = useNavigate();
 
   const handleClick = (item: BreadcrumbItem) => {
@@ -29,14 +31,16 @@ const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
       className="flex min-w-0 flex-1 items-center gap-1 overflow-hidden text-sm sm:gap-1.5"
     >
       {/* Home - Temple */}
-      <button
-        onClick={() => navigate('/temple')}
-        className="flex shrink-0 items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-        aria-label="Go to Temple"
-      >
-        <Home className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">Temple</span>
-      </button>
+      {showHome && (
+        <button
+          onClick={() => navigate('/temple')}
+          className="flex shrink-0 items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Go to Temple"
+        >
+          <Home className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Temple</span>
+        </button>
+      )}
 
       {/* Breadcrumb items */}
       {items.map((item, index) => {
@@ -46,9 +50,11 @@ const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
         return (
           <div
             key={index}
-            className={`${isLast ? 'flex' : 'hidden sm:flex'} min-w-0 items-center gap-1 sm:gap-1.5`}
+            className={`${isLast || (index === 0 && !showHome) ? 'flex' : 'hidden sm:flex'} min-w-0 items-center gap-1 sm:gap-1.5`}
           >
-            <ChevronRight className="w-3.5 h-3.5 shrink-0 text-muted-foreground/50" />
+            {!(!showHome && index === 0) && (
+              <ChevronRight className="w-3.5 h-3.5 shrink-0 text-muted-foreground/50" />
+            )}
             {isClickable ? (
               <button
                 onClick={() => handleClick(item)}
