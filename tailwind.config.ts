@@ -63,6 +63,7 @@ export default {
       },
       fontFamily: {
         'serif': ['"IM Fell English"', 'Georgia', 'serif'],
+        'palatino': ['Palatino', '"Palatino Linotype"', '"Book Antiqua"', '"Iowan Old Style"', '"URW Palladio L"', 'Georgia', 'serif'],
         'sans': ['Inter', 'sans-serif'],
       },
       borderRadius: {
