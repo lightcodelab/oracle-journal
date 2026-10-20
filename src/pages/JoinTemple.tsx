@@ -81,7 +81,7 @@ export default function JoinTemple() {
           <p className="mt-5 font-serif text-3xl">$35 AUD <span className="font-sans text-base text-muted-foreground">per month</span></p>
           <p className="mt-2 text-sm text-muted-foreground">Monthly membership. Full Temple access.</p>
           <ul className="mt-7 space-y-3 text-sm leading-relaxed">
-            {features.map(feature => <li key={feature} className="flex items-start gap-3"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" /><span className="whitespace-pre-line">{feature}</span></li>)}
+            {features.map(feature => <li key={feature} className="flex items-start gap-3"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" /><span className="whitespace-pre-line">{feature.trimEnd()}</span></li>)}
           </ul>
         </div>
         <div className="border-t border-border px-6 py-10 sm:px-10 md:grid md:content-center md:border-l md:border-t-0 md:px-10 md:py-12">
