@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ArchIcon } from "@/components/icons/ArchIcon";
 import { Link } from "react-router-dom";
 import { Check, Loader2 } from "lucide-react";
 import Auth from "./Auth";
@@ -99,6 +100,13 @@ export default function JoinTemple() {
         <div className="absolute inset-0 hidden bg-gradient-to-l from-image-overlay/95 via-image-overlay/70 to-transparent md:block" />
         <div className="relative mx-auto flex min-h-[26rem] w-full max-w-6xl items-end px-6 py-14 sm:px-10 md:min-h-[30rem] md:items-center md:justify-end md:py-16">
           <div className="max-w-xl md:ml-auto">
+            {/* Brand mark: the temple archway with the Temple name set as a wordmark */}
+            <div className="mb-6 flex items-center gap-3">
+              <ArchIcon className="h-7 w-7 shrink-0 text-primary sm:h-8 sm:w-8" aria-hidden="true" />
+              <span className="font-serif text-base leading-none tracking-[0.16em] text-on-image sm:text-xl">
+                THE TEMPLE of Sustainment
+              </span>
+            </div>
             <h2 className="font-serif text-2xl leading-snug text-on-image sm:text-3xl">
               A sanctuary for the part of you that knows there is more
             </h2>
