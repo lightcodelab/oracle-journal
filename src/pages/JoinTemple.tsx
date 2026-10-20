@@ -106,7 +106,7 @@ export default function JoinTemple() {
                 THE TEMPLE of Sustainment
               </span>
             </div>
-            <h2 className="font-serif text-2xl leading-snug text-on-image sm:text-3xl">
+            <h2 className="font-palatino text-2xl leading-snug text-on-image sm:text-3xl">
               A sanctuary for the part of you that knows there is more
             </h2>
             <p className="mt-4 whitespace-pre-line text-base leading-relaxed text-on-image/90">{introText}</p>
@@ -116,8 +116,8 @@ export default function JoinTemple() {
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="px-6 py-10 sm:px-10 md:px-10 md:py-12">
           <p className="mb-3 text-sm text-primary-strong">THE TEMPLE of Sustainment</p>
-          <h1 className="font-serif text-3xl leading-tight sm:text-4xl">Join THE TEMPLE</h1>
-          <p className="mt-5 font-serif text-3xl">$35 AUD <span className="font-sans text-base text-muted-foreground">per month</span></p>
+          <h1 className="font-palatino text-3xl leading-tight sm:text-4xl">Join THE TEMPLE</h1>
+          <p className="mt-5 font-palatino text-3xl">$35 AUD <span className="font-sans text-base text-muted-foreground">per month</span></p>
           <p className="mt-2 text-sm text-muted-foreground">Monthly membership. Full Temple access.</p>
           <ul className="mt-7 space-y-3 text-sm leading-relaxed">
             {features.filter(Boolean).map(feature => (
@@ -142,7 +142,7 @@ export default function JoinTemple() {
             {loading || authLoading ? <Loader2 className="h-6 w-6 animate-spin text-primary" aria-label="Loading membership" /> : !available ? (
               <div><p className="text-sm text-muted-foreground">The $35 monthly offer is not currently available.</p><Button asChild variant="outline" className="mt-4"><Link to="/#membership">View current membership</Link></Button></div>
             ) : user ? (
-              <><p className="mb-5 font-serif text-xl leading-snug">{wasManual ? "We are so happy you love The Temple so much and want to continue using it." : "Welcome back, we can't wait to see you inside The Temple."}</p><Button size="lg" className="w-full" disabled={checkingOut} onClick={checkout}>{checkingOut ? "Opening payment page…" : "Join The Temple"}</Button><p className="mt-3 text-center text-xs text-muted-foreground">Continue to secure payment with Stripe.</p></>
+              <><p className="mb-5 font-palatino text-xl leading-snug">{wasManual ? "We are so happy you love The Temple so much and want to continue using it." : "Welcome back, we can't wait to see you inside The Temple."}</p><Button size="lg" className="w-full" disabled={checkingOut} onClick={checkout}>{checkingOut ? "Opening payment page…" : "Join The Temple"}</Button><p className="mt-3 text-center text-xs text-muted-foreground">Continue to secure payment with Stripe.</p></>
             ) : <Auth membershipSignup />}
           </div>
         </div>
