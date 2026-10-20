@@ -76,7 +76,9 @@ export default function JoinTemple() {
     <section className="light-theme min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-3xl px-6 pt-10 sm:px-10 md:pt-14">
         <h2 className="font-serif text-2xl leading-snug sm:text-3xl">A sanctuary for the part of you that knows there is more</h2>
-        <p className="mt-4 text-base leading-relaxed text-foreground/90">
+        <p className="mt-4 whitespace-pre-line text-center text-base leading-relaxed text-foreground/90">
+          {introText}
+        </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="px-6 py-10 sm:px-10 md:px-10 md:py-12">
