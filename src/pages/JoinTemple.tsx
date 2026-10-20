@@ -79,11 +79,32 @@ export default function JoinTemple() {
 
   return (
     <section className="light-theme min-h-screen bg-background text-foreground">
-      <div className="mx-auto max-w-3xl px-6 pt-10 sm:px-10 md:pt-14">
-        <h2 className="font-serif text-2xl leading-snug sm:text-3xl">A sanctuary for the part of you that knows there is more</h2>
-        <p className="mt-4 whitespace-pre-line text-center text-base leading-relaxed text-foreground/90">
-          {introText}
-        </p>
+      {/* Banner: the doorway image sits behind the words. The woman is seated at
+          the left of the frame, so the words hold the right and the scrim deepens
+          toward them, leaving her in clean, unscrimmed light. */}
+      <div className="relative isolate overflow-hidden border-b border-border">
+        <AdminEditableImage
+          src={heroImage}
+          imageKey="join-page-image"
+          pencilAlwaysVisible
+          alt="An open conservatory doorway overlooking a sunlit garden."
+          wrapperClassName="absolute inset-0 h-full w-full"
+          className="h-full w-full object-cover object-left md:object-center"
+        />
+        {/* Phone: the crop keeps the woman in frame, so the scrim runs deep from
+            the bottom where the words sit and lifts off above her. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-image-overlay/95 via-image-overlay/72 to-image-overlay/35 md:hidden" />
+        {/* Desktop: she sits at the left, so the deep scrim runs in from the right
+            and lifts off before it reaches her. */}
+        <div className="absolute inset-0 hidden bg-gradient-to-l from-image-overlay/95 via-image-overlay/70 to-transparent md:block" />
+        <div className="relative mx-auto flex min-h-[26rem] w-full max-w-6xl items-end px-6 py-14 sm:px-10 md:min-h-[30rem] md:items-center md:justify-end md:py-16">
+          <div className="max-w-xl md:ml-auto">
+            <h2 className="font-serif text-2xl leading-snug text-on-image sm:text-3xl">
+              A sanctuary for the part of you that knows there is more
+            </h2>
+            <p className="mt-4 whitespace-pre-line text-base leading-relaxed text-on-image/90">{introText}</p>
+          </div>
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="px-6 py-10 sm:px-10 md:px-10 md:py-12">
@@ -116,9 +137,6 @@ export default function JoinTemple() {
             <><p className="mb-5 font-serif text-xl leading-snug">{wasManual ? "We are so happy you love The Temple so much and want to continue using it." : "Welcome back, we can't wait to see you inside The Temple."}</p><Button size="lg" className="w-full" disabled={checkingOut} onClick={checkout}>{checkingOut ? "Opening payment page…" : "Join The Temple"}</Button><p className="mt-3 text-center text-xs text-muted-foreground">Continue to secure payment with Stripe.</p></>
           ) : <Auth membershipSignup />}
         </div>
-      </div>
-      <div className="border-t border-border">
-        <AdminEditableImage src={heroImage} imageKey="join-page-image" pencilAlwaysVisible alt="An open conservatory doorway overlooking a sunlit garden." fetchPriority="high" wrapperClassName="w-full" className="block h-auto w-full" />
       </div>
     </section>
   );
