@@ -79,8 +79,9 @@ export default function JoinTemple() {
 
   return (
     <section className="light-theme min-h-screen bg-background text-foreground">
-      {/* Banner: the doorway image sits behind the words. The scrim is heaviest
-          where the text sits and clears toward the woman so she stays visible. */}
+      {/* Banner: the doorway image sits behind the words. The woman is seated at
+          the left of the frame, so the words hold the right and the scrim deepens
+          toward them, leaving her in clean, unscrimmed light. */}
       <div className="relative isolate overflow-hidden border-b border-border">
         <AdminEditableImage
           src={heroImage}
@@ -89,16 +90,16 @@ export default function JoinTemple() {
           alt="An open conservatory doorway overlooking a sunlit garden."
           fetchPriority="high"
           wrapperClassName="absolute inset-0 h-full w-full"
-          className="h-full w-full object-cover object-right md:object-center"
+          className="h-full w-full object-cover object-left md:object-center"
         />
         {/* Phone: the crop keeps the woman in frame, so the scrim runs deep from
             the bottom where the words sit and lifts off above her. */}
         <div className="absolute inset-0 bg-gradient-to-t from-image-overlay/95 via-image-overlay/80 to-image-overlay/45 md:hidden" />
-        {/* Desktop: the frame opens to the right, so the words keep a deep scrim
-            on the left and the woman stands in clean, unscrimmed light. */}
-        <div className="absolute inset-0 hidden bg-gradient-to-r from-image-overlay/95 via-image-overlay/55 to-transparent md:block" />
-        <div className="relative mx-auto flex min-h-[26rem] w-full max-w-6xl items-end px-6 py-14 sm:px-10 md:min-h-[30rem] md:items-center md:py-16">
-          <div className="max-w-xl">
+        {/* Desktop: she sits at the left, so the deep scrim runs in from the right
+            and lifts off before it reaches her. */}
+        <div className="absolute inset-0 hidden bg-gradient-to-l from-image-overlay/95 via-image-overlay/70 to-transparent md:block" />
+        <div className="relative mx-auto flex min-h-[26rem] w-full max-w-6xl items-end px-6 py-14 sm:px-10 md:min-h-[30rem] md:items-center md:justify-end md:py-16">
+          <div className="max-w-xl md:ml-auto">
             <h2 className="font-serif text-2xl leading-snug text-on-image sm:text-3xl">
               A sanctuary for the part of you that knows there is more
             </h2>
