@@ -66,6 +66,11 @@ let prevPath: string | null = null;
 async function send(row: Record<string, unknown>) {
   try {
     const { data } = await supabase.auth.getSession();
+    const uid = data.session?.user.id;
+    if (uid) {
+      const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: uid, _role: "admin" } as never);
+      if (isAdmin) return; // never record admin activity
+    }
     const now = new Date();
     const { device, os, browser } = deviceInfo();
     await supabase.from("site_analytics_events").insert({
