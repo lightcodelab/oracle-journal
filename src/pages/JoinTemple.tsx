@@ -74,6 +74,12 @@ export default function JoinTemple() {
 
   return (
     <section className="light-theme min-h-screen bg-background text-foreground">
+      <div className="mx-auto max-w-3xl px-6 pt-10 sm:px-10 md:pt-14">
+        <h2 className="font-serif text-2xl leading-snug sm:text-3xl">A sanctuary for the part of you that knows there is more</h2>
+        <p className="mt-4 text-base leading-relaxed text-foreground/90">
+          THE TEMPLE of Sustainment is a quiet, sacred space for your self-discovery — a place to listen to your intuition, reconnect with what your body and soul already know, and come home to yourself. And it is also practical: healing practices for the days that feel heavy, rituals to steady your energy, courses and tracking tools to help you change what you want to be different in your daily life. Whether you are just beginning to listen inward or have been walking this path for years, The Temple meets you where you are and walks beside you as you become who you are becoming.
+        </p>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="px-6 py-10 sm:px-10 md:px-10 md:py-12">
           <p className="mb-3 text-sm text-primary-strong">THE TEMPLE of Sustainment</p>
