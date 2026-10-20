@@ -3,6 +3,8 @@ import { Home, ChevronRight, LucideIcon } from 'lucide-react';
 
 export interface BreadcrumbItem {
   label: string;
+  /** Narrower label used on phone screens where the full one would be clipped. */
+  shortLabel?: string;
   href?: string;
   onClick?: () => void;
   icon?: LucideIcon;
@@ -10,9 +12,11 @@ export interface BreadcrumbItem {
 
 interface PageBreadcrumbProps {
   items: BreadcrumbItem[];
+  /** Hide the leading Temple home crumb on pages whose trail starts at a Door. */
+  showHome?: boolean;
 }
 
-const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
+const PageBreadcrumb = ({ items, showHome = true }: PageBreadcrumbProps) => {
   const navigate = useNavigate();
 
   const handleClick = (item: BreadcrumbItem) => {
@@ -29,34 +33,46 @@ const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
       className="flex min-w-0 flex-1 items-center gap-1 overflow-hidden text-sm sm:gap-1.5"
     >
       {/* Home - Temple */}
-      <button
-        onClick={() => navigate('/temple')}
-        className="flex shrink-0 items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-        aria-label="Go to Temple"
-      >
-        <Home className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">Temple</span>
-      </button>
+      {showHome && (
+        <button
+          onClick={() => navigate('/temple')}
+          className="flex shrink-0 items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Go to Temple"
+        >
+          <Home className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Temple</span>
+        </button>
+      )}
 
       {/* Breadcrumb items */}
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
         const isClickable = !isLast && (item.href || item.onClick);
+        // On pages that skip the Temple home crumb, the first crumb is the Door:
+        // phones have no room for both it and the page name, so it keeps its full width.
+        const isLead = index === 0 && !showHome;
         
         return (
           <div
             key={index}
-            className={`${isLast ? 'flex' : 'hidden sm:flex'} min-w-0 items-center gap-1 sm:gap-1.5`}
+            className={`${isLast || isLead ? 'flex' : 'hidden sm:flex'} min-w-0 items-center gap-1 sm:gap-1.5`}
           >
-            <ChevronRight className="w-3.5 h-3.5 shrink-0 text-muted-foreground/50" />
+            {!isLead && (
+              <ChevronRight className="w-3.5 h-3.5 shrink-0 text-muted-foreground/50" />
+            )}
             {isClickable ? (
               <button
                 onClick={() => handleClick(item)}
-                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors truncate max-w-[140px] sm:max-w-[200px]"
+                className={`flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors truncate max-w-[140px] sm:max-w-[200px] ${isLead ? 'shrink-0' : ''}`}
                 title={item.label}
               >
-                {item.icon && <item.icon className="w-3.5 h-3.5 shrink-0" />}
-                {item.label}
+                {item.icon && <item.icon className={`w-3.5 h-3.5 shrink-0 ${isLead ? 'hidden sm:block' : ''}`} />}
+                {item.shortLabel ? (
+                  <>
+                    <span className="sm:hidden">{item.shortLabel}</span>
+                    <span className="hidden sm:inline">{item.label}</span>
+                  </>
+                ) : item.label}
               </button>
             ) : (
               <span 
@@ -64,7 +80,12 @@ const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => {
                 title={item.label}
               >
                 {item.icon && <item.icon className="w-3.5 h-3.5 shrink-0" />}
-                {item.label}
+                {item.shortLabel ? (
+                  <>
+                    <span className="sm:hidden">{item.shortLabel}</span>
+                    <span className="hidden sm:inline">{item.label}</span>
+                  </>
+                ) : item.label}
               </span>
             )}
           </div>

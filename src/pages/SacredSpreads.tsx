@@ -365,12 +365,12 @@ const SacredSpreads = () => {
 
   const breadcrumbItems = activeSpread
     ? [
-        { label: 'The Door of Remembrance', onClick: () => navigate('/remembrance'), icon: DoorOpen },
+        { label: 'The Door of Remembrance', shortLabel: 'Remembrance', onClick: () => navigate('/remembrance'), icon: DoorOpen },
         { label: 'Sacred Spreads', onClick: handleBackToSpreads },
         { label: activeSpread.name }
       ]
     : [
-        { label: 'The Door of Remembrance', onClick: () => navigate('/remembrance'), icon: DoorOpen },
+        { label: 'The Door of Remembrance', shortLabel: 'Remembrance', onClick: () => navigate('/remembrance'), icon: DoorOpen },
         { label: 'Sacred Spreads' }
       ];
 
@@ -383,7 +383,7 @@ const SacredSpreads = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background" />
 
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
-        <PageBreadcrumb items={breadcrumbItems} />
+        <PageBreadcrumb items={breadcrumbItems} showHome={false} />
         <ProfileDropdown />
       </div>
 
