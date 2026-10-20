@@ -94,7 +94,7 @@ export default function JoinTemple() {
         />
         {/* Phone: the crop keeps the woman in frame, so the scrim runs deep from
             the bottom where the words sit and lifts off above her. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-image-overlay/95 via-image-overlay/80 to-image-overlay/45 md:hidden" />
+        <div className="absolute inset-0 bg-gradient-to-t from-image-overlay/95 via-image-overlay/72 to-image-overlay/35 md:hidden" />
         {/* Desktop: she sits at the left, so the deep scrim runs in from the right
             and lifts off before it reaches her. */}
         <div className="absolute inset-0 hidden bg-gradient-to-l from-image-overlay/95 via-image-overlay/70 to-transparent md:block" />
