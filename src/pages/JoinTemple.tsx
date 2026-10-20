@@ -89,9 +89,14 @@ export default function JoinTemple() {
           alt="An open conservatory doorway overlooking a sunlit garden."
           fetchPriority="high"
           wrapperClassName="absolute inset-0 h-full w-full"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover object-right md:object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-image-overlay/95 via-image-overlay/70 to-image-overlay/20 md:bg-gradient-to-r md:from-image-overlay/95 md:via-image-overlay/55 md:to-transparent" />
+        {/* Phone: the crop keeps the woman in frame, so the scrim runs deep from
+            the bottom where the words sit and lifts off above her. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-image-overlay/95 via-image-overlay/80 to-image-overlay/45 md:hidden" />
+        {/* Desktop: the frame opens to the right, so the words keep a deep scrim
+            on the left and the woman stands in clean, unscrimmed light. */}
+        <div className="absolute inset-0 hidden bg-gradient-to-r from-image-overlay/95 via-image-overlay/55 to-transparent md:block" />
         <div className="relative mx-auto flex min-h-[26rem] w-full max-w-6xl items-end px-6 py-14 sm:px-10 md:min-h-[30rem] md:items-center md:py-16">
           <div className="max-w-xl">
             <h2 className="font-serif text-2xl leading-snug text-on-image sm:text-3xl">
