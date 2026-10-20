@@ -3,6 +3,8 @@ import { Home, ChevronRight, LucideIcon } from 'lucide-react';
 
 export interface BreadcrumbItem {
   label: string;
+  /** Narrower label used on phone screens where the full one would be clipped. */
+  shortLabel?: string;
   href?: string;
   onClick?: () => void;
   icon?: LucideIcon;
@@ -62,7 +64,12 @@ const PageBreadcrumb = ({ items, showHome = true }: PageBreadcrumbProps) => {
                 title={item.label}
               >
                 {item.icon && <item.icon className="w-3.5 h-3.5 shrink-0" />}
-                {item.label}
+                {item.shortLabel ? (
+                  <>
+                    <span className="sm:hidden">{item.shortLabel}</span>
+                    <span className="hidden sm:inline">{item.label}</span>
+                  </>
+                ) : item.label}
               </button>
             ) : (
               <span 
@@ -70,7 +77,12 @@ const PageBreadcrumb = ({ items, showHome = true }: PageBreadcrumbProps) => {
                 title={item.label}
               >
                 {item.icon && <item.icon className="w-3.5 h-3.5 shrink-0" />}
-                {item.label}
+                {item.shortLabel ? (
+                  <>
+                    <span className="sm:hidden">{item.shortLabel}</span>
+                    <span className="hidden sm:inline">{item.label}</span>
+                  </>
+                ) : item.label}
               </span>
             )}
           </div>
