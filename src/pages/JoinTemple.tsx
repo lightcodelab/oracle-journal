@@ -91,7 +91,7 @@ export default function JoinTemple() {
                       {feature.slice(feature.indexOf("\n"))}
                     </>
                   ) : (
-                    feature.trimEnd()
+                    <span className="font-semibold">{feature.trimEnd()}</span>
                   )}
                 </span>
               </li>
