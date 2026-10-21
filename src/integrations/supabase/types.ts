@@ -8106,6 +8106,10 @@ export type Database = {
         Returns: Json
       }
       admin_launch_stats_is_authorised: { Args: never; Returns: boolean }
+      admin_member_activity: {
+        Args: { _from: string; _to: string }
+        Returns: Json
+      }
       admin_reset_test_webhook_event: {
         Args: { _event_id: string }
         Returns: Json
