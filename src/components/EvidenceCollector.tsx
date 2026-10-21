@@ -1,5 +1,11 @@
 import { Textarea } from "@/components/ui/textarea";
-import { EVIDENCE_QUESTIONS, GROUNDING_QUESTION, RETURN_QUESTION } from "@/lib/evidenceFramework";
+import { ChevronDown } from "lucide-react";
+import {
+  EVIDENCE_QUESTIONS,
+  GROUNDING_QUESTION,
+  RETURN_QUESTION,
+  type EvidenceGuide,
+} from "@/lib/evidenceFramework";
 
 interface Props {
   values: Record<string, string | undefined>;
@@ -7,12 +13,26 @@ interface Props {
   idPrefix: string;
 }
 
+const Guide = ({ guide }: { guide: EvidenceGuide }) => (
+  <details className="group mt-2 rounded-md border border-border/60 bg-background/40">
+    <summary className="flex cursor-pointer list-none items-center gap-1.5 px-3 py-2 text-sm text-primary">
+      <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
+      What does this mean? See an example
+    </summary>
+    <div className="space-y-2 px-3 pb-3 text-sm leading-relaxed text-muted-foreground">
+      <p>{guide.meaning}</p>
+      <p className="italic text-foreground/85">For example: {guide.example}</p>
+    </div>
+  </details>
+);
+
 /** Grounding question, The Evidence Collector and the Return step. */
 export const EvidenceCollector = ({ values, onChange, idPrefix }: Props) => {
-  const field = (key: string, label: string, help?: string, rows = 3) => (
+  const field = (key: string, label: string, guide: EvidenceGuide, help?: string, rows = 3) => (
     <div key={key}>
       <label htmlFor={`${idPrefix}-${key}`} className="block font-serif text-base text-foreground">{label}</label>
       {help && <p className="mt-0.5 text-xs text-muted-foreground">{help}</p>}
+      <Guide guide={guide} />
       <Textarea id={`${idPrefix}-${key}`} value={values[key] || ""} onChange={(e) => onChange(key, e.target.value)} rows={rows} className="mt-2" />
     </div>
   );
@@ -20,7 +40,7 @@ export const EvidenceCollector = ({ values, onChange, idPrefix }: Props) => {
   return (
     <div className="space-y-8 text-left">
       <section className="space-y-3">
-        {field(GROUNDING_QUESTION.key, GROUNDING_QUESTION.label)}
+        {field(GROUNDING_QUESTION.key, GROUNDING_QUESTION.label, GROUNDING_QUESTION.guide)}
       </section>
       <section className="border-t border-border pt-6 space-y-5">
         <div>
@@ -28,11 +48,14 @@ export const EvidenceCollector = ({ values, onChange, idPrefix }: Props) => {
           <p className="mt-1 text-sm italic text-muted-foreground">
             Protection Patterns use old evidence to predict future outcomes, so we need to collect new evidence to change anything.
           </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            In everyday words: the habits that once kept us safe keep expecting the past to repeat. These questions help you notice that, and gather real experiences that show things can be different now.
+          </p>
         </div>
-        {EVIDENCE_QUESTIONS.map((q) => field(q.key, q.label))}
+        {EVIDENCE_QUESTIONS.map((q) => field(q.key, q.label, q.guide))}
       </section>
       <section className="border-t border-primary/40 pt-6">
-        {field(RETURN_QUESTION.key, RETURN_QUESTION.label, RETURN_QUESTION.help, 4)}
+        {field(RETURN_QUESTION.key, RETURN_QUESTION.label, RETURN_QUESTION.guide, RETURN_QUESTION.help, 4)}
       </section>
     </div>
   );

@@ -216,23 +216,6 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
                   onChange={(key, value) => setJournalDraft((prev) => ({ ...prev, [key]: value }))}
                 />
               </div>
-              <div className="mt-8 border-t border-border pt-6 space-y-5">
-                {SPREAD_JOURNAL_QUESTIONS.map((q) => (
-                  <div key={q.key}>
-                    <label htmlFor={`saved-spread-${q.key}`} className="block font-serif text-base text-foreground">
-                      {q.label}
-                    </label>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{q.help}</p>
-                    <Textarea
-                      id={`saved-spread-${q.key}`}
-                      value={journalDraft[q.key] || ""}
-                      onChange={(e) => setJournalDraft((prev) => ({ ...prev, [q.key]: e.target.value }))}
-                      rows={4}
-                      className="mt-2"
-                    />
-                  </div>
-                ))}
-              </div>
               <div className="mt-5 flex justify-end">
                 <Button
                   onClick={handleSaveJournal}

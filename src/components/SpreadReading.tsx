@@ -258,23 +258,6 @@ export const SpreadReading = ({
                   onChange={(key, value) => onJournalAnswerChange(key as keyof SpreadJournalAnswers, value)}
                 />
               </div>
-              <div className="mt-8 border-t border-border pt-6 space-y-5">
-                {SPREAD_JOURNAL_QUESTIONS.map((q) => (
-                  <div key={q.key}>
-                    <label htmlFor={`spread-${q.key}`} className="block font-serif text-base text-foreground">
-                      {q.label}
-                    </label>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{q.help}</p>
-                    <Textarea
-                      id={`spread-${q.key}`}
-                      value={journalAnswers[q.key]}
-                      onChange={(e) => onJournalAnswerChange(q.key, e.target.value)}
-                      rows={4}
-                      className="mt-2"
-                    />
-                  </div>
-                ))}
-              </div>
             </section>
           )}
           {!generating && <p className="text-foreground/70 text-sm italic">Select any card to explore its full wisdom.</p>}
