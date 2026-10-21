@@ -8,9 +8,9 @@ import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
 import type { TempleFocus } from "@/lib/templeFocus";
 
 export const doors = [
-  { key: "temple-door-remembrance", name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance, label: "CARD DECKS & SACRED SPREADS", description: "Explore the mirrors, archetypes and inheritances shaping you through the cards and journal what you discover." },
-  { key: "temple-door-devotion", name: "The Door of Devotion", href: "/devotion", image: doorDevotion.url, label: "RITES, AREEKEERA® TEMPLATES & MEDITATIONS", description: "Return to yourself through foundational rites and restorative practice." },
-  { key: "temple-door-becoming", name: "The Door of Becoming", href: "/becoming", image: doorBecoming, label: "COURSES, INTEGRATION & SELF-INQUIRY", description: "Journeys for personal development, self-awareness and conscious identity." },
+  { key: "temple-door-remembrance", name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance, label: "CARD DECKS & SACRED SPREADS", phase: "PHASE 1: REVEAL", description: "Explore the mirrors, archetypes and inheritances shaping you through the cards and journal what you discover." },
+  { key: "temple-door-devotion", name: "The Door of Devotion", href: "/devotion", image: doorDevotion.url, label: "RITES, AREEKEERA® TEMPLATES & MEDITATIONS", phase: "PHASE 2: REGULATE", description: "Return to yourself through foundational rites and restorative practice." },
+  { key: "temple-door-becoming", name: "The Door of Becoming", href: "/becoming", image: doorBecoming, label: "COURSES, INTEGRATION & SELF-INQUIRY", phase: "PHASE 3: RESHAPE", description: "Journeys for personal development, self-awareness and conscious identity." },
   { key: "temple-door-communion", name: "The Door of Communion", href: "/communion", image: doorCommunion.url, label: "LIVE GATHERINGS, CIRCLES & COMMUNITY", description: "Find connection, reflection and support within our community." },
 ];
 
@@ -61,7 +61,12 @@ export function DoorCard({ door, delay = 0 }: { door: TempleDoor; delay?: number
             className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         </div>
-        <p className="mt-2 font-serif text-lg text-foreground text-center">
+        {door.phase && (
+          <p className="mt-3 text-[11px] uppercase tracking-[0.22em] text-primary text-center">
+            {door.phase}
+          </p>
+        )}
+        <p className="mt-1 font-serif text-lg text-foreground text-center">
           {door.name}
         </p>
         <p className="mt-1 text-xs text-primary-strong text-center uppercase tracking-wider">
