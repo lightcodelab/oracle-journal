@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SpreadSelection, type SpreadType } from "@/components/SpreadSelection";
 import { SpreadReading, EMPTY_SPREAD_JOURNAL_ANSWERS, type SpreadJournalAnswers } from "@/components/SpreadReading";
 
+import { SpreadFocusStep } from "@/components/SpreadFocusStep";
 import CardDetailDialog from "@/components/CardDetailDialog";
 import MembershipInvite from "@/components/MembershipInvite";
 import { useFreeAccess } from "@/hooks/useFreeAccess";
@@ -22,6 +23,8 @@ const SacredSpreads = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeSpread, setActiveSpread] = useState<SpreadType | null>(null);
+  const [pendingSpread, setPendingSpread] = useState<SpreadType | null>(null);
+  const [drawing, setDrawing] = useState(false);
   const [spreadCards, setSpreadCards] = useState<OracleCard[]>([]);
   const [spreadRevealedPositions, setSpreadRevealedPositions] = useState<number[]>([]);
   const [showSpreadReading, setShowSpreadReading] = useState(false);
@@ -93,7 +96,7 @@ const SacredSpreads = () => {
       setActiveSpread(spread);
       setSpreadCards(freeCards);
       setSpreadRevealedPositions([]);
-      setJournalAnswers({ ...EMPTY_SPREAD_JOURNAL_ANSWERS });
+      setJournalAnswers((prev) => ({ ...EMPTY_SPREAD_JOURNAL_ANSWERS, guiding_question: prev.guiding_question }));
       setShowSpreadReading(true);
       return;
     }
@@ -133,7 +136,7 @@ const SacredSpreads = () => {
     setActiveSpread(spread);
     setSpreadCards(mappedCards);
     setSpreadRevealedPositions([]);
-    setJournalAnswers({ ...EMPTY_SPREAD_JOURNAL_ANSWERS });
+    setJournalAnswers((prev) => ({ ...EMPTY_SPREAD_JOURNAL_ANSWERS, guiding_question: prev.guiding_question }));
     setShowSpreadReading(true);
   };
 
@@ -184,7 +187,17 @@ const SacredSpreads = () => {
         return;
       }
     }
-    await initializeSpreadReading(spread);
+    setJournalAnswers({ ...EMPTY_SPREAD_JOURNAL_ANSWERS });
+    setPendingSpread(spread);
+  };
+
+  const handleDrawPending = async (withQuestion: boolean) => {
+    if (!pendingSpread) return;
+    if (!withQuestion) setJournalAnswers((prev) => ({ ...prev, guiding_question: "" }));
+    setDrawing(true);
+    await initializeSpreadReading(pendingSpread);
+    setDrawing(false);
+    setPendingSpread(null);
   };
 
   const generateSharedReading = useCallback(async () => {
@@ -344,6 +357,7 @@ const SacredSpreads = () => {
     autoSavedRef.current = false;
     savedReadingIdRef.current = null;
     setActiveSpread(null);
+    setPendingSpread(null);
     setSpreadCards([]);
     setSpreadRevealedPositions([]);
     setShowSpreadReading(false);
@@ -364,11 +378,12 @@ const SacredSpreads = () => {
     );
   }
 
-  const breadcrumbItems = activeSpread
+  const crumbSpread = activeSpread || pendingSpread;
+  const breadcrumbItems = crumbSpread
     ? [
         { label: 'The Door of Remembrance', shortLabel: 'Remembrance', onClick: () => navigate('/remembrance'), icon: DoorOpen },
         { label: 'Sacred Spreads', onClick: handleBackToSpreads },
-        { label: activeSpread.name }
+        { label: crumbSpread.name }
       ]
     : [
         { label: 'The Door of Remembrance', shortLabel: 'Remembrance', onClick: () => navigate('/remembrance'), icon: DoorOpen },
@@ -390,7 +405,18 @@ const SacredSpreads = () => {
 
       <div className="relative z-10 container mx-auto px-4 py-12">
         {/* Spread selection */}
-        {!activeSpread && (
+        {!activeSpread && pendingSpread && (
+          <SpreadFocusStep
+            spread={pendingSpread}
+            value={journalAnswers.guiding_question}
+            onChange={(v) => setJournalAnswers((prev) => ({ ...prev, guiding_question: v }))}
+            onDraw={handleDrawPending}
+            onBack={handleBackToSpreads}
+            drawing={drawing}
+          />
+        )}
+
+        {!activeSpread && !pendingSpread && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
