@@ -56,7 +56,7 @@ function regionName(): string | null {
 export function doorForPath(path: string): string | null {
   if (path.startsWith("/devotion") || path.startsWith("/rituals")) return "Devotion";
   if (path.startsWith("/remembrance") || path.startsWith("/sacred-spreads") || path.startsWith("/readings")) return "Remembrance";
-  if (path.startsWith("/becoming") || path.startsWith("/tracking")) return "Becoming";
+  if (path.startsWith("/becoming") || path.startsWith("/tracking") || path.startsWith("/courses")) return "Becoming";
   if (path.startsWith("/communion") || path.includes("live-session") || path.startsWith("/mirror")) return "Communion";
   return null;
 }
