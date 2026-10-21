@@ -1,3 +1,4 @@
+import { DoorSectionBand } from '@/components/temple/DoorSectionBand';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -148,23 +149,10 @@ const DoorOfDevotion = () => {
             </Link>
           </div>
 
-          <section aria-labelledby="foundational-rites-heading" className="mb-12 scroll-mt-24">
-            <div className="text-center mb-8">
-              <div className="text-3xl mb-2" aria-hidden="true">🜂</div>
-              <h2 id="foundational-rites-heading" className="font-serif text-2xl md:text-3xl text-foreground mb-3">
-                The Foundational Rites
-              </h2>
-              <p className="font-bold text-primary font-sans text-base mb-3">The Rites of Remembrance</p>
-              <div className="text-muted-foreground font-sans text-base max-w-2xl mx-auto space-y-3">
-                <p>These foundational rites prepare your inner field for the work within THE TEMPLE.</p>
-                <p>They stabilise the nervous system, clear inherited distortion, and establish energetic sovereignty.</p>
-                <p>Walk them in order, without rush, and return whenever your system asks.</p>
-              </div>
-            </div>
-            <RitesOfRemembranceSection />
-          </section>
-
-          <AllResourcesSection />
+          <DoorSectionBand door="devotion" index={0} legacyLocations={['loc-healing-templates', 'loc-recipes', 'loc-somatic-rituals']} />
+          <DoorSectionBand door="devotion" index={1} legacyLocations={['loc-guided-meditation', 'loc-rites-of-remembrance']} />
+          <DoorSectionBand door="devotion" index={2} legacyLocations={['loc-energy-hygiene-practices', 'loc-altar-practices']} />
+          <DoorSectionBand door="devotion" index={3} />
       </div>
     </div>
   );

@@ -43,6 +43,7 @@ interface Deck {
   woocommerce_product_id: string | null;
   woocommerce_product_id_premium: string | null;
   is_published: boolean;
+  location_id?: string | null;
 }
 
 
