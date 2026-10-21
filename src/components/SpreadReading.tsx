@@ -15,6 +15,12 @@ export type SpreadJournalAnswers = {
   invited_to_shift: string;
   how_i_will_live_it: string;
   invited_to_return: string;
+  guiding_question: string;
+  pattern_location: string;
+  old_evidence: string;
+  new_evidence: string;
+  todays_choice: string;
+  returned_evidence: string;
 };
 
 export const EMPTY_SPREAD_JOURNAL_ANSWERS: SpreadJournalAnswers = {
@@ -22,6 +28,12 @@ export const EMPTY_SPREAD_JOURNAL_ANSWERS: SpreadJournalAnswers = {
   invited_to_shift: "",
   how_i_will_live_it: "",
   invited_to_return: "",
+  guiding_question: "",
+  pattern_location: "",
+  old_evidence: "",
+  new_evidence: "",
+  todays_choice: "",
+  returned_evidence: "",
 };
 
 interface SpreadReadingProps {
