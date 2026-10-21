@@ -129,7 +129,7 @@ const HomeScreenInstructions = ({
 
       <p className="mt-3 text-xs text-muted-foreground">
         Nothing inside THE TEMPLE changes — your membership, courses, Pattern Records,
-        Field Notes and saved work all stay exactly as they are.
+        Case Notes and saved work all stay exactly as they are.
       </p>
     </div>
   );

@@ -33,7 +33,7 @@ import {
 } from "@/components/temple/living/orientationContent";
 
 /**
- * LP-C.1 — private Field Notes detail surface for one experiment.
+ * LP-C.1 — private Case Notes detail surface for one experiment.
  *
  * Three temporal tabs: Try / Notice / Return. Text only. No due dates, overdue
  * state, reminders, streaks, or completion percentage. Owner-only through the
@@ -223,18 +223,18 @@ const LivingPatternExperiment = () => {
     <div className="min-h-screen bg-background">
       <header className="max-w-3xl mx-auto px-4 pt-4 pb-3 flex items-center justify-between gap-3">
         <Link
-          to="/field-notes"
+          to="/case-notes"
           className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          <span className="font-medium truncate">Back to My Field Notes</span>
+          <span className="font-medium truncate">Back to My Case Notes</span>
         </Link>
         <NavActions />
       </header>
 
       <div className="max-w-3xl mx-auto px-4 pb-16">
         <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">
-          Field Notes for Your Experiments
+          Case Notes for Your Experiments
         </p>
         <h1 className="font-serif text-2xl sm:text-3xl text-foreground mt-1 break-words">
           {guide && guide.key !== "own" ? guide.title : experiment?.own_experiment || "Your experiment"}
@@ -547,7 +547,7 @@ const LivingPatternExperiment = () => {
 
             <div className="mt-8 flex flex-wrap gap-2 border-t border-border/60 pt-5">
               <Button asChild variant="ghost">
-                <Link to="/field-notes">My Field Notes</Link>
+                <Link to="/case-notes">My Case Notes</Link>
               </Button>
               <Button asChild variant="ghost">
                 <Link to="/temple">Back to Home</Link>

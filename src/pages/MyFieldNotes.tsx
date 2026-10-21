@@ -10,9 +10,9 @@ import { LIFECYCLE_LABELS, guideByKey } from "@/components/temple/living/experim
 import { useJournalEntries } from "@/hooks/useJournalEntries";
 
 /**
- * My Field Notes — the single private home for Field Notes written beneath
+ * My Case Notes — the single private home for Case Notes written beneath
  * resources and cards. Deliberately separate from My Living Pattern: Pattern
- * Records and their later Returns live there, Field Notes live here.
+ * Records and their later Returns live there, Case Notes live here.
  *
  * The second tab is a strictly READ-ONLY view of historical My Journal notes
  * saved before that feature was replaced. No editor, no create path, no
@@ -82,7 +82,7 @@ const MyFieldNotes = () => {
 
       <div className="max-w-3xl mx-auto px-4 pb-16">
         <p className="text-[0.7rem] tracking-[0.2em] uppercase text-primary-strong">Private notes</p>
-        <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">My Field Notes</h1>
+        <h1 className="font-serif text-3xl sm:text-4xl text-foreground mt-1">My Case Notes</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground leading-relaxed">
           Notes you wrote beneath a resource or card, and whatever you noticed afterwards. Nothing
           here is measured, scored, or due.
@@ -96,7 +96,7 @@ const MyFieldNotes = () => {
             size="sm"
             onClick={() => setTab("field-notes")}
           >
-            Field Notes
+            Case Notes
           </Button>
           <Button
             role="tab"
@@ -125,7 +125,7 @@ const MyFieldNotes = () => {
             {!loading && !error && experiments.length === 0 && (
               <div className="rounded-xl border border-border/60 bg-card p-5 sm:p-6">
                 <p className="text-muted-foreground">
-                  No Field Notes yet. You can write one at the bottom of any resource or card you are
+                  No Case Notes yet. You can write one at the bottom of any resource or card you are
                   working with.
                 </p>
               </div>
@@ -142,7 +142,7 @@ const MyFieldNotes = () => {
                   return (
                     <li key={e.id}>
                       <Link
-                        to={`/field-notes/${e.id}`}
+                        to={`/case-notes/${e.id}`}
                         className="block rounded-xl border border-border/60 bg-card p-4 sm:p-5 transition-colors hover:border-primary/50"
                       >
                         <p className="font-serif text-lg text-foreground break-words">{title}</p>
@@ -167,7 +167,7 @@ const MyFieldNotes = () => {
         {tab === "journal" && (
           <section className="mt-8">
             <p className="text-sm text-muted-foreground">
-              Notes you saved in My Journal before it was replaced by Field Notes. They are unchanged
+              Notes you saved in My Journal before it was replaced by Case Notes. They are unchanged
               and kept here for you to read.
             </p>
 

@@ -117,7 +117,7 @@ const LivingPatternPause = ({ embedded = false }: { embedded?: boolean }) => {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [linkedPatternId, setLinkedPatternId] = useState<string | null>(null);
 
-  // LP-C.1 — optional Field Notes experiment. Never compulsory, never superior.
+  // LP-C.1 — optional Case Notes experiment. Never compulsory, never superior.
   const [wantExperiment, setWantExperiment] = useState(false);
   const [guideKey, setGuideKey] = useState<string | null>(null);
   const [ownText, setOwnText] = useState("");

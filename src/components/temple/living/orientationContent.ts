@@ -191,7 +191,7 @@ export const ORIENTATION_LESSONS: OrientationLesson[] = [
   },
 ];
 
-/** The five honest returns, taught in the orientation and echoed in Field Notes. */
+/** The five honest returns, taught in the orientation and echoed in Case Notes. */
 export const HONEST_RETURNS = [
   "It supported what I suspected.",
   "It complicated what I suspected.",
@@ -286,7 +286,7 @@ export const PRACTICE_HELP: Record<string, PromptHelp> = {
   },
 };
 
-/** Field Notes — Try / Notice / Return. */
+/** Case Notes — Try / Notice / Return. */
 export const FIELD_NOTE_TAB_NOTE =
   "These are moments in time, not homework. Try may be tiny. Notice may be one word. Return may be later—or may simply say, “Not enough information yet.”";
 

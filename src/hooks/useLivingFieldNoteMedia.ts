@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * LP-C.2 — owner-only private media attachments for Field Notes.
+ * LP-C.2 — owner-only private media attachments for Case Notes.
  *
  * Every database operation goes through the LP-C.2 SECURITY DEFINER RPCs; the
  * attachment table grants nothing to `authenticated`. Files live in the private

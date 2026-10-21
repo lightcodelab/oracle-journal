@@ -133,9 +133,9 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
         ]
       : []),
     {
-      label: 'My Field Notes',
+      label: 'My Case Notes',
       icon: <BookOpen className="w-4 h-4 mr-2" />,
-      route: '/field-notes',
+      route: '/case-notes',
     },
     {
       label: 'My Remembrance Letters',

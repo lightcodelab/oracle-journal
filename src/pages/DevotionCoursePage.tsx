@@ -330,7 +330,7 @@ const DevotionCoursePage = () => {
             />
           )}
 
-          {/* Course-level reflection — Field Notes for eligible members, legacy Journal otherwise */}
+          {/* Course-level reflection — Case Notes for eligible members, legacy Journal otherwise */}
           {courseId && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}

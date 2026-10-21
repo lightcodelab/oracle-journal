@@ -159,7 +159,7 @@ export const PRESENCE_GUIDES = PRESENCE_GUIDE_KEYS.map(
  * LP-E — the subset of the same static Guides offered at the end of Practice.
  * Member-selected only. Nothing here is ranked, inferred, recommended, or
  * claimed to be clinically appropriate, and none creates a second experiment
- * system: they all use the shared Try → Notice → Return Field Notes.
+ * system: they all use the shared Try → Notice → Return Case Notes.
  */
 export const PRACTICE_GUIDE_KEYS: GuideKey[] = [
   "make_it_smaller",

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { TOOL_ICONS } from "@/lib/toolIcons";
 
 const tools = [
-  { label: "My Field Notes", href: "/field-notes", icon: TOOL_ICONS.journal },
+  { label: "My Case Notes", href: "/case-notes", icon: TOOL_ICONS.journal },
   { label: "My Rituals", href: "/rituals", icon: TOOL_ICONS.rituals },
   { label: "My Remembrance Letters", href: "/remembrance-letters", icon: TOOL_ICONS.remembranceLetters },
   { label: "My Calendar", href: "/my-calendar", icon: TOOL_ICONS.calendar },
