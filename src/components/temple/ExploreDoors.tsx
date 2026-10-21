@@ -62,7 +62,7 @@ export function DoorCard({ door, delay = 0 }: { door: TempleDoor; delay?: number
           />
         </div>
         {door.phase && (
-          <p className="mt-3 text-[11px] uppercase tracking-[0.22em] text-primary text-center">
+          <p className="mt-3 text-xs font-medium uppercase tracking-[0.2em] text-primary text-center">
             {door.phase}
           </p>
         )}
