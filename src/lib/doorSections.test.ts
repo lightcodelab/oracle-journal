@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DOOR_SECTIONS, locationDoor, placementLabel } from './doorSections';
+import { DOOR_SECTIONS, locationDoor, placementLabel, locationPath } from './doorSections';
 describe('Door section placement', () => {
   it('keeps Phase 1 in Remembrance with three ordered sections', () => {
     expect(DOOR_SECTIONS.remembrance.phase).toBe('PHASE 1: REVEAL');
@@ -20,5 +20,12 @@ describe('Door section placement', () => {
   it('distinguishes identically named evidence sections by Door', () => {
     expect(placementLabel({id:'a',name:'File Your Evidence',page:'devotion'})).toBe('The Door of Devotion — File Your Evidence');
     expect(placementLabel({id:'b',name:'File your Evidence',page:'becoming'})).toBe('The Door of Becoming — File your Evidence');
+  });
+  it('opens every new placement through its own Door', () => {
+    for (const [door, item] of Object.entries(DOOR_SECTIONS)) {
+      for (const section of item.sections) {
+        expect(locationPath({ id: section.slug, name: section.title, slug: section.slug })).toBe(`/${door}`);
+      }
+    }
   });
 });

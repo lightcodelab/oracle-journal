@@ -16,7 +16,8 @@ export function DoorSectionSelect({ value, onChange, optional = false }: { value
     });
   }, []);
   const current = locations.find(l => l.id === value);
-  const door = chosenDoor ?? (current ? locationDoor(current) : 'none');
+  const door = current ? locationDoor(current) : chosenDoor ?? 'none';
+  const sectionSlugs = Object.values(DOOR_SECTIONS).flatMap(item => item.sections.map(section => section.slug));
   return <div className="grid gap-3 sm:grid-cols-2">
     <div className="space-y-2">
       <Label htmlFor={`${id}-door`}>Door{!optional && ' *'}</Label>
@@ -25,7 +26,6 @@ export function DoorSectionSelect({ value, onChange, optional = false }: { value
         <SelectContent>
           <SelectItem value="none">{optional ? 'No placement / keep existing default' : 'Choose a Door'}</SelectItem>
           {Object.entries(DOOR_SECTIONS).map(([key, item]) => <SelectItem key={key} value={key}>{item.phase} · {item.name}</SelectItem>)}
-          <SelectItem value="communion">The Door of Communion</SelectItem>
         </SelectContent>
       </Select>
     </div>
@@ -35,7 +35,7 @@ export function DoorSectionSelect({ value, onChange, optional = false }: { value
         <SelectTrigger id={`${id}-section`}><SelectValue placeholder="Choose a section" /></SelectTrigger>
         <SelectContent>
           <SelectItem value="none">Choose a section</SelectItem>
-          {locations.filter(l => locationDoor(l) === door).map(l => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}
+          {locations.filter(l => locationDoor(l) === door && (sectionSlugs.some(slug => slug === l.slug) || l.id === value)).map(l => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}
         </SelectContent>
       </Select>
     </div>

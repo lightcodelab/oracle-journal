@@ -154,6 +154,7 @@ const App = () => {
             <Route path="/remembrance/resources/:slug" element={<DevotionResourcePage />} />
             <Route path="/remembrance/courses/:slug" element={<DevotionCoursePage />} />
             <Route path="/remembrance/course/:courseId" element={<DevotionCoursePage />} />
+            <Route path="/remembrance/course/:courseId/lesson/:lessonId" element={<DevotionLessonPage />} />
             <Route path="/free-reading" element={<FreeReadingLanding />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/join" element={<JoinTemple />} />
