@@ -22,7 +22,7 @@ export function DoorSectionSelect({ value, onChange, optional = false }: { value
     <div className="space-y-2">
       <Label htmlFor={`${id}-door`}>Door{!optional && ' *'}</Label>
       <Select value={door} onValueChange={next => { setChosenDoor(next); onChange(''); }}>
-        <SelectTrigger id={`${id}-door`}><SelectValue placeholder="Choose a Door" /></SelectTrigger>
+        <SelectTrigger id={`${id}-door`} className="min-h-10 h-auto text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Choose a Door" /></SelectTrigger>
         <SelectContent>
           <SelectItem value="none">{optional ? 'No placement / keep existing default' : 'Choose a Door'}</SelectItem>
           {Object.entries(DOOR_SECTIONS).map(([key, item]) => <SelectItem key={key} value={key}>{item.phase} · {item.name}</SelectItem>)}
@@ -32,7 +32,7 @@ export function DoorSectionSelect({ value, onChange, optional = false }: { value
     <div className="space-y-2">
       <Label htmlFor={`${id}-section`}>Section{!optional && ' *'}</Label>
       <Select value={value || 'none'} disabled={door === 'none'} onValueChange={next => onChange(next === 'none' ? '' : next)}>
-        <SelectTrigger id={`${id}-section`}><SelectValue placeholder="Choose a section" /></SelectTrigger>
+        <SelectTrigger id={`${id}-section`} className="min-h-10 h-auto text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Choose a section" /></SelectTrigger>
         <SelectContent>
           <SelectItem value="none">Choose a section</SelectItem>
           {locations.filter(l => locationDoor(l) === door && (sectionSlugs.some(slug => slug === l.slug) || l.id === value)).map(l => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}

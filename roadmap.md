@@ -1,10 +1,10 @@
 # Roadmap
 
 ## Door sections and content placement
-- [ ] Add ordered sections and persistent placement options
-- [ ] Add Door and section choices to all four editors and location filters
-- [ ] Display assigned items beneath coloured, lined Door sections
-- [ ] Verify placement saving and all three Door pages without creating member records
+- [x] Add ordered sections and persistent placement options
+- [x] Add Door and section choices to all four editors and location filters
+- [x] Display assigned items beneath coloured, lined Door sections
+- [x] Verify placement saving and all three Door pages without creating member records
 
 ## Newly tagged discovery
 - [x] Include only newly created tags from all available catalogues; exclude assignment activity
