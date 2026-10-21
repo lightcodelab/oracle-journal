@@ -34,6 +34,9 @@ export const COMMUNION_DOOR = doors.find((d) => d.key === COMMUNION_KEY)!;
 
 const gridDoors = doors.filter((d) => d.key !== COMMUNION_KEY);
 
+const COUNT_WORDS: Record<number, string> = { 1: "one", 2: "two", 3: "three", 4: "four" };
+const countWord = (n: number) => COUNT_WORDS[n] ?? String(n);
+
 /** One Door tile: square artwork, name, label and description. */
 export function DoorCard({ door, delay = 0 }: { door: TempleDoor; delay?: number }) {
   return (
