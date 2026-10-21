@@ -9,3 +9,10 @@ export const FOCUS_OPTIONS: { value: TempleFocus; label: string; door: string }[
 
 export const isTempleFocus = (v: unknown): v is TempleFocus =>
   typeof v === "string" && FOCUS_OPTIONS.some((o) => o.value === v);
+
+/**
+ * Focus is hidden from members for now, not removed: every focus control and
+ * the focus-driven home layout stay in the code, and each member's saved
+ * focus is left untouched. Flip this to true to bring the feature back.
+ */
+export const SHOW_TEMPLE_FOCUS = false;

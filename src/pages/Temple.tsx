@@ -30,7 +30,7 @@ import { WelcomeFocusDialog } from "@/components/temple/WelcomeFocusDialog";
 import { BecomingJourneysStrip } from "@/components/temple/BecomingJourneysStrip";
 import { FocusDoorBanner } from "@/components/temple/FocusDoorBanner";
 import { RecentlyAddedSection, NewlyTaggedSection } from "@/components/temple/RecentlyAddedSection";
-import { TempleFocus, isTempleFocus } from "@/lib/templeFocus";
+import { TempleFocus, isTempleFocus, SHOW_TEMPLE_FOCUS } from "@/lib/templeFocus";
 
 /** Wrapper that only mounts recommendation queries once member access is resolved. */
 function RecommendedSection({ enabled }: { enabled: boolean }) {
@@ -143,12 +143,12 @@ const Temple = () => {
   const hasFullAccess = accessResolved && hasFullTempleAccess;
 
   useEffect(() => {
-    if (hasFullAccess && profileLoaded && !focusPrompted) setFocusOpen(true);
+    if (SHOW_TEMPLE_FOCUS && hasFullAccess && profileLoaded && !focusPrompted) setFocusOpen(true);
   }, [hasFullAccess, profileLoaded, focusPrompted]);
 
   // "My Focus" in the profile menu links here with ?focus=1 to reopen the question.
   useEffect(() => {
-    if (hasFullAccess && profileLoaded && searchParams.get("focus") === "1") {
+    if (SHOW_TEMPLE_FOCUS && hasFullAccess && profileLoaded && searchParams.get("focus") === "1") {
       setFocusOpen(true);
       const next = new URLSearchParams(searchParams);
       next.delete("focus");
@@ -279,6 +279,11 @@ const Temple = () => {
     );
   }
 
+  // Focus is hidden from the home page for now (SHOW_TEMPLE_FOCUS). The
+  // member's saved focus is kept untouched; the page simply renders as if no
+  // focus had been chosen until the feature is switched back on.
+  const activeFocus = SHOW_TEMPLE_FOCUS ? focus : null;
+
   const sections: Record<string, JSX.Element> = {
     practice: <BeginPractice />,
     cards: (
@@ -295,16 +300,16 @@ const Temple = () => {
     rituals: <MyRitualsCard />,
     devotionPractices: <DevotionPracticesSection />,
     playlist: <AccessPlaylistCard />,
-    celestial: focus === "devotion" ? <CelestialGuidanceSection /> : <></>,
+    celestial: activeFocus === "devotion" ? <CelestialGuidanceSection /> : <></>,
     living: isAdmin ? <LivingPatternCard /> : <></>,
-    becoming: !focus || focus === "becoming" ? <BecomingJourneysStrip /> : <></>,
+    becoming: !activeFocus || activeFocus === "becoming" ? <BecomingJourneysStrip /> : <></>,
     recommended: <RecommendedSection enabled={hasFullAccess} />,
     seasonal: <SeasonalSection enabled={hasFullAccess} />,
     recentlyAdded: <RecentlyAddedSection enabled={hasFullAccess} />,
     newlyTagged: <NewlyTaggedSection enabled={hasFullAccess} />,
     tools: <ToolsForReturn />,
     live: <LiveAndSupport enabled={hasFullAccess} />,
-    events: focus === "communion" ? <CommunionEventsCalendar enabled={hasFullAccess} /> : <></>,
+    events: activeFocus === "communion" ? <CommunionEventsCalendar enabled={hasFullAccess} /> : <></>,
   };
   const defaultOrder = ["practice", "newlyTagged", "cards", "rituals", "devotionPractices", "living", "becoming", "recentlyAdded", "recommended", "seasonal", "tools", "live"];
   const lead: Record<TempleFocus, string[]> = {
@@ -313,7 +318,7 @@ const Temple = () => {
     becoming: ["becoming", "tools"],
     communion: ["events", "live"],
   };
-  const front = focus ? lead[focus] : [];
+  const front = activeFocus ? lead[activeFocus] : [];
   const orderedSections = [...front, ...defaultOrder.filter((k) => !front.includes(k))];
 
   return (
@@ -343,17 +348,22 @@ const Temple = () => {
           <SearchTheTempleCard />
           <ContinueJourney enabled={hasFullAccess} />
         </section>
-        {focus && <FocusDoorBanner focus={focus} />}
+        {activeFocus && <FocusDoorBanner focus={activeFocus} />}
         {/* Focus sections lead straight under the top row, above Explore. */}
         {front.map((key) => <div key={key}>{sections[key]}</div>)}
-        <ExploreDoors focus={focus} onChangeFocus={() => setFocusOpen(true)} />
-        {orderedSections.filter((k) => !front.includes(k)).map((key) => <div key={key}>{sections[key]}</div>)}
-        <WelcomeFocusDialog
-          open={focusOpen}
-          initial={focus}
-          onChoose={saveFocus}
-          onClose={() => saveFocus(focus, true)}
+        <ExploreDoors
+          focus={activeFocus}
+          onChangeFocus={SHOW_TEMPLE_FOCUS ? () => setFocusOpen(true) : undefined}
         />
+        {orderedSections.filter((k) => !front.includes(k)).map((key) => <div key={key}>{sections[key]}</div>)}
+        {SHOW_TEMPLE_FOCUS && (
+          <WelcomeFocusDialog
+            open={focusOpen}
+            initial={focus}
+            onChoose={saveFocus}
+            onClose={() => saveFocus(focus, true)}
+          />
+        )}
 
       </div>
     </div>

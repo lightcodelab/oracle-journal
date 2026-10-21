@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
-import { FOCUS_OPTIONS } from "@/lib/templeFocus";
+import { FOCUS_OPTIONS, SHOW_TEMPLE_FOCUS } from "@/lib/templeFocus";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -191,6 +191,7 @@ const Profile = () => {
               />
             </div>
 
+            {SHOW_TEMPLE_FOCUS && (
             <div className="space-y-2">
               <Label htmlFor="focus">My focus</Label>
               <select
@@ -206,6 +207,7 @@ const Profile = () => {
               </select>
               <p className="text-xs text-muted-foreground">Brings that Door forward on your home page.</p>
             </div>
+            )}
 
 
             <Button
