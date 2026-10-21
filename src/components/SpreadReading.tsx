@@ -1,9 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles, Loader2, RefreshCw, ArrowLeft } from "lucide-react";
+import { Sparkles, Loader2, RefreshCw, ArrowLeft, Check } from "lucide-react";
 import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
@@ -51,6 +52,7 @@ interface SpreadReadingProps {
   journalAnswers?: SpreadJournalAnswers;
   onJournalAnswerChange?: (key: keyof SpreadJournalAnswers, value: string) => void;
   ritualAction?: ReactNode;
+  saved?: boolean;
 }
 
 const getDeckBadgeClass = (deckName: string | null | undefined) => {
@@ -75,6 +77,7 @@ export const SpreadReading = ({
   journalAnswers,
   onJournalAnswerChange,
   ritualAction,
+  saved,
 }: SpreadReadingProps) => {
   const allRevealed = revealedPositions.length === spread.cardCount;
   const images = useCardImagesReady(cards.map((card) => cardImageSrc(card.image_file_name)));
@@ -238,6 +241,21 @@ export const SpreadReading = ({
                 {generatedReading}
               </div>
             </motion.section>
+          )}
+          {generatedReading && !generating && saved && (
+            <p className="flex items-center justify-center gap-2 text-sm font-sans text-muted-foreground">
+              <Check className="w-4 h-4 shrink-0 text-primary" aria-hidden="true" />
+              <span>
+                Your reading has been saved. Access it again in{" "}
+                <Link
+                  to="/readings"
+                  className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                >
+                  My Readings
+                </Link>
+                .
+              </span>
+            </p>
           )}
           {!generating && journalAnswers && onJournalAnswerChange && (
             <section
