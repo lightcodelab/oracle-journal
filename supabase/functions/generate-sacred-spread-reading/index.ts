@@ -19,6 +19,7 @@ const FREE_SPREAD_ID = "past-present-future";
 const BodySchema = z.object({
   spreadType: z.string().min(1).max(80),
   cardIds: z.array(z.string().uuid()).min(1).max(4),
+  guidingQuestion: z.string().trim().max(500).optional(),
 });
 
 class GatewayError extends Error {

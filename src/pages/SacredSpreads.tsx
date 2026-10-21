@@ -218,7 +218,7 @@ const SacredSpreads = () => {
     } finally {
       setGenerating(false);
     }
-  }, [activeSpread, spreadCards, generating, generatedReading]);
+  }, [activeSpread, spreadCards, generating, generatedReading, journalAnswers.guiding_question]);
 
   useEffect(() => {
     if (activeSpread && spreadRevealedPositions.length === activeSpread.cardCount && !generatedReading && !generationError) {
