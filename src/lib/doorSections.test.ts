@@ -1,16 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { DOOR_SECTIONS, locationDoor, placementLabel, locationPath } from './doorSections';
 describe('Door section placement', () => {
-  it('keeps Phase 1 in Remembrance with three ordered sections', () => {
-    expect(DOOR_SECTIONS.remembrance.phase).toBe('PHASE 1: REVEAL');
+  it('keeps Chamber 1 in Remembrance with three ordered sections', () => {
+    expect(DOOR_SECTIONS.remembrance.chamber).toBe('CHAMBER 1: REVEAL');
     expect(DOOR_SECTIONS.remembrance.sections.map(s => s.title)).toEqual(['Draw your Mirror', 'Investigate the Pattern', 'Open a Case File']);
   });
-  it('keeps Phase 2 in Devotion with four ordered sections', () => {
-    expect(DOOR_SECTIONS.devotion.phase).toBe('PHASE 2: REGULATE');
+  it('keeps Chamber 2 in Devotion with four ordered sections', () => {
+    expect(DOOR_SECTIONS.devotion.chamber).toBe('CHAMBER 2: REGULATE');
     expect(DOOR_SECTIONS.devotion.sections.map(s => s.title)).toEqual(['Restore Your Body', 'Settle Your Nervous System', 'Stabilise the Pattern', 'File Your Evidence']);
   });
-  it('keeps Phase 3 in Becoming with three ordered sections', () => {
-    expect(DOOR_SECTIONS.becoming.phase).toBe('PHASE 3: RESHAPE');
+  it('keeps Chamber 3 in Becoming with three ordered sections', () => {
+    expect(DOOR_SECTIONS.becoming.chamber).toBe('CHAMBER 3: RESHAPE');
     expect(DOOR_SECTIONS.becoming.sections.map(s => s.title)).toEqual(['Build your new pattern', 'Shift your Energetic Signature', 'File your Evidence']);
   });
   it('retains the correct Door for existing course and rite locations', () => {

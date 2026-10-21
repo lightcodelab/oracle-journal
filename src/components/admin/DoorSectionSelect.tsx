@@ -25,7 +25,7 @@ export function DoorSectionSelect({ value, onChange, optional = false }: { value
         <SelectTrigger id={`${id}-door`} className="min-h-10 h-auto text-left [&>span]:line-clamp-none [&>span]:whitespace-normal"><SelectValue placeholder="Choose a Door" /></SelectTrigger>
         <SelectContent>
           <SelectItem value="none">{optional ? 'No placement / keep existing default' : 'Choose a Door'}</SelectItem>
-          {Object.entries(DOOR_SECTIONS).map(([key, item]) => <SelectItem key={key} value={key}>{item.phase} · {item.name}</SelectItem>)}
+          {Object.entries(DOOR_SECTIONS).map(([key, item]) => <SelectItem key={key} value={key}>{item.chamber} · {item.name}</SelectItem>)}
         </SelectContent>
       </Select>
     </div>
