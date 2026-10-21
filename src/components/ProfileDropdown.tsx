@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { SHOW_TEMPLE_FOCUS } from '@/lib/templeFocus';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -108,11 +109,15 @@ const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
       icon: <CreditCard className="w-4 h-4 mr-2" />,
       route: '/account',
     },
-    {
-      label: 'My Focus',
-      icon: <Target className="w-4 h-4 mr-2" />,
-      route: '/temple?focus=1',
-    },
+    ...(SHOW_TEMPLE_FOCUS
+      ? [
+          {
+            label: 'My Focus',
+            icon: <Target className="w-4 h-4 mr-2" />,
+            route: '/temple?focus=1',
+          },
+        ]
+      : []),
     {
       label: 'My Calendar',
       icon: <CalendarDays className="w-4 h-4 mr-2" />,
