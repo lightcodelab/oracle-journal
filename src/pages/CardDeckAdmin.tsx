@@ -1,3 +1,4 @@
+import { DoorSectionSelect } from '@/components/admin/DoorSectionSelect';
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -41,6 +42,7 @@ interface DeckRow {
   card_back_url?: string | null;
   image_color?: string | null;
   is_published: boolean;
+  location_id?: string | null;
 }
 
 interface CardRow {
@@ -180,6 +182,7 @@ const CardDeckAdmin = () => {
     thumbnail_url: string | null;
     card_back_url: string | null;
     is_published: boolean;
+    location_id: string | null;
   } | null>(null);
   const [deckTagIds, setDeckTagIds] = useState<string[]>([]);
   const [cardTagIds, setCardTagIds] = useState<string[]>([]);
@@ -215,7 +218,7 @@ const CardDeckAdmin = () => {
 
       const { data: deckData, error } = await supabase
         .from('decks')
-        .select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published')
+        .select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published, location_id')
         .order('display_order', { ascending: true });
       if (error) {
         toast({ title: 'Failed to load decks', description: error.message, variant: 'destructive' });
@@ -257,6 +260,7 @@ const CardDeckAdmin = () => {
           thumbnail_url: d.thumbnail_url || null,
           card_back_url: d.card_back_url || null,
           is_published: d.is_published,
+          location_id: d.location_id || null,
         });
       }
       const { data: tagRows } = await (supabase as any)
@@ -544,13 +548,13 @@ const CardDeckAdmin = () => {
           is_starter: false,
           is_published: false,
         })
-        .select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published')
+        .select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published, location_id')
         .single();
       if (error) throw error;
 
       // Refresh deck list and select the new deck
       const { data: deckData } = await supabase
-        .from('decks').select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published').order('display_order', { ascending: true });
+        .from('decks').select('id, name, description, theme, thumbnail_url, card_back_url, image_color, is_published, location_id').order('display_order', { ascending: true });
       setDecks(deckData || []);
       setSelectedDeckId(created.id);
       setNewDeckOpen(false);
@@ -652,6 +656,7 @@ const CardDeckAdmin = () => {
           thumbnail_url: deckDraft.thumbnail_url,
           card_back_url: deckDraft.card_back_url,
           is_published: deckDraft.is_published,
+          location_id: deckDraft.location_id,
         })
         .eq('id', selectedDeckId);
       if (error) throw error;
@@ -675,6 +680,7 @@ const CardDeckAdmin = () => {
                 thumbnail_url: deckDraft.thumbnail_url,
                 card_back_url: deckDraft.card_back_url,
                 is_published: deckDraft.is_published,
+          location_id: deckDraft.location_id,
               }
             : d,
         ),
@@ -872,10 +878,11 @@ const CardDeckAdmin = () => {
                 </Badge>
               </div>
               <p className="text-xs text-muted-foreground">
-                These fields control how the deck appears on the Door of Remembrance. They are separate from individual card content.
+                These fields control where the deck appears in THE TEMPLE. They are separate from individual card content.
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
+              <DoorSectionSelect value={deckDraft.location_id} onChange={value => setDeckDraft({ ...deckDraft, location_id: value || null })} optional />
               <div className="flex items-center justify-between gap-4 rounded-md border border-border/60 bg-background p-4">
                 <div className="space-y-1">
                   <Label htmlFor="deck-published">Publish Deck</Label>
