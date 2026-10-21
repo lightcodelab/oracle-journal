@@ -1,3 +1,4 @@
+import { locationPath, locationDoor, DOOR_SECTIONS, type PracticeDoor } from '@/lib/doorSections';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -47,11 +48,13 @@ interface ContentResource {
     id: string;
     name: string;
     slug: string;
+    page?: string | null;
   } | null;
   resource_type: {
     id: string;
     name: string;
     slug: string;
+    page?: string | null;
   } | null;
 }
 
@@ -130,7 +133,8 @@ const DevotionResourcePage = () => {
             location:content_categories!location_id (
               id,
               name,
-              slug
+              slug,
+              page
             )
         `;
 
@@ -247,7 +251,8 @@ const DevotionResourcePage = () => {
           location:content_categories!location_id (
             id,
             name,
-            slug
+            slug,
+            page
           ),
           resource_type:content_categories!resource_type_id (
             id,
@@ -498,9 +503,10 @@ const DevotionResourcePage = () => {
     );
   }
 
-  const isBecomingResource = resource.location?.slug === 'loc-remembrance-courses';
-  const doorPath = isBecomingResource ? '/becoming' : '/devotion';
-  const doorLabel = isBecomingResource ? 'The Door of Becoming' : 'The Door of Devotion';
+  const door = resource.location ? locationDoor(resource.location) : 'devotion';
+  const isBecomingResource = door === 'becoming';
+  const doorPath = locationPath(resource.location);
+  const doorLabel = door in DOOR_SECTIONS ? DOOR_SECTIONS[door as PracticeDoor].name : 'The Door of Communion';
 
   // Show access denied if user doesn't have devotion access
   if (!canAccessDevotion) {
@@ -550,7 +556,8 @@ const DevotionResourcePage = () => {
   }
 
   const getBackPath = () => {
-    if (isBecomingResource) return '/becoming';
+    if (resource.location?.slug?.startsWith(`loc-${door}-`)) return `${doorPath}#${resource.location.slug}-heading`;
+    if (door !== 'devotion') return doorPath;
     if (resource.location?.slug) {
       // Map location slug to section path
       const sectionMap: Record<string, string> = {

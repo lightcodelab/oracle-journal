@@ -1,3 +1,4 @@
+import { locationPath } from '@/lib/doorSections';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { ContentResource } from '@/hooks/useContentByLocation';
@@ -62,7 +63,7 @@ export const useAllCourses = (): UseAllCoursesResult => {
 
         let query = supabase
           .from('courses')
-          .select('id, title, description, image_url, is_published, display_order, location_id, location:content_categories!location_id (id, name, slug)')
+          .select('id, title, description, image_url, is_published, display_order, location_id, location:content_categories!location_id (id, name, slug, page)')
           .order('display_order', { ascending: true });
 
         if (!userIsAdmin) query = query.eq('is_published', true);
@@ -76,11 +77,7 @@ export const useAllCourses = (): UseAllCoursesResult => {
           return {
             categoryName: course.location?.name ?? 'Other Courses',
             categorySlug: locationSlug,
-            basePath: locationSlug === 'loc-remembrance-courses'
-              ? '/becoming'
-              : REMEMBRANCE_LOCATIONS.has(locationSlug)
-                ? '/remembrance'
-                : '/devotion',
+            basePath: locationPath(course.location),
             resource: {
               id: course.id,
               title: course.title,

@@ -1,3 +1,4 @@
+import { DoorSectionBand } from '@/components/temple/DoorSectionBand';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DoorOpen } from "lucide-react";
@@ -60,18 +61,9 @@ export default function DoorOfBecoming() {
           </div>
         </motion.div>
 
-        <section aria-labelledby="alchemy-heading">
-          <div className="mb-8 text-center">
-            <div className="mb-2 text-3xl" aria-hidden="true">🜃</div>
-            <h2 id="alchemy-heading" className="mb-3 font-serif text-2xl text-foreground md:text-3xl">The Alchemy of Becoming</h2>
-            <p className="mb-3 font-sans text-base font-bold text-primary">Courses for Integration &amp; Self-Awareness</p>
-            <div className="mx-auto max-w-2xl space-y-3 text-base text-muted-foreground">
-              <p>These journeys help you integrate what has been revealed — stabilising triggers, excavating belief, and reshaping identity.</p>
-              <p>This is not about fixing yourself. It is about becoming capable of holding what you know.</p>
-            </div>
-          </div>
-          <BecomingCoursesSection />
-        </section>
+        <DoorSectionBand door="becoming" index={0} legacyLocations={['loc-remembrance-courses']} />
+        <DoorSectionBand door="becoming" index={1} />
+        <DoorSectionBand door="becoming" index={2} />
       </div>
     </div>
   );
