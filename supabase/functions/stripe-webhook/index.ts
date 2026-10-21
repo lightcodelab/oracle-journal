@@ -50,6 +50,26 @@ async function notifyAdmins(payload: Record<string, unknown>) {
 }
 
 serve(async (req) => {
+  // Internal reconcile action (scheduled daily summary): records any live
+  // paid invoices that are missing from our payment records.
+  const notifySecret = Deno.env.get("ADMIN_NOTIFY_SECRET");
+  const internalHeader = req.headers.get("x-admin-notify-secret");
+  if (internalHeader && notifySecret && internalHeader === notifySecret) {
+    try {
+      const body = await req.json().catch(() => ({}));
+      const days = Math.min(Math.max(Number(body?.days) || 7, 1), 90);
+      const recorded = await reconcileLivePaidInvoices(days);
+      console.log("Reconciled missing invoices:", recorded);
+      return new Response(JSON.stringify({ ok: true, recorded }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "reconcile failed";
+      console.error("reconcile failed:", msg);
+      return new Response(JSON.stringify({ error: msg }), { status: 500 });
+    }
+  }
+
   const signature = req.headers.get("stripe-signature");
   if (!signature) {
     console.error("Missing signature or webhook secret");
@@ -211,7 +231,10 @@ serve(async (req) => {
 
       case "invoice.paid":
       case "invoice.payment_succeeded": {
-        const invoice = event.data.object as Stripe.Invoice;
+        const invoice = await canonicalInvoice(
+          event.data.object as Stripe.Invoice,
+          stripeClient,
+        );
         await handleInvoicePaid(invoice, stripeEnv, stripeClient, event.created);
         if (stripeEnv === "live") {
           await handleAffiliateOnInvoice(invoice);
@@ -220,7 +243,10 @@ serve(async (req) => {
       }
 
       case "invoice.payment_failed": {
-        const invoice = event.data.object as Stripe.Invoice;
+        const invoice = await canonicalInvoice(
+          event.data.object as Stripe.Invoice,
+          stripeClient,
+        );
         await handleInvoiceFailed(invoice, stripeEnv, stripeClient, event.created);
         break;
       }
@@ -516,16 +542,18 @@ async function handleInvoicePaid(
   stripeClient: Stripe,
   eventCreatedUnix: number,
 ) {
-  if (!invoice.subscription) return;
+  const subscriptionId = invoiceSubscriptionId(invoice);
+  if (!subscriptionId) {
+    console.log("invoice.paid without subscription, skipping:", invoice.id);
+    return;
+  }
 
   // Re-retrieve canonical subscription state and drive the same recovery
   // path used by customer.subscription.updated. Applies to both
   // invoice.paid and invoice.payment_succeeded.
   let canonical: Stripe.Subscription | null = null;
   try {
-    canonical = await stripeClient.subscriptions.retrieve(
-      invoice.subscription as string
-    );
+    canonical = await stripeClient.subscriptions.retrieve(subscriptionId);
     await handleSubscriptionChange(canonical, "updated", stripeEnv, eventCreatedUnix);
   } catch (e) {
     console.error("invoice.paid canonical retrieve failed:", e);
@@ -539,8 +567,9 @@ async function handleInvoicePaid(
     (await getUserIdFromCustomer(invoice.customer as string)) ??
     (canonical ? await getUserIdFromSubscription(canonical) : null);
   if (!userIdToUse) {
-    console.error("invoice.paid: no member found for", invoice.id);
-    return;
+    // Throw so the event is marked failed and Stripe retries, rather
+    // than silently losing a real payment.
+    throw new Error(`invoice.paid: no member found for ${invoice.id}`);
   }
   if (invoice.customer) {
     await supabaseAdmin
@@ -550,11 +579,13 @@ async function handleInvoicePaid(
       .is("stripe_customer_id", null);
   }
 
+  const paidAtUnix =
+    invoice.status_transitions?.paid_at ?? invoice.created ?? eventCreatedUnix;
+  const paidAtIso = new Date(paidAtUnix * 1000).toISOString();
+
   // Record invoice. Local ids are uuids, so Stripe ids live in the
   // provider_* columns and the local subscription row is resolved by lookup.
-  const localSubscriptionId = await getLocalSubscriptionId(
-    invoice.subscription as string,
-  );
+  const localSubscriptionId = await getLocalSubscriptionId(subscriptionId);
 
   const { data: invoiceRow, error: invoiceError } = await supabaseAdmin
     .from("invoices")
@@ -572,12 +603,14 @@ async function handleInvoicePaid(
       period_end: invoice.period_end
         ? new Date(invoice.period_end * 1000).toISOString()
         : null,
-      paid_at: new Date().toISOString(),
+      paid_at: paidAtIso,
     }, { onConflict: "provider_invoice_id" })
     .select("id")
     .maybeSingle();
 
-  if (invoiceError) console.error("invoice upsert failed:", invoiceError);
+  if (invoiceError) {
+    throw new Error(`invoice upsert failed: ${invoiceError.message}`);
+  }
 
   // Record payment
   const chargeId = (invoice.charge as string | null) ?? invoice.id;
@@ -591,9 +624,11 @@ async function handleInvoicePaid(
         amount_cents: invoice.amount_paid,
         currency: invoice.currency,
         status: "succeeded",
-        received_at: new Date().toISOString(),
+        received_at: paidAtIso,
       }, { onConflict: "provider_payment_id" });
-    if (paymentError) console.error("payment upsert failed:", paymentError);
+    if (paymentError) {
+      throw new Error(`payment upsert failed: ${paymentError.message}`);
+    }
   }
 
   await notifyAdmins({
@@ -621,7 +656,11 @@ async function handleInvoiceFailed(
   stripeClient: Stripe,
   eventCreatedUnix: number,
 ) {
-  if (!invoice.subscription) return;
+  const subscriptionId = invoiceSubscriptionId(invoice);
+  if (!subscriptionId) {
+    console.log("invoice.payment_failed without subscription, skipping:", invoice.id);
+    return;
+  }
 
   // Re-retrieve canonical subscription state. If Stripe has canonically
   // canceled/unpaid the subscription, that state flows through
@@ -630,23 +669,22 @@ async function handleInvoiceFailed(
   // are idempotent because ingest_stripe_subscription only sets the
   // failed_payment grace deadline on the first transition into past_due
   // (out-of-order protection uses _event_created_at).
+  let canonical: Stripe.Subscription | null = null;
   try {
-    const subscription = await stripeClient.subscriptions.retrieve(
-      invoice.subscription as string
-    );
-    await handleSubscriptionChange(subscription, "updated", stripeEnv, eventCreatedUnix);
+    canonical = await stripeClient.subscriptions.retrieve(subscriptionId);
+    await handleSubscriptionChange(canonical, "updated", stripeEnv, eventCreatedUnix);
   } catch (e) {
     console.error("invoice.payment_failed canonical retrieve failed:", e);
   }
 
   if (stripeEnv !== "live") return; // Test invoices are not mirrored.
 
-  const userIdToUse = await getUserIdFromCustomer(invoice.customer as string);
+  const userIdToUse =
+    (await getUserIdFromCustomer(invoice.customer as string)) ??
+    (canonical ? await getUserIdFromSubscription(canonical) : null);
   if (!userIdToUse) return;
 
-  const localSubscriptionId = await getLocalSubscriptionId(
-    invoice.subscription as string,
-  );
+  const localSubscriptionId = await getLocalSubscriptionId(subscriptionId);
 
   const { error: failedInvoiceError } = await supabaseAdmin
     .from("invoices")
@@ -696,6 +734,65 @@ async function getUserIdFromSubscription(subscription: Stripe.Subscription): Pro
   
   // Then try customer lookup
   return getUserIdFromCustomer(subscription.customer as string);
+}
+
+// Newer Stripe API versions moved invoice.subscription under
+// invoice.parent.subscription_details, so read every known location.
+// deno-lint-ignore no-explicit-any
+function invoiceSubscriptionId(invoice: any): string | null {
+  const raw =
+    invoice?.subscription ??
+    invoice?.parent?.subscription_details?.subscription ??
+    invoice?.lines?.data?.[0]?.parent?.subscription_item_details?.subscription ??
+    invoice?.lines?.data?.[0]?.subscription ??
+    null;
+  if (!raw) return null;
+  return typeof raw === "string" ? raw : raw.id ?? null;
+}
+
+// Webhook payloads use the endpoint's API version, which can differ from
+// the version this code was written for. Re-fetch the invoice through our
+// pinned client so fields like subscription and charge are reliable.
+async function canonicalInvoice(
+  invoice: Stripe.Invoice,
+  stripeClient: Stripe,
+): Promise<Stripe.Invoice> {
+  try {
+    return await stripeClient.invoices.retrieve(invoice.id);
+  } catch (e) {
+    console.error("canonical invoice retrieve failed:", invoice.id, e);
+    return invoice;
+  }
+}
+
+// Paid invoices that never made it into our records (missed or
+// mis-read webhooks). Used by the reconcile action.
+async function reconcileLivePaidInvoices(days: number) {
+  const since = Math.floor(Date.now() / 1000) - days * 86400;
+  const recorded: string[] = [];
+  let startingAfter: string | undefined;
+  for (let page = 0; page < 10; page++) {
+    const list = await stripeLive.invoices.list({
+      status: "paid",
+      created: { gte: since },
+      limit: 100,
+      ...(startingAfter ? { starting_after: startingAfter } : {}),
+    });
+    for (const inv of list.data) {
+      if (!inv.amount_paid || inv.amount_paid <= 0) continue;
+      const { data: existing } = await supabaseAdmin
+        .from("invoices")
+        .select("id")
+        .eq("provider_invoice_id", inv.id)
+        .maybeSingle();
+      if (existing) continue;
+      await handleInvoicePaid(inv, "live", stripeLive, inv.created);
+      recorded.push(inv.id);
+    }
+    if (!list.has_more || list.data.length === 0) break;
+    startingAfter = list.data[list.data.length - 1].id;
+  }
+  return recorded;
 }
 
 // =====================================================
@@ -818,8 +915,8 @@ async function handleAffiliateOnSubscription(subscription: Stripe.Subscription) 
 
 async function handleAffiliateOnInvoice(invoice: Stripe.Invoice) {
   try {
-    if (!invoice.subscription) return;
-    const subId = invoice.subscription as string;
+    const subId = invoiceSubscriptionId(invoice);
+    if (!subId) return;
     const subscription = await stripe.subscriptions.retrieve(subId);
     const affCode = subscription.metadata?.affiliate_code;
     if (!affCode) return;
