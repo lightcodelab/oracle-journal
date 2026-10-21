@@ -69,7 +69,7 @@ export function DoorCard({ door, delay = 0 }: { door: TempleDoor; delay?: number
         <p className="mt-1 font-serif text-lg text-foreground text-center">
           {door.name}
         </p>
-        <p className="mt-1 text-xs text-primary-strong text-center tracking-wider">
+        <p className="mt-1 text-xs text-primary-strong text-center uppercase tracking-wider">
           {door.label}
         </p>
         <p className="mt-2 text-sm text-muted-foreground text-center leading-relaxed">
