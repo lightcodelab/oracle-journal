@@ -61,9 +61,9 @@ export function DoorCard({ door, delay = 0 }: { door: TempleDoor; delay?: number
             className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         </div>
-        {door.phase && (
+        {door.chamber && (
           <p className="mt-3 text-xs font-medium uppercase tracking-[0.2em] text-primary text-center">
-            {door.phase}
+            {door.chamber}
           </p>
         )}
         <p className="mt-1 font-serif text-lg text-foreground text-center">
