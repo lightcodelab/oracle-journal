@@ -2222,6 +2222,7 @@ export type Database = {
           is_free: boolean | null
           is_published: boolean
           is_starter: boolean | null
+          location_id: string | null
           name: string
           theme: string
           thumbnail_url: string | null
@@ -2239,6 +2240,7 @@ export type Database = {
           is_free?: boolean | null
           is_published?: boolean
           is_starter?: boolean | null
+          location_id?: string | null
           name: string
           theme: string
           thumbnail_url?: string | null
@@ -2256,6 +2258,7 @@ export type Database = {
           is_free?: boolean | null
           is_published?: boolean
           is_starter?: boolean | null
+          location_id?: string | null
           name?: string
           theme?: string
           thumbnail_url?: string | null
@@ -2263,7 +2266,15 @@ export type Database = {
           woocommerce_product_id?: string | null
           woocommerce_product_id_premium?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "decks_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "content_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       emotional_capacity_checkins: {
         Row: {
