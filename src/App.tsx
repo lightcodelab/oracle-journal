@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop";
 import { AuthProvider } from "@/hooks/useAuth";
 import { AddToRitualProvider } from "@/components/rituals/AddToRitualProvider";
@@ -108,6 +108,13 @@ import { useEffect } from "react";
 import MembershipGate from "@/components/MembershipGate";
 const queryClient = new QueryClient();
 
+// Old "Field Notes" addresses stay alive for bookmarks, saved links and email
+// instructions: they forward to the same place under its new name.
+function LegacyFieldNoteRedirect() {
+  const { id } = useParams();
+  return <Navigate to={`/case-notes/${id}`} replace />;
+}
+
 const App = () => {
   useEffect(() => {
     void captureRefFromQueryString();
@@ -195,6 +202,8 @@ const App = () => {
             <Route path="/remembrance-letters" element={<MyRemembranceLetters />} />
             <Route path="/case-notes/:id" element={<LivingPatternExperiment />} />
             <Route path="/living-pattern/experiments" element={<Navigate to="/case-notes" replace />} />
+            <Route path="/field-notes" element={<Navigate to="/case-notes" replace />} />
+            <Route path="/field-notes/:id" element={<LegacyFieldNoteRedirect />} />
             <Route path="/living-pattern/experiments/:id" element={<LivingPatternExperiment />} />
 
             <Route path="/living-pattern/presence" element={<Navigate to="/living-pattern" replace />} />
