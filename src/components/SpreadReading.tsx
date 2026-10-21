@@ -119,27 +119,17 @@ export const SpreadReading = ({
         <p className="text-base text-foreground/70 max-w-xl mx-auto">
           {spread.description}
         </p>
+        <ol className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm text-muted-foreground font-sans">
+          <li>1. Set your focus</li>
+          <li className={!allRevealed ? "text-primary font-semibold" : ""}>2. Reveal your cards</li>
+          <li className={allRevealed ? "text-primary font-semibold" : ""}>3. Collect new evidence</li>
+        </ol>
         {!allRevealed && (
           <p className="text-sm text-muted-foreground">
-            Select each card to reveal its message
+            Click each card to turn it over and reveal its message
           </p>
         )}
-        {!allRevealed && journalAnswers && onJournalAnswerChange && (
-          <div className="max-w-xl mx-auto pt-2 text-left">
-            <label htmlFor="spread-guiding-question" className="block text-center font-serif text-base italic text-foreground/80">
-              Hold a guiding question or focus in mind (optional)
-            </label>
-            <Textarea
-              id="spread-guiding-question"
-              value={journalAnswers.guiding_question}
-              onChange={(e) => onJournalAnswerChange('guiding_question', e.target.value.slice(0, GUIDING_QUESTION_MAX))}
-              rows={2}
-              placeholder="e.g. What is asking for rest in my body right now?"
-              className="mt-2"
-            />
-          </div>
-        )}
-        {allRevealed && journalAnswers?.guiding_question?.trim() && (
+        {journalAnswers?.guiding_question?.trim() && (
           <p className="max-w-xl mx-auto font-serif italic text-foreground/75">“{journalAnswers.guiding_question.trim()}”</p>
         )}
       </div>
