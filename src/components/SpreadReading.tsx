@@ -9,12 +9,20 @@ import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
 import { cardImageSrc } from "@/lib/cardImage";
 import { useCardImagesReady } from "@/hooks/useCardImagesReady";
+import { EvidenceCollector } from "@/components/EvidenceCollector";
+import { GUIDING_QUESTION_MAX } from "@/lib/evidenceFramework";
 
 export type SpreadJournalAnswers = {
   asking_to_be_seen: string;
   invited_to_shift: string;
   how_i_will_live_it: string;
   invited_to_return: string;
+  guiding_question: string;
+  pattern_location: string;
+  old_evidence: string;
+  new_evidence: string;
+  todays_choice: string;
+  returned_evidence: string;
 };
 
 export const EMPTY_SPREAD_JOURNAL_ANSWERS: SpreadJournalAnswers = {
@@ -22,6 +30,12 @@ export const EMPTY_SPREAD_JOURNAL_ANSWERS: SpreadJournalAnswers = {
   invited_to_shift: "",
   how_i_will_live_it: "",
   invited_to_return: "",
+  guiding_question: "",
+  pattern_location: "",
+  old_evidence: "",
+  new_evidence: "",
+  todays_choice: "",
+  returned_evidence: "",
 };
 
 interface SpreadReadingProps {
@@ -109,6 +123,24 @@ export const SpreadReading = ({
           <p className="text-sm text-muted-foreground">
             Select each card to reveal its message
           </p>
+        )}
+        {!allRevealed && journalAnswers && onJournalAnswerChange && (
+          <div className="max-w-xl mx-auto pt-2 text-left">
+            <label htmlFor="spread-guiding-question" className="block text-center font-serif text-base italic text-foreground/80">
+              Hold a guiding question or focus in mind (optional)
+            </label>
+            <Textarea
+              id="spread-guiding-question"
+              value={journalAnswers.guiding_question}
+              onChange={(e) => onJournalAnswerChange('guiding_question', e.target.value.slice(0, GUIDING_QUESTION_MAX))}
+              rows={2}
+              placeholder="e.g. What is asking for rest in my body right now?"
+              className="mt-2"
+            />
+          </div>
+        )}
+        {allRevealed && journalAnswers?.guiding_question?.trim() && (
+          <p className="max-w-xl mx-auto font-serif italic text-foreground/75">“{journalAnswers.guiding_question.trim()}”</p>
         )}
       </div>
 
@@ -229,7 +261,14 @@ export const SpreadReading = ({
                 Private to you. Your writing is saved with the cards and your reading.
               </p>
 
-              <div className="mt-5 space-y-5">
+              <div className="mt-5">
+                <EvidenceCollector
+                  idPrefix="spread"
+                  values={journalAnswers}
+                  onChange={(key, value) => onJournalAnswerChange(key as keyof SpreadJournalAnswers, value)}
+                />
+              </div>
+              <div className="mt-8 border-t border-border pt-6 space-y-5">
                 {SPREAD_JOURNAL_QUESTIONS.map((q) => (
                   <div key={q.key}>
                     <label htmlFor={`spread-${q.key}`} className="block font-serif text-base text-foreground">

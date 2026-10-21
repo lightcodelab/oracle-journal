@@ -11,6 +11,8 @@ import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import CardDetailDialog from "./CardDetailDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useUpdateJournalAnswers } from "@/hooks/useSavedReadings";
+import { EvidenceCollector } from "@/components/EvidenceCollector";
+import { EVIDENCE_KEYS } from "@/lib/evidenceFramework";
 import { useMemberState } from "@/hooks/useMemberState";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -68,8 +70,8 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
     }
   }, [open, readingId, journalAnswers]);
 
-  const journalDirty = SPREAD_JOURNAL_QUESTIONS.some(
-    (q) => (journalDraft[q.key] || "") !== (journalAnswers?.[q.key] || "")
+  const journalDirty = [...SPREAD_JOURNAL_QUESTIONS.map((q) => q.key as string), ...EVIDENCE_KEYS].some(
+    (k) => (journalDraft[k] || "") !== (journalAnswers?.[k] || "")
   );
 
   const handleSaveJournal = async () => {
@@ -204,7 +206,17 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
               <p className="mt-1 text-sm text-muted-foreground">
                 Private to you. You can return and add to your writing at any time.
               </p>
-              <div className="mt-5 space-y-5">
+              {journalAnswers?.guiding_question?.trim() && (
+                <p className="mt-4 font-serif italic text-foreground/80">Your guiding question: “{journalAnswers.guiding_question.trim()}”</p>
+              )}
+              <div className="mt-5">
+                <EvidenceCollector
+                  idPrefix="saved-spread"
+                  values={journalDraft}
+                  onChange={(key, value) => setJournalDraft((prev) => ({ ...prev, [key]: value }))}
+                />
+              </div>
+              <div className="mt-8 border-t border-border pt-6 space-y-5">
                 {SPREAD_JOURNAL_QUESTIONS.map((q) => (
                   <div key={q.key}>
                     <label htmlFor={`saved-spread-${q.key}`} className="block font-serif text-base text-foreground">

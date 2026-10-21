@@ -196,6 +196,7 @@ const SacredSpreads = () => {
         body: {
           spreadType: activeSpread.id,
           cardIds: spreadCards.map((card) => card.id),
+          guidingQuestion: journalAnswers.guiding_question.trim() || undefined,
         },
       });
       if (error) {
@@ -217,7 +218,7 @@ const SacredSpreads = () => {
     } finally {
       setGenerating(false);
     }
-  }, [activeSpread, spreadCards, generating, generatedReading]);
+  }, [activeSpread, spreadCards, generating, generatedReading, journalAnswers.guiding_question]);
 
   useEffect(() => {
     if (activeSpread && spreadRevealedPositions.length === activeSpread.cardCount && !generatedReading && !generationError) {
