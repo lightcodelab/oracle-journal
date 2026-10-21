@@ -1,16 +1,16 @@
 export const DOOR_SECTIONS = {
-  remembrance: { name: 'The Door of Remembrance', phase: 'PHASE 1: REVEAL', sections: [
+  remembrance: { name: 'The Door of Remembrance', chamber: 'CHAMBER 1: REVEAL', sections: [
     { slug: 'loc-remembrance-draw-your-mirror', title: 'Draw your Mirror' },
     { slug: 'loc-remembrance-investigate-the-pattern', title: 'Investigate the Pattern' },
     { slug: 'loc-remembrance-open-a-case-file', title: 'Open a Case File' },
   ] },
-  devotion: { name: 'The Door of Devotion', phase: 'PHASE 2: REGULATE', sections: [
+  devotion: { name: 'The Door of Devotion', chamber: 'CHAMBER 2: REGULATE', sections: [
     { slug: 'loc-devotion-restore-your-body', title: 'Restore Your Body' },
     { slug: 'loc-devotion-settle-your-nervous-system', title: 'Settle Your Nervous System' },
     { slug: 'loc-devotion-stabilise-the-pattern', title: 'Stabilise the Pattern' },
     { slug: 'loc-devotion-file-your-evidence', title: 'File Your Evidence' },
   ] },
-  becoming: { name: 'The Door of Becoming', phase: 'PHASE 3: RESHAPE', sections: [
+  becoming: { name: 'The Door of Becoming', chamber: 'CHAMBER 3: RESHAPE', sections: [
     { slug: 'loc-becoming-build-your-new-pattern', title: 'Build your new pattern' },
     { slug: 'loc-becoming-shift-your-energetic-signature', title: 'Shift your Energetic Signature' },
     { slug: 'loc-becoming-file-your-evidence', title: 'File your Evidence' },
