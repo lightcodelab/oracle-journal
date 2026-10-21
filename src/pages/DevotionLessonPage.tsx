@@ -1,3 +1,4 @@
+import { locationPath, locationDoor } from '@/lib/doorSections';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -149,7 +150,7 @@ const DevotionLessonPage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('courses')
-        .select('title, location:content_categories!courses_location_id_fkey(id, name, slug)')
+        .select('title, location:content_categories!courses_location_id_fkey(id, name, slug, page)')
         .eq('id', courseId)
         .single();
 
@@ -483,7 +484,7 @@ const DevotionLessonPage = () => {
           courseId={courseId}
           currentLessonId={lessonId}
           courseTitle={course?.title}
-          basePath={(course as any)?.location?.slug === 'loc-remembrance-courses' ? '/becoming' : '/devotion'}
+          basePath={locationPath(course?.location)}
         />
       )}
 
@@ -494,8 +495,8 @@ const DevotionLessonPage = () => {
           {(() => {
             const locName = (course as any)?.location?.name as string | undefined;
             const locSlug = (course as any)?.location?.slug as string | undefined;
-            const isBecoming = locName === 'The Alchemy of Becoming' || locSlug === 'loc-remembrance-courses';
-            const isRemembrance = locName === 'Deepening Courses';
+            const isBecoming = course?.location ? locationDoor(course.location) === 'becoming' : false;
+            const isRemembrance = course?.location ? locationDoor(course.location) === 'remembrance' : false;
             const isDeepening = locName === 'Deepening Courses';
             const doorCrumb = isBecoming
               ? { label: 'The Door of Becoming', href: '/becoming', icon: DoorOpen }
@@ -505,7 +506,9 @@ const DevotionLessonPage = () => {
             const sectionCrumb = locName
               ? {
                   label: isDeepening ? 'Companion Courses' : locName,
-                  href: isDeepening
+                  href: locSlug?.startsWith('loc-remembrance-') && locSlug !== 'loc-remembrance-courses' || locSlug?.startsWith('loc-devotion-') || locSlug?.startsWith('loc-becoming-')
+                    ? `${locationPath(course?.location)}#${locSlug}-heading`
+                    : isDeepening
                     ? '/remembrance/companion-courses'
                     : isBecoming
                       ? '/becoming'
@@ -519,7 +522,7 @@ const DevotionLessonPage = () => {
                 items={[
                   doorCrumb,
                   ...(sectionCrumb ? [sectionCrumb] : []),
-                  { label: course?.title || 'Course', href: `${isBecoming ? '/becoming' : '/devotion'}/course/${courseId}` },
+                  { label: course?.title || 'Course', href: `${locationPath(course?.location)}/course/${courseId}` },
                 ]}
               />
             );

@@ -1,3 +1,4 @@
+import { placementLabel } from '@/lib/doorSections';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -43,6 +44,8 @@ interface HealingResource {
 interface Location {
   id: string;
   name: string;
+  slug?: string;
+  page?: string | null;
 }
 
 const modalityOptions: { value: Modality; label: string; icon: React.ReactNode }[] = [
@@ -95,7 +98,7 @@ const HealingResourceLibrary = ({ onEdit, onNew }: HealingResourceLibraryProps) 
   const loadLocations = async () => {
     const { data } = await supabase
       .from('content_categories')
-      .select('id, name')
+      .select('id, name, slug, page')
       .eq('type', 'location')
       .eq('active', true)
       .order('display_order');
@@ -214,7 +217,8 @@ const HealingResourceLibrary = ({ onEdit, onNew }: HealingResourceLibraryProps) 
 
   const getLocationName = (locationId: string | null) => {
     if (!locationId) return '-';
-    return locations.find(l => l.id === locationId)?.name || '-';
+    const location = locations.find(l => l.id === locationId);
+    return location ? placementLabel(location) : '-';
   };
 
   if (loading) {
@@ -262,13 +266,13 @@ const HealingResourceLibrary = ({ onEdit, onNew }: HealingResourceLibraryProps) 
 
         <Select value={locationFilter} onValueChange={setLocationFilter}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Location" />
+            <SelectValue placeholder="Door / Section" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Locations</SelectItem>
+            <SelectItem value="all">All Doors / Sections</SelectItem>
             {locations.map((loc) => (
               <SelectItem key={loc.id} value={loc.id}>
-                {loc.name}
+                {placementLabel(loc)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -294,7 +298,7 @@ const HealingResourceLibrary = ({ onEdit, onNew }: HealingResourceLibraryProps) 
             <TableRow>
               <TableHead className="w-[280px]">Title</TableHead>
               <TableHead>Modality</TableHead>
-              <TableHead>Location</TableHead>
+              <TableHead>Door / Section</TableHead>
               <TableHead>Duration</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Updated</TableHead>

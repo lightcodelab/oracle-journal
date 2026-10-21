@@ -1,3 +1,4 @@
+import { placementLabel } from '@/lib/doorSections';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -36,6 +37,8 @@ interface Category {
   id: string;
   name: string;
   type: 'resource_type' | 'location';
+  slug?: string;
+  page?: string | null;
 }
 
 interface ContentLibraryProps {
@@ -260,13 +263,13 @@ const ContentLibrary = ({ onEdit, onNew }: ContentLibraryProps) => {
 
         <Select value={filterLocation} onValueChange={setFilterLocation}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Location" />
+            <SelectValue placeholder="Door / Section" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Locations</SelectItem>
+            <SelectItem value="all">All Doors / Sections</SelectItem>
             {locations.map((cat) => (
               <SelectItem key={cat.id} value={cat.id}>
-                {cat.name}
+                {placementLabel(cat)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -291,7 +294,7 @@ const ContentLibrary = ({ onEdit, onNew }: ContentLibraryProps) => {
             <TableRow>
               <TableHead className="w-[300px]">Title</TableHead>
               <TableHead>Type</TableHead>
-              <TableHead>Location</TableHead>
+              <TableHead>Door / Section</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Updated</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -324,7 +327,7 @@ const ContentLibrary = ({ onEdit, onNew }: ContentLibraryProps) => {
                     {categories.find(c => c.id === resource.resource_type_id)?.name || '-'}
                   </TableCell>
                   <TableCell>
-                    {categories.find(c => c.id === resource.location_id)?.name || '-'}
+                    {(() => { const location = categories.find(c => c.id === resource.location_id); return location ? placementLabel(location) : '-'; })()}
                   </TableCell>
                   <TableCell>
                     <Badge variant={resource.status === 'published' ? 'default' : 'secondary'}>
