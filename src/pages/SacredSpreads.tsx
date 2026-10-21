@@ -196,6 +196,7 @@ const SacredSpreads = () => {
         body: {
           spreadType: activeSpread.id,
           cardIds: spreadCards.map((card) => card.id),
+          guidingQuestion: journalAnswers.guiding_question.trim() || undefined,
         },
       });
       if (error) {

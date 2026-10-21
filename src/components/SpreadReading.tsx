@@ -261,7 +261,14 @@ export const SpreadReading = ({
                 Private to you. Your writing is saved with the cards and your reading.
               </p>
 
-              <div className="mt-5 space-y-5">
+              <div className="mt-5">
+                <EvidenceCollector
+                  idPrefix="spread"
+                  values={journalAnswers}
+                  onChange={(key, value) => onJournalAnswerChange(key as keyof SpreadJournalAnswers, value)}
+                />
+              </div>
+              <div className="mt-8 border-t border-border pt-6 space-y-5">
                 {SPREAD_JOURNAL_QUESTIONS.map((q) => (
                   <div key={q.key}>
                     <label htmlFor={`spread-${q.key}`} className="block font-serif text-base text-foreground">
