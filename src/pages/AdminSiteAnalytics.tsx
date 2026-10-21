@@ -62,16 +62,20 @@ const AdminSiteAnalytics = () => {
   const [days, setDays] = useState(30);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<Stats | null>(null);
+  const [activity, setActivity] = useState<{ spreads: Row[]; decks: Row[] } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => { if (!authLoading && (!user || !isAdmin)) navigate("/"); }, [authLoading, user, isAdmin, navigate]);
 
   const load = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase.rpc("admin_site_analytics", {
-      _from: new Date(Date.now() - days * 86400000).toISOString(), _to: new Date().toISOString(),
-    });
+    const range = { _from: new Date(Date.now() - days * 86400000).toISOString(), _to: new Date().toISOString() };
+    const [{ data, error }, act] = await Promise.all([
+      supabase.rpc("admin_site_analytics", range),
+      supabase.rpc("admin_member_activity", range),
+    ]);
     if (error) setError(error.message); else { setError(null); setStats(data as unknown as Stats); }
+    if (!act.error) setActivity(act.data as unknown as { spreads: Row[]; decks: Row[] });
     setLoading(false);
   }, [days]);
 
@@ -115,7 +119,16 @@ const AdminSiteAnalytics = () => {
           ))}
         </div>
 
-        <Section title="Most accessed resources & pages">
+        <div className="grid md:grid-cols-2 gap-6">
+          <Section title="Sacred Spread readings" desc="Readings members actually drew, by spread">
+            <SimpleTable rows={activity?.spreads ?? []} cols={[["name", "Spread"], ["readings", "Readings"], ["people", "People"]]} />
+          </Section>
+          <Section title="Cards drawn" desc="Single-card draws, by deck">
+            <SimpleTable rows={activity?.decks ?? []} cols={[["name", "Deck"], ["draws", "Draws"], ["people", "People"]]} />
+          </Section>
+        </div>
+
+        <Section title="Most accessed resources & pages" desc="Page visits only — drawing cards or spreads happens inside one page, so see the two boxes above for those">
           <SimpleTable rows={stats?.top_pages ?? []} cols={[["title", "Page"], ["path", "Address"], ["door", "Door"], ["views", "Views"], ["people", "People"]]} />
         </Section>
 
