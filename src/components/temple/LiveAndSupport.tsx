@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Radio, User, Film } from "lucide-react";
+import { DoorCard, COMMUNION_DOOR } from "@/components/temple/ExploreDoors";
 
 const AU_TZ = "Australia/Melbourne";
 
@@ -120,6 +121,10 @@ export function LiveAndSupport({ enabled }: { enabled: boolean }) {
             </CardContent>
           </Card>
         </Link>
+      </div>
+
+      <div className="mt-4 max-w-xs sm:max-w-sm mx-auto">
+        <DoorCard door={COMMUNION_DOOR} delay={0.15} />
       </div>
     </section>
   );
