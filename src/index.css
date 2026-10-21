@@ -48,6 +48,10 @@ All colors MUST be HSL.
     --ring: 41 47% 45%;
 
     --radius: 1rem;
+    --section-mirror: 41 42% 80%;
+    --section-investigate: 155 18% 81%;
+    --section-case: 6 30% 83%;
+    --section-evidence: 195 22% 81%;
 
     /* Brand secondary colors */
     --brand-dark: 31 27% 18%;
@@ -63,6 +67,10 @@ All colors MUST be HSL.
 
   /* Admin tooling keeps the original dark Temple palette */
   .admin-theme {
+    --section-mirror: 41 30% 13%;
+    --section-investigate: 155 18% 12%;
+    --section-case: 6 25% 13%;
+    --section-evidence: 195 22% 12%;
     --background: 47.1 100% 2.7%;
     --foreground: 34 12% 88%;
 
@@ -107,6 +115,10 @@ All colors MUST be HSL.
 
   /* Member dark mode — near-black with warm undertone */
   .dark-theme {
+    --section-mirror: 41 30% 13%;
+    --section-investigate: 155 18% 12%;
+    --section-case: 6 25% 13%;
+    --section-evidence: 195 22% 12%;
     --background: 47.1 100% 2.7%;
     --foreground: 34 12% 88%;
 
@@ -162,6 +174,13 @@ All colors MUST be HSL.
 }
 
 /* 3D Card Flip Utilities */
+.door-section-band { border-block: 1px solid hsl(var(--border)); }
+.door-section-band + .door-section-band { border-top: 0; }
+.door-section-tone-1 { background: hsl(var(--section-mirror)); }
+.door-section-tone-2 { background: hsl(var(--section-investigate)); }
+.door-section-tone-3 { background: hsl(var(--section-case)); }
+.door-section-tone-4 { background: hsl(var(--section-evidence)); }
+
 .perspective-1000 {
   perspective: 1000px;
 }
