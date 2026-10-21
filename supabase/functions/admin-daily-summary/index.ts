@@ -24,6 +24,19 @@ serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   )
 
+  // Safety net: pull in any paid Stripe invoices the webhook missed, so
+  // the summary and Launch Dashboard always reflect real revenue.
+  try {
+    const res = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/stripe-webhook`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-notify-secret': expected },
+      body: JSON.stringify({ days: 7 }),
+    })
+    if (!res.ok) console.error('payment reconcile failed', res.status, await res.text())
+  } catch (e) {
+    console.error('payment reconcile threw', e)
+  }
+
   // Yesterday in Brisbane time (UTC+10).
   const nowBrisbane = new Date(Date.now() + 10 * 3600 * 1000)
   const dayStartBrisbane = new Date(Date.UTC(

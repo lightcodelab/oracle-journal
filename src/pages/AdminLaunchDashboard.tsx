@@ -38,6 +38,16 @@ interface LaunchStats {
     created_at: string;
     has_membership: boolean;
   }[];
+  new_members?: number;
+  recent_members?: {
+    id: string;
+    email: string | null;
+    full_name: string | null;
+    member_since: string;
+    plan_code: string | null;
+    cadence: string | null;
+    existing_account: boolean;
+  }[];
 }
 
 const RANGES = [
@@ -108,6 +118,7 @@ const AdminLaunchDashboard = () => {
     { label: "Sign-up button clicks", value: ctaClicks.toLocaleString(), note: `${pct(ctaClicks, views)} of visits` },
     { label: "Join button clicks", value: checkoutsStarted.toLocaleString(), note: "Clicked a price — not yet at payment" },
     { label: "New accounts", value: signups.toLocaleString(), note: `${pct(signups, views)} of visits` },
+    { label: "New paying members", value: (stats?.new_members ?? 0).toLocaleString(), note: "Includes people who already had an account" },
     { label: "Reached payment page", value: paymentPages.toLocaleString(), note: `${pct(paymentPages, checkoutsStarted)} of join clicks` },
     { label: "Payments received", value: payments.toLocaleString(), note: `${pct(payments, paymentPages)} of payment page visits` },
     {
@@ -271,6 +282,43 @@ const AdminLaunchDashboard = () => {
               </Badge>
             ))}
           </div>
+        </section>
+
+        <section aria-labelledby="members-heading" className="space-y-3">
+          <h2 id="members-heading" className="font-serif text-lg text-foreground">Newest paying members</h2>
+          <p className="text-sm text-muted-foreground">Everyone who started a paid membership, including people who already had an account.</p>
+          <Card>
+            <CardContent className="p-0 overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Became a member</TableHead>
+                    <TableHead>Plan</TableHead>
+                    <TableHead>Account</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {(stats?.recent_members ?? []).map((m) => (
+                    <TableRow key={m.id}>
+                      <TableCell>{m.full_name || "—"}</TableCell>
+                      <TableCell>{m.email || "—"}</TableCell>
+                      <TableCell>{new Date(m.member_since).toLocaleString()}</TableCell>
+                      <TableCell>{(m.plan_code ?? "membership")} · {m.cadence ?? "—"}</TableCell>
+                      <TableCell>
+                        {m.existing_account ? (
+                          <Badge variant="outline">Existing account</Badge>
+                        ) : (
+                          <Badge>New account</Badge>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </section>
 
         <section aria-labelledby="recent-heading" className="space-y-3">
