@@ -462,7 +462,7 @@ export const CardDetail = ({ card, onDrawAnother, hasPremiumAccess = false, isSt
         </div>
       )}
 
-      {/* Reflection footer: staging Field Notes, otherwise generic Journal Notes */}
+      {/* Reflection footer: staging Case Notes, otherwise generic Journal Notes */}
 
       <ReflectionFooter
         resourceFamily="card"

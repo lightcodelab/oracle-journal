@@ -9,7 +9,7 @@ import { useJournalEntries } from "@/hooks/useJournalEntries";
  * There is deliberately no editor, no create path and no mutation of any kind
  * here: `journal_entries` rows are never deleted, migrated, merged, relabelled
  * or rewritten, and `/journal` remains the only place history is editable.
- * Extracted so no future Field Notes surface can accidentally reintroduce a
+ * Extracted so no future Case Notes surface can accidentally reintroduce a
  * writer alongside the history.
  */
 
@@ -51,11 +51,11 @@ export default function EarlierJournalNotes({
           </div>
         ))}
         <Link
-          to="/field-notes"
+          to="/case-notes"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
         >
           <BookOpen className="h-4 w-4" />
-          Open My Field Notes
+          Open My Case Notes
         </Link>
       </div>
     </details>

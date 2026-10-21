@@ -2,7 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
 /**
- * LP-C.2 — private Field Notes media cleanup.
+ * LP-C.2 — private Case Notes media cleanup.
  *
  * Drains public.living_media_deletions and removes the physical objects from the
  * private `living-field-note-media` bucket. Rows are enqueued by a trigger, so

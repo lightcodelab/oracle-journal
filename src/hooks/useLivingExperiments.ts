@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * LP-C.1 — Field Notes for Your Experiments (text only).
+ * LP-C.1 — Case Notes for Your Experiments (text only).
  *
  * Owner-scoped client surface. Every call goes through the LP-C.1 SECURITY
  * DEFINER RPCs; the living_experiments / living_field_notes tables grant nothing

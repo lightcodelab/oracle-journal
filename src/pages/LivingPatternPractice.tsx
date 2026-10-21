@@ -43,7 +43,7 @@ import {
  * about who she is. A Pattern may be saved while still uncertain, re-chosen,
  * revised, or retired, and may hold no evidence and no experiments at all.
  *
- * Field Notes remain the one shared evidence practice (Try → Notice → Return);
+ * Case Notes remain the one shared evidence practice (Try → Notice → Return);
  * nothing here creates a second experiment or journal system.
  *
  * No Arrival table, route, query, prefill or reference exists in this file.
@@ -552,7 +552,7 @@ const LivingPatternPractice = ({ embedded = false }: { embedded?: boolean }) => 
 
         {saved && wantExperiment && (
           <div className="mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6 space-y-4">
-            <h2 className="font-serif text-2xl text-foreground">Field Notes for your experiment</h2>
+            <h2 className="font-serif text-2xl text-foreground">Case Notes for your experiment</h2>
             <p className="text-sm text-muted-foreground">
               Try → Notice → Return — the same evidence practice used everywhere in your Living
               Pattern. Choose a guide if one is useful, or write your own. None is better than

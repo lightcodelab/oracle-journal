@@ -899,7 +899,7 @@ const DevotionResourcePage = () => {
           </motion.div>
         )}
 
-        {/* Reflection footer: staging Field Notes, otherwise generic Journal Notes */}
+        {/* Reflection footer: staging Case Notes, otherwise generic Journal Notes */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

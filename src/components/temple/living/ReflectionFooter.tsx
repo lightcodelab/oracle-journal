@@ -9,7 +9,7 @@ import type { LivingResourceFamily } from "@/hooks/useLivingExperiments";
  * resources and cards.
  *
  * TL-2E — public rollout: every member with full Temple access
- * (`hasFullTempleAccess`) sees Field Notes for Your Experiments. Members
+ * (`hasFullTempleAccess`) sees Case Notes for Your Experiments. Members
  * without full access keep the existing generic Journal Notes surface,
  * unchanged.
  */
@@ -23,7 +23,7 @@ interface ReflectionFooterProps {
   contextId: string;
   contextTitle: string;
   placeholder?: string;
-  /** Optional surface-specific wording for the two voluntary Field Notes actions. */
+  /** Optional surface-specific wording for the two voluntary Case Notes actions. */
   startLabel?: string;
   attachLabel?: string;
   /**
@@ -54,7 +54,7 @@ export default function ReflectionFooter({
   if (hasFullTempleAccess) {
     /**
      * TL-2C — an eligible surface with no verified linked resource never gets an
-     * invented origin or a Field Notes composer: her history alone is shown,
+     * invented origin or a Case Notes composer: her history alone is shown,
      * strictly read-only.
      */
     if (!resourceId) {

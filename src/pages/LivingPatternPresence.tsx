@@ -463,7 +463,7 @@ const LivingPatternPresence = ({ embedded = false }: { embedded?: boolean }) => 
 
         {saved && wantExperiment && (
           <div className="mt-6 rounded-xl border border-border/60 bg-card p-5 sm:p-6 space-y-4">
-            <h2 className="font-serif text-2xl text-foreground">Field Notes for your experiment</h2>
+            <h2 className="font-serif text-2xl text-foreground">Case Notes for your experiment</h2>
             <p className="text-sm text-muted-foreground">
               Try → Notice → Return. Choose a guide if one is useful, or write your own. None of these
               is better than another, and none is advice.

@@ -717,7 +717,7 @@ const DevotionLessonPage = () => {
             </motion.div>
           )}
 
-          {/* Lesson-level reflection — Field Notes for eligible members, legacy Journal otherwise */}
+          {/* Lesson-level reflection — Case Notes for eligible members, legacy Journal otherwise */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

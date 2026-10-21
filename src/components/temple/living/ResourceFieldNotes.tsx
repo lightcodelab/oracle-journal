@@ -17,7 +17,7 @@ import EarlierJournalNotes from "@/components/temple/living/EarlierJournalNotes"
 
 
 /**
- * TL-1B — "Field Notes for Your Experiments" at the foot of an eligible Temple
+ * TL-1B — "Case Notes for Your Experiments" at the foot of an eligible Temple
  * resource or card.
  *
  * The resource or card is only ever an explicitly member-selected support she
@@ -89,7 +89,7 @@ export default function ResourceFieldNotes({
       setLoadError(
         e instanceof Error && e.message.includes("living_resource_unavailable")
           ? "This support is no longer available in the Temple."
-          : "Your Field Notes could not be opened just now.",
+          : "Your Case Notes could not be opened just now.",
       );
     } finally {
       setLoading(false);
@@ -117,7 +117,7 @@ export default function ResourceFieldNotes({
       setSafeDraft("");
       setStarting(false);
       await reload();
-      toast.success("Saved to your Field Notes.");
+      toast.success("Saved to your Case Notes.");
     } catch (e) {
       const message = e instanceof Error ? e.message : "";
       if (message.includes("living_resource_unavailable")) {
@@ -178,7 +178,7 @@ export default function ResourceFieldNotes({
           </div>
           <div className="min-w-0">
             <h3 className="font-serif text-lg text-foreground sm:text-xl">
-              Field Notes for Your Experiments
+              Case Notes for Your Experiments
             </h3>
             <p className="text-sm text-muted-foreground">{PRIVACY_LINE}</p>
           </div>
@@ -198,7 +198,7 @@ export default function ResourceFieldNotes({
         <div className="mt-5">
           {loading ? (
             <p className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" /> Opening your Field Notes…
+              <Loader2 className="h-4 w-4 animate-spin" /> Opening your Case Notes…
             </p>
           ) : loadError ? (
             <p className="text-sm text-muted-foreground">{loadError}</p>
