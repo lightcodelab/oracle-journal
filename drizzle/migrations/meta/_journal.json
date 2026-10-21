@@ -379,6 +379,13 @@
       "when": 1791691310930,
       "tag": "0053_experience_feedback",
       "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1792556088216,
+      "tag": "0054_launch_stats_new_members",
+      "breakpoints": true
     }
   ]
 }
