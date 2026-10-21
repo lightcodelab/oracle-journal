@@ -31,6 +31,7 @@ const SacredSpreads = () => {
   const [selectedCard, setSelectedCard] = useState<OracleCard | null>(null);
   const [cardDialogOpen, setCardDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [readingSaved, setReadingSaved] = useState(false);
   
   const [generatedReading, setGeneratedReading] = useState<string | null>(null);
   const [generatedReadingModel, setGeneratedReadingModel] = useState<string | null>(null);
@@ -73,6 +74,7 @@ const SacredSpreads = () => {
 
   const initializeSpreadReading = async (spread: SpreadType) => {
     if (!user) return;
+    setReadingSaved(false);
 
     // Free accounts draw through a server-side draw so the decks themselves
     // stay closed until they join.
@@ -320,6 +322,7 @@ const SacredSpreads = () => {
         title: 'Spread Saved',
         description: `Your "${activeSpread.name}" reading has been saved to My Readings.`,
       });
+      setReadingSaved(true);
     } catch (err) {
       console.error('Error saving spread:', err);
       toast({
@@ -357,6 +360,7 @@ const SacredSpreads = () => {
     autoSavedRef.current = false;
     savedReadingIdRef.current = null;
     setActiveSpread(null);
+    setReadingSaved(false);
     setPendingSpread(null);
     setSpreadCards([]);
     setSpreadRevealedPositions([]);
@@ -491,6 +495,7 @@ const SacredSpreads = () => {
             onJournalAnswerChange={(key, value) =>
               setJournalAnswers((prev) => ({ ...prev, [key]: value }))
             }
+            saved={readingSaved}
           />
         )}
 
