@@ -260,7 +260,7 @@ export const SpreadReading = ({
               </div>
             </section>
           )}
-          {!generating && <p className="text-foreground/70 text-sm italic">Select any card to explore its full wisdom.</p>}
+          {!generating && <p className="text-foreground/70 text-sm italic">Click on any card to explore its full wisdom.</p>}
         </motion.div>
       )}
     </motion.div>
