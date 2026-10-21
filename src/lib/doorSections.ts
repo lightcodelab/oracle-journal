@@ -19,6 +19,10 @@ export const DOOR_SECTIONS = {
 export type PracticeDoor = keyof typeof DOOR_SECTIONS;
 export interface PlacementLocation { id: string; name: string; slug?: string; page?: string | null }
 export function locationDoor(location: PlacementLocation): string {
+  for (const door of Object.keys(DOOR_SECTIONS)) {
+    if (location.slug?.startsWith(`loc-${door}-`) && location.slug !== 'loc-remembrance-courses') return door;
+  }
+  if (location.slug === 'loc-deepening-courses') return 'remembrance';
   if (location.slug === 'loc-remembrance-courses') return 'becoming';
   if (location.slug === 'loc-rites-of-remembrance') return 'devotion';
   return location.page || 'devotion';
@@ -27,4 +31,8 @@ export function placementLabel(location: PlacementLocation): string {
   const door = locationDoor(location);
   const name = door in DOOR_SECTIONS ? DOOR_SECTIONS[door as PracticeDoor].name : 'The Door of Communion';
   return `${name} — ${location.name}`;
+}
+
+export function locationPath(location?: PlacementLocation | null): string {
+  return `/${location ? locationDoor(location) : 'devotion'}`;
 }
