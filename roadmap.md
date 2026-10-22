@@ -1,5 +1,10 @@
 # Roadmap
 
+## Home practice shortcuts
+- [x] Confirm the broken practice destinations and missing deck anchor while signed in
+- [x] Link Devotion shortcuts to the existing category pages and restore the deck anchor
+- [ ] Verify the corrected shortcuts while signed in without creating member records
+
 ## Door sections and content placement
 - [x] Add ordered sections and persistent placement options
 - [x] Add Door and section choices to all four editors and location filters
