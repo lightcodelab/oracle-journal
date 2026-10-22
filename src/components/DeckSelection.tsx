@@ -84,7 +84,7 @@ export const DeckSelection = ({
       </div>
 
       <DoorSectionBand door="remembrance" index={0}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+          <div id="mirrors-of-sacred-undoing" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto scroll-mt-24">
             {/* Sacred Spreads link card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
