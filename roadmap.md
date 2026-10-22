@@ -3,7 +3,7 @@
 ## Home practice shortcuts
 - [x] Confirm the broken practice destinations and missing deck anchor while signed in
 - [x] Link Devotion shortcuts to the existing category pages and restore the deck anchor
-- [ ] Verify the corrected shortcuts while signed in without creating member records
+- [x] Verify the corrected shortcuts while signed in without creating member records
 
 ## Door sections and content placement
 - [x] Add ordered sections and persistent placement options
