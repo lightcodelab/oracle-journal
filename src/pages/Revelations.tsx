@@ -8,7 +8,32 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { EvidenceCollector } from "@/components/EvidenceCollector";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
-import { FOCUS_TOPICS } from "@/components/SpreadFocusStep";
+const REVELATIONS_TOPICS: { label: string; prompts: string[] }[] = [
+  {
+    label: "Starting My Business",
+    prompts: [
+      "Why does putting my work out into the world feel so much bigger than me?",
+      "What old story keeps me from finally starting?",
+      "Who am I afraid of seeing me fail — and what would change if I began anyway?",
+    ],
+  },
+  {
+    label: "It Feels Like It's Failing",
+    prompts: [
+      "Why does it feel like I've tried everything and nothing is working?",
+      "What is this setback actually telling me that I don't want to hear?",
+      "What am I carrying from other people's expectations of what this should look like by now?",
+    ],
+  },
+  {
+    label: "On the Brink of Giving Up",
+    prompts: [
+      "What am I really ready to let go of — the work, or the way I've been doing it?",
+      "What would I have to believe about myself to walk away from this?",
+      "What is still quietly asking to be built, even on my worst days?",
+    ],
+  },
+];
 import { cardImageSrc } from "@/lib/cardImage";
 import { loadCardImages } from "@/lib/loadCardImages";
 import { GUIDING_QUESTION_MAX } from "@/lib/evidenceFramework";
@@ -168,8 +193,8 @@ export default function Revelations() {
         <p className="font-serif text-xl">What is asking to be seen?</p>
         <div className="flex justify-center"><img src={cardBack} alt="The Sacred Rewrite card back" className="w-28 aspect-[7/10] rounded-lg object-cover" /></div>
         <label htmlFor="revelations-question" className="block text-muted-foreground">Your guiding question or focus (optional)</label>
-        <div className="flex flex-wrap justify-center gap-2">{FOCUS_TOPICS.map((item, index) => <Button key={item.label} variant={topic === index ? "default" : "outline"} onClick={() => setTopic(topic === index ? null : index)} aria-pressed={topic === index} className="h-auto whitespace-normal">{item.label}</Button>)}</div>
-        {topic !== null && <div className="space-y-2 text-left">{FOCUS_TOPICS[topic].prompts.map(prompt => <Button key={prompt} variant="outline" onClick={() => setQuestion(prompt)} className="h-auto w-full justify-start whitespace-normal py-3 text-left font-serif">{prompt}</Button>)}</div>}
+        <div className="flex flex-wrap justify-center gap-2">{REVELATIONS_TOPICS.map((item, index) => <Button key={item.label} variant={topic === index ? "default" : "outline"} onClick={() => setTopic(topic === index ? null : index)} aria-pressed={topic === index} className="h-auto whitespace-normal">{item.label}</Button>)}</div>
+        {topic !== null && <div className="space-y-2 text-left">{REVELATIONS_TOPICS[topic].prompts.map(prompt => <Button key={prompt} variant="outline" onClick={() => setQuestion(prompt)} className="h-auto w-full justify-start whitespace-normal py-3 text-left font-serif">{prompt}</Button>)}</div>}
         <Textarea id="revelations-question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={GUIDING_QUESTION_MAX} rows={3} placeholder="What would you like guidance on today?" />
         <Button size="lg" onClick={() => void draw(true)} disabled={drawing}><Sparkles className="mr-2 h-4 w-4" />{drawing ? "Preparing your card…" : "Shuffle & Draw My Card"}</Button>
         <div><Button variant="link" onClick={() => void draw(false)} disabled={drawing}>Draw without a question</Button></div>
