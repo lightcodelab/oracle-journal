@@ -10,6 +10,8 @@ import { EvidenceCollector } from "@/components/EvidenceCollector";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
 import { DoorHeader } from "@/components/temple/DoorHeader";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import ProfileDropdown from "@/components/ProfileDropdown";
+import { REGULATION_QUESTION } from "@/lib/revelationsJournal";
 import revelationsBanner from "@/assets/revelations-banner.png.asset.json";
 const REVELATIONS_QUESTIONS = [
   "What am I most afraid people will discover if this doesn't work?",
@@ -54,6 +56,18 @@ export default function Revelations() {
   const latestAnswers = useRef<Answers>({});
   const saveQueue = useRef<Promise<void>>(Promise.resolve());
   const generationLock = useRef(false);
+  const recordId = useRef<string | null>(null);
+  recordId.current = record?.id ?? null;
+
+  // Flush pending notes when navigating away before the debounce fires.
+  useEffect(() => () => {
+    const id = recordId.current;
+    if (!id || !dirty.current) return;
+    const snapshot = { ...latestAnswers.current };
+    saveQueue.current = saveQueue.current.catch(() => undefined).then(async () => {
+      await supabase.from("revelations_readings").update({ journal_answers: snapshot }).eq("id", id);
+    });
+  }, []);
 
   useEffect(() => {
     document.title = "Revelations | THE TEMPLE of Sustainment";
@@ -101,6 +115,7 @@ export default function Revelations() {
     saveQueue.current = saveQueue.current.catch(() => undefined).then(async () => {
       const snapshot = { ...latestAnswers.current };
       const { error: saveError } = await supabase.from("revelations_readings").update({ journal_answers: snapshot }).eq("id", id);
+      if (!saveError && JSON.stringify(snapshot) === JSON.stringify(latestAnswers.current)) dirty.current = false;
       setSaveStatus(saveError ? "Your notes haven't saved. Please try again." : "Saved privately");
     });
     await saveQueue.current;
@@ -163,7 +178,7 @@ export default function Revelations() {
   return <div className="min-h-screen bg-background text-foreground">
     <header className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-5 border-b border-border">
       <Link to="/" className="font-serif text-primary">THE TEMPLE of Sustainment</Link>
-      <Link to={user ? "/profile" : "/auth?redirect=/revelations"} className="text-sm text-muted-foreground underline">{user ? "My Profile" : "Sign in"}</Link>
+      {user ? <ProfileDropdown revelationsOnly /> : <Link to="/auth?redirect=/revelations" className="text-sm text-muted-foreground underline">Sign in</Link>}
     </header>
     <main className="mx-auto max-w-6xl px-5 pb-8 pt-0">
       <DoorHeader image={revelationsBanner.url} imageKey="revelations-header" title="REVELATIONS" srOnlyTitle flushTop />
@@ -239,11 +254,13 @@ export default function Revelations() {
               <p>A settled body is what makes something new possible. When your nervous system feels calm and safe, it stops reaching for the old story and can actually take in new evidence — a different response, a different feeling, a different ending. That is why we settle before we investigate. It isn't a pause in the work; it is what allows the work to stick.</p>
               <p>Here's your first Regulation practice from The Door of Devotion.</p>
               <p className="text-sm italic text-muted-foreground">The audio practice is coming soon.</p>
+              <label htmlFor="revelations-regulation" className="block font-serif">{REGULATION_QUESTION.label}</label>
+              <Textarea id="revelations-regulation" rows={5} value={answers[REGULATION_QUESTION.key] || ""} onChange={e => changeAnswer(REGULATION_QUESTION.key, e.target.value)} />
             </section>
             <section className="border-t border-border pt-8 space-y-5">
               <SectionTitle>PHASE 3: INVESTIGATE</SectionTitle>
               <EvidenceCollector title="The Evidence Locker" description="A private place to gather what you notice — old evidence, new evidence, and one choice you can make today — so change can begin from something real." showGrounding={false} showIntroduction={false} idPrefix="revelations-evidence" values={answers} onChange={changeAnswer} extraQuestions={[PROTECTION_PREDICTION_QUESTION]} questions={REVELATIONS_EVIDENCE_QUESTIONS} />
-              <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-muted-foreground" role="status">{saveStatus || "Your reading is saved. Return to Revelations to add new evidence."}</span><Button variant="link" onClick={() => void saveAnswers()}>Save my evidence</Button></div>
+              <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-muted-foreground" role="status">{saveStatus || "Your reading is saved privately."}</span><Button variant="link" onClick={() => void saveAnswers()}>Save my evidence</Button><Button asChild variant="link"><Link to="/revelations/saved" onClick={() => void saveAnswers()}>My Saved Revelations</Link></Button></div>
             </section>
             <section className="border-t border-border pt-8 space-y-4">
               <h2 className="font-serif text-2xl text-primary">What if this doesn't feel like it was for me?</h2>

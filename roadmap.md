@@ -1,6 +1,8 @@
 # Roadmap
 
 ## Revelations
+- [ ] Add Phase 2 reflection and private saved Reading / Phase 1 / Phase 2 / Phase 3 tabs
+- [ ] Limit Revelations profile navigation and verify private saving and reopening
 - [x] Create the single-card Sacred Rewrite page and guided Evidence Locker
 - [x] Enforce draw restrictions and persist reading/answers privately
 - [x] Redirect free signup and return links; connect existing membership checkout
