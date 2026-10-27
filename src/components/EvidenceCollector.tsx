@@ -50,11 +50,14 @@ const EvidenceItem = ({
   return (
     <div
       ref={containerRef}
-      className={`py-3 ${open ? "" : ""}`}
+      className="py-3"
       onBlurCapture={(e) => {
         const rel = e.relatedTarget as HTMLElement | null;
         // Moving focus inside this question (its guide, textarea, etc.) is not "leaving" it.
         if (rel && containerRef.current?.contains(rel)) return;
+        // Clicking another question's toggle opens it via its own click —
+        // advancing here as well would immediately close it again.
+        if (rel?.closest("button[aria-expanded]")) return;
         onAnsweredBlur();
       }}
     >
