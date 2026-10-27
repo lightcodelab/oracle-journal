@@ -226,13 +226,13 @@ export default function Revelations() {
               <div className="h-px flex-1 bg-primary/40" />
             </div>
             <section className="space-y-4">
-              <SectionTitle>REVEAL</SectionTitle>
+              <SectionTitle>PHASE 1: REVEAL</SectionTitle>
               <p>Sit quietly with this card for a moment before you do anything else. Not to decide if it's true or to analyse where it came from...just to notice: Where in your body do you feel something when you read this? Stay there for 30 seconds, that's enough.</p>
               <label htmlFor="revelations-sit" className="block font-serif">Name how this has shown up for you.</label>
               <Textarea id="revelations-sit" rows={4} value={answers.pattern_location || ""} onChange={e => changeAnswer("pattern_location", e.target.value)} />
             </section>
             <section className="space-y-4">
-              <SectionTitle>REGULATE</SectionTitle>
+              <SectionTitle>PHASE 2: REGULATE</SectionTitle>
               <p>You've named something now and your nervous system may be responding. This is normal and you are okay.</p>
               <p>Before you begin investigating, let your body settle first. This is how we work inside The Temple:</p>
               <ul className="list-disc pl-6 space-y-1"><li>we Reveal</li><li>we Regulate</li><li>we Investigate</li></ul>
@@ -240,7 +240,7 @@ export default function Revelations() {
               <p className="text-sm italic text-muted-foreground">The audio practice is coming soon.</p>
             </section>
             <section className="border-t border-border pt-8 space-y-5">
-              <SectionTitle>INVESTIGATE</SectionTitle>
+              <SectionTitle>PHASE 3: INVESTIGATE</SectionTitle>
               <EvidenceCollector title="The Evidence Locker" showGrounding={false} showIntroduction={false} idPrefix="revelations-evidence" values={answers} onChange={changeAnswer} extraQuestions={[PROTECTION_PREDICTION_QUESTION]} questions={REVELATIONS_EVIDENCE_QUESTIONS} />
               <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-muted-foreground" role="status">{saveStatus || "Your reading is saved. Return to Revelations to add new evidence."}</span><Button variant="link" onClick={() => void saveAnswers()}>Save my evidence</Button></div>
             </section>
