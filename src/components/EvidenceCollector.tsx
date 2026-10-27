@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { ChevronDown } from "lucide-react";
 import {
@@ -58,8 +59,12 @@ export const EvidenceCollector = ({ values, onChange, idPrefix, title = "The Evi
           </p>
           </>}
         </div>
-        {EVIDENCE_QUESTIONS.map((q) => field(q.key, q.label, q.guide))}
-        {extraQuestions.map((q) => field(q.key, q.label, q.guide))}
+        {EVIDENCE_QUESTIONS.map((q, i) => (
+          <Fragment key={q.key}>
+            {field(q.key, q.label, q.guide)}
+            {i === 0 && extraQuestions.map((eq) => field(eq.key, eq.label, eq.guide))}
+          </Fragment>
+        ))}
       </section>
       <section className="border-t border-primary/40 pt-6">
         {field(RETURN_QUESTION.key, RETURN_QUESTION.label, RETURN_QUESTION.guide, RETURN_QUESTION.help, 4)}
