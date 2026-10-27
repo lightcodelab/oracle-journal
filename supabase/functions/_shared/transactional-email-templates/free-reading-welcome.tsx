@@ -18,10 +18,10 @@ interface Props {
   readingUrl?: string
 }
 
-const Email = ({ name, readingUrl = 'https://inside.thetempleofsustainment.com/remembrance/spreads' }: Props) => (
+const Email = ({ name, readingUrl = 'https://inside.thetempleofsustainment.com/revelations' }: Props) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Your free Past, Present, Future reading is waiting</Preview>
+    <Preview>Your Revelations reading is waiting</Preview>
     <Body style={main}>
       <Container style={container}>
         <Heading style={h1}>Your reading is waiting</Heading>
@@ -29,21 +29,21 @@ const Email = ({ name, readingUrl = 'https://inside.thetempleofsustainment.com/r
           {name ? `Hello ${name},` : 'Hello,'}
         </Text>
         <Text style={text}>
-          Your account at THE TEMPLE of Sustainment is open. Inside is one Past,
-          Present, Future card reading — drawn from the decks and written for the
-          exact cards that come to you.
+          Your account at THE TEMPLE of Sustainment is open. Revelations offers one
+          card from The Sacred Rewrite, with a personal reading guided by your
+          question and the card that comes to you.
         </Text>
         <Text style={text}>
-          Take your time with it. There are three reflection questions beneath the
-          reading, and anything you write there is saved privately to your account,
-          so you can return and add more later.
+          Take your time with it. Pause, regulate and investigate in your Evidence
+          Locker. Anything you write there is saved privately to your account,
+          so you can return with new evidence later.
         </Text>
         <Button style={button} href={readingUrl}>
           Open your reading
         </Button>
         <Hr style={hr} />
         <Text style={muted}>
-          When you are ready for more, membership opens the other five spreads,
+          When you are ready for more, membership opens all six Sacred Spreads,
           every card deck, the courses, the Remembrance Letters, Living Pattern and
           your private journal.
         </Text>
