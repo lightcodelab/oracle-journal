@@ -170,7 +170,7 @@ export default function Revelations() {
       <div className="mx-auto max-w-3xl">
       <section className="mb-10 space-y-5 text-center">
         <h2 className="font-serif text-3xl text-primary">Welcome. There is room for you here.</h2>
-        <p className="mx-auto max-w-2xl leading-relaxed text-muted-foreground">REVELATIONS is a quiet meeting with one card from The Sacred Rewrite, and with what may be moving beneath the work you are bringing into the world. Hold a question, draw your card, and receive a reading shaped by its meaning and what you are carrying. Then take a moment to notice, let your body settle, and begin gathering new evidence.</p>
+        <p className="mx-auto max-w-2xl leading-relaxed text-muted-foreground">REVELATIONS is a quiet meeting with one card from The Sacred Rewrite, and with what may be moving beneath the work you are bringing into the world.</p>
       </section>
       {!record && !access.freeReadingUsed && <>
         <ol className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8 list-decimal pl-6 font-serif text-lg leading-relaxed marker:text-primary">
