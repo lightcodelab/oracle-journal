@@ -181,7 +181,7 @@ export default function Revelations() {
         <section aria-label="Choose your guiding focus" className="-mx-5 bg-muted/40 px-5 pt-10 pb-8 sm:mx-0 sm:px-8 sm:pt-12">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-5 sm:gap-10">
           <div className="sm:col-span-2">
-            <p id="revelations-focus-introduction" className="text-muted-foreground leading-relaxed">Before you draw your card, you might like to bring one of these questions into your reading. You don't need to arrive with a question, but if it helps to focus the reading, here are some places other women have found it useful to begin. Choose what pulls at you, or bring whatever is sitting heaviest on your heart right now.</p>
+            <p id="revelations-focus-introduction" className="text-muted-foreground leading-relaxed">Before you draw your card, you might like to bring one of these questions into your reading.{"\u00a0"}<br /><br /><br />You don't need to arrive with a question, but if it helps to focus the reading, here are some places other women have found it useful to begin.{"\u00a0"}<br /><br /><br />Choose what pulls at you, or bring whatever is sitting heaviest on your heart right now.</p>
           </div>
           <div className="sm:col-span-3">
         <RadioGroup aria-label="Guiding focus for your reading" aria-describedby="revelations-focus-introduction" value={focusChoice} onValueChange={value => { setFocusChoice(value); setQuestion(value === "none" || value === "own" ? "" : value); }} className="gap-5 border-b border-border pb-8">
