@@ -345,7 +345,7 @@ const SearchResults = () => {
       const finalItems = mixed.filter(
         (i) =>
           (i.type !== 'resource' || !!i.resource.slug) &&
-          (canSeeCommunion || i.doorBucket !== 'communion'),
+          (canSeeCommunion || i.type !== 'resource' || i.resource.doorBucket !== 'communion'),
       );
       setItems(finalItems);
       setLoading(false);
