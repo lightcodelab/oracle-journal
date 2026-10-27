@@ -13,6 +13,8 @@ interface DoorHeaderProps {
   imageKey?: string;
   /** Hide the overlaid title text (e.g. when the artwork already contains it). */
   srOnlyTitle?: boolean;
+  /** Sit flush against the element above (no rounding, no top gap). */
+  flushTop?: boolean;
 }
 
 /**
