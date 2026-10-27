@@ -52,6 +52,7 @@ export const EvidenceCollector = ({ values, onChange, idPrefix, title = "The Evi
       <section className="border-t border-border pt-6 space-y-5">
         <div>
           <h3 className="font-serif text-xl text-foreground">{title}</h3>
+          {description && <p className="mt-1 text-sm italic text-muted-foreground">{description}</p>}
           {showIntroduction && <>
           <p className="mt-1 text-sm italic text-muted-foreground">
             Protection Patterns use old evidence to predict future outcomes, so we need to collect new evidence to change anything.
