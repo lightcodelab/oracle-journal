@@ -195,7 +195,7 @@ export default function Revelations() {
         <label htmlFor="revelations-question" className="block text-muted-foreground">Your guiding question or focus (optional)</label>
         <div className="flex flex-wrap justify-center gap-2">{REVELATIONS_TOPICS.map((item, index) => <Button key={item.label} variant={topic === index ? "default" : "outline"} onClick={() => setTopic(topic === index ? null : index)} aria-pressed={topic === index} className="h-auto whitespace-normal">{item.label}</Button>)}</div>
         {topic !== null && <div className="space-y-2 text-left">{REVELATIONS_TOPICS[topic].prompts.map(prompt => <Button key={prompt} variant="outline" onClick={() => setQuestion(prompt)} className="h-auto w-full justify-start whitespace-normal py-3 text-left font-serif">{prompt}</Button>)}</div>}
-        <Textarea id="revelations-question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={GUIDING_QUESTION_MAX} rows={3} placeholder="What would you like guidance on today?" />
+        <Textarea id="revelations-question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={GUIDING_QUESTION_MAX} rows={3} placeholder="I have my own question I want to use." />
         <Button size="lg" onClick={() => void draw(true)} disabled={drawing}><Sparkles className="mr-2 h-4 w-4" />{drawing ? "Preparing your card…" : "Shuffle & Draw My Card"}</Button>
         <div><Button variant="link" onClick={() => void draw(false)} disabled={drawing}>Draw without a question</Button></div>
       </div> : <>
