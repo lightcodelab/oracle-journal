@@ -220,6 +220,11 @@ export default function Revelations() {
             {generating ? <p className="flex items-center gap-2 text-muted-foreground" role="status"><Loader2 className="h-4 w-4 animate-spin" />Your Revelation is being written…</p> : record.generated_reading ? <p className="whitespace-pre-line font-serif text-lg leading-relaxed">{record.generated_reading}</p> : <Button onClick={() => void generate()}>Try writing my reading again</Button>}
           </section>
           {record.generated_reading && <>
+            <div className="flex items-center gap-4" aria-hidden="true">
+              <div className="h-px flex-1 bg-primary/40" />
+              <span className="text-primary">✦</span>
+              <div className="h-px flex-1 bg-primary/40" />
+            </div>
             <section className="space-y-4">
               <SectionTitle>REVEAL</SectionTitle>
               <p>Sit quietly with this card for a moment before you do anything else. Not to decide if it's true or to analyse where it came from...just to notice: Where in your body do you feel something when you read this? Stay there for 30 seconds, that's enough.</p>
