@@ -22,3 +22,4 @@
 - Launch Dashboard counts new paying members from first live subscriptions, not account creation; why: people with existing or hand-added accounts who later pay must still show as new members.
 
 - Door section placement uses the shared doorSections catalogue and existing content location IDs (including nullable deck placement); all editors and navigation resolve the Door from that catalogue, preserving legacy placements so content remains reachable.
+- The Door of Communion is temporarily hidden from everyone except admins via COMMUNION_HIDDEN in src/lib/communionVisibility.ts; one switch gates navigation tiles, the /communion + live-session + /my-calendar routes (CommunionRouteGuard in App.tsx), search results, My Calendar menu entries and sales copy. Why: Communion is paused site-wide but must be restorable without rebuilding; flip the flag to false to restore everything.
