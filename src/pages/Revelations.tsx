@@ -11,31 +11,14 @@ import { ShuffleAnimation } from "@/components/ShuffleAnimation";
 import { DoorHeader } from "@/components/temple/DoorHeader";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import revelationsBanner from "@/assets/tsr-banner.png";
-const REVELATIONS_TOPICS: { label: string; prompts: string[] }[] = [
-  {
-    label: "Starting My Business",
-    prompts: [
-      "Why does putting my work out into the world feel so much bigger than me?",
-      "What old story keeps me from finally starting?",
-      "Who am I afraid of seeing me fail — and what would change if I began anyway?",
-    ],
-  },
-  {
-    label: "It Feels Like It's Failing",
-    prompts: [
-      "Why does it feel like I've tried everything and nothing is working?",
-      "What is this setback actually telling me that I don't want to hear?",
-      "What am I carrying from other people's expectations of what this should look like by now?",
-    ],
-  },
-  {
-    label: "On the Brink of Giving Up",
-    prompts: [
-      "What am I really ready to let go of — the work, or the way I've been doing it?",
-      "What would I have to believe about myself to walk away from this?",
-      "What is still quietly asking to be built, even on my worst days?",
-    ],
-  },
+const REVELATIONS_QUESTIONS = [
+  "What am I most afraid people will discover if this doesn't work?",
+  "What have I been telling myself is a strategy that might actually be a way of staying safe?",
+  "What part of my business am I avoiding looking at directly, and what story am I telling myself about why?",
+  "What would I have to admit about myself if the way I've been doing this simply isn't working?",
+  "What do I know is true about why this isn't working that I haven't said out loud to anyone yet?",
+  "Where am I waiting to feel ready, certain, or good enough before I fully commit to this?",
+  "What would the version of me who suceeds wildly at this have to be willing to be seen doing or saying? And what would this say about me?",
 ];
 import { cardImageSrc } from "@/lib/cardImage";
 import { loadCardImages } from "@/lib/loadCardImages";
@@ -195,8 +178,9 @@ export default function Revelations() {
           <li className="pl-2">Let one of the questions below find you. You don't need to answer it. Just hold it.</li>
           <li className="pl-2">Draw your card. Let it show you what is ready to be named.</li>
         </ol>
-        <RadioGroup aria-label="Guiding focus for your reading" value={focusChoice} onValueChange={value => { setFocusChoice(value); setQuestion(value === "none" || value === "own" ? "" : value); }} className="gap-5 border-y border-border py-8">
-          {REVELATIONS_TOPICS.flatMap(item => item.prompts).map((prompt, index) => <label key={prompt} htmlFor={`revelations-focus-${index}`} className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed has-[[data-state=checked]]:text-foreground">
+        <p id="revelations-focus-introduction" className="mb-6 text-muted-foreground leading-relaxed">Before you draw your card, you might like to bring one of these questions into your reading. You don't need to arrive with a question, but if it helps to focus the reading, here are some places other women have found it useful to begin. Choose what pulls at you, or bring whatever is sitting heaviest on your heart right now.</p>
+        <RadioGroup aria-label="Guiding focus for your reading" aria-describedby="revelations-focus-introduction" value={focusChoice} onValueChange={value => { setFocusChoice(value); setQuestion(value === "none" || value === "own" ? "" : value); }} className="gap-5 border-y border-border py-8">
+          {REVELATIONS_QUESTIONS.map((prompt, index) => <label key={prompt} htmlFor={`revelations-focus-${index}`} className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed has-[[data-state=checked]]:text-foreground">
             <RadioGroupItem id={`revelations-focus-${index}`} value={prompt} className="mt-1 shrink-0" />
             <span>{prompt}</span>
           </label>)}
