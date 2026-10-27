@@ -245,7 +245,7 @@ export default function Revelations() {
               <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-muted-foreground" role="status">{saveStatus || "Your reading is saved. Return to Revelations to add new evidence."}</span><Button variant="link" onClick={() => void saveAnswers()}>Save my evidence</Button></div>
             </section>
             <section className="border-t border-border pt-8 space-y-4">
-              <h2 className="font-serif text-2xl text-primary">What if this doesn't feel like it for me?</h2>
+              <h2 className="font-serif text-2xl text-primary">What if this doesn't feel like it was for me?</h2>
               <p>It might not be, and that is information to collect. However, sometimes shame wants to stay hidden, and its first move is to make the mirror feel like it belongs to someone else.</p>
               <p>If you read this card and quickly said "this isn't for me!", I would like you to sit with this feeling for a moment and then ask yourself "I know this isn't for me, but if it was for me, how could it be showing up for me in my life?"</p>
               <p>Notice what comes to you; in feelings, thoughts, stories, memories, sensations, smells, movies in your mind, anything that drops in. That noticing is your first case file entry in the Evidence Locker either way. Congratulations.</p>
