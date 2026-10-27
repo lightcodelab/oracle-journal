@@ -484,13 +484,15 @@ You do not need to arrive knowing your pattern. You need somewhere it can become
                 image={doorDevotion.url}
                 imageAlt="The Door of Devotion, holding guided meditations and restorative practices."
               />
-              <TempleDoorPanel
-                eyebrow="The Door of Communion"
-                title="Live gatherings and the Mirror Exchange"
-                body="Enter live readings, classes, workshops and replays, or meet another member inside the Mirror Exchange — a peer-held space where somebody can hold the mirror without trying to fix you, while you listen for what becomes clearer when it is finally spoken aloud."
-                image={doorCommunion.url}
-                imageAlt="The Door of Communion, holding live readings, classes, workshops and replays."
-              />
+              {(!COMMUNION_HIDDEN || isAdmin) && (
+                <TempleDoorPanel
+                  eyebrow="The Door of Communion"
+                  title="Live gatherings and the Mirror Exchange"
+                  body="Enter live readings, classes, workshops and replays, or meet another member inside the Mirror Exchange — a peer-held space where somebody can hold the mirror without trying to fix you, while you listen for what becomes clearer when it is finally spoken aloud."
+                  image={doorCommunion.url}
+                  imageAlt="The Door of Communion, holding live readings, classes, workshops and replays."
+                />
+              )}
             </div>
 
             <div className="mt-16 text-center">
