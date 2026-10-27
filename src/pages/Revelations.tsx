@@ -184,7 +184,7 @@ export default function Revelations() {
             <p id="revelations-focus-introduction" className="text-muted-foreground leading-relaxed">Before you draw your card, you might like to bring one of these questions into your reading.{"\u00a0"}<br /><br /><br />You don't need to arrive with a question, but if it helps to focus the reading, here are some places other women have found it useful to begin.{"\u00a0"}<br /><br /><br />Click what pulls at you, or bring whatever is sitting heaviest on your heart right now.</p>
           </div>
           <div className="sm:col-span-3">
-        <RadioGroup aria-label="Guiding focus for your reading" aria-describedby="revelations-focus-introduction" value={focusChoice} onValueChange={value => { setFocusChoice(value); setQuestion(value === "none" || value === "own" ? "" : value); }} className="gap-5 border-b border-border pb-8">
+        <RadioGroup aria-label="Guiding focus for your reading" aria-describedby="revelations-focus-introduction" value={focusChoice} onValueChange={value => { setFocusChoice(value); setQuestion(value === "none" || value === "own" ? "" : value); }} className="gap-5">
           {REVELATIONS_QUESTIONS.map((prompt, index) => <label key={prompt} htmlFor={`revelations-focus-${index}`} className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed has-[[data-state=checked]]:text-foreground">
             <RadioGroupItem id={`revelations-focus-${index}`} value={prompt} className="mt-1 shrink-0" />
             <span className="italic">{prompt}</span>
