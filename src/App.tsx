@@ -235,7 +235,7 @@ const App = () => {
             <Route path="/living-pattern/patterns/:id" element={<LivingPatternPractice />} />
 
 
-            <Route path="/my-calendar" element={<MyCalendar />} />
+            <Route path="/my-calendar" element={<CommunionRouteGuard><MyCalendar /></CommunionRouteGuard>} />
             <Route path="/all-live-sessions" element={<CommunionRouteGuard><LiveSessions /></CommunionRouteGuard>} />
             <Route path="/all-live-sessions/:sessionId/join" element={<CommunionRouteGuard><LiveSessionJoin /></CommunionRouteGuard>} />
             <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />

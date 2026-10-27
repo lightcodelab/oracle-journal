@@ -4,6 +4,7 @@ import { REVELATIONS_PROFILE_LINKS } from '@/lib/revelationsJournal';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { SHOW_TEMPLE_FOCUS } from '@/lib/templeFocus';
+import { COMMUNION_HIDDEN } from '@/lib/communionVisibility';
 import {
   DropdownMenu,
   DropdownMenuContent,
