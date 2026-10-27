@@ -1,10 +1,10 @@
 # Roadmap
 
 ## Revelations
-- [ ] Create the single-card Sacred Rewrite page and guided Evidence Locker
-- [ ] Enforce draw restrictions and persist reading/answers privately
-- [ ] Redirect free signup and return links; connect existing membership checkout
-- [ ] Test rules and verify the page without saving test data to a member account
+- [x] Create the single-card Sacred Rewrite page and guided Evidence Locker
+- [x] Enforce draw restrictions and persist reading/answers privately
+- [x] Redirect free signup and return links; connect existing membership checkout
+- [x] Test rules and verify signed-in question selection and phone layout without saving test data to a member account
 
 ## Home practice shortcuts
 - [x] Confirm the broken practice destinations and missing deck anchor while signed in

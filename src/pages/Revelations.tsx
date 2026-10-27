@@ -40,6 +40,8 @@ export default function Revelations() {
   const [saveStatus, setSaveStatus] = useState("");
   const [checkingOut, setCheckingOut] = useState(false);
   const dirty = useRef(false);
+  const latestAnswers = useRef<Answers>({});
+  const saveQueue = useRef<Promise<void>>(Promise.resolve());
   const generationLock = useRef(false);
 
   useEffect(() => {
@@ -63,6 +65,7 @@ export default function Revelations() {
       if (readError) setError("Your reading could not be opened. Please refresh to try again.");
       if (data) {
         setRecord(data); setQuestion(data.guiding_question); setAnswers(answersFrom(data.journal_answers));
+        latestAnswers.current = answersFrom(data.journal_answers);
         setRevealed(Boolean(data.generated_reading));
       }
       setLoading(false);
@@ -82,17 +85,25 @@ export default function Revelations() {
 
   const saveAnswers = async () => {
     if (!record || !dirty.current) return;
-    const snapshot = { ...answers };
+    const id = record.id;
     setSaveStatus("Saving…");
-    const { error: saveError } = await supabase.from("revelations_readings").update({ journal_answers: snapshot }).eq("id", record.id);
-    setSaveStatus(saveError ? "Your notes haven't saved. Please try again." : "Saved privately");
+    saveQueue.current = saveQueue.current.catch(() => undefined).then(async () => {
+      const snapshot = { ...latestAnswers.current };
+      const { error: saveError } = await supabase.from("revelations_readings").update({ journal_answers: snapshot }).eq("id", id);
+      setSaveStatus(saveError ? "Your notes haven't saved. Please try again." : "Saved privately");
+    });
+    await saveQueue.current;
   };
   useEffect(() => {
     if (!dirty.current || !record) return;
     const timer = setTimeout(() => { void saveAnswers(); }, 600);
     return () => clearTimeout(timer);
   }, [answers, record?.id]);
-  const changeAnswer = (key: string, value: string) => { dirty.current = true; setAnswers(prev => ({ ...prev, [key]: value })); };
+  const changeAnswer = (key: string, value: string) => {
+    dirty.current = true;
+    latestAnswers.current = { ...latestAnswers.current, [key]: value };
+    setAnswers(latestAnswers.current);
+  };
 
   const draw = async (withQuestion: boolean) => {
     if (drawing || record) return;

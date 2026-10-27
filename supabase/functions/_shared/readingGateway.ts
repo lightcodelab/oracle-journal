@@ -83,24 +83,24 @@ export async function callGateway(apiKey: string, model: string, systemPrompt: s
     const decoder = new TextDecoder();
     let buffer = "";
     let text = "";
+    const consume = (line: string) => {
+      if (!line.startsWith("data: ")) return;
+      const data = line.slice(6).trim();
+      if (!data || data === "[DONE]") return;
+      try {
+        const event = JSON.parse(data);
+        if (event.type === "response.output_text.delta") text += event.delta ?? "";
+      } catch { /* Provider metadata does not contain answer text. */ }
+    };
     while (true) {
       const { value, done } = await reader.read();
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split("\n");
       buffer = lines.pop() ?? "";
-      for (const line of lines) {
-        if (!line.startsWith("data: ")) continue;
-        const data = line.slice(6).trim();
-        if (!data || data === "[DONE]") continue;
-        try {
-          const event = JSON.parse(data);
-          if (event.type === "response.output_text.delta") text += event.delta ?? "";
-        } catch {
-          // Provider metadata and incomplete events do not contain answer text.
-        }
-      }
+      for (const line of lines) consume(line);
     }
+    consume(buffer + decoder.decode());
     if (text.trim().length < 160) throw new GatewayError(500, "The reading returned no usable content.");
     return text.trim();
   }
