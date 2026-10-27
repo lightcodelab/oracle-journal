@@ -407,6 +407,13 @@
       "when": 1793067968693,
       "tag": "0057_revelations_single_card_readings",
       "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "7",
+      "when": 1793068186366,
+      "tag": "0058_revelations_restrict_record_grants",
+      "breakpoints": true
     }
   ]
 }
