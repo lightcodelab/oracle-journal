@@ -29,10 +29,12 @@ const answersFrom = (value: Json): Answers => {
 };
 const SectionTitle = ({ children }: { children: string }) => <h2 className="font-serif text-2xl text-primary">{children}</h2>;
 
+
 export default function Revelations() {
   const { user, loading: authLoading } = useAuth();
   const access = useFreeAccess();
   const [record, setRecord] = useState<Revelation | null>(null);
+  const [firstName, setFirstName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [question, setQuestion] = useState("");
   const [focusChoice, setFocusChoice] = useState("none");
@@ -86,6 +88,18 @@ export default function Revelations() {
     });
     return () => { active = false; };
   }, [user?.id, authLoading]);
+
+  // Preferred name: profiles.full_name, first word only. Never fall back to email.
+  useEffect(() => {
+    let active = true;
+    if (!user) { setFirstName(null); return; }
+    void supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle().then(({ data }) => {
+      if (!active) return;
+      const name = (data?.full_name || "").toString().trim();
+      setFirstName(name ? name.split(/\s+/)[0] : null);
+    });
+    return () => { active = false; };
+  }, [user?.id]);
 
   useEffect(() => {
     if (!record) return;
@@ -170,7 +184,7 @@ export default function Revelations() {
       <DoorHeader image={revelationsBanner.url} imageKey="revelations-header" title="REVELATIONS" srOnlyTitle flushTop />
       <div className="mx-auto max-w-3xl">
       <section className="mb-10 mt-12 space-y-5 text-center">
-        <h2 className="font-serif text-3xl text-primary">Welcome. Something already knows why you are here, and there is room for all of you here.</h2>
+        <h2 className="font-serif text-3xl text-primary">{firstName ? `Welcome, ${firstName}.` : "Welcome."} Something already knows why you are here, and there is room for all of you here.</h2>
         <p className="mx-auto max-w-2xl leading-relaxed">If you have been doing the work for awhile now and something is still running underneath it no matter what you do, you're in the right place.</p>
         <p className="mx-auto max-w-2xl leading-relaxed text-muted-foreground">REVELATIONS is a quiet meeting with one card from The Sacred Rewrite deck, and with what may be moving beneath the work you are bringing into the world.</p>
         {record?.guiding_question && <>
