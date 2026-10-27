@@ -25,6 +25,7 @@ import livingPatternImage from "@/assets/living-pattern-banner.webp";
 import doorRemembrance from "@/assets/door-of-remembrance-4.webp";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
+import { COMMUNION_HIDDEN } from "@/lib/communionVisibility";
 import relationshipBanner from "@/assets/relationship-with-life-banner-v2.webp";
 import appMockupGif from "@/assets/app-mockup-v3.gif.asset.json";
 import whatItCostsImage from "@/assets/what-it-costs.png.asset.json";
@@ -484,13 +485,15 @@ You do not need to arrive knowing your pattern. You need somewhere it can become
                 image={doorDevotion.url}
                 imageAlt="The Door of Devotion, holding guided meditations and restorative practices."
               />
-              <TempleDoorPanel
-                eyebrow="The Door of Communion"
-                title="Live gatherings and the Mirror Exchange"
-                body="Enter live readings, classes, workshops and replays, or meet another member inside the Mirror Exchange — a peer-held space where somebody can hold the mirror without trying to fix you, while you listen for what becomes clearer when it is finally spoken aloud."
-                image={doorCommunion.url}
-                imageAlt="The Door of Communion, holding live readings, classes, workshops and replays."
-              />
+              {(!COMMUNION_HIDDEN || isAdmin) && (
+                <TempleDoorPanel
+                  eyebrow="The Door of Communion"
+                  title="Live gatherings and the Mirror Exchange"
+                  body="Enter live readings, classes, workshops and replays, or meet another member inside the Mirror Exchange — a peer-held space where somebody can hold the mirror without trying to fix you, while you listen for what becomes clearer when it is finally spoken aloud."
+                  image={doorCommunion.url}
+                  imageAlt="The Door of Communion, holding live readings, classes, workshops and replays."
+                />
+              )}
             </div>
 
             <div className="mt-16 text-center">

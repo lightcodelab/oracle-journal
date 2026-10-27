@@ -4,6 +4,7 @@ import { REVELATIONS_PROFILE_LINKS } from '@/lib/revelationsJournal';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { SHOW_TEMPLE_FOCUS } from '@/lib/templeFocus';
+import { COMMUNION_HIDDEN } from '@/lib/communionVisibility';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -136,11 +137,15 @@ const ProfileDropdown = ({ onSignOut, revelationsOnly = false }: ProfileDropdown
           },
         ]
       : []),
-    {
-      label: 'My Calendar',
-      icon: <CalendarDays className="w-4 h-4 mr-2" />,
-      route: '/my-calendar',
-    },
+    ...(!COMMUNION_HIDDEN || memberIsAdmin
+      ? [
+          {
+            label: 'My Calendar',
+            icon: <CalendarDays className="w-4 h-4 mr-2" />,
+            route: '/my-calendar',
+          },
+        ]
+      : []),
     {
       label: 'My Protocols',
       icon: <FolderHeart className="w-4 h-4 mr-2" />,
