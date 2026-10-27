@@ -1,5 +1,11 @@
 # Roadmap
 
+## Sacred Spreads Revelations alignment
+- [ ] Share Revelations' visible guiding questions and quiet pre-draw invitation
+- [ ] Add Reveal, Regulate and Evidence Locker reflections to live and saved spreads
+- [ ] Share the soft, confronting reading voice while weaving every card through the spread's theme
+- [ ] Deploy and verify without creating a reading in Natasha's account
+
 ## Revelations
 - [x] Add Phase 2 reflection and private saved Reading / Phase 1 / Phase 2 / Phase 3 tabs
 - [x] Limit Revelations profile navigation and verify existing private records; isolated save/reopen test leaves personal answers unchanged
