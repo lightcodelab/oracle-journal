@@ -9,20 +9,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { EvidenceCollector } from "@/components/EvidenceCollector";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
 import { DoorHeader } from "@/components/temple/DoorHeader";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ReadingFocusQuestions } from "@/components/ReadingFocusQuestions";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import { REGULATION_QUESTION } from "@/lib/revelationsJournal";
 import { saveRevelationAnswers } from "@/lib/saveRevelationAnswers";
 import revelationsBanner from "@/assets/revelations-banner.png.asset.json";
-const REVELATIONS_QUESTIONS = [
-  "What am I most afraid people will discover if this doesn't work?",
-  "What have I been telling myself is a strategy that might actually be a way of staying safe?",
-  "What part of my business am I avoiding looking at directly, and what story am I telling myself about why?",
-  "What would I have to admit about myself if the way I've been doing this simply isn't working?",
-  "What do I know is true about why this isn't working that I haven't said out loud to anyone yet?",
-  "Where am I waiting to feel ready, certain, or good enough before I fully commit to this?",
-  "What would the version of me who suceeds wildly at this have to be willing to be seen doing or saying? And what would this say about me?",
-];
 import { cardImageSrc } from "@/lib/cardImage";
 import { loadCardImages } from "@/lib/loadCardImages";
 import { GUIDING_QUESTION_MAX, PROTECTION_PREDICTION_QUESTION, REVELATIONS_EVIDENCE_QUESTIONS } from "@/lib/evidenceFramework";
@@ -192,24 +183,7 @@ export default function Revelations() {
           <li className="pl-2">Let one of the questions below find you. You don't need to answer it. Just hold it.</li>
           <li className="pl-2">Draw your card. Let it show you what is ready to be named.</li>
         </ol>
-        <section aria-label="Choose your guiding focus" className="-mx-5 bg-muted/40 px-5 pt-10 pb-8 sm:mx-0 sm:px-8 sm:pt-12">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-5 sm:gap-10">
-          <div className="sm:col-span-2">
-            <p id="revelations-focus-introduction" className="text-muted-foreground leading-relaxed">Before you draw your card, you might like to bring one of these questions into your reading.{"\u00a0"}<br /><br /><br />You don't need to arrive with a question, but if it helps to focus the reading, here are some places other women have found it useful to begin.{"\u00a0"}<br /><br /><br />Click what pulls at you, or bring whatever is sitting heaviest on your heart right now.</p>
-          </div>
-          <div className="sm:col-span-3">
-        <RadioGroup aria-label="Guiding focus for your reading" aria-describedby="revelations-focus-introduction" value={focusChoice} onValueChange={value => { setFocusChoice(value); setQuestion(value === "none" || value === "own" ? "" : value); }} className="gap-5">
-          {REVELATIONS_QUESTIONS.map((prompt, index) => <label key={prompt} htmlFor={`revelations-focus-${index}`} className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed has-[[data-state=checked]]:text-foreground">
-            <RadioGroupItem id={`revelations-focus-${index}`} value={prompt} className="mt-1 shrink-0" />
-            <span className="italic">{prompt}</span>
-          </label>)}
-          <label htmlFor="revelations-focus-own" className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed"><RadioGroupItem id="revelations-focus-own" value="own" className="mt-1 shrink-0" /><span>I have my own question I want to use.</span></label>
-          {focusChoice === "own" && <Textarea id="revelations-question" aria-label="Your own guiding question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={GUIDING_QUESTION_MAX} rows={3} placeholder="Write your own question or focus prompt here" />}
-          <label htmlFor="revelations-focus-none" className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed"><RadioGroupItem id="revelations-focus-none" value="none" className="mt-1 shrink-0" /><span>Let the card find me without a question.</span></label>
-        </RadioGroup>
-          </div>
-        </div>
-        </section>
+        <ReadingFocusQuestions idPrefix="revelations" choice={focusChoice} value={question} onChoiceChange={setFocusChoice} onChange={setQuestion} />
         <p className="my-10 text-center font-serif text-xl leading-relaxed">You've done the work. Something is still running beneath it. This is where it gets named.</p>
       </>}
       {(loading || authLoading || access.loading) ? <Loader2 className="mx-auto h-6 w-6 animate-spin text-primary" aria-label="Opening your reading" /> : !user ? <div className="text-center space-y-6">
