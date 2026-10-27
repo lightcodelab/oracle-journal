@@ -180,7 +180,7 @@ export default function Revelations() {
       <Link to={user ? "/profile" : "/auth?redirect=/revelations"} className="text-sm text-muted-foreground underline">{user ? "My Profile" : "Sign in"}</Link>
     </header>
     <main className="mx-auto max-w-3xl px-5 py-12 sm:py-16">
-      <h1 className="text-center font-serif text-4xl sm:text-5xl text-primary mb-10">Revelations</h1>
+      <h1 className="text-center font-serif text-4xl sm:text-5xl text-primary mb-10">REVELATIONS</h1>
       {(loading || authLoading || access.loading) ? <Loader2 className="mx-auto h-6 w-6 animate-spin text-primary" aria-label="Opening your reading" /> : !user ? <div className="text-center space-y-6">
         <p className="text-muted-foreground">Sign in to receive your card and return to your Evidence Locker.</p>
         <Button asChild><Link to="/auth?redirect=/revelations">Sign in</Link></Button>
