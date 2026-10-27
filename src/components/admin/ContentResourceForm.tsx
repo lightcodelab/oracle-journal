@@ -1,4 +1,3 @@
-import { looksLikeHtml } from '@/lib/richText';
 import { DoorSectionSelect } from './DoorSectionSelect';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -207,20 +206,6 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
 
       if (editor && resource.body_richtext && typeof resource.body_richtext === 'object') {
         editor.commands.setContent(resource.body_richtext as Record<string, unknown>);
-      } else if (editor && resource.content) {
-        // Legacy resources store their text in `content`. Load it so the editor
-        // shows the existing writing instead of starting empty (which would
-        // replace it with an empty document on save).
-        const raw = String(resource.content);
-        if (looksLikeHtml(raw)) {
-          editor.commands.setContent(raw);
-        } else {
-          const html = raw
-            .split(/\n{2,}/)
-            .map((block) => `<p>${block.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/\n/g, '<br />')}</p>`)
-            .join('');
-          editor.commands.setContent(html);
-        }
       }
 
       // Check if this resource has a course record
