@@ -165,7 +165,7 @@ export default function Revelations() {
       <Link to="/" className="font-serif text-primary">THE TEMPLE of Sustainment</Link>
       <Link to={user ? "/profile" : "/auth?redirect=/revelations"} className="text-sm text-muted-foreground underline">{user ? "My Profile" : "Sign in"}</Link>
     </header>
-    <main className="mx-auto max-w-6xl px-5 py-8">
+    <main className="mx-auto max-w-6xl px-5 pb-8 pt-0">
       <DoorHeader image={revelationsBanner.url} imageKey="revelations-header" title="REVELATIONS" srOnlyTitle />
       <div className="mx-auto max-w-3xl">
       <section className="mb-10 mt-12 space-y-5 text-center">
