@@ -1,3 +1,4 @@
+import { looksLikeHtml } from '@/lib/richText';
 import { DoorSectionSelect } from './DoorSectionSelect';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
