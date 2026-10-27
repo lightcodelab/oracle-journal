@@ -3,15 +3,12 @@ import { Link } from "react-router-dom";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Loader2, RefreshCw, ArrowLeft, Check } from "lucide-react";
-import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import type { SpreadType } from "./SpreadSelection";
 import type { OracleCard } from "@/data/oracleCards";
 import { cardImageSrc } from "@/lib/cardImage";
 import { useCardImagesReady } from "@/hooks/useCardImagesReady";
-import { EvidenceCollector } from "@/components/EvidenceCollector";
-import { GUIDING_QUESTION_MAX } from "@/lib/evidenceFramework";
+import { ReadingReflectionPhases } from "@/components/ReadingReflectionPhases";
 
 export type SpreadJournalAnswers = {
   asking_to_be_seen: string;
@@ -24,6 +21,8 @@ export type SpreadJournalAnswers = {
   new_evidence: string;
   todays_choice: string;
   returned_evidence: string;
+  regulation_experience: string;
+  protection_prediction: string;
 };
 
 export const EMPTY_SPREAD_JOURNAL_ANSWERS: SpreadJournalAnswers = {
@@ -37,6 +36,8 @@ export const EMPTY_SPREAD_JOURNAL_ANSWERS: SpreadJournalAnswers = {
   new_evidence: "",
   todays_choice: "",
   returned_evidence: "",
+  regulation_experience: "",
+  protection_prediction: "",
 };
 
 interface SpreadReadingProps {
@@ -257,25 +258,10 @@ export const SpreadReading = ({
               </span>
             </p>
           )}
-          {!generating && journalAnswers && onJournalAnswerChange && (
-            <section
-              aria-labelledby="spread-journal-title"
-              className="max-w-3xl mx-auto rounded-xl border border-border bg-card p-5 sm:p-6 text-left"
-            >
-              <h2 id="spread-journal-title" className="font-serif text-xl text-foreground">
-                Write with this reading
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Private to you. Your writing is saved with the cards and your reading.
-              </p>
-
-              <div className="mt-5">
-                <EvidenceCollector
-                  idPrefix="spread"
-                  values={journalAnswers}
-                  onChange={(key, value) => onJournalAnswerChange(key as keyof SpreadJournalAnswers, value)}
-                />
-              </div>
+          {generatedReading && !generating && journalAnswers && onJournalAnswerChange && (
+            <section className="max-w-3xl mx-auto text-left">
+              <p className="mb-6 text-sm text-muted-foreground">Private to you. Your writing is saved with the cards and your reading.</p>
+              <ReadingReflectionPhases idPrefix="spread" values={journalAnswers} onChange={(key, value) => onJournalAnswerChange(key as keyof SpreadJournalAnswers, value)} />
             </section>
           )}
           {!generating && <p className="text-foreground/70 text-sm italic">Click on any card to explore its full wisdom.</p>}

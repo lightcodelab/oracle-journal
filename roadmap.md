@@ -1,5 +1,11 @@
 # Roadmap
 
+## Sacred Spreads Revelations alignment
+- [x] Share Revelations' visible guiding questions and quiet pre-draw invitation
+- [x] Add Reveal, Regulate and Evidence Locker reflections to live and saved spreads
+- [x] Share the soft, confronting reading voice while weaving every card through the spread's theme
+- [x] Deploy both generators; verify signed-in question choices and isolated reflection save/reopen without creating or modifying personal readings (fresh AI prose intentionally not generated)
+
 ## Revelations
 - [x] Add Phase 2 reflection and private saved Reading / Phase 1 / Phase 2 / Phase 3 tabs
 - [x] Limit Revelations profile navigation and verify existing private records; isolated save/reopen test leaves personal answers unchanged
