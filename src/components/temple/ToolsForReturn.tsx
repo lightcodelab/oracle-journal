@@ -30,7 +30,7 @@ export function ToolsForReturn() {
           Gentle places to reflect, listen, and notice what is changing.
         </p>
         <div className="flex flex-wrap gap-2">
-          {tools.map(({ label, href, icon: Icon }) => (
+          {visibleTools.map(({ label, href, icon: Icon }) => (
             <Link
               key={href}
               to={href}

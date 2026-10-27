@@ -136,11 +136,15 @@ const ProfileDropdown = ({ onSignOut, revelationsOnly = false }: ProfileDropdown
           },
         ]
       : []),
-    {
-      label: 'My Calendar',
-      icon: <CalendarDays className="w-4 h-4 mr-2" />,
-      route: '/my-calendar',
-    },
+    ...(!COMMUNION_HIDDEN || memberIsAdmin
+      ? [
+          {
+            label: 'My Calendar',
+            icon: <CalendarDays className="w-4 h-4 mr-2" />,
+            route: '/my-calendar',
+          },
+        ]
+      : []),
     {
       label: 'My Protocols',
       icon: <FolderHeart className="w-4 h-4 mr-2" />,
