@@ -29,10 +29,13 @@ const answersFrom = (value: Json): Answers => {
 };
 const SectionTitle = ({ children }: { children: string }) => <h2 className="font-serif text-2xl text-primary">{children}</h2>;
 
+const WELCOME_FALLBACK = "Welcome. Something already knows why you are here, and there is room for all of you here.";
+
 export default function Revelations() {
   const { user, loading: authLoading } = useAuth();
   const access = useFreeAccess();
   const [record, setRecord] = useState<Revelation | null>(null);
+  const [firstName, setFirstName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [question, setQuestion] = useState("");
   const [focusChoice, setFocusChoice] = useState("none");
