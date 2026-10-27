@@ -235,18 +235,18 @@ const App = () => {
 
 
             <Route path="/my-calendar" element={<MyCalendar />} />
-            <Route path="/all-live-sessions" element={<LiveSessions />} />
-            <Route path="/all-live-sessions/:sessionId/join" element={<LiveSessionJoin />} />
+            <Route path="/all-live-sessions" element={<CommunionRouteGuard><LiveSessions /></CommunionRouteGuard>} />
+            <Route path="/all-live-sessions/:sessionId/join" element={<CommunionRouteGuard><LiveSessionJoin /></CommunionRouteGuard>} />
             <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
             <Route path="/admin/session-replays" element={<AdminSessionReplays />} />
             <Route path="/admin/users" element={<UserManagement />} />
-            <Route path="/communion" element={<DoorOfCommunion />} />
-            <Route path="/communion/live-readings" element={<CommunionLiveReadings />} />
-            <Route path="/communion/live-classes" element={<CommunionLiveClasses />} />
-            <Route path="/communion/live-workshops" element={<CommunionLiveWorkshops />} />
-            <Route path="/communion/live-meditations" element={<CommunionLiveMeditations />} />
-            <Route path="/communion/live-replays" element={<LiveReplays />} />
-            <Route path="/communion/mirror-exchange" element={<MirrorExchange />} />
+            <Route path="/communion" element={<CommunionRouteGuard><DoorOfCommunion /></CommunionRouteGuard>} />
+            <Route path="/communion/live-readings" element={<CommunionRouteGuard><CommunionLiveReadings /></CommunionRouteGuard>} />
+            <Route path="/communion/live-classes" element={<CommunionRouteGuard><CommunionLiveClasses /></CommunionRouteGuard>} />
+            <Route path="/communion/live-workshops" element={<CommunionRouteGuard><CommunionLiveWorkshops /></CommunionRouteGuard>} />
+            <Route path="/communion/live-meditations" element={<CommunionRouteGuard><CommunionLiveMeditations /></CommunionRouteGuard>} />
+            <Route path="/communion/live-replays" element={<CommunionRouteGuard><LiveReplays /></CommunionRouteGuard>} />
+            <Route path="/communion/mirror-exchange" element={<CommunionRouteGuard><MirrorExchange /></CommunionRouteGuard>} />
             <Route path="/membership/success" element={<MembershipSuccess />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/suggestions" element={<FeatureSuggestions />} />
