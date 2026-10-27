@@ -10,7 +10,7 @@ import { Loader2, Sparkles } from "lucide-react";
 import spreadsImage from "@/assets/sacred-spreads-temple.jpg";
 import cardBacksCollage from "@/assets/free-reading-card-backs-collage.jpg";
 
-const SPREAD_PATH = "/remembrance/spreads";
+const SPREAD_PATH = "/revelations";
 
 const FreeReadingLanding = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const FreeReadingLanding = () => {
   useEffect(() => {
     document.title = "Your free card reading | THE TEMPLE of Sustainment";
     const description =
-      "Create a free account and receive one Past, Present, Future card reading, written for the exact cards drawn for you.";
+      "Create a free account for Revelations: one Sacred Rewrite card, a personal reading, and your private Evidence Locker.";
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) {
       meta = document.createElement("meta");
@@ -136,12 +136,12 @@ const FreeReadingLanding = () => {
         <div className="mx-auto max-w-3xl px-5 py-16 text-center md:py-24">
           <p className="mb-3 text-xs uppercase tracking-[0.2em] text-primary">A free card reading</p>
           <h1 className="font-serif text-[2rem] leading-tight text-on-image sm:text-5xl">
-            Past, Present, Future
+            Revelations
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-on-image/90">
-            Three cards drawn for you, and one reading written from the thread that
-            runs between them. No charge, no card details — just a free account so
-            your reading is saved and stays yours.
+            One card from The Sacred Rewrite, and a personal reading guided by what
+            you bring. No charge — just a free account so your reading and evidence
+            are saved and stay yours.
           </p>
         </div>
       </section>
@@ -153,28 +153,27 @@ const FreeReadingLanding = () => {
             <ul className="mt-5 space-y-4 text-sm leading-relaxed text-muted-foreground">
               <li className="flex gap-3">
                 <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
-                Three cards drawn at random from across the decks, laid out as Past,
-                Present and Future.
+                One card drawn for you from The Sacred Rewrite deck.
               </li>
               <li className="flex gap-3">
                 <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
-                One written reading that names the common thread between your three
-                cards, in THE TEMPLE's grounded voice.
+                One written reading that connects your question with the meaning of
+                your card, in THE TEMPLE's grounded voice.
               </li>
               <li className="flex gap-3">
                 <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
-                Three reflection questions you can write into privately, saved to your
-                account so you can return and add more.
+                Space to pause, regulate and investigate in your private Evidence
+                Locker, saved so you can return with new evidence.
               </li>
             </ul>
             <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
-              A free account includes this one reading. Membership opens the other five
+              A free account includes this one reading. Membership opens all six
               spreads, every card deck, the courses, the Remembrance Letters, Living
               Pattern and your private journal.
             </p>
             <p className="mt-4 text-sm text-muted-foreground">
               Already have an account?{" "}
-              <Link to="/auth" className="text-primary underline">
+              <Link to="/auth?redirect=/revelations" className="text-primary underline">
                 Sign in
               </Link>
               .

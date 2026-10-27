@@ -1,5 +1,7 @@
 # Project Architecture Rules
 
+- Revelations uses a dedicated owner-private reading record, server-selected single-deck card and server-persisted generation; clients may update only evidence answers, never card or reading content. Why: extended card material must remain server-only and returning visitors must keep the same reading. It shares the existing reading gateway implementation; membership checkout remains the existing server-selected monthly flow.
+
 - Newly tagged discovery reads creation timestamps only from all four tag catalogues through useNewlyTagged, never assignment timestamps; why: applying an existing tag must not count as creating a new tag. Global search resolves both shared tag catalogues as well as symptoms and conditions so every tag link can find published resources.
 
 - Card draws preload and decode required artwork through loadCardImages before mounting the animation; animation completion, not a timer, unlocks reveal so slow images cannot race the draw.
