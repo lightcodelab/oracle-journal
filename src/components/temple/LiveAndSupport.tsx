@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Radio, User, Film } from "lucide-react";
 import { DoorCard, COMMUNION_DOOR } from "@/components/temple/ExploreDoors";
+import { useCanSeeCommunion } from "@/lib/communionVisibility";
 
 const AU_TZ = "Australia/Melbourne";
 
@@ -29,9 +30,10 @@ function formatAU(iso: string): string {
 }
 
 export function LiveAndSupport({ enabled }: { enabled: boolean }) {
+  const canSeeCommunion = useCanSeeCommunion();
   const { data: nextSession } = useQuery({
     queryKey: ["home-next-live-session"],
-    enabled,
+    enabled: enabled && canSeeCommunion,
     queryFn: async () => {
       // Use the safe public view. Session must be scheduled and in the future.
       const { data, error } = await supabase
@@ -49,6 +51,9 @@ export function LiveAndSupport({ enabled }: { enabled: boolean }) {
     },
     staleTime: 60_000,
   });
+
+  // The Door of Communion is hidden from everyone except admins for now.
+  if (!canSeeCommunion) return null;
 
   return (
     <section aria-labelledby="live-heading" className="mb-12">
