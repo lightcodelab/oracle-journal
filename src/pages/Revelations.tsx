@@ -168,7 +168,7 @@ export default function Revelations() {
     <main className="mx-auto max-w-6xl px-5 py-8">
       <DoorHeader image={revelationsBanner.url} imageKey="revelations-header" title="REVELATIONS" srOnlyTitle />
       <div className="mx-auto max-w-3xl">
-      <section className="mb-10 space-y-5 text-center">
+      <section className="mb-10 mt-12 space-y-5 text-center">
         <h2 className="font-serif text-3xl text-primary">Welcome. There is room for you here.</h2>
         <p className="mx-auto max-w-2xl leading-relaxed text-muted-foreground">REVELATIONS is a quiet meeting with one card from The Sacred Rewrite, and with what may be moving beneath the work you are bringing into the world.</p>
       </section>
