@@ -182,7 +182,7 @@ export default function Revelations() {
         <RadioGroup aria-label="Guiding focus for your reading" aria-describedby="revelations-focus-introduction" value={focusChoice} onValueChange={value => { setFocusChoice(value); setQuestion(value === "none" || value === "own" ? "" : value); }} className="gap-5 border-y border-border py-8">
           {REVELATIONS_QUESTIONS.map((prompt, index) => <label key={prompt} htmlFor={`revelations-focus-${index}`} className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed has-[[data-state=checked]]:text-foreground">
             <RadioGroupItem id={`revelations-focus-${index}`} value={prompt} className="mt-1 shrink-0" />
-            <span>{prompt}</span>
+            <span className="italic">{prompt}</span>
           </label>)}
           <label htmlFor="revelations-focus-own" className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed"><RadioGroupItem id="revelations-focus-own" value="own" className="mt-1 shrink-0" /><span>I have my own question I want to use.</span></label>
           {focusChoice === "own" && <Textarea id="revelations-question" aria-label="Your own guiding question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={GUIDING_QUESTION_MAX} rows={3} placeholder="Write your own question or focus prompt here" />}
