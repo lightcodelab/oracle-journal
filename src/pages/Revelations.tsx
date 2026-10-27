@@ -173,7 +173,7 @@ export default function Revelations() {
         <p className="mx-auto max-w-2xl leading-relaxed text-muted-foreground">REVELATIONS is a quiet meeting with one card from The Sacred Rewrite, and with what may be moving beneath the work you are bringing into the world. Hold a question, draw your card, and receive a reading shaped by its meaning and what you are carrying. Then take a moment to notice, let your body settle, and begin gathering new evidence.</p>
       </section>
       {!record && !access.freeReadingUsed && <>
-        <ol className="mb-10 list-decimal space-y-5 pl-6 font-serif text-lg leading-relaxed marker:text-primary">
+        <ol className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8 list-decimal pl-6 font-serif text-lg leading-relaxed marker:text-primary">
           <li className="pl-2">Sit quietly for a moment. Bring to mind whatever is sitting heaviest in your business right now.</li>
           <li className="pl-2">Let one of the questions below find you. You don't need to answer it. Just hold it.</li>
           <li className="pl-2">Draw your card. Let it show you what is ready to be named.</li>
