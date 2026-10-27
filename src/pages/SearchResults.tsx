@@ -340,7 +340,11 @@ const SearchResults = () => {
         return (ta || '').localeCompare(tb || '');
       });
 
-      const finalItems = mixed.filter((i) => i.type !== 'resource' || !!i.resource.slug);
+      const finalItems = mixed.filter(
+        (i) =>
+          (i.type !== 'resource' || !!i.resource.slug) &&
+          (canSeeCommunion || i.doorBucket !== 'communion'),
+      );
       setItems(finalItems);
       setLoading(false);
       trackSearch(query, finalItems.length);

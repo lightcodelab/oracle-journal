@@ -25,6 +25,7 @@ import livingPatternImage from "@/assets/living-pattern-banner.webp";
 import doorRemembrance from "@/assets/door-of-remembrance-4.webp";
 import doorDevotion from "@/assets/door-of-devotion-temple-thumbnail.webp.asset.json";
 import doorCommunion from "@/assets/door-of-communion-temple-thumbnail.webp.asset.json";
+import { COMMUNION_HIDDEN } from "@/lib/communionVisibility";
 import relationshipBanner from "@/assets/relationship-with-life-banner-v2.webp";
 import appMockupGif from "@/assets/app-mockup-v3.gif.asset.json";
 import whatItCostsImage from "@/assets/what-it-costs.png.asset.json";
