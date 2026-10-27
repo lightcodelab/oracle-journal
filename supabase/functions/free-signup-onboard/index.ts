@@ -3,7 +3,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { sendTemplateEmail } from "../_shared/transactional-email-templates/send-email.ts";
 
 const MAILERLITE_API = "https://api.mailerlite.com/api/v2";
-const READING_URL = "https://inside.thetempleofsustainment.com/remembrance/spreads";
+const READING_URL = "https://inside.thetempleofsustainment.com/revelations";
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {

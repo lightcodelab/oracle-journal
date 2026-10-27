@@ -58,6 +58,7 @@ import UserManagement from "./pages/UserManagement";
 import MyCalendar from "./pages/MyCalendar";
 import Membership from "./pages/Membership";
 import FreeReadingLanding from "./pages/FreeReadingLanding";
+import Revelations from "./pages/Revelations";
 import MembershipSuccess from "./pages/MembershipSuccess";
 import MyAccount from "./pages/MyAccount";
 import DevotionSectionPage from "./pages/DevotionSectionPage";
@@ -156,6 +157,7 @@ const App = () => {
             <Route path="/remembrance/course/:courseId" element={<DevotionCoursePage />} />
             <Route path="/remembrance/course/:courseId/lesson/:lessonId" element={<DevotionLessonPage />} />
             <Route path="/free-reading" element={<FreeReadingLanding />} />
+            <Route path="/revelations" element={<Revelations />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/join" element={<JoinTemple />} />
             <Route path="/reset-password" element={<ResetPassword />} />

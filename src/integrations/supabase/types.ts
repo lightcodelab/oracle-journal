@@ -6324,6 +6324,63 @@ export type Database = {
           },
         ]
       }
+      revelations_readings: {
+        Row: {
+          card_id: string
+          card_title: string
+          created_at: string
+          generated_reading: string | null
+          generated_reading_model: string | null
+          generation_started_at: string | null
+          guiding_question: string
+          id: string
+          image_file_name: string | null
+          journal_answers: Json
+          user_id: string
+        }
+        Insert: {
+          card_id: string
+          card_title: string
+          created_at?: string
+          generated_reading?: string | null
+          generated_reading_model?: string | null
+          generation_started_at?: string | null
+          guiding_question?: string
+          id?: string
+          image_file_name?: string | null
+          journal_answers?: Json
+          user_id: string
+        }
+        Update: {
+          card_id?: string
+          card_title?: string
+          created_at?: string
+          generated_reading?: string | null
+          generated_reading_model?: string | null
+          generation_started_at?: string | null
+          guiding_question?: string
+          id?: string
+          image_file_name?: string | null
+          journal_answers?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revelations_readings_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "revelations_readings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ritual_steps: {
         Row: {
           client_request_id: string | null
@@ -8193,7 +8250,12 @@ export type Database = {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
       }
+      complete_revelation: {
+        Args: { _id: string; _model: string; _reading: string }
+        Returns: undefined
+      }
       draw_free_spread_cards: { Args: { _count?: number }; Returns: Json }
+      draw_revelation: { Args: { _guiding_question?: string }; Returns: Json }
       find_unpaid_accounts: {
         Args: { _older_than_days?: number }
         Returns: {

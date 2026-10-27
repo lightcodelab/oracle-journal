@@ -16,6 +16,7 @@ const OPEN_EXACT = new Set([
   "/",
   "/membership",
   "/free-reading",
+  "/revelations",
   "/join",
   "/auth",
   "/reset-password",

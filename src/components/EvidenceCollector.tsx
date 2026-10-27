@@ -11,6 +11,9 @@ interface Props {
   values: Record<string, string | undefined>;
   onChange: (key: string, value: string) => void;
   idPrefix: string;
+  title?: string;
+  showGrounding?: boolean;
+  showIntroduction?: boolean;
 }
 
 const Guide = ({ guide }: { guide: EvidenceGuide }) => (
@@ -27,7 +30,7 @@ const Guide = ({ guide }: { guide: EvidenceGuide }) => (
 );
 
 /** Grounding question, The Evidence Collector and the Return step. */
-export const EvidenceCollector = ({ values, onChange, idPrefix }: Props) => {
+export const EvidenceCollector = ({ values, onChange, idPrefix, title = "The Evidence Collector", showGrounding = true, showIntroduction = true }: Props) => {
   const field = (key: string, label: string, guide: EvidenceGuide, help?: string, rows = 3) => (
     <div key={key}>
       <label htmlFor={`${idPrefix}-${key}`} className="block font-serif text-base text-foreground">{label}</label>
@@ -39,18 +42,20 @@ export const EvidenceCollector = ({ values, onChange, idPrefix }: Props) => {
 
   return (
     <div className="space-y-8 text-left">
-      <section className="space-y-3">
+      {showGrounding && <section className="space-y-3">
         {field(GROUNDING_QUESTION.key, GROUNDING_QUESTION.label, GROUNDING_QUESTION.guide)}
-      </section>
+      </section>}
       <section className="border-t border-border pt-6 space-y-5">
         <div>
-          <h3 className="font-serif text-xl text-foreground">The Evidence Collector</h3>
+          <h3 className="font-serif text-xl text-foreground">{title}</h3>
+          {showIntroduction && <>
           <p className="mt-1 text-sm italic text-muted-foreground">
             Protection Patterns use old evidence to predict future outcomes, so we need to collect new evidence to change anything.
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
             In everyday words: the habits that once kept us safe keep expecting the past to repeat. These questions help you notice that, and gather real experiences that show things can be different now.
           </p>
+          </>}
         </div>
         {EVIDENCE_QUESTIONS.map((q) => field(q.key, q.label, q.guide))}
       </section>
