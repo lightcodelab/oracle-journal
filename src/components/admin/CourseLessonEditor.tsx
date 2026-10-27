@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import AudioFileList from './AudioFileList';
 import LessonFormBuilder from './LessonFormBuilder';
+import { looksLikeHtml } from '@/lib/richText';
 import { LessonFormQuestion, legacyToFormQuestions } from '@/lib/lessonFormTypes';
 import { createStorageFileName, displayStorageFileName, titleFileNameFallback } from '@/lib/storageFileNames';
 
