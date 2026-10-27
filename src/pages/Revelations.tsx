@@ -166,7 +166,7 @@ export default function Revelations() {
       <Link to={user ? "/profile" : "/auth?redirect=/revelations"} className="text-sm text-muted-foreground underline">{user ? "My Profile" : "Sign in"}</Link>
     </header>
     <main className="mx-auto max-w-6xl px-5 pb-8 pt-0">
-      <DoorHeader image={revelationsBanner.url} imageKey="revelations-header" title="REVELATIONS" srOnlyTitle />
+      <DoorHeader image={revelationsBanner.url} imageKey="revelations-header" title="REVELATIONS" srOnlyTitle flushTop />
       <div className="mx-auto max-w-3xl">
       <section className="mb-10 mt-12 space-y-5 text-center">
         <h2 className="font-serif text-3xl text-primary">Welcome. There is room for you here.</h2>
