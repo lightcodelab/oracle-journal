@@ -16,6 +16,7 @@ interface Props {
   showGrounding?: boolean;
   showIntroduction?: boolean;
   extraQuestions?: { key: string; label: string; guide: EvidenceGuide }[];
+  questions?: { key: string; label: string; guide: EvidenceGuide }[];
 }
 
 const Guide = ({ guide }: { guide: EvidenceGuide }) => (
