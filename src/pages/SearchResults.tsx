@@ -353,7 +353,7 @@ const SearchResults = () => {
     };
 
     search();
-  }, [query]);
+  }, [query, canSeeCommunion]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
