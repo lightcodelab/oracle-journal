@@ -31,7 +31,7 @@ const Guide = ({ guide }: { guide: EvidenceGuide }) => (
 );
 
 /** Grounding question, The Evidence Collector and the Return step. */
-export const EvidenceCollector = ({ values, onChange, idPrefix, title = "The Evidence Collector", showGrounding = true, showIntroduction = true }: Props) => {
+export const EvidenceCollector = ({ values, onChange, idPrefix, title = "The Evidence Collector", showGrounding = true, showIntroduction = true, extraQuestions = [] }: Props) => {
   const field = (key: string, label: string, guide: EvidenceGuide, help?: string, rows = 3) => (
     <div key={key}>
       <label htmlFor={`${idPrefix}-${key}`} className="block font-serif text-base text-foreground">{label}</label>
@@ -59,6 +59,7 @@ export const EvidenceCollector = ({ values, onChange, idPrefix, title = "The Evi
           </>}
         </div>
         {EVIDENCE_QUESTIONS.map((q) => field(q.key, q.label, q.guide))}
+        {extraQuestions.map((q) => field(q.key, q.label, q.guide))}
       </section>
       <section className="border-t border-primary/40 pt-6">
         {field(RETURN_QUESTION.key, RETURN_QUESTION.label, RETURN_QUESTION.guide, RETURN_QUESTION.help, 4)}
