@@ -257,7 +257,7 @@ export default function Revelations() {
               <ul className="space-y-3">
                 <li className="flex gap-3"><span className="text-primary">✦</span><span>The full ceremonial experience for every card in The Sacred Rewrite, plus 4 other Card Decks; The rituals, the deeper inquiry, and a guided audio journey for each card</span></li>
                 <li className="flex gap-3"><span className="text-primary">✦</span><span>AreekeerA Healing Templates, Energetic Clearings, guided meditations; all designed to create a safe place inside you to do this Sacred Undoing work.</span></li>
-                <li className="flex gap-3"><span className="text-primary">✦</span><span>The full Evidence Locker to file everything that surfaces{"\n"}</span></li>
+                <li className="flex gap-3"><span className="text-primary">✦</span><span>The full Evidence Locker to file everything that surfaces and to see the patterns between everything that you may not have seen before.{"\n"}</span></li>
                 <li className="flex gap-3"><span className="text-primary">✦</span><span>All four Doors of THE TEMPLE — Remembrance, Devotion, Becoming and Communion, places to see what is hidden deep beneath the surface (even when you have been doing the work for decades) and to feel supported in turning and looking at it.</span></li>
               </ul>
               <div className="pt-2 space-y-3">
