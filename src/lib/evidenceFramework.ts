@@ -69,7 +69,7 @@ export const REVELATIONS_EVIDENCE_QUESTIONS = [
     label: "What new evidence do you already have that contradicts it?",
     guide: {
       meaning:
-        "Look for any moment, even a small one, where you were visible and the predicted disaster didn't happen. A post you were terrified to publish that someone thanked you for. A price you stated out loud that was simply accepted. A time you showed your real opinion and the relationship survived — or even deepened. These moments are easy to dismiss as flukes; the pattern will tell you they don't count. Write them down anyway. They are evidence.",
+        "Look for any moment, even a small one, where you were visible and the predicted disaster didn't happen. A post you were terrified to publish that someone thanked you for. A price you stated out loud that was simply accepted. A time you showed your real opinion and the relationship survived — or even deepened. These moments are easy to dismiss as flukes; the pattern will tell you they don't count. Write them down anyway. They are evidence. And the more new evidence you can collect, the faster reality can reshape around you.",
       example:
         "“I finally shared the story of why I started this work, shaking the whole time. Three women messaged to say it was exactly what they needed to hear. Nobody called me self-absorbed. The sky did not fall.”",
     } as EvidenceGuide,
