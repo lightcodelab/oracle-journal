@@ -400,6 +400,13 @@
       "when": 1792561510897,
       "tag": "0056_door_section_locations_and_deck_placement",
       "breakpoints": true
+    },
+    {
+      "idx": 57,
+      "version": "7",
+      "when": 1793067968693,
+      "tag": "0057_revelations_single_card_readings",
+      "breakpoints": true
     }
   ]
 }
