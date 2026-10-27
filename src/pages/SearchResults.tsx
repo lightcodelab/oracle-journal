@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTierAccess, getRequiredTierForBucket } from '@/hooks/useTierAccess';
+import { useCanSeeCommunion } from '@/lib/communionVisibility';
 import type { ContentResource } from '@/hooks/useContentByLocation';
 import { htmlToPlainText } from '@/lib/richText';
 
@@ -98,6 +99,7 @@ const SearchResults = () => {
   const [visibleCount, setVisibleCount] = useState(24);
   const [loading, setLoading] = useState(false);
   const { hasAccess, loading: tierLoading } = useTierAccess();
+  const canSeeCommunion = useCanSeeCommunion();
 
   useEffect(() => {
     setLocalQuery(query);
