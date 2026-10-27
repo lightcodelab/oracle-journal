@@ -193,6 +193,8 @@ export default function Revelations() {
           {focusChoice === "own" && <Textarea id="revelations-question" aria-label="Your own guiding question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={GUIDING_QUESTION_MAX} rows={3} placeholder="Write your own question or focus prompt here" />}
           <label htmlFor="revelations-focus-none" className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed"><RadioGroupItem id="revelations-focus-none" value="none" className="mt-1 shrink-0" /><span>Let the card find me without a question.</span></label>
         </RadioGroup>
+          </div>
+        </div>
         </section>
         <p className="my-10 text-center font-serif text-xl leading-relaxed">You've done the work. Something is still running beneath it. This is where it gets named.</p>
       </>}
