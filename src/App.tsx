@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { RouteAnalytics } from "@/components/RouteAnalytics";
 import AdminSiteAnalytics from "./pages/AdminSiteAnalytics";
 import { Toaster } from "@/components/ui/toaster";
@@ -116,7 +117,7 @@ const queryClient = new QueryClient();
  * the live-session pages redirect non-admins to the Temple home. Admins
  * keep full access so the content can still be prepared.
  */
-const CommunionRouteGuard = ({ children }: { children: React.ReactNode }) => {
+const CommunionRouteGuard = ({ children }: { children: ReactNode }) => {
   const { isAdmin, loading } = useAuth();
   if (!COMMUNION_HIDDEN) return <>{children}</>;
   if (loading) return null;
