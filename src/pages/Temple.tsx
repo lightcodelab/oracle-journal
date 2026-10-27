@@ -79,6 +79,7 @@ const Temple = () => {
     hasFullTempleAccess,
     loading: memberLoading,
   } = useMemberState();
+  const canSeeCommunion = useCanSeeCommunion();
 
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [profileLoaded, setProfileLoaded] = useState(false);
