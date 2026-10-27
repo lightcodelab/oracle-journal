@@ -185,7 +185,7 @@ export default function Revelations() {
       <div className="mx-auto max-w-3xl">
       <section className="mb-10 mt-12 space-y-5 text-center">
         <h2 className="font-serif text-3xl text-primary">{firstName ? `Welcome, ${firstName}.` : "Welcome."}&nbsp;Some part of you already knows why you're here, and there is room for all of you.</h2>
-        <p className="mx-auto max-w-2xl leading-relaxed text-muted-foreground">REVELATIONS is a quiet meeting with one card from The Sacred Rewrite deck, and with what may be moving beneath the work you are bringing into the world.</p>
+        <p className="mx-auto max-w-2xl leading-relaxed text-muted-foreground">REVELATIONS is a quiet meeting with one card from The Sacred Rewrite deck, and with what may be moving beneath the Big Work you are bringing into the world.</p>
         {record?.guiding_question && <>
           <div className="mx-auto w-full max-w-2xl border-t border-border" />
           <p className="mx-auto max-w-2xl italic leading-relaxed text-muted-foreground">{record.guiding_question}</p>
