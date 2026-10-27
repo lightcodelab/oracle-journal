@@ -13,6 +13,7 @@ interface Props {
   onChange: (key: string, value: string) => void;
   idPrefix: string;
   title?: string;
+  description?: string;
   showGrounding?: boolean;
   showIntroduction?: boolean;
   extraQuestions?: { key: string; label: string; guide: EvidenceGuide }[];
