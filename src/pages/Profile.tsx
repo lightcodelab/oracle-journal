@@ -11,10 +11,12 @@ import { useToast } from "@/hooks/use-toast";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { FOCUS_OPTIONS, SHOW_TEMPLE_FOCUS } from "@/lib/templeFocus";
+import { useMemberState } from "@/hooks/useMemberState";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { hasFullTempleAccess } = useMemberState();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -121,7 +123,7 @@ const Profile = () => {
       {/* Header */}
       <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between px-4">
-          <PageBreadcrumb items={[{ label: 'My Profile' }]} />
+          <PageBreadcrumb showHome={hasFullTempleAccess} items={[...(!hasFullTempleAccess ? [{ label: 'REVELATIONS', href: '/revelations' }] : []), { label: 'My Profile' }]} />
           <ProfileDropdown />
         </div>
       </header>
