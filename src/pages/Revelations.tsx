@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { EvidenceCollector } from "@/components/EvidenceCollector";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
+import { DoorHeader } from "@/components/temple/DoorHeader";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import revelationsBanner from "@/assets/tsr-banner.png";
 const REVELATIONS_TOPICS: { label: string; prompts: string[] }[] = [
   {
     label: "Starting My Business",
@@ -55,7 +58,7 @@ export default function Revelations() {
   const [record, setRecord] = useState<Revelation | null>(null);
   const [loading, setLoading] = useState(true);
   const [question, setQuestion] = useState("");
-  const [topic, setTopic] = useState<number | null>(null);
+  const [focusChoice, setFocusChoice] = useState("none");
   const [drawing, setDrawing] = useState(false);
   const [imagesReady, setImagesReady] = useState(false);
   const [revealed, setRevealed] = useState(false);
@@ -179,8 +182,30 @@ export default function Revelations() {
       <Link to="/" className="font-serif text-primary">THE TEMPLE of Sustainment</Link>
       <Link to={user ? "/profile" : "/auth?redirect=/revelations"} className="text-sm text-muted-foreground underline">{user ? "My Profile" : "Sign in"}</Link>
     </header>
-    <main className="mx-auto max-w-3xl px-5 py-12 sm:py-16">
-      <h1 className="text-center font-serif text-4xl sm:text-5xl text-primary mb-10">REVELATIONS</h1>
+    <main className="mx-auto max-w-6xl px-5 py-8">
+      <DoorHeader image={revelationsBanner} imageKey="revelations-header" title="REVELATIONS" />
+      <div className="mx-auto max-w-3xl">
+      <section className="mb-10 space-y-5 text-center">
+        <h2 className="font-serif text-3xl text-primary">Welcome. There is room for you here.</h2>
+        <p className="mx-auto max-w-2xl leading-relaxed text-muted-foreground">REVELATIONS is a quiet meeting with one card from The Sacred Rewrite, and with what may be moving beneath the work you are bringing into the world. Hold a question, draw your card, and receive a reading shaped by its meaning and what you are carrying. Then take a moment to notice, let your body settle, and begin gathering new evidence.</p>
+      </section>
+      {!record && !access.freeReadingUsed && <>
+        <ol className="mb-10 list-decimal space-y-5 pl-6 font-serif text-lg leading-relaxed marker:text-primary">
+          <li className="pl-2">Sit quietly for a moment. Bring to mind whatever is sitting heaviest in your business right now.</li>
+          <li className="pl-2">Let one of the questions below find you. You don't need to answer it. Just hold it.</li>
+          <li className="pl-2">Draw your card. Let it show you what is ready to be named.</li>
+        </ol>
+        <RadioGroup aria-label="Guiding focus for your reading" value={focusChoice} onValueChange={value => { setFocusChoice(value); setQuestion(value === "none" || value === "own" ? "" : value); }} className="gap-5 border-y border-border py-8">
+          {REVELATIONS_TOPICS.flatMap(item => item.prompts).map((prompt, index) => <label key={prompt} htmlFor={`revelations-focus-${index}`} className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed has-[[data-state=checked]]:text-foreground">
+            <RadioGroupItem id={`revelations-focus-${index}`} value={prompt} className="mt-1 shrink-0" />
+            <span>{prompt}</span>
+          </label>)}
+          <label htmlFor="revelations-focus-own" className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed"><RadioGroupItem id="revelations-focus-own" value="own" className="mt-1 shrink-0" /><span>I have my own question I want to use.</span></label>
+          {focusChoice === "own" && <Textarea id="revelations-question" aria-label="Your own guiding question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={GUIDING_QUESTION_MAX} rows={3} placeholder="I have my own question I want to use." />}
+          <label htmlFor="revelations-focus-none" className="flex cursor-pointer items-start gap-4 text-muted-foreground leading-relaxed"><RadioGroupItem id="revelations-focus-none" value="none" className="mt-1 shrink-0" /><span>Let the card find me without a question.</span></label>
+        </RadioGroup>
+        <p className="my-10 text-center font-serif text-xl leading-relaxed">You've done the work. Something is still running beneath it. This is where it gets named.</p>
+      </>}
       {(loading || authLoading || access.loading) ? <Loader2 className="mx-auto h-6 w-6 animate-spin text-primary" aria-label="Opening your reading" /> : !user ? <div className="text-center space-y-6">
         <p className="text-muted-foreground">Sign in to receive your card and return to your Evidence Locker.</p>
         <Button asChild><Link to="/auth?redirect=/revelations">Sign in</Link></Button>
@@ -189,25 +214,18 @@ export default function Revelations() {
         <p>Your introductory reading has already been used. Your saved reading remains yours.</p>
         <Button asChild variant="outline"><Link to="/readings">Return to My Readings</Link></Button>
         <Button onClick={checkout} disabled={checkingOut}>Join us in The Temple</Button>
-      </div> : <div className="space-y-6 text-center">
-        <p className="font-serif text-xl">What is asking to be seen?</p>
-        <div className="flex justify-center"><img src={cardBack} alt="The Sacred Rewrite card back" className="w-28 aspect-[7/10] rounded-lg object-cover" /></div>
-        <label htmlFor="revelations-question" className="block text-muted-foreground">Use our prompts if you aren't sure what you what you want to use to guide your reading. You can also use none.</label>
-        <div className="flex flex-wrap justify-center gap-2">{REVELATIONS_TOPICS.map((item, index) => <Button key={item.label} variant={topic === index ? "default" : "outline"} onClick={() => setTopic(topic === index ? null : index)} aria-pressed={topic === index} className="h-auto whitespace-normal">{item.label}</Button>)}</div>
-        {topic !== null && <div className="space-y-2 text-left">{REVELATIONS_TOPICS[topic].prompts.map(prompt => <Button key={prompt} variant="outline" onClick={() => setQuestion(prompt)} className="h-auto w-full justify-start whitespace-normal py-3 text-left font-serif">{prompt}</Button>)}</div>}
-        <Textarea id="revelations-question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={GUIDING_QUESTION_MAX} rows={3} placeholder="I have my own question I want to use." />
+      </div> : <div className="mb-10 text-center">
         <Button size="lg" onClick={() => void draw(true)} disabled={drawing}><Sparkles className="mr-2 h-4 w-4" />{drawing ? "Preparing your card…" : "Shuffle & Draw My Card"}</Button>
-        <div><Button variant="link" onClick={() => void draw(false)} disabled={drawing}>Draw without a question</Button></div>
       </div> : <>
         {!imagesReady ? <p className="text-center text-muted-foreground">Preparing your card artwork…</p> : !revealed ? <ShuffleAnimation cardBackImage={cardBack} onReveal={() => void generate()} /> : <div className="flex justify-center mb-10"><img src={cardImageSrc(record.image_file_name)} alt={record.card_title} className="w-64 sm:w-72 aspect-[7/10] rounded-lg object-cover" /></div>}
         {revealed && <div className="space-y-10 leading-relaxed">
           <section className="space-y-5">
-            <SectionTitle>REVEAL</SectionTitle>
+            <SectionTitle>YOUR READING</SectionTitle>
             {generating ? <p className="flex items-center gap-2 text-muted-foreground" role="status"><Loader2 className="h-4 w-4 animate-spin" />Your Revelation is being written…</p> : record.generated_reading ? <p className="whitespace-pre-line font-serif text-lg leading-relaxed">{record.generated_reading}</p> : <Button onClick={() => void generate()}>Try writing my reading again</Button>}
           </section>
           {record.generated_reading && <>
             <section className="space-y-4">
-              <SectionTitle>SIT WITH THIS</SectionTitle>
+              <SectionTitle>REVEAL</SectionTitle>
               <p>Sit quietly with this card for a moment before you do anything else. Not to decide if it's true or to analyse where it came from...just to notice: Where in your body do you feel something when you read this? Stay there for 30 seconds, that's enough.</p>
               <label htmlFor="revelations-sit" className="block font-serif">Name how this has shown up for you.</label>
               <Textarea id="revelations-sit" rows={4} value={answers.pattern_location || ""} onChange={e => changeAnswer("pattern_location", e.target.value)} />
@@ -240,6 +258,7 @@ export default function Revelations() {
         </div>}
       </>}
       {error && <p role="alert" className="mt-6 text-destructive">{error}</p>}
+      </div>
     </main>
   </div>;
 }
