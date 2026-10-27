@@ -245,10 +245,20 @@ export default function Revelations() {
               <p>If you read this card and quickly said "this isn't for me!", I would like you to sit with this feeling for a moment and then ask yourself "I know this isn't for me, but if it was for me, how could it be showing up for me in my life?"</p>
               <p>Notice what comes to you; in feelings, thoughts, stories, memories, sensations, smells, movies in your mind, anything that drops in. That noticing is your first case file entry in the Evidence Locker either way. Congratulations.</p>
             </section>
-            <section className="border-t border-border pt-8 space-y-5">
+            <section className="rounded-lg border border-primary/40 bg-card p-8 sm:p-10 space-y-6 shadow-[0_0_60px_-15px_hsl(var(--primary)/0.25)]">
+              <p className="text-xs uppercase tracking-[0.25em] text-primary">Continue the investigation</p>
+              <h2 className="font-serif text-3xl sm:text-4xl text-primary">You've seen what one card can name. Imagine what the full investigation opens.</h2>
               <p>You've just experienced The Temple's three phase Evidence Collector System "Revelation, Regulation, Investigation". Inside The Temple, you become the Sherlock Holmes of your inner world, revealing and investigating old evidence so you can build something new and bring your Big Work to the world in a way that fills you with excitement and passion, not dread.</p>
-              <p>Inside The Temple you'll find the full ceremonial experience for every card, the rituals, the deeper inquiry, a guided audio journey, and the full Evidence Locker to file what surfaces. You've seen what one card can name. Imagine what the full investigation opens.</p>
-              {access.hasFullAccess ? <Button asChild size="lg"><Link to="/temple">Enter The Temple</Link></Button> : <Button size="lg" onClick={() => void checkout()} disabled={checkingOut}>{checkingOut && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Join us in The Temple</Button>}
+              <ul className="space-y-3">
+                <li className="flex gap-3"><span className="text-primary">✦</span><span>The full ceremonial experience for every card in The Sacred Rewrite</span></li>
+                <li className="flex gap-3"><span className="text-primary">✦</span><span>The rituals, the deeper inquiry, and a guided audio journey for each card</span></li>
+                <li className="flex gap-3"><span className="text-primary">✦</span><span>The full Evidence Locker to file everything that surfaces</span></li>
+                <li className="flex gap-3"><span className="text-primary">✦</span><span>All four Doors — Remembrance, Devotion, Becoming and Communion</span></li>
+              </ul>
+              <div className="pt-2 space-y-3">
+                {access.hasFullAccess ? <Button asChild size="lg" className="w-full sm:w-auto text-base px-10 py-6"><Link to="/temple">Enter The Temple</Link></Button> : <Button size="lg" className="w-full sm:w-auto text-base px-10 py-6" onClick={() => void checkout()} disabled={checkingOut}>{checkingOut && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Join us in The Temple</Button>}
+                {!access.hasFullAccess && <p className="text-sm text-muted-foreground">Founding member offer — $35 AUD per month. One membership, full Temple access.</p>}
+              </div>
             </section>
           </>}
         </div>}
