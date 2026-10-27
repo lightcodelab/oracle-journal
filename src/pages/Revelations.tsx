@@ -184,7 +184,7 @@ export default function Revelations() {
       <DoorHeader image={revelationsBanner.url} imageKey="revelations-header" title="REVELATIONS" srOnlyTitle flushTop />
       <div className="mx-auto max-w-3xl">
       <section className="mb-10 mt-12 space-y-5 text-center">
-        <h2 className="font-serif text-3xl text-primary">{firstName ? `Welcome, ${firstName}.` : "Welcome."} Something already knows why you are here, and there is room for all of you here.</h2>
+        <h2 className="font-serif text-3xl text-primary">{firstName ? `Welcome, ${firstName}.` : "Welcome."} Something already knows why you are here, and there is room for all of you.</h2>
         <p className="mx-auto max-w-2xl leading-relaxed">If you have been doing the work for awhile now and something is still running underneath it no matter what you do, you're in the right place.</p>
         <p className="mx-auto max-w-2xl leading-relaxed text-muted-foreground">REVELATIONS is a quiet meeting with one card from The Sacred Rewrite deck, and with what may be moving beneath the work you are bringing into the world.</p>
         {record?.guiding_question && <>
