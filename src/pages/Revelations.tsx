@@ -234,8 +234,9 @@ export default function Revelations() {
             <section className="space-y-4">
               <SectionTitle>PHASE 2: REGULATE</SectionTitle>
               <p>You've named something now and your nervous system may be responding. This is normal and you are okay.</p>
-              <p>Before you begin investigating, let your body settle first. This is how we work inside The Temple:</p>
-              <ul className="list-disc pl-6 space-y-1"><li>we Reveal</li><li>we Regulate</li><li>we Investigate</li></ul>
+              <p>Before you begin investigating, let your body settle first.</p>
+              <p>When your nervous system is activated, it does exactly what it was built to do: it reaches for the old evidence — everything it has already learned about what happens to you, what is safe, what is coming — and uses it to predict what happens next. That is protection, not a flaw. But it means that if we try to change anything while we're still activated, we are building on top of the very pattern we're trying to change. The new way won't hold, no matter how much you want it to, because your body is still standing on the old ground.</p>
+              <p>A settled body is what makes something new possible. When your nervous system feels calm and safe, it stops reaching for the old story and can actually take in new evidence — a different response, a different feeling, a different ending. That is why we settle before we investigate. It isn't a pause in the work; it is what allows the work to stick.</p>
               <p>Here's your first Regulation practice from The Door of Devotion.</p>
               <p className="text-sm italic text-muted-foreground">The audio practice is coming soon.</p>
             </section>
