@@ -22,7 +22,7 @@ const REVELATIONS_QUESTIONS = [
 ];
 import { cardImageSrc } from "@/lib/cardImage";
 import { loadCardImages } from "@/lib/loadCardImages";
-import { GUIDING_QUESTION_MAX } from "@/lib/evidenceFramework";
+import { GUIDING_QUESTION_MAX, PROTECTION_PREDICTION_QUESTION } from "@/lib/evidenceFramework";
 import { getStoredAffiliateRef } from "@/lib/affiliateTracking";
 import cardBack from "@/assets/card-back-v2.png";
 import type { Tables, Json } from "@/integrations/supabase/types";
@@ -236,7 +236,7 @@ export default function Revelations() {
             </section>
             <section className="border-t border-border pt-8 space-y-5">
               <SectionTitle>INVESTIGATE</SectionTitle>
-              <EvidenceCollector title="The Evidence Locker" showGrounding={false} showIntroduction={false} idPrefix="revelations-evidence" values={answers} onChange={changeAnswer} />
+              <EvidenceCollector title="The Evidence Locker" showGrounding={false} showIntroduction={false} idPrefix="revelations-evidence" values={answers} onChange={changeAnswer} extraQuestions={[PROTECTION_PREDICTION_QUESTION]} />
               <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-muted-foreground" role="status">{saveStatus || "Your reading is saved. Return to Revelations to add new evidence."}</span><Button variant="link" onClick={() => void saveAnswers()}>Save my evidence</Button></div>
             </section>
             <section className="border-t border-border pt-8 space-y-4">
