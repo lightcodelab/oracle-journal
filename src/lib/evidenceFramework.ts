@@ -50,6 +50,18 @@ export const EVIDENCE_QUESTIONS = [
   },
 ];
 
+// Extra question used only by The Evidence Locker on Revelations.
+export const PROTECTION_PREDICTION_QUESTION = {
+  key: "protection_prediction" as const,
+  label: "What is the protection pattern predicting will happen if you actually do what you are avoiding?",
+  guide: {
+    meaning:
+      "Protection Patterns keep us safe by making quiet predictions about the future: if you do the thing you're avoiding, something bad will follow. Name the prediction out loud, exactly as the pattern tells it. What does it say will happen? Who will be upset, what will you lose, what will it prove about you? Once the prediction is written down, it becomes something you can test with new evidence instead of something that silently runs your choices.",
+    example:
+      "“If I actually raise my prices, the pattern says everyone will leave, I'll be seen as greedy, and the whole business will collapse — proof that I was never cut out for this.”",
+  } as EvidenceGuide,
+};
+
 export const RETURN_QUESTION = {
   key: "returned_evidence" as const,
   label: "Return with New Evidence",
