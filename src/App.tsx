@@ -111,6 +111,19 @@ import { useEffect } from "react";
 import MembershipGate from "@/components/MembershipGate";
 const queryClient = new QueryClient();
 
+/**
+ * While the Door of Communion is hidden (COMMUNION_HIDDEN), its pages and
+ * the live-session pages redirect non-admins to the Temple home. Admins
+ * keep full access so the content can still be prepared.
+ */
+const CommunionRouteGuard = ({ children }: { children: React.ReactNode }) => {
+  const { isAdmin, loading } = useAuth();
+  if (!COMMUNION_HIDDEN) return <>{children}</>;
+  if (loading) return null;
+  if (!isAdmin) return <Navigate to="/temple" replace />;
+  return <>{children}</>;
+};
+
 // Old "Field Notes" addresses stay alive for bookmarks, saved links and email
 // instructions: they forward to the same place under its new name.
 function LegacyFieldNoteRedirect() {
