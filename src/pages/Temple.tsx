@@ -31,6 +31,7 @@ import { BecomingJourneysStrip } from "@/components/temple/BecomingJourneysStrip
 import { FocusDoorBanner } from "@/components/temple/FocusDoorBanner";
 import { RecentlyAddedSection, NewlyTaggedSection } from "@/components/temple/RecentlyAddedSection";
 import { TempleFocus, isTempleFocus, SHOW_TEMPLE_FOCUS } from "@/lib/templeFocus";
+import { useCanSeeCommunion } from "@/lib/communionVisibility";
 
 /** Wrapper that only mounts recommendation queries once member access is resolved. */
 function RecommendedSection({ enabled }: { enabled: boolean }) {
@@ -308,8 +309,8 @@ const Temple = () => {
     recentlyAdded: <RecentlyAddedSection enabled={hasFullAccess} />,
     newlyTagged: <NewlyTaggedSection enabled={hasFullAccess} />,
     tools: <ToolsForReturn />,
-    live: <LiveAndSupport enabled={hasFullAccess} />,
-    events: activeFocus === "communion" ? <CommunionEventsCalendar enabled={hasFullAccess} /> : <></>,
+    live: canSeeCommunion ? <LiveAndSupport enabled={hasFullAccess} /> : <></>,
+    events: activeFocus === "communion" && canSeeCommunion ? <CommunionEventsCalendar enabled={hasFullAccess} /> : <></>,
   };
   const defaultOrder = ["practice", "newlyTagged", "cards", "rituals", "devotionPractices", "living", "becoming", "recentlyAdded", "recommended", "seasonal", "tools", "live"];
   const lead: Record<TempleFocus, string[]> = {
