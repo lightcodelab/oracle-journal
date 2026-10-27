@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { Sparkles, Loader2, Save } from "lucide-react";
 import { SPREAD_TYPES } from "./SpreadSelection";
@@ -11,8 +10,7 @@ import { SPREAD_JOURNAL_QUESTIONS } from "@/lib/remembranceThemes";
 import CardDetailDialog from "./CardDetailDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useUpdateJournalAnswers } from "@/hooks/useSavedReadings";
-import { EvidenceCollector } from "@/components/EvidenceCollector";
-import { EVIDENCE_KEYS } from "@/lib/evidenceFramework";
+import { ReadingReflectionPhases } from "@/components/ReadingReflectionPhases";
 import { useMemberState } from "@/hooks/useMemberState";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -70,8 +68,8 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
     }
   }, [open, readingId, journalAnswers]);
 
-  const journalDirty = [...SPREAD_JOURNAL_QUESTIONS.map((q) => q.key as string), ...EVIDENCE_KEYS].some(
-    (k) => (journalDraft[k] || "") !== (journalAnswers?.[k] || "")
+  const journalDirty = Object.keys(journalDraft).some(
+    (key) => (journalDraft[key] || "") !== (journalAnswers?.[key] || "")
   );
 
   const handleSaveJournal = async () => {
@@ -201,7 +199,7 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
           )}
 
           {readingId && (
-            <section className="max-w-3xl mx-auto rounded-xl border border-border bg-card p-5 sm:p-6 mt-4" aria-labelledby="saved-spread-journal-title">
+            <section className="max-w-3xl mx-auto py-6 mt-4" aria-labelledby="saved-spread-journal-title">
               <h2 id="saved-spread-journal-title" className="font-serif text-xl text-foreground">Write with this reading</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Private to you. You can return and add to your writing at any time.
@@ -210,7 +208,7 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
                 <p className="mt-4 font-serif italic text-foreground/80">Your guiding question: “{journalAnswers.guiding_question.trim()}”</p>
               )}
               <div className="mt-5">
-                <EvidenceCollector
+                <ReadingReflectionPhases
                   idPrefix="saved-spread"
                   values={journalDraft}
                   onChange={(key, value) => setJournalDraft((prev) => ({ ...prev, [key]: value }))}

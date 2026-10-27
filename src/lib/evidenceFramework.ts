@@ -50,9 +50,9 @@ export const EVIDENCE_QUESTIONS = [
   },
 ];
 
-// Revelations-specific versions of the three Evidence Collector questions:
+// Shared Revelations and Sacred Spreads versions of the three evidence questions:
 // same keys (so saved answers stay compatible), but with deeper guides themed
-// around business visibility and shame. Used only by The Evidence Locker.
+// around business visibility and shame. Used by The Evidence Locker.
 export const REVELATIONS_EVIDENCE_QUESTIONS = [
   {
     key: "old_evidence" as const,
@@ -86,7 +86,7 @@ export const REVELATIONS_EVIDENCE_QUESTIONS = [
   },
 ];
 
-// Extra question used only by The Evidence Locker on Revelations.
+// Extra question shared by Revelations and Sacred Spreads Evidence Lockers.
 export const PROTECTION_PREDICTION_QUESTION = {
   key: "protection_prediction" as const,
   label: "What is the protection pattern predicting will happen if you actually do what you are avoiding?",

@@ -16,7 +16,7 @@ import { saveRevelationAnswers } from "@/lib/saveRevelationAnswers";
 import revelationsBanner from "@/assets/revelations-banner.png.asset.json";
 import { cardImageSrc } from "@/lib/cardImage";
 import { loadCardImages } from "@/lib/loadCardImages";
-import { GUIDING_QUESTION_MAX, PROTECTION_PREDICTION_QUESTION, REVELATIONS_EVIDENCE_QUESTIONS } from "@/lib/evidenceFramework";
+import { PROTECTION_PREDICTION_QUESTION, REVELATIONS_EVIDENCE_QUESTIONS } from "@/lib/evidenceFramework";
 import { getStoredAffiliateRef } from "@/lib/affiliateTracking";
 import cardBack from "@/assets/card-back-v2.png";
 import type { Tables, Json } from "@/integrations/supabase/types";
