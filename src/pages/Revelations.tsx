@@ -192,7 +192,7 @@ export default function Revelations() {
       </div> : <div className="space-y-6 text-center">
         <p className="font-serif text-xl">What is asking to be seen?</p>
         <div className="flex justify-center"><img src={cardBack} alt="The Sacred Rewrite card back" className="w-28 aspect-[7/10] rounded-lg object-cover" /></div>
-        <label htmlFor="revelations-question" className="block text-muted-foreground">Your guiding question or focus (optional)</label>
+        <label htmlFor="revelations-question" className="block text-muted-foreground">Use our prompts if you aren't sure what you what you want to use to guide your reading. You can also use none.</label>
         <div className="flex flex-wrap justify-center gap-2">{REVELATIONS_TOPICS.map((item, index) => <Button key={item.label} variant={topic === index ? "default" : "outline"} onClick={() => setTopic(topic === index ? null : index)} aria-pressed={topic === index} className="h-auto whitespace-normal">{item.label}</Button>)}</div>
         {topic !== null && <div className="space-y-2 text-left">{REVELATIONS_TOPICS[topic].prompts.map(prompt => <Button key={prompt} variant="outline" onClick={() => setQuestion(prompt)} className="h-auto w-full justify-start whitespace-normal py-3 text-left font-serif">{prompt}</Button>)}</div>}
         <Textarea id="revelations-question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={GUIDING_QUESTION_MAX} rows={3} placeholder="I have my own question I want to use." />
