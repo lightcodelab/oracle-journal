@@ -8,7 +8,32 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { EvidenceCollector } from "@/components/EvidenceCollector";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
-import { FOCUS_TOPICS } from "@/components/SpreadFocusStep";
+const REVELATIONS_TOPICS: { label: string; prompts: string[] }[] = [
+  {
+    label: "Starting My Business",
+    prompts: [
+      "Why does putting my work out into the world feel so much bigger than me?",
+      "What old story keeps me from finally starting?",
+      "Who am I afraid of seeing me fail — and what would change if I began anyway?",
+    ],
+  },
+  {
+    label: "It Feels Like It's Failing",
+    prompts: [
+      "Why does it feel like I've tried everything and nothing is working?",
+      "What is this setback actually telling me that I don't want to hear?",
+      "What am I carrying from other people's expectations of what this should look like by now?",
+    ],
+  },
+  {
+    label: "On the Brink of Giving Up",
+    prompts: [
+      "What am I really ready to let go of — the work, or the way I've been doing it?",
+      "What would I have to believe about myself to walk away from this?",
+      "What is still quietly asking to be built, even on my worst days?",
+    ],
+  },
+];
 import { cardImageSrc } from "@/lib/cardImage";
 import { loadCardImages } from "@/lib/loadCardImages";
 import { GUIDING_QUESTION_MAX } from "@/lib/evidenceFramework";
