@@ -118,9 +118,11 @@ const queryClient = new QueryClient();
  * keep full access so the content can still be prepared.
  */
 const CommunionRouteGuard = ({ children }: { children: ReactNode }) => {
-  const { isAdmin, loading } = useAuth();
+  // rolesLoading stays true until the admin role check has resolved, so an
+  // admin is never bounced to /temple before their role has loaded.
+  const { isAdmin, rolesLoading } = useAuth();
   if (!COMMUNION_HIDDEN) return <>{children}</>;
-  if (loading) return null;
+  if (rolesLoading) return null;
   if (!isAdmin) return <Navigate to="/temple" replace />;
   return <>{children}</>;
 };
