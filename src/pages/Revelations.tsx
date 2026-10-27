@@ -90,6 +90,18 @@ export default function Revelations() {
     return () => { active = false; };
   }, [user?.id, authLoading]);
 
+  // Preferred name: profiles.full_name, first word only. Never fall back to email.
+  useEffect(() => {
+    let active = true;
+    if (!user) { setFirstName(null); return; }
+    void supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle().then(({ data }) => {
+      if (!active) return;
+      const name = (data?.full_name || "").toString().trim();
+      setFirstName(name ? name.split(/\s+/)[0] : null);
+    });
+    return () => { active = false; };
+  }, [user?.id]);
+
   useEffect(() => {
     if (!record) return;
     let active = true;
