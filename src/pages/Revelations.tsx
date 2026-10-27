@@ -173,7 +173,7 @@ export default function Revelations() {
         <p className="mx-auto max-w-2xl leading-relaxed text-muted-foreground">REVELATIONS is a quiet meeting with one card from The Sacred Rewrite deck, and with what may be moving beneath the work you are bringing into the world.</p>
         {record?.guiding_question && <>
           <div className="mx-auto w-full max-w-2xl border-t border-border" />
-          <p className="mx-auto max-w-2xl leading-relaxed text-muted-foreground">{record.guiding_question}</p>
+          <p className="mx-auto max-w-2xl italic leading-relaxed text-muted-foreground">{record.guiding_question}</p>
         </>}
       </section>
       {!record && !access.freeReadingUsed && <>
