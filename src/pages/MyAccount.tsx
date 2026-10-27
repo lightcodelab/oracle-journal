@@ -60,7 +60,7 @@ const MyAccount = () => {
   const { toast } = useToast();
   const { memberTierCode, subscriptionStatus, tierName, loading: tierLoading, isAdmin, bucketAccess, refetch } = useTierAccess();
   const { tiers, loading: tiersLoading, startCheckout, checkoutLoading } = useMembership();
-  const { isFoundingMember, foundingPriceStatus, manualFullAccess } =
+  const { isFoundingMember, foundingPriceStatus, manualFullAccess, hasFullTempleAccess } =
     useMemberState();
   const [portalLoading, setPortalLoading] = useState(false);
   const [pauseLoading, setPauseLoading] = useState(false);
@@ -193,7 +193,7 @@ const MyAccount = () => {
       {/* Header */}
       <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between px-4">
-          <PageBreadcrumb items={[{ label: "My Account" }]} />
+          <PageBreadcrumb showHome={hasFullTempleAccess} items={[...(!hasFullTempleAccess ? [{ label: 'REVELATIONS', href: '/revelations' }] : []), { label: "My Account" }]} />
           <ProfileDropdown />
         </div>
       </header>
