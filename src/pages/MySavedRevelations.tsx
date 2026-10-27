@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import { cardImageSrc } from "@/lib/cardImage";
 import { revelationAnswers, REVELATIONS_PHASE_FIELDS } from "@/lib/revelationsJournal";
+import { waitForRevelationSaves } from "@/lib/saveRevelationAnswers";
 import type { Tables } from "@/integrations/supabase/types";
 
 export default function MySavedRevelations() {
@@ -27,7 +28,7 @@ export default function MySavedRevelations() {
     if (!user) { setLoading(false); return; }
     let active = true;
     setLoading(true);
-    void supabase.from("revelations_readings").select("*").eq("user_id", user.id).maybeSingle().then(({ data, error: readError }) => {
+    void waitForRevelationSaves().then(() => supabase.from("revelations_readings").select("*").eq("user_id", user.id).maybeSingle()).then(({ data, error: readError }) => {
       if (!active) return;
       setRecord(data); setError(Boolean(readError)); setLoading(false);
     });

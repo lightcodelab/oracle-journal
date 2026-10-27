@@ -12,6 +12,7 @@ import { DoorHeader } from "@/components/temple/DoorHeader";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import { REGULATION_QUESTION } from "@/lib/revelationsJournal";
+import { saveRevelationAnswers } from "@/lib/saveRevelationAnswers";
 import revelationsBanner from "@/assets/revelations-banner.png.asset.json";
 const REVELATIONS_QUESTIONS = [
   "What am I most afraid people will discover if this doesn't work?",
@@ -54,7 +55,6 @@ export default function Revelations() {
   const [checkingOut, setCheckingOut] = useState(false);
   const dirty = useRef(false);
   const latestAnswers = useRef<Answers>({});
-  const saveQueue = useRef<Promise<void>>(Promise.resolve());
   const generationLock = useRef(false);
   const recordId = useRef<string | null>(null);
   recordId.current = record?.id ?? null;
@@ -64,9 +64,7 @@ export default function Revelations() {
     const id = recordId.current;
     if (!id || !dirty.current) return;
     const snapshot = { ...latestAnswers.current };
-    saveQueue.current = saveQueue.current.catch(() => undefined).then(async () => {
-      await supabase.from("revelations_readings").update({ journal_answers: snapshot }).eq("id", id);
-    });
+    void saveRevelationAnswers(id, snapshot);
   }, []);
 
   useEffect(() => {
@@ -112,13 +110,10 @@ export default function Revelations() {
     if (!record || !dirty.current) return;
     const id = record.id;
     setSaveStatus("Saving…");
-    saveQueue.current = saveQueue.current.catch(() => undefined).then(async () => {
-      const snapshot = { ...latestAnswers.current };
-      const { error: saveError } = await supabase.from("revelations_readings").update({ journal_answers: snapshot }).eq("id", id);
-      if (!saveError && JSON.stringify(snapshot) === JSON.stringify(latestAnswers.current)) dirty.current = false;
-      setSaveStatus(saveError ? "Your notes haven't saved. Please try again." : "Saved privately");
-    });
-    await saveQueue.current;
+    const snapshot = { ...latestAnswers.current };
+    const { error: saveError } = await saveRevelationAnswers(id, snapshot);
+    if (!saveError && JSON.stringify(snapshot) === JSON.stringify(latestAnswers.current)) dirty.current = false;
+    setSaveStatus(saveError ? "Your notes haven't saved. Please try again." : "Saved privately");
   };
   useEffect(() => {
     if (!dirty.current || !record) return;
