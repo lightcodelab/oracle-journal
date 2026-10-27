@@ -152,13 +152,15 @@ const LessonEditorPanel = ({
     return supabase.storage.from('content-main-media').getPublicUrl(path).data.publicUrl;
   };
 
-  // Build initial editor content. Prefer stored rich-text JSON; otherwise
-  // convert the plain-text `content` mirror into paragraph HTML so newline
-  // structure isn't collapsed into a single paragraph on first save.
+  // Build initial editor content. Prefer stored rich-text JSON. Otherwise, if
+  // the `content` mirror already holds HTML, load it as HTML so existing
+  // formatting (italics, bold, headings) is not shown — and re-saved — as
+  // literal tag text. Only true plain-text content gets escaped into blocks.
   const buildInitialContent = () => {
     if (lesson.body_richtext) return lesson.body_richtext;
     const raw = lesson.content || '';
     if (!raw.trim()) return '';
+    if (looksLikeHtml(raw)) return raw;
     const escape = (s: string) =>
       s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     // Split on blank lines into paragraphs; single newlines become <br />.
