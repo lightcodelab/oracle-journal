@@ -11,6 +11,7 @@ import CardDetailDialog from "./CardDetailDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useUpdateJournalAnswers } from "@/hooks/useSavedReadings";
 import { ReadingReflectionPhases } from "@/components/ReadingReflectionPhases";
+import { reflectionAnswersChanged } from "@/lib/readingReflectionAnswers";
 import { useMemberState } from "@/hooks/useMemberState";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -68,9 +69,7 @@ const SpreadViewDialog = ({ open, onOpenChange, readingId, spreadType, spreadNam
     }
   }, [open, readingId, journalAnswers]);
 
-  const journalDirty = Object.keys(journalDraft).some(
-    (key) => (journalDraft[key] || "") !== (journalAnswers?.[key] || "")
-  );
+  const journalDirty = reflectionAnswersChanged(journalDraft, journalAnswers);
 
   const handleSaveJournal = async () => {
     if (!readingId) return;
