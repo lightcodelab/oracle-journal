@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { TOOL_ICONS } from "@/lib/toolIcons";
+import { useCanSeeCommunion } from "@/lib/communionVisibility";
 
 const tools = [
   { label: "My Case Notes", href: "/case-notes", icon: TOOL_ICONS.journal },
   { label: "My Rituals", href: "/rituals", icon: TOOL_ICONS.rituals },
   { label: "My Remembrance Letters", href: "/remembrance-letters", icon: TOOL_ICONS.remembranceLetters },
-  { label: "My Calendar", href: "/my-calendar", icon: TOOL_ICONS.calendar },
   { label: "My Playlists", href: "/playlists", icon: TOOL_ICONS.playlists },
   { label: "My Living Pattern", href: "/living-pattern", icon: TOOL_ICONS.livingPattern },
   { label: "My Tracking", href: "/tracking", icon: TOOL_ICONS.tracking },
@@ -13,7 +13,13 @@ const tools = [
   { label: "My Protocols", href: "/devotion/protocols", icon: TOOL_ICONS.protocols },
 ];
 
+const communionTools = [
+  { label: "My Calendar", href: "/my-calendar", icon: TOOL_ICONS.calendar },
+];
+
 export function ToolsForReturn() {
+  const canSeeCommunion = useCanSeeCommunion();
+  const visibleTools = canSeeCommunion ? [...tools, ...communionTools] : tools;
   return (
     <section aria-labelledby="tools-heading" className="mb-12">
       <div className="rounded-lg border border-border/50 bg-card/50 p-4">
