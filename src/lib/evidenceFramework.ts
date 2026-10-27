@@ -50,6 +50,42 @@ export const EVIDENCE_QUESTIONS = [
   },
 ];
 
+// Revelations-specific versions of the three Evidence Collector questions:
+// same keys (so saved answers stay compatible), but with deeper guides themed
+// around business visibility and shame. Used only by The Evidence Locker.
+export const REVELATIONS_EVIDENCE_QUESTIONS = [
+  {
+    key: "old_evidence" as const,
+    label: "What old evidence is this pattern using to justify itself?",
+    guide: {
+      meaning:
+        "Every protection pattern was learned somewhere. Long before the business, something taught you that being fully seen was unsafe — that speaking up, wanting more, or being visible came with a cost. Trace it back: What happened when you were visible as a child, in school, in early work, in past relationships? What did you learn about what happens to people who shine, ask, or take up space? What does the voice inside say will happen if you let yourself be truly seen in your work now?",
+      example:
+        "“When I won an award at school, my best friend stopped talking to me for a week and Mum told me not to boast. So part of me believes that if my business becomes visible and successful, the people I love will quietly turn away — and it will be my fault for wanting too much.”",
+    } as EvidenceGuide,
+  },
+  {
+    key: "new_evidence" as const,
+    label: "What new evidence do you already have that contradicts it?",
+    guide: {
+      meaning:
+        "Look for any moment, even a small one, where you were visible and the predicted disaster didn't happen. A post you were terrified to publish that someone thanked you for. A price you stated out loud that was simply accepted. A time you showed your real opinion and the relationship survived — or even deepened. These moments are easy to dismiss as flukes; the pattern will tell you they don't count. Write them down anyway. They are evidence.",
+      example:
+        "“I finally shared the story of why I started this work, shaking the whole time. Three women messaged to say it was exactly what they needed to hear. Nobody called me self-absorbed. The sky did not fall.”",
+    } as EvidenceGuide,
+  },
+  {
+    key: "todays_choice" as const,
+    label: "What's one choice you could make today that would add to your new evidence file?",
+    guide: {
+      meaning:
+        "Choose one small, doable act of visibility that gently goes against what the pattern demands. Not a grand gesture — a real one. Send the pitch you've been redrafting for weeks. Publish the thing with your actual face or name on it. Say your price without apologising. It only needs to be big enough to give you a real experience to learn from — one the pattern can't explain away.",
+      example:
+        "“Today I'll reply to the enquiry sitting in my inbox with my real rate, written plainly, without the discount I usually offer before anyone asks.”",
+    } as EvidenceGuide,
+  },
+];
+
 // Extra question used only by The Evidence Locker on Revelations.
 export const PROTECTION_PREDICTION_QUESTION = {
   key: "protection_prediction" as const,
