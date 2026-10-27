@@ -34,7 +34,7 @@ const Guide = ({ guide }: { guide: EvidenceGuide }) => (
 );
 
 /** Grounding question, The Evidence Collector and the Return step. */
-export const EvidenceCollector = ({ values, onChange, idPrefix, title = "The Evidence Collector", showGrounding = true, showIntroduction = true, extraQuestions = [], questions = EVIDENCE_QUESTIONS }: Props) => {
+export const EvidenceCollector = ({ values, onChange, idPrefix, title = "The Evidence Collector", description, showGrounding = true, showIntroduction = true, extraQuestions = [], questions = EVIDENCE_QUESTIONS }: Props) => {
   const field = (key: string, label: string, guide: EvidenceGuide, help?: string, rows = 3) => (
     <div key={key}>
       <label htmlFor={`${idPrefix}-${key}`} className="block font-serif text-base text-foreground">{label}</label>
