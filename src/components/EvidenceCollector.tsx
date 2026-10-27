@@ -13,6 +13,7 @@ interface Props {
   onChange: (key: string, value: string) => void;
   idPrefix: string;
   title?: string;
+  description?: string;
   showGrounding?: boolean;
   showIntroduction?: boolean;
   extraQuestions?: { key: string; label: string; guide: EvidenceGuide }[];
@@ -33,7 +34,7 @@ const Guide = ({ guide }: { guide: EvidenceGuide }) => (
 );
 
 /** Grounding question, The Evidence Collector and the Return step. */
-export const EvidenceCollector = ({ values, onChange, idPrefix, title = "The Evidence Collector", showGrounding = true, showIntroduction = true, extraQuestions = [], questions = EVIDENCE_QUESTIONS }: Props) => {
+export const EvidenceCollector = ({ values, onChange, idPrefix, title = "The Evidence Collector", description, showGrounding = true, showIntroduction = true, extraQuestions = [], questions = EVIDENCE_QUESTIONS }: Props) => {
   const field = (key: string, label: string, guide: EvidenceGuide, help?: string, rows = 3) => (
     <div key={key}>
       <label htmlFor={`${idPrefix}-${key}`} className="block font-serif text-base text-foreground">{label}</label>
@@ -51,6 +52,7 @@ export const EvidenceCollector = ({ values, onChange, idPrefix, title = "The Evi
       <section className="border-t border-border pt-6 space-y-5">
         <div>
           <h3 className="font-serif text-xl text-foreground">{title}</h3>
+          {description && <p className="mt-1 text-sm italic text-muted-foreground">{description}</p>}
           {showIntroduction && <>
           <p className="mt-1 text-sm italic text-muted-foreground">
             Protection Patterns use old evidence to predict future outcomes, so we need to collect new evidence to change anything.

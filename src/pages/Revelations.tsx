@@ -242,7 +242,7 @@ export default function Revelations() {
             </section>
             <section className="border-t border-border pt-8 space-y-5">
               <SectionTitle>PHASE 3: INVESTIGATE</SectionTitle>
-              <EvidenceCollector title="The Evidence Locker" showGrounding={false} showIntroduction={false} idPrefix="revelations-evidence" values={answers} onChange={changeAnswer} extraQuestions={[PROTECTION_PREDICTION_QUESTION]} questions={REVELATIONS_EVIDENCE_QUESTIONS} />
+              <EvidenceCollector title="The Evidence Locker" description="A private place to gather what you notice — old evidence, new evidence, and one choice you made today — so change can begin from something real." showGrounding={false} showIntroduction={false} idPrefix="revelations-evidence" values={answers} onChange={changeAnswer} extraQuestions={[PROTECTION_PREDICTION_QUESTION]} questions={REVELATIONS_EVIDENCE_QUESTIONS} />
               <div className="flex flex-wrap items-center gap-3"><span className="text-xs text-muted-foreground" role="status">{saveStatus || "Your reading is saved. Return to Revelations to add new evidence."}</span><Button variant="link" onClick={() => void saveAnswers()}>Save my evidence</Button></div>
             </section>
             <section className="border-t border-border pt-8 space-y-4">
