@@ -51,9 +51,9 @@ export default function MySavedRevelations() {
         <Tabs defaultValue="reading" className="w-full">
           <TabsList className="grid h-auto w-full grid-cols-4">
             <TabsTrigger value="reading" className="px-1 py-3">Reading</TabsTrigger>
-            <TabsTrigger value="reveal" className="px-1 py-3">Phase 1</TabsTrigger>
-            <TabsTrigger value="regulate" className="px-1 py-3">Phase 2</TabsTrigger>
-            <TabsTrigger value="investigate" className="px-1 py-3">Phase 3</TabsTrigger>
+            <TabsTrigger value="reveal" className="px-1 py-3">Phase 1: REVEAL</TabsTrigger>
+            <TabsTrigger value="regulate" className="px-1 py-3">Phase 2: REGULATE</TabsTrigger>
+            <TabsTrigger value="investigate" className="px-1 py-3">Phase 3: INVESTIGATE</TabsTrigger>
           </TabsList>
           <TabsContent value="reading" className="pt-6 space-y-6">
             {cardImageSrc(record.image_file_name) && <img src={cardImageSrc(record.image_file_name)} alt={record.card_title} className="mx-auto w-64 max-w-full aspect-[7/10] rounded-lg object-cover" />}
