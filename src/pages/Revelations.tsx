@@ -10,7 +10,7 @@ import { EvidenceCollector } from "@/components/EvidenceCollector";
 import { ShuffleAnimation } from "@/components/ShuffleAnimation";
 import { DoorHeader } from "@/components/temple/DoorHeader";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import revelationsBanner from "@/assets/tsr-banner.png";
+import revelationsBanner from "@/assets/revelations-banner.png.asset.json";
 const REVELATIONS_QUESTIONS = [
   "What am I most afraid people will discover if this doesn't work?",
   "What have I been telling myself is a strategy that might actually be a way of staying safe?",
@@ -166,7 +166,7 @@ export default function Revelations() {
       <Link to={user ? "/profile" : "/auth?redirect=/revelations"} className="text-sm text-muted-foreground underline">{user ? "My Profile" : "Sign in"}</Link>
     </header>
     <main className="mx-auto max-w-6xl px-5 py-8">
-      <DoorHeader image={revelationsBanner} imageKey="revelations-header" title="REVELATIONS" />
+      <DoorHeader image={revelationsBanner.url} imageKey="revelations-header" title="REVELATIONS" srOnlyTitle />
       <div className="mx-auto max-w-3xl">
       <section className="mb-10 space-y-5 text-center">
         <h2 className="font-serif text-3xl text-primary">Welcome. There is room for you here.</h2>
