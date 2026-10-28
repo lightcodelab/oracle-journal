@@ -10,8 +10,9 @@
 - [x] Deploy both generators; verify signed-in question choices and isolated reflection save/reopen without creating or modifying personal readings (fresh AI prose intentionally not generated)
 
 ## Revelations
+- [x] Automatically sync Sacred Rewrite card edits to deepening lesson titles and teaching; all 63 aligned, editor save and lesson readback verified, 13 tests passed without generating personal readings
 - [x] Refine reading instructions for relevant imagery, distinct paragraphs, effortless openings and a sustained older evidence moment; deployed both generators, confirmed paragraph preservation and passed existing tests without generating a personal reading
-- [ ] Correct artwork/content mismatch: card 37 artwork is The Watchtower, stored card and copied lesson are The Frozen River; awaiting verified artwork-aligned extended source material
+- [x] Align card 37's deepening lesson with the current admin-edited Watchtower card material; all nine stale lesson titles corrected from their current card records
 - [x] Connect each drawn card's verified deepening lesson and stored question to generation without changing the approved voice; all 63 lesson matches verified, 16 tests passed, generator deployed without creating personal readings
 - [x] Add Phase 2 reflection and private saved Reading / Phase 1 / Phase 2 / Phase 3 tabs
 - [x] Limit Revelations profile navigation and verify existing private records; isolated save/reopen test leaves personal answers unchanged

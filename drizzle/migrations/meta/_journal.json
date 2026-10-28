@@ -414,6 +414,13 @@
       "when": 1793068186366,
       "tag": "0058_revelations_restrict_record_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1793229744833,
+      "tag": "0059_sync_sacred_rewrite_card_lessons",
+      "breakpoints": true
     }
   ]
 }
