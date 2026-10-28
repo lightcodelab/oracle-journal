@@ -1,5 +1,8 @@
 # Roadmap
 
+## Admin card selector
+- [x] Keep the card dropdown within the preview and verify cards 1 and 2 can be selected
+
 ## Sacred Spreads Revelations alignment
 - [x] Share Revelations' visible guiding questions and quiet pre-draw invitation
 - [x] Add Reveal, Regulate and Evidence Locker reflections to live and saved spreads
@@ -7,7 +10,7 @@
 - [x] Deploy both generators; verify signed-in question choices and isolated reflection save/reopen without creating or modifying personal readings (fresh AI prose intentionally not generated)
 
 ## Revelations
-- [ ] Audit and correct the selected card artwork, meaning and generated-reading identity mismatch
+- [ ] Correct artwork/content mismatch: card 37 artwork is The Watchtower, stored card and copied lesson are The Frozen River; awaiting verified artwork-aligned extended source material
 - [x] Connect each drawn card's verified deepening lesson and stored question to generation without changing the approved voice; all 63 lesson matches verified, 16 tests passed, generator deployed without creating personal readings
 - [x] Add Phase 2 reflection and private saved Reading / Phase 1 / Phase 2 / Phase 3 tabs
 - [x] Limit Revelations profile navigation and verify existing private records; isolated save/reopen test leaves personal answers unchanged
