@@ -852,7 +852,13 @@ const CardDeckAdmin = () => {
                       : 'Pick a deck first'
                   } />
                 </SelectTrigger>
-                <SelectContent position="popper" className="max-h-[60vh] overflow-y-auto">
+                <SelectContent
+                  position="popper"
+                  side="bottom"
+                  align="start"
+                  collisionPadding={12}
+                  className="max-h-[min(60vh,var(--radix-select-content-available-height))]"
+                >
                   {cards.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
                       Card {c.card_number}

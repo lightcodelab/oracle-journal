@@ -1,5 +1,8 @@
 # Roadmap
 
+## Admin card selector
+- [ ] Keep the card dropdown within the preview and verify cards 1 and 2 can be selected
+
 ## Sacred Spreads Revelations alignment
 - [x] Share Revelations' visible guiding questions and quiet pre-draw invitation
 - [x] Add Reveal, Regulate and Evidence Locker reflections to live and saved spreads
