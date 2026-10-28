@@ -7,7 +7,7 @@
 - [x] Deploy both generators; verify signed-in question choices and isolated reflection save/reopen without creating or modifying personal readings (fresh AI prose intentionally not generated)
 
 ## Revelations
-- [ ] Connect each drawn card's verified deepening lesson and stored question to generation without changing the approved voice; test and deploy without creating personal readings
+- [x] Connect each drawn card's verified deepening lesson and stored question to generation without changing the approved voice; all 63 lesson matches verified, 16 tests passed, generator deployed without creating personal readings
 - [x] Add Phase 2 reflection and private saved Reading / Phase 1 / Phase 2 / Phase 3 tabs
 - [x] Limit Revelations profile navigation and verify existing private records; isolated save/reopen test leaves personal answers unchanged
 - [x] Create the single-card Sacred Rewrite page and guided Evidence Locker
