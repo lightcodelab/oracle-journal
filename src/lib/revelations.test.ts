@@ -22,6 +22,12 @@ describe("Revelations drawn-card material", () => {
   it("rejects a lesson with the right number but another card's meaning", () => {
     expect(() => matchingDeepeningContent(first, [{ ...lessons[1], lesson_number: 1 }])).toThrow();
   });
+  it("uses updated card 31 lesson material and rejects its obsolete title", () => {
+    const card = { card_number: 31, card_title: "The Strangled Voice" };
+    const updated = { lesson_number: 31, title: "31. The Strangled Voice", content: "Updated voice teaching" };
+    expect(matchingDeepeningContent(card, [updated])).toBe("Updated voice teaching");
+    expect(() => matchingDeepeningContent(card, [{ ...updated, title: "31. The Hollow Offering" }])).toThrow();
+  });
   it("does not silently substitute missing or ambiguous material", () => {
     expect(() => matchingDeepeningContent(first, [])).toThrow();
     expect(() => matchingDeepeningContent(first, [lessons[0], lessons[0]])).toThrow();
