@@ -2,7 +2,7 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { z } from "npm:zod@3.25.76";
 import { callGateway, flattenCardContent, GatewayError } from "../_shared/readingGateway.ts";
-import { isRevelationCard, REVELATIONS_PROMPT } from "./rules.ts";
+import { buildRevelationInput, isRevelationCard, matchingDeepeningContent, REVELATIONS_PROMPT } from "./rules.ts";
 
 const MODEL = "openai/gpt-6-astra";
 const schema = z.object({ readingId: z.string().uuid() });
@@ -40,6 +40,16 @@ Deno.serve(async (req) => {
     const { data: card, error: cardError } = await admin.from("cards").select("*, decks!inner(is_published)").eq("id", record.card_id).eq("decks.is_published", true).maybeSingle();
     if (cardError) throw cardError;
     if (!card || !isRevelationCard(card, record.card_id)) return json({ error: "Your Sacred Rewrite card is unavailable." }, 400);
+    // Use the same card-number mapping as the card's Companion Course link,
+    // additionally verifying its title so unrelated lessons cannot inform it.
+    const { data: courses, error: coursesError } = await admin.from("courses").select("id").eq("title", "The Sacred Rewrite");
+    if (coursesError) throw coursesError;
+    if (!courses?.length) throw new Error("Sacred Rewrite companion course unavailable");
+    const { data: lessons, error: lessonsError } = await admin.from("lessons")
+      .select("lesson_number, title, content, body_richtext")
+      .in("course_id", courses.map((course) => course.id)).eq("lesson_number", card.card_number);
+    if (lessonsError) throw lessonsError;
+    const deepeningContent = matchingDeepeningContent(card, lessons ?? []);
     // Compare-and-set prevents parallel reveals from charging for duplicate generation.
     const started = new Date().toISOString();
     const { data: claimed, error: claimError } = await admin.from("revelations_readings")
@@ -48,8 +58,8 @@ Deno.serve(async (req) => {
     if (claimError) throw claimError;
     if (!claimed?.length) return json({ error: "Your reading is being written. Please wait a moment, then try again." }, 409);
     release = async () => { await admin.from("revelations_readings").update({ generation_started_at: null }).eq("id", record.id).eq("generation_started_at", started); };
-    const focus = record.guiding_question ? `Reader's question: ${JSON.stringify(record.guiding_question)}` : "No guiding question was supplied.";
-    const reading = await callGateway(key, MODEL, REVELATIONS_PROMPT, `${focus}\n\nSacred Rewrite card:\n${flattenCardContent(card)}\n\nWrite their single-card Revelation.`);
+    const reading = await callGateway(key, MODEL, REVELATIONS_PROMPT,
+      buildRevelationInput(record.guiding_question, flattenCardContent(card), deepeningContent));
     const { error: saveError } = await admin.rpc("complete_revelation", { _id: record.id, _reading: reading, _model: MODEL });
     if (saveError) throw saveError;
     release = undefined;
