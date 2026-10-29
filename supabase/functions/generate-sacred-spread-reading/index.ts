@@ -87,7 +87,10 @@ Deno.serve(async (req) => {
     const systemPrompt = SACRED_SPREAD_PROMPT;
     const focus = parsed.data.guidingQuestion?.trim();
     const focusBlock = focus ? `Reader's guiding question or focus: """${focus}"""\n\n` : "No guiding question was given.\n\n";
-    const userPrompt = `Spread: ${spread.name}\n\n${focusBlock}Cards in their exact spread order:\n\n${cardsBlock}\n\nWrite the complete shared card reading now.`;
+    const { data: profile } = await admin.from("profiles").select("full_name").eq("id", user.id).maybeSingle();
+    const firstName = typeof profile?.full_name === "string" ? profile.full_name.trim().split(/\s+/)[0] : "";
+    const nameBlock = firstName ? `Reader's first name (use exactly once, at the most poignant turn): ${firstName}\n\n` : "";
+    const userPrompt = `Spread: ${spread.name}\n\n${nameBlock}${focusBlock}Cards in their exact spread order:\n\n${cardsBlock}\n\nWrite the complete shared card reading now.`;
 
     const reading = await callGateway(apiKey, MODEL, systemPrompt, userPrompt);
 

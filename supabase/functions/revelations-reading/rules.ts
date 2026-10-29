@@ -45,11 +45,12 @@ export function matchingDeepeningContent(
   return text;
 }
 
-export function buildRevelationInput(question: string | null, cardContent: string, deepeningContent: string): string {
+export function buildRevelationInput(question: string | null, cardContent: string, deepeningContent: string, firstName: string | null): string {
   return JSON.stringify({
+    reader_first_name: firstName?.trim() || null,
     guiding_question: question?.trim() || null,
     drawn_sacred_rewrite_card: cardContent,
     matching_card_deepening_lesson: deepeningContent,
-    request: "Write this drawn card's single-card Revelation through the supplied guiding question.",
+    request: "Write this drawn card's single-card Revelation through the supplied guiding question, speaking directly to the reader.",
   });
 }
