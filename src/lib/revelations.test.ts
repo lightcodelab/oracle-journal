@@ -41,12 +41,15 @@ describe("Revelations drawn-card material", () => {
   });
   it("passes the pre-draw guiding question unchanged with this card and lesson", () => {
     const question = "What would the version of me who succeeds wildly at this have to be willing to be seen doing or saying?";
-    const input = JSON.parse(buildRevelationInput(question, second.card_title, matchingDeepeningContent(second, lessons)));
+    const input = JSON.parse(buildRevelationInput(question, second.card_title, matchingDeepeningContent(second, lessons), "Tash"));
     expect(input.guiding_question).toBe(question);
     expect(input.drawn_sacred_rewrite_card).toBe("The Hollow Echo");
     expect(input.matching_card_deepening_lesson).toBe("Worth-specific extended meaning");
   });
   it("keeps no-question draws optional", () => {
-    expect(JSON.parse(buildRevelationInput(null, first.card_title, "Meaning")).guiding_question).toBeNull();
+    const noQuestion = JSON.parse(buildRevelationInput(null, first.card_title, "Meaning", null));
+    expect(noQuestion.guiding_question).toBeNull();
+    expect(noQuestion.reader_first_name).toBeNull();
+    expect(JSON.parse(buildRevelationInput(null, first.card_title, "Meaning", " Tash ")).reader_first_name).toBe("Tash");
   });
 });

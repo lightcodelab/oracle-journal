@@ -50,6 +50,8 @@ Deno.serve(async (req) => {
       .in("course_id", courses.map((course) => course.id)).eq("lesson_number", card.card_number);
     if (lessonsError) throw lessonsError;
     const deepeningContent = matchingDeepeningContent(card, lessons ?? []);
+    const { data: profile } = await admin.from("profiles").select("full_name").eq("id", user.id).maybeSingle();
+    const firstName = typeof profile?.full_name === "string" ? profile.full_name.trim().split(/\s+/)[0] || null : null;
     // Compare-and-set prevents parallel reveals from charging for duplicate generation.
     const started = new Date().toISOString();
     const { data: claimed, error: claimError } = await admin.from("revelations_readings")
@@ -59,7 +61,7 @@ Deno.serve(async (req) => {
     if (!claimed?.length) return json({ error: "Your reading is being written. Please wait a moment, then try again." }, 409);
     release = async () => { await admin.from("revelations_readings").update({ generation_started_at: null }).eq("id", record.id).eq("generation_started_at", started); };
     const reading = await callGateway(key, MODEL, REVELATIONS_PROMPT,
-      buildRevelationInput(record.guiding_question, flattenCardContent(card), deepeningContent));
+      buildRevelationInput(record.guiding_question, flattenCardContent(card), deepeningContent, firstName));
     const { error: saveError } = await admin.rpc("complete_revelation", { _id: record.id, _reading: reading, _model: MODEL });
     if (saveError) throw saveError;
     release = undefined;
