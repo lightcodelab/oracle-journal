@@ -28,11 +28,6 @@ export function WelcomeHome({ displayName, showFounderBadge, foundingSince }: We
           wrapperClassName="w-full"
           className="w-full h-[120px] sm:h-[150px] md:h-[180px] object-cover object-center"
         />
-        {/* Legibility scrim behind the text only (left-to-right, fades out) */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-y-0 left-0 w-full sm:w-3/4 bg-gradient-to-r from-black/55 via-black/30 to-transparent"
-        />
         <div className="absolute inset-0 flex items-center">
           <div className="pl-5 sm:pl-8 md:pl-10 pr-6 max-w-[80%] sm:max-w-[60%]">
             <p className="text-[0.65rem] sm:text-xs tracking-[0.22em] uppercase text-on-image/80 mb-1">
