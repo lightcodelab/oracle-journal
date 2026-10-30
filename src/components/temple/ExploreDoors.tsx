@@ -99,7 +99,7 @@ export function ExploreDoors({ focus, onChangeFocus }: { focus?: TempleFocus | n
       <p className="text-sm text-muted-foreground mb-4">
         {focus
           ? `The other ${countWord(visible.length)} pathways for exploring THE TEMPLE. Every pathway is open to every active member.`
-          : "What do you need most right now? Choose a Chamber that gives you what you need. If you're not sure use The AreekeerA Guide to show you."}
+          : "What do you need most right now? Choose a Phase that gives you what you need. If you're not sure use The AreekeerA Guide to show you."}
       </p>
       <div className={`grid grid-cols-1 sm:grid-cols-2 ${focus ? "lg:grid-cols-2" : "lg:grid-cols-3"} gap-4 mb-6`}>
         {visible.map((door, i) => (
