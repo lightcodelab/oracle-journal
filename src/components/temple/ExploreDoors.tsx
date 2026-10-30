@@ -8,9 +8,9 @@ import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
 import type { TempleFocus } from "@/lib/templeFocus";
 
 export const doors = [
-  { key: "temple-door-remembrance", name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance, label: "What am I willing to see?", chamber: "CHAMBER 1: REVEAL", description: "Explore the mirrors, archetypes and inheritances shaping you through the cards and journal what you discover." },
-  { key: "temple-door-devotion", name: "The Door of Devotion", href: "/devotion", image: doorDevotion.url, label: "What do I need to tend to?", chamber: "CHAMBER 2: REGULATE", description: "Return to yourself through foundational rites and restorative practice." },
-  { key: "temple-door-becoming", name: "The Door of Becoming", href: "/becoming", image: doorBecoming, label: "What am I ready to build?", chamber: "CHAMBER 3: RESHAPE", description: "Journeys for personal development, self-awareness and conscious identity." },
+  { key: "temple-door-remembrance", name: "The Door of Remembrance", href: "/remembrance", image: doorRemembrance, label: "What am I willing to see?", chamber: "PHASE 1: REVEAL", description: "Explore the mirrors, archetypes and inheritances shaping you through the cards and journal what you discover." },
+  { key: "temple-door-devotion", name: "The Door of Devotion", href: "/devotion", image: doorDevotion.url, label: "What do I need to tend to?", chamber: "PHASE 2: REGULATE", description: "Return to yourself through foundational rites and restorative practice." },
+  { key: "temple-door-becoming", name: "The Door of Becoming", href: "/becoming", image: doorBecoming, label: "What am I ready to build?", chamber: "PHASE 3: INVESTIGATE", description: "Journeys for personal development, self-awareness and conscious identity." },
   { key: "temple-door-communion", name: "The Door of Communion", href: "/communion", image: doorCommunion.url, label: "LIVE GATHERINGS, CIRCLES & COMMUNITY", description: "Find connection, reflection and support within our community." },
 ];
 
@@ -99,7 +99,7 @@ export function ExploreDoors({ focus, onChangeFocus }: { focus?: TempleFocus | n
       <p className="text-sm text-muted-foreground mb-4">
         {focus
           ? `The other ${countWord(visible.length)} pathways for exploring THE TEMPLE. Every pathway is open to every active member.`
-          : "What do you need most right now? Choose a Chamber that gives you what you need. If you're not sure use The AreekeerA Guide to show you."}
+          : "What do you need most right now? Choose a Phase that gives you what you need. If you're not sure use The AreekeerA Guide to show you."}
       </p>
       <div className={`grid grid-cols-1 sm:grid-cols-2 ${focus ? "lg:grid-cols-2" : "lg:grid-cols-3"} gap-4 mb-6`}>
         {visible.map((door, i) => (
