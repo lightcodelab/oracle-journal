@@ -31,7 +31,7 @@ export function WelcomeHome({ displayName, showFounderBadge, foundingSince }: We
         <div className="absolute inset-0 flex items-center">
           <div className="pl-5 sm:pl-8 md:pl-10 pr-6 max-w-[80%] sm:max-w-[60%]">
             <p className="text-[0.65rem] sm:text-xs tracking-[0.22em] uppercase text-on-image/80 mb-1">
-              Welcome back
+              JULIE AND TASH WELCOME YOU
             </p>
             <h1
               id="temple-welcome-heading"
