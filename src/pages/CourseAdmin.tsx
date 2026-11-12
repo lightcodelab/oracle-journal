@@ -1,4 +1,3 @@
-import { placementLabel } from '@/lib/doorSections';
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -40,8 +39,6 @@ interface Category {
   id: string;
   name: string;
   type: 'resource_type' | 'location';
-  slug?: string;
-  page?: string | null;
 }
 
 type View = 'list' | 'form';
@@ -209,12 +206,12 @@ const CourseAdmin = () => {
 
               <Select value={filterLocation} onValueChange={setFilterLocation}>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Door / Section" />
+                  <SelectValue placeholder="Location" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Doors / Sections</SelectItem>
+                  <SelectItem value="all">All Locations</SelectItem>
                   {categories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>{placementLabel(cat)}</SelectItem>
+                    <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -236,7 +233,7 @@ const CourseAdmin = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[300px]">Title</TableHead>
-                    <TableHead>Door / Section</TableHead>
+                    <TableHead>Location</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Order</TableHead>
                     <TableHead>Updated</TableHead>
@@ -260,7 +257,7 @@ const CourseAdmin = () => {
                           </div>
                         </TableCell>
                         <TableCell>
-                          {(() => { const location = categories.find(c => c.id === course.location_id); return location ? placementLabel(location) : '-'; })()}
+                          {categories.find(c => c.id === course.location_id)?.name || '-'}
                         </TableCell>
                         <TableCell>
                           <Badge variant={course.is_published ? 'default' : 'secondary'}>

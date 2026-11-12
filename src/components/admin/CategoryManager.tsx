@@ -16,14 +16,12 @@ interface Category {
   slug: string;
   active: boolean;
   display_order: number;
-  page: 'devotion' | 'remembrance' | 'becoming' | 'communion' | null;
+  page: 'devotion' | 'remembrance' | null;
 }
 
 const PAGE_LABELS: Record<string, string> = {
   devotion: 'Door of Devotion',
   remembrance: 'Door of Remembrance',
-  becoming: 'Door of Becoming',
-  communion: 'Door of Communion',
 };
 
 const CategoryManager = () => {
@@ -34,7 +32,7 @@ const CategoryManager = () => {
   const [editName, setEditName] = useState('');
   const [newResourceType, setNewResourceType] = useState('');
   const [newLocation, setNewLocation] = useState('');
-  const [newLocationPage, setNewLocationPage] = useState<'devotion' | 'remembrance' | 'becoming' | 'communion'>('devotion');
+  const [newLocationPage, setNewLocationPage] = useState<'devotion' | 'remembrance'>('devotion');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -64,7 +62,7 @@ const CategoryManager = () => {
       .trim();
   };
 
-  const addCategory = async (type: 'resource_type' | 'location', name: string, page?: 'devotion' | 'remembrance' | 'becoming' | 'communion') => {
+  const addCategory = async (type: 'resource_type' | 'location', name: string, page?: 'devotion' | 'remembrance') => {
     if (!name.trim()) return;
     setSaving(true);
 
@@ -173,7 +171,7 @@ const CategoryManager = () => {
     updateCategory(category.id, { active: !category.active });
   };
 
-  const updatePage = (category: Category, page: 'devotion' | 'remembrance' | 'becoming' | 'communion') => {
+  const updatePage = (category: Category, page: 'devotion' | 'remembrance') => {
     updateCategory(category.id, { page });
   };
 
@@ -296,7 +294,7 @@ const CategoryManager = () => {
               {showPageSelector && (
                 <Select
                   value={category.page || 'devotion'}
-                  onValueChange={(value: 'devotion' | 'remembrance' | 'becoming' | 'communion') => updatePage(category, value)}
+                  onValueChange={(value: 'devotion' | 'remembrance') => updatePage(category, value)}
                 >
                   <SelectTrigger className="w-[160px] h-8 text-xs">
                     <SelectValue />
@@ -304,8 +302,6 @@ const CategoryManager = () => {
                   <SelectContent>
                     <SelectItem value="devotion">Door of Devotion</SelectItem>
                     <SelectItem value="remembrance">Door of Remembrance</SelectItem>
-                    <SelectItem value="becoming">Door of Becoming</SelectItem>
-                    <SelectItem value="communion">Door of Communion</SelectItem>
                   </SelectContent>
                 </Select>
               )}
@@ -364,7 +360,7 @@ const CategoryManager = () => {
       />
       <Select
         value={newLocationPage}
-        onValueChange={(value: 'devotion' | 'remembrance' | 'becoming' | 'communion') => setNewLocationPage(value)}
+        onValueChange={(value: 'devotion' | 'remembrance') => setNewLocationPage(value)}
       >
         <SelectTrigger className="w-[160px]">
           <SelectValue />
@@ -372,8 +368,6 @@ const CategoryManager = () => {
         <SelectContent>
           <SelectItem value="devotion">Door of Devotion</SelectItem>
           <SelectItem value="remembrance">Door of Remembrance</SelectItem>
-                    <SelectItem value="becoming">Door of Becoming</SelectItem>
-                    <SelectItem value="communion">Door of Communion</SelectItem>
         </SelectContent>
       </Select>
       <Button
@@ -449,11 +443,6 @@ const CategoryManager = () => {
               )}
             </CardContent>
           </Card>
-
-          {(['becoming', 'communion'] as const).map(page => <Card key={page}>
-            <CardHeader><CardTitle className="text-base">{PAGE_LABELS[page]}</CardTitle></CardHeader>
-            <CardContent>{renderCategoryList(categories.filter(c => c.type === 'location' && c.page === page), 'location', true)}</CardContent>
-          </Card>)}
 
           {/* Add new location input */}
           <Card>

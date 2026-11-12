@@ -7,7 +7,6 @@ import {
   BookOpen,
   Radio,
 } from "lucide-react";
-import { useCanSeeCommunion } from "@/lib/communionVisibility";
 
 const items = [
   {
@@ -27,15 +26,10 @@ const items = [
     icon: FileHeart,
   },
   { title: "Explore courses", href: "/courses", icon: BookOpen },
-];
-
-const communionItems = [
   { title: "View live offerings", href: "/all-live-sessions", icon: Radio },
 ];
 
 export function BeginPractice() {
-  const canSeeCommunion = useCanSeeCommunion();
-  const visibleItems = canSeeCommunion ? [...items, ...communionItems] : items;
   return (
     <section
       id="begin-practice"
@@ -49,7 +43,7 @@ export function BeginPractice() {
         Begin a practice
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {visibleItems.map(({ title, href, icon: Icon }) => (
+        {items.map(({ title, href, icon: Icon }) => (
           <Link
             key={href}
             to={href}
