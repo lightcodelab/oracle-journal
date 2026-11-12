@@ -46,7 +46,7 @@ export function DevotionPracticesSection() {
         {locations.map(({ id, name, slug }) => (
           <Link
             key={id}
-            to={`/devotion/section/${slug.replace(/^loc-/, "")}`}
+            to={`/devotion?tab=${slug.replace(/^loc-/, "")}#all-resources`}
             className="group flex items-center gap-3 p-4 rounded-lg border border-border/60 bg-card/60 hover:border-primary/40 hover:bg-card transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[64px]"
           >
             <LayoutGrid

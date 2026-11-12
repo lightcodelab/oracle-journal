@@ -1,4 +1,3 @@
-import { DoorSectionSelect } from './DoorSectionSelect';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -222,7 +221,17 @@ const CourseForm = ({ courseId, onSuccess, onCancel }: CourseFormProps) => {
               <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Course title" />
             </div>
             <div className="space-y-2">
-              <DoorSectionSelect value={locationId} onChange={setLocationId} optional />
+              <Label>Location</Label>
+              <Select value={locationId} onValueChange={setLocationId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select location" />
+                </SelectTrigger>
+                <SelectContent>
+                  {locations.map((loc) => (
+                    <SelectItem key={loc.id} value={loc.id}>{loc.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

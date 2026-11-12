@@ -21,7 +21,7 @@ interface CourseSessionNavProps {
   courseId: string;
   currentLessonId?: string;
   courseTitle?: string;
-  basePath?: string;
+  basePath?: '/devotion' | '/becoming';
 }
 
 export default function CourseSessionNav({

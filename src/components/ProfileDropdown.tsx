@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { REVELATIONS_PROFILE_LINKS } from '@/lib/revelationsJournal';
-import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { SHOW_TEMPLE_FOCUS } from '@/lib/templeFocus';
-import { COMMUNION_HIDDEN } from '@/lib/communionVisibility';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,14 +38,10 @@ import { useMemberState } from '@/hooks/useMemberState';
 
 interface ProfileDropdownProps {
   onSignOut?: () => void;
-  revelationsOnly?: boolean;
 }
 
-const ProfileDropdown = ({ onSignOut, revelationsOnly = false }: ProfileDropdownProps) => {
+const ProfileDropdown = ({ onSignOut }: ProfileDropdownProps) => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const { user } = useAuth();
-  const [hasRevelation, setHasRevelation] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { openInstallDialog } = useInstallApp();
   // LP-F.0: My Living Pattern stays behind exactly the same admin-only staging
@@ -58,18 +50,6 @@ const ProfileDropdown = ({ onSignOut, revelationsOnly = false }: ProfileDropdown
   const showLivingPattern = hasFullTempleAccess && memberIsAdmin;
   // Free accounts (no active membership) see every item except My Readings greyed out.
   const lockNonMember = !memberLoading && !hasFullTempleAccess;
-  const isProfilePage = pathname === '/profile' || pathname === '/account';
-  const limitedMenu = revelationsOnly || (isProfilePage && !hasFullTempleAccess && (memberLoading || hasRevelation));
-
-  useEffect(() => {
-    setHasRevelation(false);
-    if (!user || !isProfilePage || memberLoading || hasFullTempleAccess) return;
-    let active = true;
-    void supabase.from('revelations_readings').select('id').eq('user_id', user.id).maybeSingle().then(({ data }) => {
-      if (active) setHasRevelation(Boolean(data));
-    });
-    return () => { active = false; };
-  }, [user?.id, isProfilePage, memberLoading, hasFullTempleAccess]);
 
 
   useEffect(() => {
@@ -128,24 +108,16 @@ const ProfileDropdown = ({ onSignOut, revelationsOnly = false }: ProfileDropdown
       icon: <CreditCard className="w-4 h-4 mr-2" />,
       route: '/account',
     },
-    ...(SHOW_TEMPLE_FOCUS
-      ? [
-          {
-            label: 'My Focus',
-            icon: <Target className="w-4 h-4 mr-2" />,
-            route: '/temple?focus=1',
-          },
-        ]
-      : []),
-    ...(!COMMUNION_HIDDEN || memberIsAdmin
-      ? [
-          {
-            label: 'My Calendar',
-            icon: <CalendarDays className="w-4 h-4 mr-2" />,
-            route: '/my-calendar',
-          },
-        ]
-      : []),
+    {
+      label: 'My Focus',
+      icon: <Target className="w-4 h-4 mr-2" />,
+      route: '/temple?focus=1',
+    },
+    {
+      label: 'My Calendar',
+      icon: <CalendarDays className="w-4 h-4 mr-2" />,
+      route: '/my-calendar',
+    },
     {
       label: 'My Protocols',
       icon: <FolderHeart className="w-4 h-4 mr-2" />,
@@ -220,14 +192,13 @@ const ProfileDropdown = ({ onSignOut, revelationsOnly = false }: ProfileDropdown
 
   return (
     <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
-      {!limitedMenu && <GlobalSearch />}
+      <GlobalSearch />
       <ThemeModeToggle />
       <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
           size="sm"
-          aria-label="My Profile"
           className="text-foreground hover:text-primary-foreground hover:bg-primary px-2 sm:px-3"
         >
           <User className="w-4 h-4 sm:mr-2" />
@@ -235,12 +206,7 @@ const ProfileDropdown = ({ onSignOut, revelationsOnly = false }: ProfileDropdown
           <ChevronDown className="hidden sm:inline-block w-3 h-3 ml-1" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        {limitedMenu && REVELATIONS_PROFILE_LINKS.map(item => <DropdownMenuItem key={item.route} onClick={() => navigate(item.route)} className="cursor-pointer">
-          {item.route === '/profile' ? <User className="w-4 h-4 mr-2" /> : item.route === '/account' ? <CreditCard className="w-4 h-4 mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
-          {item.label}
-        </DropdownMenuItem>)}
-        {!limitedMenu && <>
+      <DropdownMenuContent align="end" className="w-48">
         {isAdmin && (
           <>
             <DropdownMenuItem 
@@ -302,7 +268,6 @@ const ProfileDropdown = ({ onSignOut, revelationsOnly = false }: ProfileDropdown
             {item.label}
           </DropdownMenuItem>
         ))}
-        </>}
         <DropdownMenuSeparator />
         <DropdownMenuItem 
           onClick={handleSignOut}

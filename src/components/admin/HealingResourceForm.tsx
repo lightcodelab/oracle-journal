@@ -1,4 +1,3 @@
-import { DoorSectionSelect } from './DoorSectionSelect';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
@@ -932,7 +931,23 @@ const HealingResourceForm = ({ resourceId, onSuccess, onCancel }: HealingResourc
             )}
 
             <div>
-              <DoorSectionSelect value={locationId} onChange={value => setLocationId(value || null)} optional />
+              <Label htmlFor="location">Display Location (Optional)</Label>
+              <Select value={locationId || 'none'} onValueChange={(v) => setLocationId(v === 'none' ? null : v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Protocol Only" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None – Protocol Only</SelectItem>
+                  {locations.map(loc => (
+                    <SelectItem key={loc.id} value={loc.id}>
+                      {loc.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground mt-1">
+                If set, this resource also appears in that section grid on the Door of Devotion.
+              </p>
             </div>
 
             <div className="col-span-2">

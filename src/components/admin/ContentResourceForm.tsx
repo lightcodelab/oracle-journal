@@ -1,4 +1,3 @@
-import { DoorSectionSelect } from './DoorSectionSelect';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -520,7 +519,21 @@ const ContentResourceForm = ({ resourceId, onSuccess, onCancel }: ContentResourc
                 name="location_id"
                 render={({ field }) => (
                   <FormItem>
-                    <DoorSectionSelect value={field.value} onChange={field.onChange} />
+                    <FormLabel>Location *</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select location" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {locations.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

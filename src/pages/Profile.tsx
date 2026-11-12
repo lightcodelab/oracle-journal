@@ -10,13 +10,11 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
-import { FOCUS_OPTIONS, SHOW_TEMPLE_FOCUS } from "@/lib/templeFocus";
-import { useMemberState } from "@/hooks/useMemberState";
+import { FOCUS_OPTIONS } from "@/lib/templeFocus";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { hasFullTempleAccess } = useMemberState();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -123,7 +121,7 @@ const Profile = () => {
       {/* Header */}
       <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between px-4">
-          <PageBreadcrumb showHome={hasFullTempleAccess} items={[...(!hasFullTempleAccess ? [{ label: 'REVELATIONS', href: '/revelations' }] : []), { label: 'My Profile' }]} />
+          <PageBreadcrumb items={[{ label: 'My Profile' }]} />
           <ProfileDropdown />
         </div>
       </header>
@@ -193,7 +191,6 @@ const Profile = () => {
               />
             </div>
 
-            {SHOW_TEMPLE_FOCUS && (
             <div className="space-y-2">
               <Label htmlFor="focus">My focus</Label>
               <select
@@ -209,7 +206,6 @@ const Profile = () => {
               </select>
               <p className="text-xs text-muted-foreground">Brings that Door forward on your home page.</p>
             </div>
-            )}
 
 
             <Button

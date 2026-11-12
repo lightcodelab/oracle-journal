@@ -35,7 +35,6 @@ const getPublicUrl = (bucket: string, path: string | null): string | null => {
   if (!path) return null;
   // If it's already a full URL, return as is
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
-  if (path.startsWith('/')) return path;
   // Otherwise construct the public URL
   const { data } = supabase.storage.from(bucket).getPublicUrl(path);
   return data.publicUrl;
