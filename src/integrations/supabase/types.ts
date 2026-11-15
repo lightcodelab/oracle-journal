@@ -429,6 +429,7 @@ export type Database = {
       areekeera_protocols: {
         Row: {
           created_at: string | null
+          created_by: string | null
           id: string
           recommendation_id: string | null
           safety_notes: string | null
@@ -440,6 +441,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          created_by?: string | null
           id?: string
           recommendation_id?: string | null
           safety_notes?: string | null
@@ -451,6 +453,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          created_by?: string | null
           id?: string
           recommendation_id?: string | null
           safety_notes?: string | null
@@ -8275,6 +8278,19 @@ export type Database = {
           user_id: string
           verified: boolean
           woocommerce_order_id: string
+        }[]
+      }
+      get_feature_suggestions_board: {
+        Args: never
+        Returns: {
+          created_at: string
+          description: string
+          id: string
+          is_mine: boolean
+          status: string
+          title: string
+          user_voted: boolean
+          vote_count: number
         }[]
       }
       get_location_preview: {
