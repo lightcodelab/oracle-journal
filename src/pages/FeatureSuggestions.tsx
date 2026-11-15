@@ -110,36 +110,17 @@ const FeatureSuggestions = () => {
   const fetchSuggestions = async () => {
     if (!user) return;
 
-    const { data: suggestionsData, error } = await supabase
-      .from('feature_suggestions')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const { data, error } = await supabase.rpc('get_feature_suggestions_board');
 
     if (error) {
       console.error('Error fetching suggestions:', error);
       return;
     }
 
-    const { data: votesData } = await supabase
-      .from('suggestion_votes')
-      .select('suggestion_id');
-
-    const { data: userVotes } = await supabase
-      .from('suggestion_votes')
-      .select('suggestion_id')
-      .eq('user_id', user.id);
-
-    const voteCounts: Record<string, number> = {};
-    votesData?.forEach((v: any) => {
-      voteCounts[v.suggestion_id] = (voteCounts[v.suggestion_id] || 0) + 1;
-    });
-
-    const userVoteSet = new Set(userVotes?.map((v: any) => v.suggestion_id) || []);
-
-    const enriched: Suggestion[] = (suggestionsData || []).map((s: any) => ({
+    const enriched: Suggestion[] = (data || []).map((s: any) => ({
       ...s,
-      vote_count: voteCounts[s.id] || 0,
-      user_voted: userVoteSet.has(s.id),
+      user_id: s.is_mine ? user.id : '',
+      vote_count: Number(s.vote_count) || 0,
     }));
 
     enriched.sort((a, b) => b.vote_count - a.vote_count);
