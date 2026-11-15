@@ -437,7 +437,7 @@ const LessonEditorPanel = ({
                     <Input
                       type="file"
                       multiple
-                      accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip"
+                      accept=".jpg,.jpeg,.png,.webp,.pdf,.mp3,.mp4"
                       onChange={(e) => {
                         const files = e.target.files ? Array.from(e.target.files) : [];
                         e.target.value = '';
@@ -451,7 +451,7 @@ const LessonEditorPanel = ({
                     {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Upload multiple files of any type. They'll appear in the Downloadables section on the lesson page.
+                    Upload PDFs, images (JPG, PNG, WebP), MP3 audio or MP4 video. They'll appear in the Downloadables section on the lesson page.
                   </p>
                 </div>
               )}
