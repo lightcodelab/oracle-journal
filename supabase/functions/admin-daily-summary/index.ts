@@ -37,6 +37,18 @@ serve(async (req) => {
     console.error('payment reconcile threw', e)
   }
 
+  // Member payment reminders (2 days before, day of, every 3 days overdue).
+  try {
+    const res = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/payment-reminders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-notify-secret': expected },
+      body: '{}',
+    })
+    console.log('payment reminders', res.status, await res.text())
+  } catch (e) {
+    console.error('payment reminders threw', e)
+  }
+
   // Yesterday in Brisbane time (UTC+10).
   const nowBrisbane = new Date(Date.now() + 10 * 3600 * 1000)
   const dayStartBrisbane = new Date(Date.UTC(
