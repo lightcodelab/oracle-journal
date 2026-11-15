@@ -439,10 +439,10 @@ const LessonEditorPanel = ({
                       multiple
                       accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip"
                       onChange={(e) => {
-                        const files = e.target.files;
-                        if (files && files.length > 0) {
+                        const files = e.target.files ? Array.from(e.target.files) : [];
+                        e.target.value = '';
+                        if (files.length > 0) {
                           handleFileUpload(files);
-                          e.target.value = '';
                         }
                       }}
                       disabled={uploading}
