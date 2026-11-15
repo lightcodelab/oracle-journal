@@ -5,6 +5,7 @@ import { template as adminNewPaymentTemplate } from './admin-new-payment.tsx'
 import { template as adminDailySummaryTemplate } from './admin-daily-summary.tsx'
 import { template as remembranceLetterReadyTemplate } from './remembrance-letter-ready.tsx'
 import { template as freeReadingWelcomeTemplate } from './free-reading-welcome.tsx'
+import { template as paymentReminderTemplate } from './payment-reminder.tsx'
 
 export interface TemplateEntry {
   component: ComponentType<any>
@@ -30,4 +31,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'admin-daily-summary': adminDailySummaryTemplate,
   'remembrance-letter-ready': remembranceLetterReadyTemplate,
   'free-reading-welcome': freeReadingWelcomeTemplate,
+  'payment-reminder': paymentReminderTemplate,
 }
