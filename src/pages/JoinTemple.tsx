@@ -18,7 +18,6 @@ const features = [
   "DOOR OF DEVOTION:\n- 49x AreekeerA® healing practices and guided meditations (more being added) to support physical and energetic wellbeing\n- Create Personal Playlists and Rituals to return to\n- Energy Hygiene Practices to protect, cleanse, and support your energy bodies during close contact with other people (in client work or daily life)",
   "DOOR OF BECOMING:\n- 10x Personal development courses to guide you in stepping into the new version of yourself\n- Transformation Tracking Tools to track your progress in your daily life",
   "",
-  "DOOR OF COMMUNION:\n- Live Gatherings\n- Live Readings\n- Live Meditation Classes\n- Open Office Hours if you need guided support or recommendations\n- Connection with likeminded people on the same journey\n",
 ];
 
 const introText = `THE TEMPLE of Sustainment is a quiet, sacred space for your self-discovery - a place to listen to your intuition, reconnect with what your body and soul already know, and come home to yourself.
