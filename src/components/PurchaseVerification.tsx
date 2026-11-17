@@ -58,7 +58,7 @@ export const PurchaseVerification = ({
       } else {
         toast({
           title: "Purchase not found",
-          description: "We couldn't find a purchase for this deck under your account email. If you bought it with a different email, please contact support.",
+          description: "We couldn't match that order number to a purchase of this deck under your account email. Please check the number, or contact support if you bought it with a different email.",
           variant: "destructive",
         });
       }
