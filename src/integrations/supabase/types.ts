@@ -8110,6 +8110,7 @@ export type Database = {
         Args: { _interaction_id: string; _user_id: string }
         Returns: Json
       }
+      _caller_may_check: { Args: { _user_id: string }; Returns: boolean }
       _mirror_blocks_bidirectional: {
         Args: { _a: string; _b: string }
         Returns: boolean
