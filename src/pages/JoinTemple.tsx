@@ -81,7 +81,46 @@ export default function JoinTemple() {
   };
 
   return (
-    <section className="light-theme min-h-screen bg-background text-foreground">
+    <section id="top" className="light-theme min-h-screen bg-background text-foreground">
+      {/* Same quiet threshold header as the /home sales page. */}
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/85 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-5 py-3 md:px-8">
+          <a
+            href="#top"
+            className="flex items-center gap-1.5 text-sm text-muted-foreground"
+          >
+            <Home className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span className="font-medium hover:text-foreground transition-colors">
+              THE TEMPLE of Sustainment
+            </span>
+          </a>
+          <div className="flex items-center gap-4">
+            {user ? (
+              <ProfileDropdown />
+            ) : (
+              <button
+                type="button"
+                onClick={() => navigate("/auth")}
+                className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                Sign in
+              </button>
+            )}
+            <Button
+              size="default"
+              className="hidden sm:inline-flex"
+              onClick={() =>
+                document
+                  .getElementById("membership")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+            >
+              <DoorOpen className="mr-2 h-4 w-4" aria-hidden />
+              See what awaits inside
+            </Button>
+          </div>
+        </div>
+      </header>
       {/* Banner: the doorway image sits behind the words. The woman is seated at
           the left of the frame, so the words hold the right and the scrim deepens
           toward them, leaving her in clean, unscrimmed light. */}
@@ -116,7 +155,7 @@ export default function JoinTemple() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2">
+      <div id="membership" className="grid scroll-mt-16 grid-cols-1 md:grid-cols-2">
         <div className="px-6 py-10 sm:px-10 md:px-10 md:py-12">
           <p className="mb-3 text-sm text-primary-strong">THE TEMPLE of Sustainment</p>
           <h1 className="font-serif text-3xl leading-tight sm:text-4xl">Join THE TEMPLE</h1>
