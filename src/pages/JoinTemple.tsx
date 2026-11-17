@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getStoredAffiliateRef } from "@/lib/affiliateTracking";
 import { Button } from "@/components/ui/button";
 import { AdminEditableImage } from "@/components/admin/AdminEditableImage";
+import { FreeReadingCard } from "@/components/temple/FreeReadingCard";
 import heroImage from "@/assets/landing-page-banner-v2.webp";
 
 type Offer = { tier: string; currency: string; unit_amount_cents: number | null; checkout_available: boolean };

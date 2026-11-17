@@ -1,42 +1,36 @@
-import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 /**
- * The shared "Free Reading: One Card" card, shown to visitors on the
- * homepage doors grid and at the bottom of /join.
+ * The shared "Begin with one free card reading" offer card, shown on the
+ * homepage (Membership) and at the bottom of /join.
  */
 export function FreeReadingCard() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="max-w-3xl mx-auto"
+    <section
+      aria-labelledby="free-reading-heading"
+      className="px-5 pb-8 md:px-8 md:pb-14"
     >
-      <Link
-        to="/sacred-spreads"
-        className="group block rounded-lg border border-primary/30 bg-gradient-to-br from-primary/10 to-transparent p-6 transition-colors hover:border-primary/60 hover:bg-primary/15"
-      >
-        <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/20">
-            <Sparkles className="h-6 w-6 text-primary" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-serif text-xl mb-2 group-hover:text-primary transition-colors">
-              Free Reading: One Card
-            </h3>
-            <p className="text-sm text-muted-foreground mb-3">
-              Draw a single card for guidance on any question. No membership
-              required — experience the wisdom of the decks before you join.
-            </p>
-            <div className="flex items-center gap-2 text-sm text-primary">
-              <span>Draw your card</span>
-              <span aria-hidden="true">→</span>
-            </div>
-          </div>
+      <div className="mx-auto max-w-3xl rounded-lg border border-primary/30 bg-primary/5 p-7 text-center md:p-9">
+        <p className="mb-3 text-xs uppercase tracking-[0.2em] text-primary">
+          Not ready yet?
+        </p>
+        <h2
+          id="free-reading-heading"
+          className="font-serif text-[1.6rem] leading-tight text-foreground sm:text-3xl"
+        >
+          Begin with one free card reading
+        </h2>
+        <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+          Create a free account and draw a Past, Present, Future spread. Three
+          cards, one written reading of the thread between them, and space to
+          write privately — no payment, and your reading stays yours.
+        </p>
+        <div className="mt-7 flex justify-center">
+          <Button asChild variant="outline">
+            <a href="/free-reading">Draw my free reading</a>
+          </Button>
         </div>
-      </Link>
-    </motion.div>
+      </div>
+    </section>
   );
 }
