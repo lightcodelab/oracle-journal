@@ -143,8 +143,9 @@ const App = () => {
             <Route path="/rituals/:id" element={<RitualDetail />} />
             <Route path="/rituals/:id/visit" element={<RitualVisitPage />} />
             <Route path="/rituals/visits/:visitId" element={<RitualVisitPage />} />
-            <Route path="/" element={<Membership />} />
-            <Route path="/membership" element={<Navigate to="/" replace />} />
+            <Route path="/" element={<JoinTemple />} />
+            <Route path="/home" element={<Membership />} />
+            <Route path="/membership" element={<Navigate to="/home" replace />} />
             <Route path="/temple" element={<Temple />} />
             <Route path="/remembrance" element={<Index />} />
             <Route path="/remembrance/section/:section" element={<RemembranceSectionPage />} />
