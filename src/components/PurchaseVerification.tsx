@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,17 +23,27 @@ export const PurchaseVerification = ({
   onSuccess,
 }: PurchaseVerificationProps) => {
   const [isPremium, setIsPremium] = useState(false);
+  const [orderId, setOrderId] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const handleVerify = async () => {
     if (!deckId) return;
 
+    if (!orderId.trim()) {
+      toast({
+        title: "Order number needed",
+        description: "Please enter the order number from your purchase receipt email.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
       const { data, error } = await supabase.functions.invoke('verify-woocommerce-purchase', {
-        body: { deckId, isPremium },
+        body: { deckId, isPremium, orderId: orderId.trim() },
       });
 
       if (error) throw error;
@@ -47,7 +58,7 @@ export const PurchaseVerification = ({
       } else {
         toast({
           title: "Purchase not found",
-          description: "We couldn't find a purchase for this deck under your account email. If you bought it with a different email, please contact support.",
+          description: "We couldn't match that order number to a purchase of this deck under your account email. Please check the number, or contact support if you bought it with a different email.",
           variant: "destructive",
         });
       }
@@ -69,7 +80,7 @@ export const PurchaseVerification = ({
         <DialogHeader>
           <DialogTitle>Verify Purchase for {deckName}</DialogTitle>
           <DialogDescription>
-            We'll check for a purchase made with your account email address. Select which version you purchased.
+            Enter the order number from your purchase receipt email and select which version you purchased.
           </DialogDescription>
         </DialogHeader>
 
@@ -96,6 +107,21 @@ export const PurchaseVerification = ({
             </div>
             <p className="text-xs text-muted-foreground">
               Premium includes embodiment content and guided meditations
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="order-id">Order Number</Label>
+            <Input
+              id="order-id"
+              type="text"
+              inputMode="numeric"
+              placeholder="e.g. 12345"
+              value={orderId}
+              onChange={(e) => setOrderId(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">
+              You'll find this in the receipt email from your purchase. It must match your account email address.
             </p>
           </div>
 
