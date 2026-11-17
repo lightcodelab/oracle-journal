@@ -8,6 +8,7 @@ const corsHeaders = {
 interface PurchaseVerificationRequest {
   deckId: string;
   isPremium?: boolean;
+  orderId?: string;
 }
 
 Deno.serve(async (req) => {
@@ -36,7 +37,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { deckId, isPremium = false }: PurchaseVerificationRequest = await req.json();
+    const { deckId, isPremium = false, orderId }: PurchaseVerificationRequest = await req.json();
 
     if (!deckId || typeof deckId !== 'string') {
       return new Response(
