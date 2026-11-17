@@ -147,6 +147,7 @@ export default function JoinTemple() {
           </div>
         </div>
       </div>
+      <FreeReadingCard />
     </section>
   );
 }

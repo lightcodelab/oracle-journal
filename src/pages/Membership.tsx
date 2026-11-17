@@ -17,6 +17,7 @@ import { MembershipCard } from "@/components/sales/MembershipCard";
 import { FAQAccordion } from "@/components/sales/FAQAccordion";
 import type { FaqItem } from "@/components/sales/FAQAccordion";
 import { StickyMobileCTA } from "@/components/sales/StickyMobileCTA";
+import { FreeReadingCard } from "@/components/temple/FreeReadingCard";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import finalThreshold from "@/assets/sales-final-threshold.jpg";
 import guidesPhoto from "@/assets/julie-tash-guides.webp";
