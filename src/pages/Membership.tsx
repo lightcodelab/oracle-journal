@@ -20,7 +20,7 @@ import { StickyMobileCTA } from "@/components/sales/StickyMobileCTA";
 import { FreeReadingCard } from "@/components/temple/FreeReadingCard";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import finalThreshold from "@/assets/sales-final-threshold.jpg";
-import guidesPhoto from "@/assets/julie-tash-guides.webp";
+import { GuidesBio } from "@/components/temple/GuidesBio";
 import areekeeraThumbnail from "@/assets/areekeera-guide-sigil.webp";
 import livingPatternImage from "@/assets/living-pattern-banner.webp";
 import doorRemembrance from "@/assets/door-of-remembrance-4.webp";
