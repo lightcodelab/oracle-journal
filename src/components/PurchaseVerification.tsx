@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,17 +23,27 @@ export const PurchaseVerification = ({
   onSuccess,
 }: PurchaseVerificationProps) => {
   const [isPremium, setIsPremium] = useState(false);
+  const [orderId, setOrderId] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const handleVerify = async () => {
     if (!deckId) return;
 
+    if (!orderId.trim()) {
+      toast({
+        title: "Order number needed",
+        description: "Please enter the order number from your purchase receipt email.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
       const { data, error } = await supabase.functions.invoke('verify-woocommerce-purchase', {
-        body: { deckId, isPremium },
+        body: { deckId, isPremium, orderId: orderId.trim() },
       });
 
       if (error) throw error;
