@@ -47,7 +47,7 @@ export function GuidesBio() {
             <span className="font-semibold text-foreground">Tash Lewin</span>{" "}
             works at the intersection of trauma, identity, and nervous
             system regulation, helping women understand how protective
-            patterns and old meanings quietly shape the choices available
+            patterns and old evidence quietly shape the choices available
             in the present.
           </p>
           <p className="whitespace-pre-line">
