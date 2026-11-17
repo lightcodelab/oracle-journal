@@ -162,46 +162,73 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Paid decks require the WooCommerce order number from the buyer's
+    // receipt. Matching on the account email alone is not safe: sign-up does
+    // not prove email ownership, so anyone could claim purchases made with
+    // another person's address. The order number is only known to the buyer.
+    if (!orderId || typeof orderId !== 'string' || !/^\d{1,12}$/.test(orderId.trim())) {
+      return new Response(
+        JSON.stringify({
+          error: 'Please enter the order number from your purchase receipt email',
+          requires_order_id: true,
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    const requestedOrderId = orderId.trim();
+
     // Create Basic Auth header
     const authString = btoa(`${consumerKey}:${consumerSecret}`);
-    
-    // Query WooCommerce for orders with this email and product
-    const ordersUrl = `${woocommerceUrl}/wp-json/wc/v3/orders?customer=${encodeURIComponent(email)}&status=completed&per_page=100`;
-    
-    console.log('Fetching orders from WooCommerce...');
-    const ordersResponse = await fetch(ordersUrl, {
+
+    // Fetch the specific order and verify it belongs to this account's email
+    const orderUrl = `${woocommerceUrl}/wp-json/wc/v3/orders/${encodeURIComponent(requestedOrderId)}`;
+
+    console.log('Fetching order from WooCommerce...');
+    const orderResponse = await fetch(orderUrl, {
       headers: {
         'Authorization': `Basic ${authString}`,
         'Content-Type': 'application/json',
       },
     });
 
-    if (!ordersResponse.ok) {
-      console.error('WooCommerce API error:', await ordersResponse.text());
+    if (orderResponse.status === 404) {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          verified: false,
+          message: 'No purchase found for this deck',
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!orderResponse.ok) {
+      console.error('WooCommerce API error:', await orderResponse.text());
       return new Response(
         JSON.stringify({ error: 'Failed to verify purchase with WooCommerce' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const orders = await ordersResponse.json();
-    console.log(`Found ${orders.length} completed orders for ${email}`);
+    const order = await orderResponse.json();
 
-    // Check if any order contains the product
-    let purchaseFound = false;
-    let matchingOrderId = null;
+    // The order must be completed, billed to the caller's own account email,
+    // and contain the product being claimed.
+    const billingEmail = (order?.billing?.email ?? '').toString().trim().toLowerCase();
+    const accountEmail = email.trim().toLowerCase();
+    const emailMatches = billingEmail !== '' && billingEmail === accountEmail;
+    const isCompleted = order?.status === 'completed';
+    const hasProduct = Array.isArray(order?.line_items) && order.line_items.some(
+      (item: any) => item.product_id?.toString() === productId
+    );
 
-    for (const order of orders) {
-      const hasProduct = order.line_items?.some(
-        (item: any) => item.product_id.toString() === productId
-      );
+    const purchaseFound = Boolean(emailMatches && isCompleted && hasProduct);
+    const matchingOrderId = purchaseFound ? requestedOrderId : null;
 
-      if (hasProduct) {
-        purchaseFound = true;
-        matchingOrderId = order.id.toString();
-        console.log('Purchase verified! Order ID:', matchingOrderId);
-        break;
-      }
+    if (purchaseFound) {
+      console.log('Purchase verified! Order ID:', matchingOrderId);
+    } else {
+      console.log('Order did not match:', { emailMatches, isCompleted, hasProduct });
     }
 
     if (purchaseFound && matchingOrderId) {
