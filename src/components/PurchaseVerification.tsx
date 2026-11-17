@@ -80,7 +80,7 @@ export const PurchaseVerification = ({
         <DialogHeader>
           <DialogTitle>Verify Purchase for {deckName}</DialogTitle>
           <DialogDescription>
-            We'll check for a purchase made with your account email address. Select which version you purchased.
+            Enter the order number from your purchase receipt email and select which version you purchased.
           </DialogDescription>
         </DialogHeader>
 
@@ -107,6 +107,21 @@ export const PurchaseVerification = ({
             </div>
             <p className="text-xs text-muted-foreground">
               Premium includes embodiment content and guided meditations
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="order-id">Order Number</Label>
+            <Input
+              id="order-id"
+              type="text"
+              inputMode="numeric"
+              placeholder="e.g. 12345"
+              value={orderId}
+              onChange={(e) => setOrderId(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">
+              You'll find this in the receipt email from your purchase. It must match your account email address.
             </p>
           </div>
 
