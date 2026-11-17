@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { ArchIcon } from "@/components/icons/ArchIcon";
-import { Link } from "react-router-dom";
-import { Check, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Check, DoorOpen, Home, Loader2 } from "lucide-react";
+import ProfileDropdown from "@/components/ProfileDropdown";
 import Auth from "./Auth";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -29,6 +30,7 @@ Whether you are just beginning to listen inward or have been walking this path f
 export default function JoinTemple() {
   const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [offer, setOffer] = useState<Offer | null>(null);
   const [loading, setLoading] = useState(true);
   const [checkingOut, setCheckingOut] = useState(false);
