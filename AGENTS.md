@@ -1,5 +1,7 @@
 # Project Architecture Rules
 
+- Subscription invoices use an authenticated edge function bound to server-maintained owner subscription IDs, including canceled subscriptions; PDFs are fetched privately and downloaded from a ready Blob. Why: billing history stays private and downloads retain user activation on iOS.
+
 - Revelations uses a dedicated owner-private reading record, server-selected single-deck card and server-persisted generation; clients may update only evidence answers, never card or reading content. Why: extended card material must remain server-only and returning visitors must keep the same reading. It shares the existing reading gateway implementation; membership checkout remains the existing server-selected monthly flow.
 - Revelations loads its drawn card's Companion Course lesson server-side by Sacred Rewrite course, card number and verified title; content direction is appended locally without modifying the shared reading voice. Why: every interpretation receives the correct complete deepening material and stored guiding question while preserving the approved tone.
 - Sacred Rewrite card saves atomically sync canonical teaching fields into content_sections and the matching deepening lesson title/text/richtext through a database trigger; preserve lesson-specific media, questions, attachments and organisation. Why: card edits must never leave course copies or reading generation using stale material.

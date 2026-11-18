@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { FOCUS_OPTIONS } from "@/lib/templeFocus";
+import SubscriptionInvoices from "@/components/SubscriptionInvoices";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -218,6 +219,7 @@ const Profile = () => {
             </Button>
           </CardContent>
         </Card>
+        <SubscriptionInvoices />
       </div>
     </div>
   );

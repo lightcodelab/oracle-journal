@@ -22,6 +22,7 @@ import { useMembership } from "@/hooks/useMembership";
 import { useMemberState } from "@/hooks/useMemberState";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SubscriptionInvoices from "@/components/SubscriptionInvoices";
 import { motion } from "framer-motion";
 import {
   AlertDialog,
@@ -370,6 +371,8 @@ const MyAccount = () => {
         )}
 
         {/* Upgrade/Downgrade Options */}
+        <SubscriptionInvoices />
+
         {isActiveMember && (
           <>
             <div className="text-center mb-6">

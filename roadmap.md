@@ -1,5 +1,11 @@
 # Roadmap
 
+## Subscription invoice downloads
+- [x] Add owner-bound invoice listing and PDF retrieval
+- [x] Show invoice downloads on My Profile and My Account, including past subscriptions
+- [x] Pass ownership tests, verify signed-in empty history, unauthorized denial, and sample PDF download on desktop/mobile
+- [ ] Verify a real Stripe PDF download — requesting user's account has no subscription invoices; requires a paying member's approved test session
+
 ## Admin card selector
 - [x] Keep the card dropdown within the preview and verify cards 1 and 2 can be selected
 
