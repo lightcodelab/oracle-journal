@@ -9,3 +9,7 @@ export function ownsInvoice(invoice: Parameters<typeof subscriptionId>[0] & { li
   const id = subscriptionId(invoice);
   return invoice.livemode && id !== null && owned.includes(id);
 }
+
+export function canPayInvoice(invoice: Parameters<typeof ownsInvoice>[0] & { status: string | null; amount_remaining: number }, owned: string[]): boolean {
+  return ownsInvoice(invoice, owned) && invoice.status === "open" && invoice.amount_remaining > 0;
+}

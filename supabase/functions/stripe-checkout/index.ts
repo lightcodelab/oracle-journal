@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { blocksNewMembership } from "./rules.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -34,7 +35,7 @@ serve(async (req) => {
       throw new Error("Unauthorized");
     }
 
-    console.log("User authenticated:", user.id, user.email);
+    console.log("User authenticated:", user.id);
 
     const {
       affiliateCode,
@@ -112,6 +113,12 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
+    const lockToken = crypto.randomUUID();
+    const { data: claimed, error: lockError } = await supabaseAdmin.rpc("claim_membership_checkout", {
+      _user_id: user.id, _environment: stripeMode, _token: lockToken,
+    });
+    if (lockError || !claimed) throw new Error("A membership checkout is already opening. Please wait a moment.");
+    try {
     let stripePriceId: string;
     let offerTier: string;
 
@@ -190,13 +197,22 @@ serve(async (req) => {
     });
 
     // Check if customer already exists
-    const { data: profile } = await supabaseClient
+    const { data: profile, error: profileError } = await supabaseAdmin
       .from("profiles")
       .select("stripe_customer_id")
       .eq("id", user.id)
       .single();
 
     let customerId = profile?.stripe_customer_id;
+    if (profileError) throw new Error("Unable to check your billing account.");
+    const { data: existing, error: existingError } = await supabaseAdmin.from("subscriptions")
+      .select("provider_subscription_id").eq("profile_id", user.id).eq("provider", "stripe").eq("stripe_environment", stripeMode);
+    if (existingError) throw new Error("Unable to check existing memberships.");
+    for (const row of existing ?? []) {
+      if (!row.provider_subscription_id) continue;
+      const current = await stripe.subscriptions.retrieve(row.provider_subscription_id);
+      if (blocksNewMembership(current.status)) return new Response(JSON.stringify({ url: `${safeOrigin(req)}/account`, existingMembership: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
 
     if (!customerId) {
       // Create new Stripe customer
@@ -220,6 +236,13 @@ serve(async (req) => {
     } else {
       console.log("Using existing Stripe customer:", customerId);
     }
+
+    for await (const current of stripe.subscriptions.list({ customer: customerId, status: "all", limit: 100 })) {
+      if (blocksNewMembership(current.status)) return new Response(JSON.stringify({ url: `${safeOrigin(req)}/account`, existingMembership: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    const openSessions = await stripe.checkout.sessions.list({ customer: customerId, status: "open", limit: 100 });
+    const pending = openSessions.data.find((s) => s.mode === "subscription");
+    if (pending?.url) return new Response(JSON.stringify({ url: pending.url }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
     // Build affiliate metadata (only include keys we have)
     const affMeta: Record<string, string> = {};
@@ -246,8 +269,8 @@ serve(async (req) => {
           ...affMeta,
         },
       },
-      success_url: `${req.headers.get("origin")}/membership/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get("origin")}/`,
+      success_url: `${safeOrigin(req)}/membership/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${safeOrigin(req)}/`,
       metadata: {
         supabase_user_id: user.id,
         plan_code: offerTier === "founding" ? "founding" : "standard",
@@ -276,6 +299,9 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
+    } finally {
+      await supabaseAdmin.from("membership_checkout_locks").delete().eq("user_id", user.id).eq("environment", stripeMode).eq("token", lockToken);
+    }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     console.error("Checkout error:", errorMessage);
@@ -288,3 +314,8 @@ serve(async (req) => {
     );
   }
 });
+
+function safeOrigin(req: Request) {
+  const origin = req.headers.get("origin") ?? "";
+  return ["https://inside.thetempleofsustainment.com", "https://thetemple.lightcodelab.com", "https://templeofsustainment.lovable.app", "http://localhost:8080"].includes(origin) || /^https:\/\/[a-z0-9-]+\.lovable\.app$/.test(origin) ? origin : "https://inside.thetempleofsustainment.com";
+}

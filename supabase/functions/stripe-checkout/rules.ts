@@ -1,0 +1,1 @@
+export const blocksNewMembership = (status: string) => ["active", "trialing", "past_due", "unpaid", "paused", "incomplete"].includes(status);

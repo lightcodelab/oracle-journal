@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
+import { normalizeSignupEmail, signupReturnedExistingIdentity } from "@/lib/signupIdentity";
 import templeBannerAsset from "@/assets/homepage-banner.webp.asset.json";
 const templeBanner = templeBannerAsset.url;
 
@@ -217,8 +218,8 @@ const Auth = ({ membershipSignup = false }: { membershipSignup?: boolean }) => {
         sessionStorage.setItem("pendingTrialPriceId", priceId);
       }
       
-      const { error } = await supabase.auth.signUp({
-        email,
+      const { data, error } = await supabase.auth.signUp({
+        email: normalizeSignupEmail(email),
         password,
         options: {
           emailRedirectTo: `${window.location.origin}${redirectTo}`,
@@ -228,8 +229,8 @@ const Auth = ({ membershipSignup = false }: { membershipSignup?: boolean }) => {
         },
       });
 
-      if (error) {
-        if (error.message.includes("already registered")) {
+      if (error || signupReturnedExistingIdentity(data.user)) {
+        if (signupReturnedExistingIdentity(data.user) || error?.message.includes("already registered") || error?.code === "user_already_exists") {
           toast({
             title: "Account exists",
             description: "This email is already registered. Please sign in instead.",
@@ -238,7 +239,7 @@ const Auth = ({ membershipSignup = false }: { membershipSignup?: boolean }) => {
         } else {
           toast({
             title: "Error",
-            description: error.message,
+            description: error?.message || "Unable to create account.",
             variant: "destructive",
           });
         }

@@ -1,0 +1,2 @@
+export const normalizeSignupEmail = (email: string) => email.trim().toLowerCase();
+export const signupReturnedExistingIdentity = (user: { identities?: unknown[] } | null) => user?.identities?.length === 0;

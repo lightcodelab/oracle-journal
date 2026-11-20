@@ -61,7 +61,7 @@ const MyAccount = () => {
   const { toast } = useToast();
   const { memberTierCode, subscriptionStatus, tierName, loading: tierLoading, isAdmin, bucketAccess, refetch } = useTierAccess();
   const { tiers, loading: tiersLoading, startCheckout, checkoutLoading } = useMembership();
-  const { isFoundingMember, foundingPriceStatus, manualFullAccess } =
+  const { isFoundingMember, foundingPriceStatus, manualFullAccess, billingOnly } =
     useMemberState();
   const [portalLoading, setPortalLoading] = useState(false);
   const [pauseLoading, setPauseLoading] = useState(false);
@@ -179,7 +179,7 @@ const MyAccount = () => {
   const isActiveMember = subscriptionStatus === "active" || subscriptionStatus === "trialing";
   const isPaused = subscriptionStatus === "paused";
   const hasManualAccess = manualFullAccess.state === "active";
-  const hasSubscription = isActiveMember || isPaused;
+  const hasSubscription = isActiveMember || isPaused || subscriptionStatus === "past_due";
 
   if (loading || tierLoading || tiersLoading) {
     return (
@@ -188,6 +188,21 @@ const MyAccount = () => {
       </div>
     );
   }
+
+  if (billingOnly) return (
+    <div className="min-h-screen bg-background">
+      <main className="mx-auto max-w-3xl px-4 py-12">
+        <h1 className="text-3xl font-serif mb-4">Your billing account</h1>
+        <p className="text-muted-foreground mb-6">Your renewal is overdue. Your account and saved work are safe. Pay your outstanding invoice to restore Temple access.</p>
+        <Button variant="outline" disabled={portalLoading} onClick={handleManageBilling}><CreditCard className="h-4 w-4 mr-2" />Update payment method</Button>
+        <SubscriptionInvoices />
+        <div className="flex flex-wrap gap-3">
+          <Button variant="outline" onClick={() => window.location.reload()}>Check payment status</Button>
+          <Button variant="ghost" onClick={() => supabase.auth.signOut()}>Sign out</Button>
+        </div>
+      </main>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">

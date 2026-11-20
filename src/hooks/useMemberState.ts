@@ -47,6 +47,7 @@ export interface ManualFullAccess {
 }
 
 export interface MemberState {
+  billingOnly: boolean;
   isActiveMember: boolean;
   isFoundingMember: boolean;
   founderBadge: boolean;
@@ -71,6 +72,7 @@ const EMPTY_MANUAL: ManualFullAccess = {
 };
 
 const EMPTY: MemberState = {
+  billingOnly: false,
   isActiveMember: false,
   isFoundingMember: false,
   founderBadge: false,
@@ -139,6 +141,7 @@ export function useMemberState() {
         manual,
       );
       setState({
+        billingOnly: Boolean(d.billing_only),
         isActiveMember,
         isFoundingMember: Boolean(d.is_founding_member),
         founderBadge: Boolean(d.founder_badge),
@@ -162,6 +165,14 @@ export function useMemberState() {
   useEffect(() => {
     refetch();
   }, [refetch]);
+
+  useEffect(() => {
+    if (!userId) return;
+    const refresh = () => { void refetch(); };
+    window.addEventListener("focus", refresh);
+    const timer = window.setInterval(refresh, 15000);
+    return () => { window.removeEventListener("focus", refresh); window.clearInterval(timer); };
+  }, [userId, refetch]);
 
   return { ...state, loading, refetch };
 }

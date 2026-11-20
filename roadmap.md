@@ -1,5 +1,12 @@
 # Roadmap
 
+## Payment renewal safeguards
+- [x] Prevent duplicate signup and overlapping subscription checkouts
+- [x] Enforce 24-hour renewal grace and overdue billing-only login
+- [x] Enable secure manual settlement of the existing subscription invoice
+- [x] Pass live 24-hour boundary checks, ownership tests and duplicate-membership tests; deploy billing functions; verify signed-in account and simulated overdue navigation
+- [ ] Verify real overdue invoice payment and restored access — requires an approved overdue member session and payment; no real charge was submitted
+
 ## Subscription invoice downloads
 - [x] Add owner-bound invoice listing and PDF retrieval
 - [x] Show invoice downloads on My Profile and My Account, including past subscriptions

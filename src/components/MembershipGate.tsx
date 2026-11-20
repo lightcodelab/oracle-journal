@@ -1,5 +1,5 @@
 import { ReactNode, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { Home, Loader2 } from "lucide-react";
 import NavActions from "@/components/NavActions";
 import { Button } from "@/components/ui/button";
@@ -40,7 +40,7 @@ const isPreviewPath = (path: string) =>
 export const MembershipGate = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation();
   const { user, loading: authLoading } = useAuth();
-  const { hasFullTempleAccess, loading: memberLoading, refetch } = useMemberState();
+  const { hasFullTempleAccess, billingOnly, loading: memberLoading, refetch } = useMemberState();
 
   // The gate stays mounted for the whole visit, so a person who was locked
   // out (e.g. just paid, before the payment confirmation landed) must be
@@ -57,8 +57,6 @@ export const MembershipGate = ({ children }: { children: ReactNode }) => {
     return () => { window.removeEventListener("focus", onFocus); window.clearInterval(t); };
   }, [user, hasFullTempleAccess, refetch]);
 
-  if (isOpenPath(pathname)) return <>{children}</>;
-
   if (authLoading || (user && memberLoading)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -67,6 +65,8 @@ export const MembershipGate = ({ children }: { children: ReactNode }) => {
     );
   }
 
+  if (user && billingOnly && pathname.replace(/\/+$/, "") !== "/account" && pathname !== "/reset-password") return <Navigate to="/account" replace />;
+  if (isOpenPath(pathname)) return <>{children}</>;
   if (user && hasFullTempleAccess) return <>{children}</>;
 
   // Free accounts can look around the Temple and the four Doors, but not use them.

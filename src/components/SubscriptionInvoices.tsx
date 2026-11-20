@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { Download, FileText, Loader2 } from "lucide-react";
+import { CreditCard, Download, FileText, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 
-type Invoice = { id: string; number: string | null; created: number; amount: number; currency: string; status: string; downloadable: boolean };
+type Invoice = { id: string; number: string | null; created: number; amount: number; currency: string; status: string; downloadable: boolean; payable: boolean };
 type Cursors = Record<string, string | null> | null;
 
 export default function SubscriptionInvoices() {
@@ -14,6 +14,7 @@ export default function SubscriptionInvoices() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [downloading, setDownloading] = useState<string | null>(null);
+  const [paying, setPaying] = useState<string | null>(null);
   const [ready, setReady] = useState<{ blob: Blob; filename: string } | null>(null);
   const { toast } = useToast();
   const load = useCallback(async (next: Cursors = null) => {
@@ -28,6 +29,23 @@ export default function SubscriptionInvoices() {
     finally { setLoading(false); }
   }, []);
   useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    const refresh = () => { void load(); };
+    window.addEventListener("focus", refresh);
+    const timer = window.setInterval(refresh, 30000);
+    return () => { window.removeEventListener("focus", refresh); window.clearInterval(timer); };
+  }, [load]);
+  const pay = async (invoice: Invoice) => {
+    setPaying(invoice.id);
+    try {
+      const { data, error: paymentError } = await supabase.functions.invoke("subscription-invoices", { body: { invoiceId: invoice.id, action: "pay" } });
+      if (paymentError || !data?.url) throw new Error("Payment unavailable");
+      window.location.assign(data.url);
+    } catch {
+      toast({ title: "Payment page unavailable", description: "This invoice may already be paid. Refresh your invoices or try again shortly.", variant: "destructive" });
+      void load();
+    } finally { setPaying(null); }
+  };
 
   const save = async (file: { blob: Blob; filename: string }) => {
     const shareFile = new File([file.blob], file.filename, { type: "application/pdf" });
@@ -67,6 +85,7 @@ export default function SubscriptionInvoices() {
               <p className="text-sm text-muted-foreground">{new Date(invoice.created * 1000).toLocaleDateString(undefined, { dateStyle: "medium" })} · {new Intl.NumberFormat(undefined, { style: "currency", currency: invoice.currency.toUpperCase() }).format(invoice.amount / 100)}</p>
               <Badge variant="outline" className="capitalize">{invoice.status === "open" ? "Awaiting payment" : invoice.status}</Badge>
             </div>
+            {invoice.payable && <Button size="sm" disabled={paying !== null} onClick={() => pay(invoice)}><CreditCard className="h-4 w-4 mr-2" />{paying === invoice.id ? "Opening…" : "Pay outstanding invoice"}</Button>}
             {ready?.filename === `Temple-invoice-${(invoice.number || invoice.id).replace(/[^a-zA-Z0-9_-]/g, "-")}.pdf` ? (
               <Button size="sm" onClick={() => save(ready)}><Download className="h-4 w-4 mr-2" />Download PDF</Button>
             ) : (

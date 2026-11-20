@@ -1,5 +1,8 @@
 # Project Architecture Rules
 
+- Renewal access uses the database renewal_window_open rule and polling member state; overdue accounts redirect to billing while authentication remains independent. Why: deadlines apply consistently without deleting accounts or trusting stale profile status.
+- Membership checkout serializes requests per owner/environment, checks canonical Stripe subscriptions and reuses open sessions; manual payment opens an owner-verified existing hosted invoice. Why: renewal recovery must not create a second subscription or charge outside Stripe's invoice balance.
+
 - Subscription invoices use an authenticated edge function bound to server-maintained owner subscription IDs, including canceled subscriptions; PDFs are fetched privately and downloaded from a ready Blob. Why: billing history stays private and downloads retain user activation on iOS.
 
 - Revelations uses a dedicated owner-private reading record, server-selected single-deck card and server-persisted generation; clients may update only evidence answers, never card or reading content. Why: extended card material must remain server-only and returning visitors must keep the same reading. It shares the existing reading gateway implementation; membership checkout remains the existing server-selected monthly flow.

@@ -2,10 +2,11 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import Stripe from "https://esm.sh/stripe@14.21.0";
 import { z } from "https://esm.sh/zod@3.25.76";
-import { ownsInvoice } from "./rules.ts";
+import { ownsInvoice, canPayInvoice } from "./rules.ts";
 
 const schema = z.object({
   invoiceId: z.string().regex(/^in_[a-zA-Z0-9]+$/).optional(),
+  action: z.enum(["download", "pay"]).optional(),
   cursors: z.record(z.string().regex(/^in_[a-zA-Z0-9]+$/).nullable()).optional(),
 }).strict();
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
@@ -34,6 +35,15 @@ Deno.serve(async (req) => {
     if (parsed.data.invoiceId) {
       const invoice = await stripe.invoices.retrieve(parsed.data.invoiceId);
       if (!ownsInvoice(invoice, owned)) return json({ error: "Invoice not available" }, 404);
+      if (parsed.data.action === "pay") {
+        // Settle the SAME invoice through Stripe; concurrent automatic retries
+        // cannot collect that invoice again once its balance is paid.
+        if (!canPayInvoice(invoice, owned)) return json({ error: "Invoice is already settled or cannot be paid." }, 409);
+        if (!invoice.hosted_invoice_url) return json({ error: "Payment page is not ready yet." }, 409);
+        const paymentUrl = new URL(invoice.hosted_invoice_url);
+        if (paymentUrl.protocol !== "https:" || paymentUrl.hostname !== "invoice.stripe.com") throw new Error("Invalid payment URL");
+        return json({ url: invoice.hosted_invoice_url });
+      }
       if (!invoice.invoice_pdf) return json({ error: "Invoice PDF is not ready yet" }, 404);
       const url = new URL(invoice.invoice_pdf);
       if (url.protocol !== "https:" || !url.hostname.endsWith(".stripe.com")) throw new Error("Invalid invoice download URL");
@@ -48,7 +58,7 @@ Deno.serve(async (req) => {
       cursors[id] = page.has_more ? page.data.at(-1)?.id ?? null : null;
       return page.data.filter((i) => i.status !== "draft" && ownsInvoice(i, owned)).map((i) => ({
         id: i.id, number: i.number, created: i.created, amount: i.total, currency: i.currency,
-        status: i.status, downloadable: Boolean(i.invoice_pdf),
+        status: i.status, downloadable: Boolean(i.invoice_pdf), payable: canPayInvoice(i, owned) && Boolean(i.hosted_invoice_url),
       }));
     }));
     return json({ invoices: batches.flat().sort((a, b) => b.created - a.created), cursors: Object.values(cursors).some(Boolean) ? cursors : null });

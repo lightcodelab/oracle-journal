@@ -4485,6 +4485,27 @@ export type Database = {
           },
         ]
       }
+      membership_checkout_locks: {
+        Row: {
+          environment: string
+          expires_at: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          environment: string
+          expires_at: string
+          token: string
+          user_id: string
+        }
+        Update: {
+          environment?: string
+          expires_at?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       mirror_adult_attestation_versions: {
         Row: {
           body: string
@@ -8245,6 +8266,7 @@ export type Database = {
         Args: { _code: string; _commission_model?: string; _link_code?: string }
         Returns: string
       }
+      billing_only_required: { Args: { _user_id: string }; Returns: boolean }
       can_view_card: {
         Args: { _deck_id: string; _user_id: string }
         Returns: boolean
@@ -8252,6 +8274,10 @@ export type Database = {
       can_view_lesson: { Args: { _user_id: string }; Returns: boolean }
       can_view_lesson_by_door: {
         Args: { _course_id: string; _user_id: string }
+        Returns: boolean
+      }
+      claim_membership_checkout: {
+        Args: { _environment: string; _token: string; _user_id: string }
         Returns: boolean
       }
       complete_revelation: {
@@ -8815,6 +8841,16 @@ export type Database = {
           _letter_id: string
         }
         Returns: Json
+      }
+      renewal_window_open: {
+        Args: {
+          _cancel: boolean
+          _end: string
+          _now: string
+          _start: string
+          _status: string
+        }
+        Returns: boolean
       }
       saved_free_spread_count: { Args: { _user_id: string }; Returns: number }
       saved_readings_count: { Args: { _user_id: string }; Returns: number }
