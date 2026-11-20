@@ -442,6 +442,13 @@
       "when": 1795135153073,
       "tag": "0062_renewal_grace_and_checkout_lock",
       "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1795214496387,
+      "tag": "0063_restrict_suggestions_board_to_members",
+      "breakpoints": true
     }
   ]
 }
