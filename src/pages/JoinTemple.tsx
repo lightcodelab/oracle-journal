@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { ArchIcon } from "@/components/icons/ArchIcon";
 import { Link, useNavigate } from "react-router-dom";
-import { Check, DoorOpen, Home, Loader2 } from "lucide-react";
+import { Check, Home, Loader2 } from "lucide-react";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import Auth from "./Auth";
 import { useAuth } from "@/hooks/useAuth";
+import { useMemberState } from "@/hooks/useMemberState";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { getStoredAffiliateRef } from "@/lib/affiliateTracking";
@@ -29,6 +30,7 @@ Whether you are just beginning to listen inward or have been walking this path f
 
 export default function JoinTemple() {
   const { user, loading: authLoading } = useAuth();
+  const { hasFullTempleAccess, loading: memberLoading } = useMemberState();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [offer, setOffer] = useState<Offer | null>(null);
@@ -60,6 +62,20 @@ export default function JoinTemple() {
     ]).then(([a, b]) => { if (active) setWasManual((a.count ?? 0) + (b.count ?? 0) > 0); });
     return () => { active = false; };
   }, [user]);
+
+  // Members and admins are sent into the app, as on the old sales page;
+  // signed-in visitors who are not yet members stay here so they can read
+  // it and check out. A saved destination from the sign-in flow wins.
+  useEffect(() => {
+    if (authLoading || memberLoading || !user) return;
+    const saved = sessionStorage.getItem("postLoginRedirect");
+    if (saved && saved.startsWith("/") && saved !== "/") {
+      sessionStorage.removeItem("postLoginRedirect");
+      navigate(saved, { replace: true });
+      return;
+    }
+    if (hasFullTempleAccess) navigate("/temple", { replace: true });
+  }, [authLoading, memberLoading, user, hasFullTempleAccess, navigate]);
 
   const available = offer?.checkout_available && offer.unit_amount_cents === 3500 && offer.currency.toLowerCase() === "aud";
   const checkout = async () => {
@@ -98,26 +114,10 @@ export default function JoinTemple() {
             {user ? (
               <ProfileDropdown />
             ) : (
-              <button
-                type="button"
-                onClick={() => navigate("/auth")}
-                className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-              >
+              <Button size="default" onClick={() => navigate("/auth")}>
                 Sign in
-              </button>
+              </Button>
             )}
-            <Button
-              size="default"
-              className="hidden sm:inline-flex"
-              onClick={() =>
-                document
-                  .getElementById("membership")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-            >
-              <DoorOpen className="mr-2 h-4 w-4" aria-hidden />
-              See what awaits inside
-            </Button>
           </div>
         </div>
       </header>
