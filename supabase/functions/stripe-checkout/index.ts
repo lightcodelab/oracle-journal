@@ -240,9 +240,27 @@ serve(async (req) => {
     for await (const current of stripe.subscriptions.list({ customer: customerId, status: "all", limit: 100 })) {
       if (blocksNewMembership(current.status)) return new Response(JSON.stringify({ url: `${safeOrigin(req)}/account`, existingMembership: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
+    // Reuse an unfinished checkout only when it is for the exact price the
+    // member just chose. If they backed out of one plan and picked another
+    // (e.g. yearly instead of monthly), expire the stale session so they
+    // are never sent back to the wrong plan's payment page.
     const openSessions = await stripe.checkout.sessions.list({ customer: customerId, status: "open", limit: 100 });
-    const pending = openSessions.data.find((s) => s.mode === "subscription");
-    if (pending?.url) return new Response(JSON.stringify({ url: pending.url }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    for (const pending of openSessions.data.filter((s) => s.mode === "subscription")) {
+      const detailed = await stripe.checkout.sessions.retrieve(pending.id, { expand: ["line_items"] });
+      const pendingPriceId = detailed.line_items?.data?.[0]?.price?.id;
+      const pendingCadence = detailed.metadata?.cadence;
+      const pendingTier = detailed.metadata?.offer_tier;
+      if (pendingPriceId === stripePriceId && pendingCadence === cadence && pendingTier === offerTier && pending.url) {
+        return new Response(JSON.stringify({ url: pending.url }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      // Wrong plan or unverifiable: close it so a fresh session can be made.
+      try {
+        await stripe.checkout.sessions.expire(pending.id);
+        console.log("Expired stale checkout session:", pending.id, "wanted price:", stripePriceId, "had price:", pendingPriceId);
+      } catch (expireErr) {
+        console.error("Could not expire stale checkout session:", pending.id, expireErr);
+      }
+    }
 
     // Build affiliate metadata (only include keys we have)
     const affMeta: Record<string, string> = {};
